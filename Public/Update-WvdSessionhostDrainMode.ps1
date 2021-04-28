@@ -49,9 +49,9 @@ function Update-WvdSessionhostDrainMode {
         switch ($PsCmdlet.ParameterSetName) {
             InputObject {
                 $parameters = @{
-                    HostpoolName      = $InputObject.Name.Split("/")[0]
-                    ResourceGroupName = $InputObject.id.split("/")[4]
-                    Name              = $InputObject.Name.Split("/")[1]
+                    HostpoolName      = $InputObject.HostpoolName
+                    ResourceGroupName = $InputObject.ResourceGroupName
+                    Name              = $InputObject.SessionHostName
                     AllowNewSession = $AllowNewSession
                 }
             }
