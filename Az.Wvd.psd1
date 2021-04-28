@@ -15,7 +15,7 @@
     ModuleVersion          = '1.0.0'
 
     # Supported PSEditions
-    # CompatiblePSEditions = @()
+    CompatiblePSEditions = 'Core', 'Desktop'
 
     # ID used to uniquely identify this module
     GUID                   = 'fdf37ff7-689a-46de-82d4-66228b92dae4'
@@ -113,7 +113,7 @@
             Tags       = 'Azure', 'ResourceManager', 'ARM', 'PSModule', 'DesktopVirtualization', 'WindowsVirtualDesktop', 'DesktopVirtualization'
 
             # A URL to the license for this module.
-            LicenseUri = 'https://rozemuller.com'
+            LicenseUri = 'https://github.com/srozemuller/AzWvd/blob/main/LICENSE'
 
             # A URL to the main website for this project.
             ProjectUri = 'https://github.com/srozemuller/Windows-Virtual-Desktop/tree/master/PowerShell-Modules/WVD-Automation'
