@@ -21,7 +21,12 @@ Get-WvdHostPoolInfo -HostPoolName wvd-hostpool-001 -ResourceGroupName rg-wvd-001
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName
     )
-    $Query = 'resources | where type =~ "microsoft.desktopvirtualization/hostpools" and name =~ "' + $hostpoolName + '" and resourceGroup =~ "' + $ResourceGroupName + '"
+    Begin {
+        Write-Verbose "Start searching"
+        AuthenticationCheck
+    }
+    Process {
+        $Query = 'resources | where type =~ "microsoft.desktopvirtualization/hostpools" and name =~ "' + $hostpoolName + '" and resourceGroup =~ "' + $ResourceGroupName + '"
     | extend vmTemplate=parse_json(tostring(parse_json(properties.vmTemplate)))
     | extend registrationInfo=properties.registrationInfo
 	| project hostpoolId=id,hostpoolName=name,hostpoolDescription=properties.description,hostpoolLocation=location, domain=vmTemplate.domain, imageType=vmTemplate.imageType, resourceGroupName=tolower(resourceGroup), startVMOnConnect=properties.startVMOnConnect, 
@@ -33,5 +38,7 @@ Get-WvdHostPoolInfo -HostPoolName wvd-hostpool-001 -ResourceGroupName rg-wvd-001
     ) on resourceGroupName
     | project hostpoolId,hostpoolName,hostpoolDescription,hostpoolLocation,resourceGroupName,resourceGroupLocation,domain,startVMOnConnect,imageType,expirationTime,maxSessionLimit,hostPoolType,validationEnvironment,vmTemplate,properties
     '
-    return Search-AzGraph -Query $Query
+        return Search-AzGraph -Query $Query
+    }
+    End {}
 }

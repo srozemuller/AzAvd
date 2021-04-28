@@ -28,18 +28,25 @@ function Update-WvdRegistrationToken {
         [parameter(mandatory = $false)]
         [int]$HoursActive = 4
     )
-    try {
-        $registered = Get-AzWvdRegistrationInfo -HostPoolName $HostpoolName -ResourceGroupName $ResourceGroupName 
+    Begin {
+        Write-Verbose "Start searching"
+        AuthenticationCheck
     }
-    catch {
-        Throw "No WVD Hostpool found for $HostpoolName, $_"
-    }
+    Process {
+        try {
+            $registered = Get-AzWvdRegistrationInfo -HostPoolName $HostpoolName -ResourceGroupName $ResourceGroupName 
+        }
+        catch {
+            Throw "No WVD Hostpool found for $HostpoolName, $_"
+        }
 
-    $now = get-date
-    # Create a registration key for adding machines to the WVD Hostpool
-    if (($null -eq $registered.ExpirationTime) -or ($registered.ExpirationTime -le ($now))) {
-        $registered = New-AzWvdRegistrationInfo -HostPoolName $hostpoolName -ResourceGroupName $ResourceGroupName -ExpirationTime $now.AddHours($HoursActive)
-        Write-Verbose "Requesting new token for $HoursActive hour(s)"
+        $now = get-date
+        # Create a registration key for adding machines to the WVD Hostpool
+        if (($null -eq $registered.ExpirationTime) -or ($registered.ExpirationTime -le ($now))) {
+            $registered = New-AzWvdRegistrationInfo -HostPoolName $hostpoolName -ResourceGroupName $ResourceGroupName -ExpirationTime $now.AddHours($HoursActive)
+            Write-Verbose "Requesting new token for $HoursActive hour(s)"
+        }
+        return $registered
     }
-    return $registered
+    End {}
 }

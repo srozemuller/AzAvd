@@ -43,7 +43,7 @@ function Update-WvdSessionhostDrainMode {
     )
     Begin {
         Write-Verbose "Start searching"
-        precheck
+        AuthenticationCheck
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
