@@ -31,13 +31,14 @@ function Generate-Output {
     )
 
     Begin {
-        $ExportBody = [System.Collections.Generic.List[object]]::new()
+        
     }
     Process {
         $FilePath = ".\$FileName.$($Format.tolower())"
         switch ($Format) {
             HTML {
-                $Content.Values | foreach { $ExportBody.Add(($_.Value | ConvertTo-Html -Fragment -PreContent "<p>$($_.Name) information for $HostpoolName</p>")) }
+                $ExportBody = [System.Collections.Generic.List[object]]::new()
+                $Content.Values | foreach { $ExportBody.Add(($_ | ConvertTo-Html -Fragment -PreContent "<p>$($_.Name) information for $HostpoolName</p>")) }
                 $Css = Get-Content -Path '.\Private\exportconfig.css' -Raw
                 $ExportBody = $ExportBody -replace '<td>0</td>', '<td class="WrongStatus">False</td>'
                 $Logo = '<link rel="shortcut icon" href="./Private/wvd-logo.png" />'
@@ -85,6 +86,9 @@ function Generate-Output {
             JSON {
                 $ExportBody.Add(($Content | ConvertTo-Json -Depth 99))
                 $ExportBody | Out-File -FilePath $FilePath
+            }
+            Console {
+                return $Content
             }
         }
     }

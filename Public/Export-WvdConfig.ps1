@@ -18,22 +18,28 @@ function Export-WvdConfig {
     Export-WvdConfig -HostPoolName wvd-hostpool-001 -ResourceGroupName rg-wvd-001 -Format HTML,JSON -Verbose -Filename WVDExport
     
     #>
-    [CmdletBinding(DefaultParameterSetName = 'Hostpool')]
+    [CmdletBinding(DefaultParameterSetName = 'FileExport')]
     param (
-        [parameter(Mandatory, ParameterSetName = 'Hostpool')]
+        [parameter(Mandatory, ParameterSetName = 'FileExport')]
+        [parameter(Mandatory, ParameterSetName = 'Console')]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
 
-        [parameter(Mandatory, ParameterSetName = 'Hostpool')]
+        [parameter(Mandatory, ParameterSetName = 'FileExport')]
+        [parameter(Mandatory, ParameterSetName = 'Console')]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
 
-        [parameter(Mandatory)]
+        [parameter(Mandatory, ParameterSetName = 'FileExport')]
+        [ValidateNotNullOrEmpty()]
         [string]$FileName,
 
-        [parameter(Mandatory)]
+        [parameter(Mandatory, ParameterSetName = 'FileExport')]
         [ValidateSet("JSON", "HTML", "XLSX")]
-        [array]$Format
+        [array]$Format,
+
+        [parameter(Mandatory, ParameterSetName = 'Console')]
+        [switch]$Console
     )
 
     Begin {
@@ -47,10 +53,18 @@ function Export-WvdConfig {
         }
         $Content = [ordered]@{
             Hostpool     = Get-WvdHostPoolInfo @Parameters | Select-Object hostpoolName, hostpoolDescription, hostpoolLocation, resourceGroupName, resourceGroupLocation, domain, startVMOnConnect, expirationTime, validationEnvironment
-            SessionHosts = Get-WvdImageVersionStatus @Parameters | Select-Object vmLatestVersion, vmName, resourceGroup, LastVersion, currentImageVersion, imageName, imageGallery, subscriptionId
+            SessionHosts = Get-WvdImageVersionStatus @Parameters | Select-Object vmLatestVersion, vmName, resourceGroupName, LastVersion, currentImageVersion, imageName, imageGallery, subscriptionId
             Network      = Get-WvdNetworkInfo @Parameters | Select-Object vmName, vmResourceGroup, ipAddress, nicName, nsgName, subnetName
         }
-        $Format | foreach { Generate-Output -Format $_ -Content $Content -FileName $FileName -Hostpoolname $HostpoolName }
+        switch ($PsCmdlet.ParameterSetName) {
+            Console { 
+                return $Content
+            }
+            Default {
+                $Format | foreach { Generate-Output -Format $_ -Content $Content -FileName $FileName -Hostpoolname $HostpoolName }
+            }
+        }
+        
     }
     End {
     }
