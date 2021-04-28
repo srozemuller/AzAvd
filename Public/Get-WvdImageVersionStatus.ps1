@@ -55,13 +55,13 @@ Function Get-WvdImageVersionStatus {
                 }
             }
         }
-        try{
+        try {
             $SessionHosts = Get-AzWvdSessionHost @Parameters
         }
         catch {
             Throw "No sessionhosts found, $_"
         }
-        $sessionhostsIds = [system.String]::Join("`",`"",$SessionHosts.ResourceId)
+        $sessionhostsIds = [system.String]::Join("`",`"", $SessionHosts.ResourceId)
         $Query = 
         'resources 
         | where type =~ "microsoft.compute/virtualmachines" 
@@ -69,7 +69,7 @@ Function Get-WvdImageVersionStatus {
         and id in~ ("'+ $sessionhostsIds + '")
         | extend currentImageVersion = properties.storageProfile.imageReference.exactVersion
         | extend imageName=split(properties.storageProfile.imageReference.id,"/")[10]
-        | project tostring(imageName), tostring(currentImageVersion), vmId=id, vmName=name
+        | project tostring(imageName), tostring(currentImageVersion), vmId=id, vmName=name, hostpoolName = tolower("'+ $HostpoolName + '"), ResourceGroupName = "' + $ResourceGroupName + '"
         | join kind=inner(
         resources
         | where type=~"microsoft.compute/galleries/images/versions"
@@ -80,14 +80,20 @@ Function Get-WvdImageVersionStatus {
         | where type =~ "microsoft.compute/galleries/images/versions"
         | extend versionDetails=split(id,"/")
         | project id, name, imageName=versionDetails[10], imageGallery=versionDetails[8], resourceGroup, subscriptionId
-        | summarize LastVersion=max(tostring(name)) by tostring(imageName) , tostring(imageGallery), resourceGroup, subscriptionId
+        | summarize lastVersion=max(tostring(name)) by tostring(imageName) , tostring(imageGallery), resourceGroup, subscriptionId
         ) on imageName
-        | extend latestVersion = case(name != LastVersion, false, true)
+        | extend latestVersion = case(name != lastVersion, false, true)
         | where latestVersion == true
         ) on imageName
-        | extend vmLatestVersion = case(currentImageVersion != LastVersion, false, true)
+        | extend vmLatestVersion = case(currentImageVersion != lastVersion, false, true)
         | extend vmDetails = split(vmId,"/")
-        | project vmLatestVersion,vmName,imageName, currentImageVersion, vmId, imageGallery, resourceGroup, subscriptionId, LastVersion
+        | join kind=inner (
+        resources | where type =~ "microsoft.desktopvirtualization/hostpools" and name =~ "'+ $HostpoolName + '" and resourceGroup =~ "' + $ResourceGroupName + '"
+        | extend vmTemplate=parse_json(tostring(parse_json(properties.vmTemplate)))
+        | extend registrationInfo=properties.registrationInfo
+        | project hostpoolName=tolower(name), resourceGroup, domain=vmTemplate.domain
+        ) on hostpoolName
+        | project vmLatestVersion,vmName,imageName, currentImageVersion, vmId, imageGallery, resourceGroupName=resourceGroup, subscriptionId, lastVersion, hostpoolName, sessionHostName=strcat(vmName, ".", domain)
         '
         if ($NotLatest.IsPresent) {
             $LatestQuery = '| where vmLatestVersion == false'
