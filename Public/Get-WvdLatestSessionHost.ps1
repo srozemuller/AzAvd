@@ -28,38 +28,36 @@ function Get-WvdLatestSessionHost {
         [ValidateNotNullOrEmpty()]
         [PSCustomObject]$InputObject
     )
-    Begin {
-        Write-Verbose "Start searching"
-        AuthenticationCheck
-    }
-    Process {
-        switch ($PsCmdlet.ParameterSetName) {
-            InputObject { 
-                $Parameters = @{
-                    HostpoolName      = $InputObject.Name
-                    ResourceGroupName = (Get-AzResource -ResourceId $InputObject.Id).ResourceGroupName
-                }
-            }
-            Default {
-                $Parameters = @{
-                    HostPoolName      = $HostpoolName
-                    ResourceGroupName = $ResourceGroupName
-                }
+
+    Write-Verbose "Start searching"
+    AuthenticationCheck
+
+   
+    switch ($PsCmdlet.ParameterSetName) {
+        InputObject { 
+            $Parameters = @{
+                HostpoolName      = $InputObject.Name
+                ResourceGroupName = (Get-AzResource -ResourceId $InputObject.Id).ResourceGroupName
             }
         }
-        try {
-            $SessionHosts = Get-AzWvdSessionHost @Parameters |  Sort-Object ResourceId -Descending
+        Default {
+            $Parameters = @{
+                HostPoolName      = $HostpoolName
+                ResourceGroupName = $ResourceGroupName
+            }
         }
-        catch {
-            Throw "No session hosts found in WVD Hostpool $WvdHostpoolName, $_"
-        }
-        # Convert hosts to highest number to get initial value
-        $All = @{}
-        $Names = $SessionHosts | % { ($_.Name).Split("/")[-1].Split(".")[0] }
-        $Names | % { $All.add([int]($_).Split("-")[-1], $_) }
-        $VirtualMachineName = $All.GetEnumerator() | Select-Object -first 1 -ExpandProperty Value
-        $LatestSessionHost = $SessionHosts | Where-Object { $_.Name -match $VirtualMachineName.name }
-        return $LatestSessionHost
     }
-    End {}
+    try {
+        $SessionHosts = Get-AzWvdSessionHost @Parameters |  Sort-Object ResourceId -Descending
+    }
+    catch {
+        Throw "No session hosts found in WVD Hostpool $WvdHostpoolName, $_"
+    }
+    # Convert hosts to highest number to get initial value
+    $All = [ordered]@{}
+    $Names = $SessionHosts | % { ($_.Name).Split("/")[-1].Split(".")[0] }
+    $Names | % { $All.add([int]($_).Split("-")[-1], $_) }
+    $VirtualMachineName = $All.GetEnumerator() | Sort-Object Name | Select-Object -Last 1 -ExpandProperty Value
+    $LatestSessionHost = $SessionHosts | Where-Object { $_.Name -match $VirtualMachineName }
+    return $LatestSessionHost
 }
