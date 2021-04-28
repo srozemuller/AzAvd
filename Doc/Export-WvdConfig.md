@@ -12,9 +12,15 @@ Exports the WVD environment, based on the hostpool name.
 
 ## SYNTAX
 
+### FileExport (Default)
 ```
 Export-WvdConfig -HostpoolName <String> -ResourceGroupName <String> -FileName <String> -Format <Array>
  [<CommonParameters>]
+```
+
+### Console
+```
+Export-WvdConfig -HostpoolName <String> -ResourceGroupName <String> [-Console] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -66,7 +72,7 @@ Enter the filename. Based on the format parameter the function will create a cor
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: FileExport
 Aliases:
 
 Required: True
@@ -81,12 +87,27 @@ Enter the format you like. For creating more formats use a comma.
 
 ```yaml
 Type: Array
-Parameter Sets: (All)
+Parameter Sets: FileExport
 Aliases:
 
 Required: True
 Position: Named
 Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Console
+Exports the config to the PowerShell console
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Console
+Aliases:
+
+Required: True
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
