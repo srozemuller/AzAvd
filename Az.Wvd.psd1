@@ -119,7 +119,7 @@
             ProjectUri = 'https://github.com/srozemuller/Windows-Virtual-Desktop/tree/master/PowerShell-Modules/WVD-Automation'
 
             # A URL to an icon representing this module.
-            # IconUri = ''
+            IconUri = 'https://github.com/srozemuller/AzWvd/blob/main/Private/wvd-logo.png'
 
             # ReleaseNotes of this module
             # ReleaseNotes = ''
