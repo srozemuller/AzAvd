@@ -39,7 +39,7 @@ function Generate-Output {
             HTML {
                 $ExportBody = [System.Collections.Generic.List[object]]::new()
                 $Content.Values | foreach { $ExportBody.Add(($_ | ConvertTo-Html -Fragment -PreContent "<p>$($_.Name) information for $HostpoolName</p>")) }
-                $Css = Get-Content -Path '.\Private\exportconfig.css' -Raw
+                $Css = Get-Content -Path "$PSScriptRoot\..\Private\exportconfig.css" -Raw
                 $ExportBody = $ExportBody -replace '<td>0</td>', '<td class="WrongStatus">False</td>'
                 $Logo = '<link rel="shortcut icon" href="./Private/wvd-logo.png" />'
                 $style = ("<style>`n") + $Css + ("`n</style>")
