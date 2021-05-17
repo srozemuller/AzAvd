@@ -12,7 +12,7 @@
     RootModule             = 'Az.Wvd.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '1.0.0'
+    ModuleVersion          = '1.0.1'
 
     # Supported PSEditions
     CompatiblePSEditions = 'Core', 'Desktop'
@@ -30,7 +30,7 @@
     Copyright              = '(c) All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description            = 'High level automation cmdlets for Windows Virtual Desktop'
+    Description            = 'For managing and automate Windows Virtual Desktop environments. This module can also be used for housekeeping and manageing all the WVD related Azure resources.'
 
     # Minimum version of the PowerShell engine required by this module
     PowerShellVersion      = '5.1'
