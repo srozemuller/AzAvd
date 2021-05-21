@@ -1,4 +1,4 @@
-requires -module @{ModuleName = 'Az.ResourceGraph'; ModuleVersion = '0.7.6'}
+#requires -module @{ModuleName = 'Az.ResourceGraph'; ModuleVersion = '0.7.6'}
 Function Get-WvdImageVersionStatus {
     <#
     .SYNOPSIS
