@@ -11,6 +11,8 @@ function Get-WvdLatestSessionHost {
     Enter the WVD Hostpool resourcegroup name
     .PARAMETER InputObject
     You can put the hostpool object in here. 
+    .PARAMETER NumOnly
+    With this switch parameter you will set, you will get the next sessionhost number returned.
     .EXAMPLE
     Get-WvdLatestSessionHost -WvdHostpoolName wvd-hostpool -ResourceGroupName wvd-resourcegroup
     #>
