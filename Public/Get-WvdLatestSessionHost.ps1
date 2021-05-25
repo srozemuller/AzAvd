@@ -24,6 +24,9 @@ function Get-WvdLatestSessionHost {
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
 
+        [parameter(ParameterSetName = 'Parameters')]
+        [switch]$NumOnly,
+
         [parameter(Mandatory, ValueFromPipeline, ParameterSetName = 'InputObject')]
         [ValidateNotNullOrEmpty()]
         [PSCustomObject]$InputObject
@@ -31,8 +34,6 @@ function Get-WvdLatestSessionHost {
 
     Write-Verbose "Start searching"
     AuthenticationCheck
-
-   
     switch ($PsCmdlet.ParameterSetName) {
         InputObject { 
             $Parameters = @{
@@ -57,7 +58,13 @@ function Get-WvdLatestSessionHost {
     $All = [ordered]@{}
     $Names = $SessionHosts | % { ($_.Name).Split("/")[-1].Split(".")[0] }
     $Names | % { $All.add([int]($_).Split("-")[-1], $_) }
+    $InitialNumber = ($All.GetEnumerator() | Sort-Object Name | Select-Object -Last 1).Key + 1
     $VirtualMachineName = $All.GetEnumerator() | Sort-Object Name | Select-Object -Last 1 -ExpandProperty Value
     $LatestSessionHost = $SessionHosts | Where-Object { $_.Name -match $VirtualMachineName }
-    return $LatestSessionHost
+    if ($NumOnly) {
+        return $InitialNumber
+    }
+    else {
+        return $LatestSessionHost
+    }
 }
