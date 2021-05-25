@@ -14,7 +14,7 @@ Gets the latest session host from the WVD Hostpool
 
 ### Parameters (Default)
 ```
-Get-WvdLatestSessionHost -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+Get-WvdLatestSessionHost -HostpoolName <String> -ResourceGroupName <String> [-NumOnly] [<CommonParameters>]
 ```
 
 ### InputObject
@@ -61,6 +61,21 @@ Aliases:
 Required: True
 Position: Named
 Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -NumOnly
+With this switch parameter you will set, you will get the next sessionhost number returned.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Parameters
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
