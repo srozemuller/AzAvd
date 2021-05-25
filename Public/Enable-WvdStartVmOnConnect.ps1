@@ -33,16 +33,16 @@ function Enable-WvdStartVmOnConnect {
     }
     Process {
         try {
-            $HostpoolParameters = @{
+            $parameters = @{
                 HostPoolName      = $HostpoolName 
                 ResourceGroupName = $ResourceGroupName
             }
-            $Hostpool = Get-AzWvdHostPool @HostpoolParameters
+            $Hostpool = Get-AzWvdHostPool @parameters
             if ($Force){
-                Update-AzWvdHostPool @HostpoolParameters -ValidationEnvironment:$true
+                Update-AzWvdHostPool @parameters -ValidationEnvironment:$true
             }
-            if (($Hostpool.HostPoolType -eq "Personal") -and ($Hostpool.ValidationEnvironment -eq $true)) {
-                Update-AzWvdHostPool @HostpoolParameters -StartVMOnConnect:$true
+            if ($Hostpool.ValidationEnvironment -eq $true) {
+                Update-AzWvdHostPool @parameters -StartVMOnConnect:$true
                 Write-Verbose "Hostpool $($Hostpool.Hostpoolname) updated, StartVMOnConnect is set to $true"
             }
         }
@@ -56,10 +56,9 @@ function Enable-WvdStartVmOnConnect {
         $ServicePrincipalURL = "$($GraphResource)/beta/servicePrincipals?`$filter=displayName eq 'Windows Virtual Desktop'"
         $ServicePrincipals = Invoke-RestMethod -Method GET -Uri $ServicePrincipalURL -Headers $GraphHeader
         #Endregion
-
-
-        $ScopeResourceGroup = Get-AzResource -ResourceID (Get-WvdLatestSessionHost @HostpoolParameters).ResourceGroupName
-        $Scope = "subscriptions/$($context.Subscription.Id)/Resourcegroups/$($ScopeResourceGroup.ResourceGroupName)"
+        $SubscriptionId = [Microsoft.Azure.Commands.Common.Authentication.Abstractions.AzureRmProfileProvider]::Instance.Profile.DefaultContext.Subscription.Id
+        $ScopeResourceGroup = (Get-AzResource -ResourceID (Get-WvdLatestSessionHost @parameters).ResourceId).ResourceGroupName
+        $Scope = "subscriptions/$($SubscriptionId)/Resourcegroups/$ScopeResourceGroup"
         $AzureResource = "https://management.azure.com"
         $AzureHeader = GetAuthToken -resource $AzureResource
 
@@ -97,7 +96,7 @@ function Enable-WvdStartVmOnConnect {
         # New assignment GUID
         $ServicePrincipals.value.id | foreach {
             $AssignGuid = (New-Guid).Guid
-            $AssignURL = "$AzureResource/$Scope/providers/Microsoft.Authorization/roleAssignments/$($AssignGuid)?api-version=2015-07-01"
+            $AssignURL = "$AzureResource/$Scope/providers/Microsoft.Authorization/roleAssignments/$($AssignGuid)?api-version=2021-04-01-preview"
             $assignBody = @{
                 properties = @{
                     roleDefinitionId = $CustomRole.id
