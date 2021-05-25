@@ -47,7 +47,7 @@ function Enable-WvdStartVmOnConnect {
             }
         }
         catch {
-            Throw "The hostpooltype for provided hostpool $Hostpoolname must be Personal"
+            Throw "The hostpooltype for provided hostpool $Hostpoolname must be a validation enviroment"
         }
 
         #Region get Windows Virtual Desktop Service Principal
