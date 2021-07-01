@@ -1,19 +1,27 @@
 ---
-external help file: Az.Wvd-help.xml
-Module Name: Az.Wvd
+external help file: Az.Avd-help.xml
+Module Name: Az.Avd
 online version:
 schema: 2.0.0
 ---
 
-# Enable-WvdStartVmOnConnect
+# Enable-AvdStartVmOnConnect
 
 ## SYNOPSIS
-Enable WVD Start VM on Connect
+Enable AVD Start VM on Connect
 
 ## SYNTAX
 
+### Initial (Default)
 ```
-Enable-WvdStartVmOnConnect [-HostpoolName <String>] [-ResourceGroupName <String>] [-Force] [<CommonParameters>]
+Enable-AvdStartVmOnConnect [-HostpoolName <String>] [-ResourceGroupName <String>]
+ [-HostsResourceGroup <String>] [-RoleName <String>] [-Force] [<CommonParameters>]
+```
+
+### Update
+```
+Enable-AvdStartVmOnConnect [-HostpoolName <String>] [-ResourceGroupName <String>] -HostsResourceGroup <String>
+ [-RoleName <String>] [-Force] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -24,7 +32,7 @@ It will create a new role (WVD Start VM on connect) in the Azure AD
 
 ### EXAMPLE 1
 ```
-Enable-WvdStartVmOnConnect -HostPoolName wvd-hostpool-001 -ResourceGroupName rg-wvd-001
+Enable-AvdStartVmOnConnect -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
 ```
 
 ## PARAMETERS
@@ -46,6 +54,48 @@ Accept wildcard characters: False
 
 ### -ResourceGroupName
 Enter the name of the resourcegroup where the hostpool resides in.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -HostsResourceGroup
+{{ Fill HostsResourceGroup Description }}
+
+```yaml
+Type: String
+Parameter Sets: Initial
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+```yaml
+Type: String
+Parameter Sets: Update
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -RoleName
+{{ Fill RoleName Description }}
 
 ```yaml
 Type: String

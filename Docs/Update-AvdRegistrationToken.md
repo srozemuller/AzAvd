@@ -1,11 +1,11 @@
 ---
-external help file: Az.Wvd-help.xml
-Module Name: Az.Wvd
+external help file: Az.Avd-help.xml
+Module Name: Az.Avd
 online version:
 schema: 2.0.0
 ---
 
-# Update-WvdRegistrationToken
+# Update-AvdRegistrationToken
 
 ## SYNOPSIS
 Will create a new registration token which you need to onboard new session hosts
@@ -13,7 +13,7 @@ Will create a new registration token which you need to onboard new session hosts
 ## SYNTAX
 
 ```
-Update-WvdRegistrationToken [-HostpoolName] <String> [-ResourceGroupName] <String> [[-HoursActive] <Int32>]
+Update-AvdRegistrationToken [-HostpoolName] <String> [-ResourceGroupName] <String> [[-HoursActive] <Int32>]
  [<CommonParameters>]
 ```
 

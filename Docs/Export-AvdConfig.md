@@ -1,11 +1,11 @@
 ---
-external help file: Az.Wvd-help.xml
-Module Name: Az.Wvd
+external help file: Az.Avd-help.xml
+Module Name: Az.Avd
 online version:
 schema: 2.0.0
 ---
 
-# Export-WvdConfig
+# Export-AvdConfig
 
 ## SYNOPSIS
 Exports the WVD environment, based on the hostpool name.
@@ -14,13 +14,13 @@ Exports the WVD environment, based on the hostpool name.
 
 ### FileExport (Default)
 ```
-Export-WvdConfig -HostpoolName <String> -ResourceGroupName <String> -FileName <String> -Format <Array>
+Export-AvdConfig -HostpoolName <String> -ResourceGroupName <String> -FileName <String> -Format <Array>
  [<CommonParameters>]
 ```
 
 ### Console
 ```
-Export-WvdConfig -HostpoolName <String> -ResourceGroupName <String> [-Console] [<CommonParameters>]
+Export-AvdConfig -HostpoolName <String> -ResourceGroupName <String> [-Console] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,12 +28,15 @@ The function will help you exporting the complete WVD environment to common outp
 
 ## EXAMPLES
 
-### Example 1
+### EXAMPLE 1
 ```
 Export-WvdConfig -Hostpoolname wvd-hostpool-001 -ResourceGroupName rg-wvd-001 -Format HTML -Verbose -Filename WVDExport
 ```
 
-Exports the current configuration into a HTML file
+### EXAMPLE 2
+```
+Export-WvdConfig -HostPoolName wvd-hostpool-001 -ResourceGroupName rg-wvd-001 -Format HTML,JSON -Verbose -Filename WVDExport
+```
 
 ## PARAMETERS
 
@@ -68,7 +71,9 @@ Accept wildcard characters: False
 ```
 
 ### -FileName
-Enter the filename. Based on the format parameter the function will create a correct file. Default filepath is in the execution directory.
+Enter the filename.
+Based on the format parameter the function will create a correct file.
+Default filepath is in the execution directory.
 
 ```yaml
 Type: String
@@ -83,7 +88,8 @@ Accept wildcard characters: False
 ```
 
 ### -Format
-Enter the format you like. For creating more formats use a comma.
+Enter the format you like.
+For creating more formats use a comma.
 
 ```yaml
 Type: Array
@@ -98,7 +104,7 @@ Accept wildcard characters: False
 ```
 
 ### -Console
-Exports the config to the PowerShell console
+{{ Fill Console Description }}
 
 ```yaml
 Type: SwitchParameter
@@ -117,10 +123,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### System.Management.Automation.PSObject
 ## OUTPUTS
 
-### System.Object
 ## NOTES
 
 ## RELATED LINKS

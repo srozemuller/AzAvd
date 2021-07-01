@@ -1,11 +1,11 @@
 ---
-external help file: Az.Wvd-help.xml
-Module Name: Az.Wvd
+external help file: Az.Avd-help.xml
+Module Name: Az.Avd
 online version:
 schema: 2.0.0
 ---
 
-# Get-WvdLatestSessionHost
+# Get-AvdLatestSessionHost
 
 ## SYNOPSIS
 Gets the latest session host from the WVD Hostpool
@@ -14,12 +14,12 @@ Gets the latest session host from the WVD Hostpool
 
 ### Parameters (Default)
 ```
-Get-WvdLatestSessionHost -HostpoolName <String> -ResourceGroupName <String> [-NumOnly] [<CommonParameters>]
+Get-AvdLatestSessionHost -HostpoolName <String> -ResourceGroupName <String> [-NumOnly] [<CommonParameters>]
 ```
 
 ### InputObject
 ```
-Get-WvdLatestSessionHost -InputObject <PSObject> [<CommonParameters>]
+Get-AvdLatestSessionHost -InputObject <PSObject> [<CommonParameters>]
 ```
 
 ## DESCRIPTION

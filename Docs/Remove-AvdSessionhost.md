@@ -1,43 +1,37 @@
 ---
-external help file: Az.Wvd-help.xml
-Module Name: Az.Wvd
+external help file: Az.Avd-help.xml
+Module Name: Az.Avd
 online version:
 schema: 2.0.0
 ---
 
-# Get-WvdSessionHostResources
+# Remove-AvdSessionhost
 
 ## SYNOPSIS
-Gets the Virtual Machines Azure resource from a WVD Session Host
+Updates sessionhosts for accepting or denying connections.
 
 ## SYNTAX
 
-### Sessionhost
 ```
-Get-WvdSessionHostResources -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
+Remove-AvdSessionhost -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
  [<CommonParameters>]
 ```
 
-### Hostpool
-```
-Get-WvdSessionHostResources -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
-```
-
 ## DESCRIPTION
-The function will help you getting the virtual machine resource information which is behind the WVD Session Host
+The function will update sessionhosts drainmode to true or false.
+This can be one sessionhost or all of them.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-WvdSessionHostResources -SessionHost SessionHostObject
-Add a comment to existing incidnet
+Remove-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.wvd.domain -AllowNewSession $true
 ```
 
 ## PARAMETERS
 
 ### -HostpoolName
-{{ Fill HostpoolName Description }}
+Enter the WVD Hostpool name
 
 ```yaml
 Type: String
@@ -52,7 +46,7 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-{{ Fill ResourceGroupName Description }}
+Enter the WVD Hostpool resourcegroup name
 
 ```yaml
 Type: String
@@ -67,11 +61,11 @@ Accept wildcard characters: False
 ```
 
 ### -SessionHostName
-{{ Fill SessionHostName Description }}
+Enter the sessionhosts name
 
 ```yaml
 Type: String
-Parameter Sets: Sessionhost
+Parameter Sets: (All)
 Aliases:
 
 Required: True

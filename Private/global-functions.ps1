@@ -32,3 +32,15 @@ function GetAuthToken($resource) {
     }
     return $authHeader
 }
+
+function Create-CategoryArray ($Categories) {
+    $categoryArray = @()
+    $Categories | foreach {
+        $category = @{
+            Category = $_
+            Enabled  = $true
+        }
+        $categoryArray += ($category)
+    }
+    return  $categoryArray    
+}

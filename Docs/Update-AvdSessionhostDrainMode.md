@@ -1,11 +1,11 @@
 ---
-external help file: Az.Wvd-help.xml
-Module Name: Az.Wvd
+external help file: Az.Avd-help.xml
+Module Name: Az.Avd
 online version:
 schema: 2.0.0
 ---
 
-# Update-WvdSessionhostDrainMode
+# Update-AvdSessionhostDrainMode
 
 ## SYNOPSIS
 Updates sessionhosts for accepting or denying connections.
@@ -14,12 +14,12 @@ Updates sessionhosts for accepting or denying connections.
 
 ### InputObject
 ```
-Update-WvdSessionhostDrainMode -InputObject <PSObject> -AllowNewSession <Boolean> [<CommonParameters>]
+Update-AvdSessionhostDrainMode -InputObject <PSObject> -AllowNewSession <Boolean> [<CommonParameters>]
 ```
 
 ### Parameters
 ```
-Update-WvdSessionhostDrainMode -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
+Update-AvdSessionhostDrainMode -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
  -AllowNewSession <Boolean> [<CommonParameters>]
 ```
 

@@ -1,11 +1,11 @@
 ---
-external help file: Az.Wvd-help.xml
-Module Name: Az.Wvd
+external help file: Az.Avd-help.xml
+Module Name: Az.Avd
 online version:
 schema: 2.0.0
 ---
 
-# Get-WvdHostPoolInfo
+# Get-AvdHostPoolInfo
 
 ## SYNOPSIS
 Get WVD Hostpool information, including the underlaying session hosts
@@ -13,7 +13,7 @@ Get WVD Hostpool information, including the underlaying session hosts
 ## SYNTAX
 
 ```
-Get-WvdHostPoolInfo [-HostPoolName] <String> [-ResourceGroupName] <String> [<CommonParameters>]
+Get-AvdHostPoolInfo [-HostPoolName] <String> [-ResourceGroupName] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION

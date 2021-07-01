@@ -1,37 +1,41 @@
 ---
-external help file: Az.Wvd-help.xml
-Module Name: Az.Wvd
+external help file: Az.Avd-help.xml
+Module Name: Az.Avd
 online version:
 schema: 2.0.0
 ---
 
-# Get-WvdImageVersionStatus
+# Get-AvdNetworkInfo
 
 ## SYNOPSIS
-Gets the image version from where the session host is started from.
+Gets the sessionhost network information
 
 ## SYNTAX
 
 ### Hostpool (Default)
 ```
-Get-WvdImageVersionStatus -HostpoolName <String> -ResourceGroupName <String> [-NotLatest] [<CommonParameters>]
+Get-AvdNetworkInfo -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
 ```
 
 ### Sessionhost
 ```
-Get-WvdImageVersionStatus -HostpoolName <String> -ResourceGroupName <String> [-SessionHostName <String>]
- [-NotLatest] [<CommonParameters>]
+Get-AvdNetworkInfo -HostpoolName <String> -ResourceGroupName <String> [-SessionHostName <String>]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The function will help you getting insights if there are session hosts started from an old version in relation to the Shared Image Gallery
+The function will help you getting insights about the WVD network configuration.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-WvdImageVersionStatus -WvdHostpoolName wvd-hostpool -ResourceGroupName wvd-resourcegroup
-Get-AzWvdHostpool -WvdHostpoolName wvd-hostpool -ResourceGroupName wvd-resourcegroup | Get-WvdImageVersionStatus
+-ResourceGroupName <string>
+```
+
+### EXAMPLE 2
+```
+-ResourceGroupName <string> -SessionHostName <string>
 ```
 
 ## PARAMETERS
@@ -67,7 +71,7 @@ Accept wildcard characters: False
 ```
 
 ### -SessionHostName
-{{ Fill SessionHostName Description }}
+This parameter accepts a single sessionhost name
 
 ```yaml
 Type: String
@@ -77,21 +81,6 @@ Aliases:
 Required: False
 Position: Named
 Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -NotLatest
-This is a switch parameter which let you control the output to show only the sessionhosts which are not started from the latest version.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

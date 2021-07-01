@@ -1,42 +1,43 @@
 ---
-external help file: Az.Wvd-help.xml
-Module Name: Az.Wvd
+external help file: Az.Avd-help.xml
+Module Name: Az.Avd
 online version:
 schema: 2.0.0
 ---
 
-# Get-WvdNetworkInfo
+# Get-AvdSessionHostResources
 
 ## SYNOPSIS
-Gets the sessionhost network information
+Gets the Virtual Machines Azure resource from a WVD Session Host
 
 ## SYNTAX
 
-### Hostpool (Default)
+### Sessionhost (Default)
 ```
-Get-WvdNetworkInfo -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
-```
-
-### Sessionhost
-```
-Get-WvdNetworkInfo -HostpoolName <String> -ResourceGroupName <String> [-SessionHostName <String>]
+Get-AvdSessionHostResources -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
  [<CommonParameters>]
 ```
 
+### Hostpool
+```
+Get-AvdSessionHostResources -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+```
+
 ## DESCRIPTION
-The function will help you getting insights about the WVD network configuration.
+The function will help you getting the virtual machine resource information which is behind the WVD Session Host
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-WvdNetworkInfo -HostpoolName wvd-hostpool -ResourceGroupName wvd-resourcegroup
+Get-WvdSessionHostResources -SessionHost SessionHostObject
+Add a comment to existing incidnet
 ```
 
 ## PARAMETERS
 
 ### -HostpoolName
-Enter the WVD Hostpool name
+{{ Fill HostpoolName Description }}
 
 ```yaml
 Type: String
@@ -51,7 +52,7 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the WVD Hostpool resourcegroup name
+{{ Fill ResourceGroupName Description }}
 
 ```yaml
 Type: String
@@ -66,14 +67,14 @@ Accept wildcard characters: False
 ```
 
 ### -SessionHostName
-This parameter accepts a single sessionhost name
+{{ Fill SessionHostName Description }}
 
 ```yaml
 Type: String
 Parameter Sets: Sessionhost
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False
