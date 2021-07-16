@@ -1,9 +1,9 @@
 function Remove-AvdSessionhost {
     <#
     .SYNOPSIS
-    Updates sessionhosts for accepting or denying connections.
+    Removing sessionhosts from an Azure Virtual Desktop hostpool.
     .DESCRIPTION
-    The function will update sessionhosts drainmode to true or false. This can be one sessionhost or all of them.
+    The function will search for sessionhosts and will remove them from the Azure Virtual Desktop hostpool.
     .PARAMETER HostpoolName
     Enter the WVD Hostpool name
     .PARAMETER ResourceGroupName
@@ -11,7 +11,7 @@ function Remove-AvdSessionhost {
     .PARAMETER SessionHostName
     Enter the sessionhosts name
     .EXAMPLE
-     Remove-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.wvd.domain -AllowNewSession $true 
+    Remove-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.wvd.domain
     #>
     [CmdletBinding()]
     param
@@ -31,11 +31,13 @@ function Remove-AvdSessionhost {
     Begin {
         Write-Verbose "Start searching"
         AuthenticationCheck
+        $token = GetAuthToken -resource "https://management.azure.com"
+        $apiVersion = "?api-version=2019-12-10-preview"
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
             Parameters {
-                $url = "https://management.azure.com/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + "/sessionHosts/" + $SessionHostName + "?api-version=2019-12-10-preview"
+                $url = "https://management.azure.com/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + "/sessionHosts/" + $SessionHostName + $apiVersion
                 $parameters = @{
                     uri     = $url
                     Method  = "Delete"

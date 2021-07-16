@@ -50,6 +50,7 @@ function Update-AvdDiagnostics {
     )
     Begin {
         AuthenticationCheck
+        $token = GetAuthToken -resource "https://management.azure.com"
         $parameters = @{
             HostPoolName      = $HostpoolName 
             ResourceGroupName = $ResourceGroupName

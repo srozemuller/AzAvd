@@ -59,6 +59,7 @@ function Enable-AvdDiagnostics {
     )
     Begin {
        AuthenticationCheck
+       $token = GetAuthToken -resource "https://management.azure.com"
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
