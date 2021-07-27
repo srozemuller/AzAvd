@@ -12,7 +12,7 @@
     RootModule             = 'Az.Avd.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '1.2.1'
+    ModuleVersion          = '1.2.2'
 
     # Supported PSEditions
     CompatiblePSEditions   = 'Core', 'Desktop'
@@ -85,6 +85,7 @@
         'Get-AvdLatestSessionHost',
         'Get-AvdSessionHostResources',
         "Remove-AvdSessionHost",
+        "Update-AvdHostpool",
         'Update-AvdDiagnostics',
         'Update-AvdRegistrationToken',
         'Update-AvdSessionhostDrainMode'
