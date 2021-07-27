@@ -57,12 +57,18 @@ function Get-AvdLatestSessionHost {
         Throw "No session hosts found in WVD Hostpool $WvdHostpoolName, $_"
     }
     # Convert hosts to highest number to get initial value
-    $All = [ordered]@{}
-    $Names = $SessionHosts | % { ($_.Name).Split("/")[-1].Split(".")[0] }
-    $Names | % { $All.add([int]($_).Split("-")[-1], $_) }
-    $InitialNumber = ($All.GetEnumerator() | Sort-Object Name | Select-Object -Last 1).Key + 1
-    $VirtualMachineName = $All.GetEnumerator() | Sort-Object Name | Select-Object -Last 1 -ExpandProperty Value
-    $LatestSessionHost = $SessionHosts | Where-Object { $_.Name -match $VirtualMachineName }
+    if ($null -eq $SessionHosts) {
+        $InitialNumber = 0
+    }
+    else {
+        $All = [ordered]@{}
+        $Names = $SessionHosts | % { ($_.Name).Split("/")[-1].Split(".")[0] }
+        $Names | % { $All.add([int]($_).Split("-")[-1], $_) }
+    
+        $InitialNumber = ($All.GetEnumerator() | Sort-Object Name | Select-Object -Last 1).Key + 1
+        $VirtualMachineName = $All.GetEnumerator() | Sort-Object Name | Select-Object -Last 1 -ExpandProperty Value
+        $LatestSessionHost = $SessionHosts | Where-Object { $_.Name -match $VirtualMachineName }
+    }
     if ($NumOnly) {
         return $InitialNumber
     }
