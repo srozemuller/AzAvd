@@ -54,8 +54,6 @@ function Update-AvdHostpool {
         AuthenticationCheck
         $token = GetAuthToken -resource "https://management.azure.com"
         $apiVersion = "?api-version=2019-12-10-preview"
-    }
-    Process {
         $url = "https://management.azure.com/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + $apiVersion
         $parameters = @{
             uri     = $url
@@ -74,8 +72,9 @@ function Update-AvdHostpool {
         if ($loadBalancerType){$body.properties.Add("loadBalancerType", $loadBalancerType)}
         if ($validationEnvironment){$body.properties.Add("validationEnvironment", $validationEnvironment)}
         if ($maxSessionLimit){$body.properties.Add("maxSessionLimit", $maxSessionLimit)}
-
-        switch ($PsCmdlet.ParameterSetName) {
+    }
+    Process {
+         switch ($PsCmdlet.ParameterSetName) {
             Change {
                 Write-Verbose "Force used, overwriting custom RDP properties."
                 Write-Verbose "Old properties where: $customRdpProperty"
