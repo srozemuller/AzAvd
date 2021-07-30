@@ -8,7 +8,7 @@ schema: 2.0.0
 # Get-AvdSessionHost
 
 ## SYNOPSIS
-Updates sessionhosts for accepting or denying connections.
+Gets the current AVD Session hosts from a specific hostpool.
 
 ## SYNTAX
 
@@ -24,8 +24,7 @@ Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -SessionHo
 ```
 
 ## DESCRIPTION
-The function will update sessionhosts drainmode to true or false.
-This can be one sessionhost or all of them.
+This function will grab all the sessionhost from a specific Azure Virtual Desktop hostpool.
 
 ## EXAMPLES
 

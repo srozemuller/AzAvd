@@ -5,48 +5,40 @@ online version:
 schema: 2.0.0
 ---
 
-# Enable-AvdDiagnostics
+# Update-AvdHostpool
 
 ## SYNOPSIS
-Enables the AVD Diagnostics and will send it to a new LogAnalytics workspace
+Removing sessionhosts from an Azure Virtual Desktop hostpool.
 
 ## SYNTAX
 
-### Existing (Default)
 ```
-Enable-AvdDiagnostics [-HostpoolName <String>] [-ResourceGroupName <String>] [-LAWorkspace <String>]
- [-LaResourceGroupName <String>] [-Categories <Array>] [<CommonParameters>]
-```
-
-### Initial
-```
-Enable-AvdDiagnostics [-HostpoolName <String>] [-ResourceGroupName <String>] [-LAWorkspace <String>]
- [-LASku <String>] [-LaResourceGroupName <String>] [-diagnosticsName <String>] [-Categories <Array>]
- [-RetentionInDays <Int32>] [<CommonParameters>]
+Update-AvdHostpool -HostpoolName <String> -ResourceGroupName <String> [-customRdpProperty <String>]
+ [-friendlyName <String>] [-loadBalancerType <String>] [-validationEnvironment <Boolean>]
+ [-maxSessionLimit <Int32>] [-Force] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The function will enable AVD diagnostics for a hostpool.
-It will create a new Log Analytics workspace if no existing workspace is provided.
+The function will search for sessionhosts and will remove them from the Azure Virtual Desktop hostpool.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Enable-AvdDiagnostics -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -LAWorkspace 'la-avd-workspace' -Categories ("Checkpoint","Error")
+Update-AvdHostpool
 ```
 
 ## PARAMETERS
 
 ### -HostpoolName
-Enter the name of the hostpool you want to enable start vm on connnect.
+Enter the WVD Hostpool name
 
 ```yaml
 Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False
@@ -54,7 +46,22 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the name of the resourcegroup where the hostpool resides in.
+Enter the WVD Hostpool resourcegroup name
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -customRdpProperty
+If needed fill in the custom rdp properties (for example: targetisaadjoined:i:1 )
 
 ```yaml
 Type: String
@@ -68,8 +75,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -LAWorkspace
-Enter the name of the Log Analytics Workspace
+### -friendlyName
+Change the host pool friendly name
 
 ```yaml
 Type: String
@@ -83,23 +90,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -LASku
-Enter the name of the Log Analytics SKU
-
-```yaml
-Type: String
-Parameter Sets: Initial
-Aliases:
-
-Required: False
-Position: Named
-Default value: Standard
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -LaResourceGroupName
-Enter the name of the Log Analyics Workspace resource group
+### -loadBalancerType
+Change the host pool loadBalancerType
 
 ```yaml
 Type: String
@@ -113,47 +105,48 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -diagnosticsName
-The diagnostics name shown in the hostpool diagnostics overview
+### -validationEnvironment
+Change the host pool validation environment
 
 ```yaml
-Type: String
-Parameter Sets: Initial
-Aliases:
-
-Required: False
-Position: Named
-Default value: AVD-Diagnostics
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Categories
-The categories you like to save in Log Analytics
-
-```yaml
-Type: Array
+Type: Boolean
 Parameter Sets: (All)
 Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -RetentionInDays
-How long should the data be saved
+### -maxSessionLimit
+Change the host pool max session limit (max 999999)
 
 ```yaml
 Type: Int32
-Parameter Sets: Initial
+Parameter Sets: (All)
 Aliases:
 
 Required: False
 Position: Named
 Default value: 0
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Force
+use the force parameter if you want to override the current customrdpproperties.
+Otherwise it will add the provided properties.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

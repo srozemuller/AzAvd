@@ -8,7 +8,7 @@ schema: 2.0.0
 # Remove-AvdSessionhost
 
 ## SYNOPSIS
-Updates sessionhosts for accepting or denying connections.
+Removing sessionhosts from an Azure Virtual Desktop hostpool.
 
 ## SYNTAX
 
@@ -18,14 +18,13 @@ Remove-AvdSessionhost -HostpoolName <String> -ResourceGroupName <String> -Sessio
 ```
 
 ## DESCRIPTION
-The function will update sessionhosts drainmode to true or false.
-This can be one sessionhost or all of them.
+The function will search for sessionhosts and will remove them from the Azure Virtual Desktop hostpool.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Remove-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.wvd.domain -AllowNewSession $true
+Remove-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.wvd.domain
 ```
 
 ## PARAMETERS

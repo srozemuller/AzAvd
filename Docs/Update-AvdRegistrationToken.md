@@ -24,14 +24,14 @@ The function will create a new registration token, if needed, and will return th
 
 ### EXAMPLE 1
 ```
-New-WvdRegistrationToken -WvdHostpoolName wvd-hostpool -ResourceGroupName wvd-resourcegroup
+Update-AvdRegistrationToken -HostpoolName avd-hostpool -ResourceGroupName avd-resourcegroup
 Add a comment to existing incidnet
 ```
 
 ## PARAMETERS
 
 ### -HostpoolName
-Enter the WVD Hostpool name
+Enter the AVD Hostpool name
 
 ```yaml
 Type: String
@@ -46,7 +46,7 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the WVD Hostpool resourcegroup name
+Enter the AVD Hostpool resourcegroup name
 
 ```yaml
 Type: String
