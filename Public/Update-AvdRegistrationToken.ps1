@@ -5,13 +5,13 @@ function Update-AvdRegistrationToken {
     .DESCRIPTION
     The function will create a new registration token, if needed, and will return the value which you need to onboard new session hosts
     .PARAMETER HostpoolName
-    Enter the WVD Hostpool name
+    Enter the AVD Hostpool name
     .PARAMETER ResourceGroupName
-    Enter the WVD Hostpool resourcegroup name
+    Enter the AVD Hostpool resourcegroup name
     .PARAMETER HoursActive
     Optional, give the token availability in hours. Default 4.
     .EXAMPLE
-    New-WvdRegistrationToken -WvdHostpoolName wvd-hostpool -ResourceGroupName wvd-resourcegroup
+    Update-AvdRegistrationToken -HostpoolName avd-hostpool -ResourceGroupName avd-resourcegroup
     Add a comment to existing incidnet
     #>
     [CmdletBinding()]
@@ -29,24 +29,30 @@ function Update-AvdRegistrationToken {
         [int]$HoursActive = 4
     )
     Begin {
-        Write-Verbose "Start searching"
+        Write-Verbose "Start updating registration token"
         AuthenticationCheck
+        $token = GetAuthToken -resource "https://management.azure.com"
+        $apiVersion = "?api-version=2019-12-10-preview"
+        $hostpoolUrl = "https://management.azure.com/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + $apiVersion
     }
     Process {
-        try {
-            $registered = Get-AzWvdRegistrationInfo -HostPoolName $HostpoolName -ResourceGroupName $ResourceGroupName 
-        }
-        catch {
-            Throw "No WVD Hostpool found for $HostpoolName, $_"
-        }
-
         $now = get-date
-        # Create a registration key for adding machines to the WVD Hostpool
-        if (($null -eq $registered.ExpirationTime) -or ($registered.ExpirationTime -le ($now))) {
-            $registered = New-AzWvdRegistrationInfo -HostPoolName $hostpoolName -ResourceGroupName $ResourceGroupName -ExpirationTime $now.AddHours($HoursActive)
-            Write-Verbose "Requesting new token for $HoursActive hour(s)"
+        $body = @{
+            properties = @{
+                registrationInfo = @{
+                    expirationTime = $now.AddHours($HoursActive)
+                    registrationTokenOperation = "Update"
+                }
+            }
         }
-        return $registered
+        $parameters = @{
+            uri     = $hostpoolUrl
+            Method  = "PATCH"
+            Headers = $token
+            body    = $body | ConvertTo-Json
+        }
+        $results = Invoke-RestMethod @parameters
+        return $results
     }
     End {}
 }
