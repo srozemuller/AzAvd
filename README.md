@@ -4,6 +4,12 @@ This module will help you managing an Azure Virtual Desktop environment and all 
 |--|--|
 |v1.2.2 | 5.1 |
 
+## Install module
+To install the module in PowerShell use the command below
+
+    Install-Module Az.Avd
+    Import-Module Az.Avd
+
 The module consists of the following commands:
 
 ## Commands
