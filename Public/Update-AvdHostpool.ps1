@@ -10,8 +10,20 @@ function Update-AvdHostpool {
     Enter the WVD Hostpool resourcegroup name
     .PARAMETER SessionHostName
     Enter the sessionhosts name
+    .PARAMETER customRdpProperty
+    If needed fill in the custom rdp properties (for example: targetisaadjoined:i:1 )
+    .PARAMETER friendlyName
+    Change the host pool friendly name
+    .PARAMETER loadBalancerType
+    Change the host pool loadBalancerType   
+    .PARAMETER validationEnvironment
+    Change the host pool validation environment   
+    .PARAMETER maxSessionLimit
+    Change the host pool max session limit (max 999999)
+    .PARAMETER Force
+    use the force parameter if you want to override the current customrdpproperties. Otherwise it will add the provided properties.
     .EXAMPLE
-    Remove-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.wvd.domain
+    Update-AvdHostpool
     #>
     [CmdletBinding()]
     param
