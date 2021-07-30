@@ -31,7 +31,7 @@ function Get-AvdSessionHost {
         [string]$SessionHostName
     )
     Begin {
-        Write-Verbose "Start searching"
+        Write-Verbose "Start searching session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource "https://management.azure.com"
         $baseUrl = "https://management.azure.com/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + "/sessionHosts/"
