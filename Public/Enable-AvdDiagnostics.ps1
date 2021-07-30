@@ -8,12 +8,20 @@ function Enable-AvdDiagnostics {
     Enter the name of the hostpool you want to enable start vm on connnect.
     .PARAMETER ResourceGroupName
     Enter the name of the resourcegroup where the hostpool resides in.
-    .PARAMETER Workspace
-    Enter the name(s) of the AVD workspaces
+    .PARAMETER LASku
+    Enter the name of the Log Analytics SKU
     .PARAMETER LAWorkspace
     Enter the name of the Log Analytics Workspace
+    .PARAMETER LaResourceGroupName
+    Enter the name of the Log Analyics Workspace resource group
+    .PARAMETER diagnosticsName
+    The diagnostics name shown in the hostpool diagnostics overview
+    .PARAMETER categories
+    The categories you like to save in Log Analytics
+    .PARAMETER RetentionInDays
+    How long should the data be saved
     .EXAMPLE
-    Enable-AvdDiagnostics -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -AvdWorkspace avd-workpace-001
+    Enable-AvdDiagnostics -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -LAWorkspace 'la-avd-workspace' -Categories ("Checkpoint","Error")
     #>
     [CmdletBinding(DefaultParameterSetName = 'Existing')]
     param (
@@ -29,16 +37,12 @@ function Enable-AvdDiagnostics {
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
 
-        [parameter()]
-        [parameter(ParameterSetName = 'Initial')]
-        [parameter(ParameterSetName = 'Existing')]
-        [string]$AvdWorkspace,
-
         [parameter(ParameterSetName = 'Initial')]
         [parameter(ParameterSetName = 'Existing')]
         [string]$LAWorkspace,
 
         [parameter(ParameterSetName = 'Initial')]
+        [ValidateSet("CapacityReservation", "Free", "LACluster", "PerGB2018", "PerNode", "Premium","Standalone","Standard")]
         [string]$LASku = "Standard",
 
         [parameter(ParameterSetName = 'Initial')]
@@ -48,6 +52,7 @@ function Enable-AvdDiagnostics {
         [parameter(ParameterSetName = 'Initial')]
         [string]$diagnosticsName = "AVD-Diagnostics",
 
+        [parameter(Mandatory)]
         [parameter(ParameterSetName = 'Initial')]
         [parameter(ParameterSetName = 'Existing')]
         [ValidateSet("Checkpoint", "Error", "Management", "Connection", "HostRegistration", "AgentHealthStatus")]
