@@ -80,13 +80,14 @@
         'Export-AvdConfig',  
         'Get-AvdHostPoolInfo',
         'Get-AvdImageVersionStatus',
+        'Get-AvdLatestSessionHost',
         'Get-AvdNetworkInfo',
         'Get-AvdSessionHost'
-        'Get-AvdLatestSessionHost',
         'Get-AvdSessionHostResources',
+        "Move-AvdSessionHost",
         "Remove-AvdSessionHost",
-        "Update-AvdHostpool",
         'Update-AvdDiagnostics',
+        "Update-AvdHostpool",
         'Update-AvdRegistrationToken',
         'Update-AvdSessionhostDrainMode'
     )
