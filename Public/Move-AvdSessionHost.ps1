@@ -4,12 +4,16 @@ function Move-AvdSessionhost {
     Moving sessionhosts from an Azure Virtual Desktop hostpool to a new one.
     .DESCRIPTION
     The function will move sessionhosts to a new Azure Virtual Desktop hostpool.
-    .PARAMETER HostpoolName
-    Enter the AVD Hostpool name
-    .PARAMETER ResourceGroupName
-    Enter the AVD Hostpool resourcegroup name
+    .PARAMETER fromHostpoolName
+    Enter the source AVD Hostpool name
+    .PARAMETER fromResourceGroupName
+    Enter the source Hostpool resourcegroup name
+    .PARAMETER toHostpoolName
+    Enter the destination AVD Hostpool name
+    .PARAMETER toResourceGroupName
+    Enter the destination Hostpool resourcegroup name
     .PARAMETER SessionHostName
-    Enter the sessionhosts name [avd-hostpool/avd-host-1.avd.domain]
+    Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
     .EXAMPLE
     Move-AvdSessionhost -FromHostpoolName avd-hostpool -FromResourceGroupName rg-avd-01 -ToHostpoolName avd-hostpool-02 -ToResourceGroupName rg-avd-02 -SessionHostName avd-host-1.avd.domain
     #>
@@ -18,20 +22,20 @@ function Move-AvdSessionhost {
     (
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string]$toHostpoolName,
-    
-        [parameter(Mandatory)]
-        [ValidateNotNullOrEmpty()]
-        [string]$toResourceGroupName,
-
-        [parameter(Mandatory)]
-        [ValidateNotNullOrEmpty()]
         [string]$fromHostpoolName,
     
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [string]$fromResourceGroupName,
         
+        [parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]$toHostpoolName,
+    
+        [parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]$toResourceGroupName,
+
         [parameter(ParameterSetName = 'SingleObject')]
         [parameter(Mandatory)]
         [string]$sessionHostName
