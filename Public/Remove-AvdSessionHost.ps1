@@ -44,7 +44,7 @@ function Remove-AvdSessionhost {
                     Method  = "DELETE"
                 }
                 try {
-                    $results = Invoke-RestMethod @parameters -Method DELETE
+                    $results = Invoke-RestMethod @parameters
                 }
                 catch {
                     Throw $_
