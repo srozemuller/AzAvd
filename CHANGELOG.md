@@ -2,6 +2,11 @@
 # Changelog
 All notable changes to this Az.Avd PowerShell will be documented in this file. 
 
+## [1.2.3] - 2021-07-31
+
+### Changes
+- [Bug fix] Multiple DELETE method in remove-avdsessionhosts [973940f](https://github.com/srozemuller/AzAvd/commit/973940fddff1da76cc893beeca0420552b0a920a)
+
 ## [1.2.2] - 2021-07-30
  
 ### Added Commands
