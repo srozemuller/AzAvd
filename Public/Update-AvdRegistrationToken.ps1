@@ -12,7 +12,6 @@ function Update-AvdRegistrationToken {
     Optional, give the token availability in hours. Default 4.
     .EXAMPLE
     Update-AvdRegistrationToken -HostpoolName avd-hostpool -ResourceGroupName avd-resourcegroup
-    Add a comment to existing incidnet
     #>
     [CmdletBinding()]
     param (

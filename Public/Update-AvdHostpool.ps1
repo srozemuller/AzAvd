@@ -5,11 +5,9 @@ function Update-AvdHostpool {
     .DESCRIPTION
     The function will search for sessionhosts and will remove them from the Azure Virtual Desktop hostpool.
     .PARAMETER HostpoolName
-    Enter the WVD Hostpool name
+    Enter the AVD Hostpool name
     .PARAMETER ResourceGroupName
-    Enter the WVD Hostpool resourcegroup name
-    .PARAMETER SessionHostName
-    Enter the sessionhosts name
+    Enter the AVD Hostpool resourcegroup name
     .PARAMETER customRdpProperty
     If needed fill in the custom rdp properties (for example: targetisaadjoined:i:1 )
     .PARAMETER friendlyName
@@ -23,7 +21,7 @@ function Update-AvdHostpool {
     .PARAMETER Force
     use the force parameter if you want to override the current customrdpproperties. Otherwise it will add the provided properties.
     .EXAMPLE
-    Update-AvdHostpool
+    Update-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -customRdpProperty "targetisaadjoined:i:1"
     #>
     [CmdletBinding()]
     param

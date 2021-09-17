@@ -1,20 +1,20 @@
 function Get-AvdLatestSessionHost {
     <#
     .SYNOPSIS
-    Gets the latest session host from the WVD Hostpool
+    Gets the latest session host from the AVD Hostpool
     .DESCRIPTION
-    The function will help you getting the latests session host from a WVD Hostpool. 
+    The function will help you getting the latests session host from a AVD Hostpool. 
     By running this function you will able to define the next number for deploying new session hosts.
     .PARAMETER HostpoolName
-    Enter the WVD Hostpool name
+    Enter the AVD Hostpool name
     .PARAMETER ResourceGroupName
-    Enter the WVD Hostpool resourcegroup name
+    Enter the AVD Hostpool resourcegroup name
     .PARAMETER InputObject
     You can put the hostpool object in here. 
     .PARAMETER NumOnly
     With this switch parameter you will set, you will get the next sessionhost number returned.
     .EXAMPLE
-    Get-WvdLatestSessionHost -WvdHostpoolName wvd-hostpool -ResourceGroupName wvd-resourcegroup
+    Get-AvdLatestSessionHost -HostpoolName avd-hostpool -ResourceGroupName avd-resourcegroup
     #>
     [CmdletBinding(DefaultParameterSetName = 'Parameters')]
     param (
@@ -54,7 +54,7 @@ function Get-AvdLatestSessionHost {
         $SessionHosts = Get-AzWvdSessionHost @Parameters |  Sort-Object ResourceId -Descending
     }
     catch {
-        Throw "No session hosts found in WVD Hostpool $WvdHostpoolName, $_"
+        Throw "No session hosts found in AVD Hostpool $WvdHostpoolName, $_"
     }
     # Convert hosts to highest number to get initial value
     if ($null -eq $SessionHosts) {

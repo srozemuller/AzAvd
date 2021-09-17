@@ -1,15 +1,15 @@
 function Get-AvdHostPoolInfo {
     <#
 .SYNOPSIS
-Get WVD Hostpool information, including the underlaying session hosts
+Get AVD Hostpool information, including the underlaying session hosts
 .DESCRIPTION
-With this function you can get information about a WVD hostpool that includes the information about the underlaying session hosts.
+With this function you can get information about a AVD hostpool that includes the information about the underlaying session hosts.
 .PARAMETER HostPoolName
 Enter the name of the hostpool you want information from.
 .PARAMETER ResourceGroupName
 Enter the name of the resourcegroup where the hostpool resides in.
 .EXAMPLE
-Get-WvdHostPoolInfo -HostPoolName wvd-hostpool-001 -ResourceGroupName rg-wvd-001
+Get-AvdHostPoolInfo -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
 #>
     [CmdletBinding()]
     param (

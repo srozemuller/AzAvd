@@ -24,7 +24,7 @@ Get-AvdNetworkInfo -HostpoolName <String> -ResourceGroupName <String> [-SessionH
 ```
 
 ## DESCRIPTION
-The function will help you getting insights about the WVD network configuration.
+The function will help you getting insights about the AVD network configuration.
 
 ## EXAMPLES
 
@@ -41,7 +41,7 @@ The function will help you getting insights about the WVD network configuration.
 ## PARAMETERS
 
 ### -HostpoolName
-Enter the WVD Hostpool name
+Enter the AVD Hostpool name
 
 ```yaml
 Type: String
@@ -56,7 +56,7 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the WVD Hostpool resourcegroup name
+Enter the AVD Hostpool resourcegroup name
 
 ```yaml
 Type: String

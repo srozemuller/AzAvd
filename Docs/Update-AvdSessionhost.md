@@ -5,33 +5,46 @@ online version:
 schema: 2.0.0
 ---
 
-# Update-AvdHostpool
+# Update-AvdSessionhost
 
 ## SYNOPSIS
-Removing sessionhosts from an Azure Virtual Desktop hostpool.
+Updating one or more sessionhosts.
+Assign new users or put them in drainmode or not.
 
 ## SYNTAX
 
+### SingleObject (Default)
 ```
-Update-AvdHostpool -HostpoolName <String> -ResourceGroupName <String> [-customRdpProperty <String>]
- [-friendlyName <String>] [-loadBalancerType <String>] [-validationEnvironment <Boolean>]
- [-maxSessionLimit <Int32>] [-Force] [<CommonParameters>]
+Update-AvdSessionhost -HostpoolName <String> -ResourceGroupName <String> [-allowNewSession <String>]
+ [-assignedUser <String>] [-sessionHostName <String>] [<CommonParameters>]
+```
+
+### InputObject
+```
+Update-AvdSessionhost -HostpoolName <String> -ResourceGroupName <String> [-allowNewSession <String>]
+ -sessionHostName <String> -SessionHosts <Object> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The function will search for sessionhosts and will remove them from the Azure Virtual Desktop hostpool.
+The function will update the current sessionhosts assigned user and drainmode
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Update-AvdHostpool
+Update-AvdSessionhost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -AllowNewSession $true
+```
+
+### EXAMPLE 2
+```
+$sessionHosts = Get-AvdSessionhost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01
+$sessionHosts | Update-AvdSessionhost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -AllowNewSession $true
 ```
 
 ## PARAMETERS
 
 ### -HostpoolName
-Enter the AVD Hostpool name
+Enter the source AVD Hostpool name
 
 ```yaml
 Type: String
@@ -46,7 +59,7 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the AVD Hostpool resourcegroup name
+Enter the source Hostpool resourcegroup name
 
 ```yaml
 Type: String
@@ -60,12 +73,29 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -customRdpProperty
-If needed fill in the custom rdp properties (for example: targetisaadjoined:i:1 )
+### -allowNewSession
+Allowing new sessions or not.
+(Default: true).
 
 ```yaml
 Type: String
 Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: True
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -assignedUser
+Enter the new username for the current sessionhost.
+Only available if providing one sessionhost at a time.
+
+```yaml
+Type: String
+Parameter Sets: SingleObject
 Aliases:
 
 Required: False
@@ -75,12 +105,12 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -friendlyName
-Change the host pool friendly name
+### -sessionHostName
+Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: SingleObject
 Aliases:
 
 Required: False
@@ -90,63 +120,29 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -loadBalancerType
-Change the host pool loadBalancerType
-
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: InputObject
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -validationEnvironment
-Change the host pool validation environment
+### -SessionHosts
+{{ Fill SessionHosts Description }}
 
 ```yaml
-Type: Boolean
-Parameter Sets: (All)
+Type: Object
+Parameter Sets: InputObject
 Aliases:
 
-Required: False
+Required: True
 Position: Named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -maxSessionLimit
-Change the host pool max session limit (max 999999)
-
-```yaml
-Type: Int32
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: 0
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Force
-use the force parameter if you want to override the current customrdpproperties.
-Otherwise it will add the provided properties.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

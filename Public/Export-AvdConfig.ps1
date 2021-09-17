@@ -1,21 +1,21 @@
 function Export-AvdConfig {
     <#
     .SYNOPSIS
-    Exports the WVD environment, based on the hostpool name.
+    Exports the AVD environment, based on the hostpool name.
     .DESCRIPTION
-    The function will help you exporting the complete WVD environment to common output types as HTML and CSV.
+    The function will help you exporting the complete AVD environment to common output types as HTML and CSV.
     .PARAMETER HostpoolName
-    Enter the WVD hostpoolname name.
+    Enter the AVD hostpoolname name.
     .PARAMETER ResourceGroupName
-    Enter the WVD hostpool resource group name.
+    Enter the AVD hostpool resource group name.
     .PARAMETER FileName
     Enter the filename. Based on the format parameter the function will create a correct file. Default filepath is in the execution directory.
     .PARAMETER Format
     Enter the format you like. For creating more formats use a comma. 
     .EXAMPLE
-    Export-WvdConfig -Hostpoolname wvd-hostpool-001 -ResourceGroupName rg-wvd-001 -Format HTML -Verbose -Filename WVDExport
+    Export-AvdConfig -Hostpoolname avd-hostpool-001 -ResourceGroupName rg-avd-001 -Format HTML -Verbose -Filename AVDExport
     .EXAMPLE
-    Export-WvdConfig -HostPoolName wvd-hostpool-001 -ResourceGroupName rg-wvd-001 -Format HTML,JSON -Verbose -Filename WVDExport
+    Export-AvdConfig -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -Format HTML,JSON -Verbose -Filename AVDExport
     
     #>
     [CmdletBinding(DefaultParameterSetName = 'FileExport')]

@@ -30,13 +30,13 @@ This function will grab all the sessionhost from a specific Azure Virtual Deskto
 
 ### EXAMPLE 1
 ```
-Get-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.wvd.domain -AllowNewSession $true
+Get-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.AVD.domain -AllowNewSession $true
 ```
 
 ## PARAMETERS
 
 ### -HostpoolName
-Enter the WVD Hostpool name
+Enter the AVD Hostpool name
 
 ```yaml
 Type: String
@@ -51,7 +51,7 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the WVD Hostpool resourcegroup name
+Enter the AVD Hostpool resourcegroup name
 
 ```yaml
 Type: String

@@ -2,14 +2,13 @@
 function Get-AvdSessionHostResources {
     <#
     .SYNOPSIS
-    Gets the Virtual Machines Azure resource from a WVD Session Host
+    Gets the Virtual Machines Azure resource from a AVD Session Host
     .DESCRIPTION
-    The function will help you getting the virtual machine resource information which is behind the WVD Session Host
+    The function will help you getting the virtual machine resource information which is behind the AVD Session Host
     .PARAMETER SessionHost
-    Enter the WVD Session Host name
+    Enter the AVD Session Host name
     .EXAMPLE
-    Get-WvdSessionHostResources -SessionHost SessionHostObject
-    Add a comment to existing incidnet
+    Get-AvdSessionHostResources -SessionHost SessionHostObject
     #>
     [CmdletBinding(DefaultParameterSetName = 'Sessionhost')]
     param (

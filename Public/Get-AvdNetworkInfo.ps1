@@ -4,17 +4,17 @@ Function Get-AvdNetworkInfo {
     .SYNOPSIS
     Gets the sessionhost network information 
     .DESCRIPTION
-    The function will help you getting insights about the WVD network configuration. 
+    The function will help you getting insights about the AVD network configuration. 
     .PARAMETER HostpoolName
-    Enter the WVD Hostpool name
+    Enter the AVD Hostpool name
     .PARAMETER ResourceGroupName
-    Enter the WVD Hostpool resourcegroup name
+    Enter the AVD Hostpool resourcegroup name
     .PARAMETER SessionHostName
     This parameter accepts a single sessionhost name
     .EXAMPLE
-    Get-WvdNetworkInfo -HostpoolName <string> -ResourceGroupName <string>
+    Get-AvdNetworkInfo -HostpoolName <string> -ResourceGroupName <string>
     .EXAMPLE
-    Get-WvdNetworkInfo -HostpoolName <string> -ResourceGroupName <string> -SessionHostName <string>
+    Get-AvdNetworkInfo -HostpoolName <string> -ResourceGroupName <string> -SessionHostName <string>
     #>
     [CmdletBinding(DefaultParameterSetName = 'Hostpool')]
     param (

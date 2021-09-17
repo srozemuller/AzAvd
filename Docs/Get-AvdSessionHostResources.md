@@ -8,7 +8,7 @@ schema: 2.0.0
 # Get-AvdSessionHostResources
 
 ## SYNOPSIS
-Gets the Virtual Machines Azure resource from a WVD Session Host
+Gets the Virtual Machines Azure resource from a AVD Session Host
 
 ## SYNTAX
 
@@ -24,13 +24,13 @@ Get-AvdSessionHostResources -HostpoolName <String> -ResourceGroupName <String> [
 ```
 
 ## DESCRIPTION
-The function will help you getting the virtual machine resource information which is behind the WVD Session Host
+The function will help you getting the virtual machine resource information which is behind the AVD Session Host
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-WvdSessionHostResources -SessionHost SessionHostObject
+Get-AVDSessionHostResources -SessionHost SessionHostObject
 Add a comment to existing incidnet
 ```
 
