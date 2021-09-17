@@ -52,6 +52,6 @@ function Get-AvdSessionHost {
             Headers = $token
         }
         $results = Invoke-RestMethod @parameters
-        return $results
+        return $results.value
     }
 }
