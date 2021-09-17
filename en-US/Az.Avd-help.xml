@@ -2,6 +2,437 @@
 <helpItems schema="maml" xmlns="http://msh">
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
     <command:details>
+      <command:name>Create-AvdVmTemplate</command:name>
+      <command:verb>Create</command:verb>
+      <command:noun>AvdVmTemplate</command:noun>
+      <maml:description>
+        <maml:para>Removing sessionhosts from an Azure Virtual Desktop hostpool.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>The function will search for sessionhosts and will remove them from the Azure Virtual Desktop hostpool.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Create-AvdVmTemplate</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>HostpoolName</maml:name>
+          <maml:description>
+            <maml:para>Enter the AVD Hostpool name</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="10" aliases="none">
+          <maml:name>namePrefix</maml:name>
+          <maml:description>
+            <maml:para>The sessionhosts name prefix (avd-)</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="11" aliases="none">
+          <maml:name>useManagedDisks</maml:name>
+          <maml:description>
+            <maml:para>The use of a managed disk or not (default: True)</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>True</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="12" aliases="none">
+          <maml:name>osDiskType</maml:name>
+          <maml:description>
+            <maml:para>The OS disk type ("Standard_LRS", "Premium_LRS", "StandardSSD_LRS")</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="13" aliases="none">
+          <maml:name>vmSku</maml:name>
+          <maml:description>
+            <maml:para>This is the part of the VMsize information. (eg. Standard_B2ms)</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="14" aliases="none">
+          <maml:name>vmCores</maml:name>
+          <maml:description>
+            <maml:para>This is the part of the VMsize information. How many cores.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="15" aliases="none">
+          <maml:name>vmRam</maml:name>
+          <maml:description>
+            <maml:para>This is the part of the VMsize information. The RAM size in GB.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="16" aliases="none">
+          <maml:name>CustomObject</maml:name>
+          <maml:description>
+            <maml:para>Can be used to add extra values into the template. Please provide a PSCustomObject.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
+          <dev:type>
+            <maml:name>Object</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+          <maml:name>ResourceGroupName</maml:name>
+          <maml:description>
+            <maml:para>Enter the AVD Hostpool resourcegroup name</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
+          <maml:name>domain</maml:name>
+          <maml:description>
+            <maml:para>Enter the sessionhosts domain</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
+          <maml:name>galleryImageOffer</maml:name>
+          <maml:description>
+            <maml:para>Enter the gallery image offer</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="5" aliases="none">
+          <maml:name>galleryImagePublisher</maml:name>
+          <maml:description>
+            <maml:para>Enter the gallery image publisher</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="6" aliases="none">
+          <maml:name>galleryImageSKU</maml:name>
+          <maml:description>
+            <maml:para>Enter the gallery image sku</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="7" aliases="none">
+          <maml:name>imageType</maml:name>
+          <maml:description>
+            <maml:para>Enter the image type. (default: CustomImage)</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="8" aliases="none">
+          <maml:name>imageUri</maml:name>
+          <maml:description>
+            <maml:para>The url of an image (.vhd)</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="9" aliases="none">
+          <maml:name>customImageId</maml:name>
+          <maml:description>
+            <maml:para>The resourceId of an image or image version</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>HostpoolName</maml:name>
+        <maml:description>
+          <maml:para>Enter the AVD Hostpool name</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+        <maml:name>ResourceGroupName</maml:name>
+        <maml:description>
+          <maml:para>Enter the AVD Hostpool resourcegroup name</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
+        <maml:name>domain</maml:name>
+        <maml:description>
+          <maml:para>Enter the sessionhosts domain</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
+        <maml:name>galleryImageOffer</maml:name>
+        <maml:description>
+          <maml:para>Enter the gallery image offer</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="5" aliases="none">
+        <maml:name>galleryImagePublisher</maml:name>
+        <maml:description>
+          <maml:para>Enter the gallery image publisher</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="6" aliases="none">
+        <maml:name>galleryImageSKU</maml:name>
+        <maml:description>
+          <maml:para>Enter the gallery image sku</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="7" aliases="none">
+        <maml:name>imageType</maml:name>
+        <maml:description>
+          <maml:para>Enter the image type. (default: CustomImage)</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="8" aliases="none">
+        <maml:name>imageUri</maml:name>
+        <maml:description>
+          <maml:para>The url of an image (.vhd)</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="9" aliases="none">
+        <maml:name>customImageId</maml:name>
+        <maml:description>
+          <maml:para>The resourceId of an image or image version</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="10" aliases="none">
+        <maml:name>namePrefix</maml:name>
+        <maml:description>
+          <maml:para>The sessionhosts name prefix (avd-)</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="11" aliases="none">
+        <maml:name>useManagedDisks</maml:name>
+        <maml:description>
+          <maml:para>The use of a managed disk or not (default: True)</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>True</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="12" aliases="none">
+        <maml:name>osDiskType</maml:name>
+        <maml:description>
+          <maml:para>The OS disk type ("Standard_LRS", "Premium_LRS", "StandardSSD_LRS")</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="13" aliases="none">
+        <maml:name>vmSku</maml:name>
+        <maml:description>
+          <maml:para>This is the part of the VMsize information. (eg. Standard_B2ms)</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="14" aliases="none">
+        <maml:name>vmCores</maml:name>
+        <maml:description>
+          <maml:para>This is the part of the VMsize information. How many cores.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="15" aliases="none">
+        <maml:name>vmRam</maml:name>
+        <maml:description>
+          <maml:para>This is the part of the VMsize information. The RAM size in GB.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="16" aliases="none">
+        <maml:name>CustomObject</maml:name>
+        <maml:description>
+          <maml:para>Can be used to add extra values into the template. Please provide a PSCustomObject.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
+        <dev:type>
+          <maml:name>Object</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes />
+    <command:returnValues />
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
+        <dev:code>$customObjects = @{
+    TestObject = 'TestValue'
+}
+create-AvdVmTemplate -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -domain domain.local -namePrefix avd -vmSku 'Standard_B2ms' -vmCores 2 -vmRam 8 -osDiskType "Premium_LRS" -CustomObjects $customObjects</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- EXAMPLE 2 --------------------------</maml:title>
+        <dev:code>create-AvdVmTemplate -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -domain domain.local -namePrefix avd -vmSku 'Standard_B2ms' -vmCores 2 -vmRam 8 -osDiskType "Premium_LRS"</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
       <command:name>Enable-AvdDiagnostics</command:name>
       <command:verb>Enable</command:verb>
       <command:noun>AvdDiagnostics</command:noun>
@@ -453,11 +884,11 @@
       <command:verb>Export</command:verb>
       <command:noun>AvdConfig</command:noun>
       <maml:description>
-        <maml:para>Exports the WVD environment, based on the hostpool name.</maml:para>
+        <maml:para>Exports the AVD environment, based on the hostpool name.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>The function will help you exporting the complete WVD environment to common output types as HTML and CSV.</maml:para>
+      <maml:para>The function will help you exporting the complete AVD environment to common output types as HTML and CSV.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -465,7 +896,7 @@
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>HostpoolName</maml:name>
           <maml:description>
-            <maml:para>Enter the WVD hostpoolname name.</maml:para>
+            <maml:para>Enter the AVD hostpoolname name.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -477,7 +908,7 @@
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>ResourceGroupName</maml:name>
           <maml:description>
-            <maml:para>Enter the WVD hostpool resource group name.</maml:para>
+            <maml:para>Enter the AVD hostpool resource group name.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -516,7 +947,7 @@
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>HostpoolName</maml:name>
           <maml:description>
-            <maml:para>Enter the WVD hostpoolname name.</maml:para>
+            <maml:para>Enter the AVD hostpoolname name.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -528,7 +959,7 @@
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>ResourceGroupName</maml:name>
           <maml:description>
-            <maml:para>Enter the WVD hostpool resource group name.</maml:para>
+            <maml:para>Enter the AVD hostpool resource group name.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -554,7 +985,7 @@
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>HostpoolName</maml:name>
         <maml:description>
-          <maml:para>Enter the WVD hostpoolname name.</maml:para>
+          <maml:para>Enter the AVD hostpoolname name.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -566,7 +997,7 @@
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>ResourceGroupName</maml:name>
         <maml:description>
-          <maml:para>Enter the WVD hostpool resource group name.</maml:para>
+          <maml:para>Enter the AVD hostpool resource group name.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -622,14 +1053,14 @@
     <command:examples>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
-        <dev:code>Export-WvdConfig -Hostpoolname wvd-hostpool-001 -ResourceGroupName rg-wvd-001 -Format HTML -Verbose -Filename WVDExport</dev:code>
+        <dev:code>Export-AVDConfig -Hostpoolname AVD-hostpool-001 -ResourceGroupName rg-AVD-001 -Format HTML -Verbose -Filename AVDExport</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 2 --------------------------</maml:title>
-        <dev:code>Export-WvdConfig -HostPoolName wvd-hostpool-001 -ResourceGroupName rg-wvd-001 -Format HTML,JSON -Verbose -Filename WVDExport</dev:code>
+        <dev:code>Export-AVDConfig -HostPoolName AVD-hostpool-001 -ResourceGroupName rg-AVD-001 -Format HTML,JSON -Verbose -Filename AVDExport</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
@@ -643,11 +1074,11 @@
       <command:verb>Get</command:verb>
       <command:noun>AvdHostPoolInfo</command:noun>
       <maml:description>
-        <maml:para>Get WVD Hostpool information, including the underlaying session hosts</maml:para>
+        <maml:para>Get AVD Hostpool information, including the underlaying session hosts</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>With this function you can get information about a WVD hostpool that includes the information about the underlaying session hosts.</maml:para>
+      <maml:para>With this function you can get information about a AVD hostpool that includes the information about the underlaying session hosts.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -714,7 +1145,7 @@
     <command:examples>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
-        <dev:code>Get-WvdHostPoolInfo -HostPoolName wvd-hostpool-001 -ResourceGroupName rg-wvd-001</dev:code>
+        <dev:code>Get-AVDHostPoolInfo -HostPoolName AVD-hostpool-001 -ResourceGroupName rg-AVD-001</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
@@ -740,7 +1171,7 @@
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>HostpoolName</maml:name>
           <maml:description>
-            <maml:para>Enter the WVD Hostpool name</maml:para>
+            <maml:para>Enter the AVD Hostpool name</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -752,7 +1183,7 @@
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>ResourceGroupName</maml:name>
           <maml:description>
-            <maml:para>Enter the WVD Hostpool resourcegroup name</maml:para>
+            <maml:para>Enter the AVD Hostpool resourcegroup name</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -790,7 +1221,7 @@
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>HostpoolName</maml:name>
         <maml:description>
-          <maml:para>Enter the WVD Hostpool name</maml:para>
+          <maml:para>Enter the AVD Hostpool name</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -802,7 +1233,7 @@
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>ResourceGroupName</maml:name>
         <maml:description>
-          <maml:para>Enter the WVD Hostpool resourcegroup name</maml:para>
+          <maml:para>Enter the AVD Hostpool resourcegroup name</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -846,7 +1277,7 @@
     <command:examples>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
-        <dev:code>Get-WvdImageVersionStatus -HostpoolName wvd-hostpool-001 -ResourceGroupName rg-wvd-001</dev:code>
+        <dev:code>Get-AVDImageVersionStatus -HostpoolName AVD-hostpool-001 -ResourceGroupName rg-AVD-001</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
@@ -860,11 +1291,11 @@
       <command:verb>Get</command:verb>
       <command:noun>AvdLatestSessionHost</command:noun>
       <maml:description>
-        <maml:para>Gets the latest session host from the WVD Hostpool</maml:para>
+        <maml:para>Gets the latest session host from the AVD Hostpool</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>The function will help you getting the latests session host from a WVD Hostpool.  By running this function you will able to define the next number for deploying new session hosts.</maml:para>
+      <maml:para>The function will help you getting the latests session host from a AVD Hostpool.  By running this function you will able to define the next number for deploying new session hosts.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -872,7 +1303,7 @@
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>HostpoolName</maml:name>
           <maml:description>
-            <maml:para>Enter the WVD Hostpool name</maml:para>
+            <maml:para>Enter the AVD Hostpool name</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -884,7 +1315,7 @@
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>ResourceGroupName</maml:name>
           <maml:description>
-            <maml:para>Enter the WVD Hostpool resourcegroup name</maml:para>
+            <maml:para>Enter the AVD Hostpool resourcegroup name</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -925,7 +1356,7 @@
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>HostpoolName</maml:name>
         <maml:description>
-          <maml:para>Enter the WVD Hostpool name</maml:para>
+          <maml:para>Enter the AVD Hostpool name</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -937,7 +1368,7 @@
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>ResourceGroupName</maml:name>
         <maml:description>
-          <maml:para>Enter the WVD Hostpool resourcegroup name</maml:para>
+          <maml:para>Enter the AVD Hostpool resourcegroup name</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -981,7 +1412,7 @@
     <command:examples>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
-        <dev:code>Get-WvdLatestSessionHost -WvdHostpoolName wvd-hostpool -ResourceGroupName wvd-resourcegroup</dev:code>
+        <dev:code>Get-AVDLatestSessionHost -AVDHostpoolName AVD-hostpool -ResourceGroupName AVD-resourcegroup</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
@@ -999,7 +1430,7 @@
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>The function will help you getting insights about the WVD network configuration.</maml:para>
+      <maml:para>The function will help you getting insights about the AVD network configuration.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -1007,7 +1438,7 @@
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>HostpoolName</maml:name>
           <maml:description>
-            <maml:para>Enter the WVD Hostpool name</maml:para>
+            <maml:para>Enter the AVD Hostpool name</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -1019,7 +1450,7 @@
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>ResourceGroupName</maml:name>
           <maml:description>
-            <maml:para>Enter the WVD Hostpool resourcegroup name</maml:para>
+            <maml:para>Enter the AVD Hostpool resourcegroup name</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -1046,7 +1477,7 @@
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>HostpoolName</maml:name>
         <maml:description>
-          <maml:para>Enter the WVD Hostpool name</maml:para>
+          <maml:para>Enter the AVD Hostpool name</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -1058,7 +1489,7 @@
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>ResourceGroupName</maml:name>
         <maml:description>
-          <maml:para>Enter the WVD Hostpool resourcegroup name</maml:para>
+          <maml:para>Enter the AVD Hostpool resourcegroup name</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -1123,7 +1554,7 @@
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>HostpoolName</maml:name>
           <maml:description>
-            <maml:para>Enter the WVD Hostpool name</maml:para>
+            <maml:para>Enter the AVD Hostpool name</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -1135,7 +1566,7 @@
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>ResourceGroupName</maml:name>
           <maml:description>
-            <maml:para>Enter the WVD Hostpool resourcegroup name</maml:para>
+            <maml:para>Enter the AVD Hostpool resourcegroup name</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -1162,7 +1593,7 @@
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>HostpoolName</maml:name>
         <maml:description>
-          <maml:para>Enter the WVD Hostpool name</maml:para>
+          <maml:para>Enter the AVD Hostpool name</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -1174,7 +1605,7 @@
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>ResourceGroupName</maml:name>
         <maml:description>
-          <maml:para>Enter the WVD Hostpool resourcegroup name</maml:para>
+          <maml:para>Enter the AVD Hostpool resourcegroup name</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -1206,7 +1637,7 @@
     <command:examples>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
-        <dev:code>Get-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.wvd.domain -AllowNewSession $true</dev:code>
+        <dev:code>Get-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.AVD.domain -AllowNewSession $true</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
@@ -1220,11 +1651,11 @@
       <command:verb>Get</command:verb>
       <command:noun>AvdSessionHostResources</command:noun>
       <maml:description>
-        <maml:para>Gets the Virtual Machines Azure resource from a WVD Session Host</maml:para>
+        <maml:para>Gets the Virtual Machines Azure resource from a AVD Session Host</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>The function will help you getting the virtual machine resource information which is behind the WVD Session Host</maml:para>
+      <maml:para>The function will help you getting the virtual machine resource information which is behind the AVD Session Host</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -1315,7 +1746,7 @@
     <command:examples>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
-        <dev:code>Get-WvdSessionHostResources -SessionHost SessionHostObject
+        <dev:code>Get-AVDSessionHostResources -SessionHost SessionHostObject
 Add a comment to existing incidnet</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
@@ -1499,7 +1930,7 @@ Add a comment to existing incidnet</dev:code>
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>HostpoolName</maml:name>
           <maml:description>
-            <maml:para>Enter the WVD Hostpool name</maml:para>
+            <maml:para>Enter the AVD Hostpool name</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -1511,7 +1942,7 @@ Add a comment to existing incidnet</dev:code>
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>ResourceGroupName</maml:name>
           <maml:description>
-            <maml:para>Enter the WVD Hostpool resourcegroup name</maml:para>
+            <maml:para>Enter the AVD Hostpool resourcegroup name</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -1538,7 +1969,7 @@ Add a comment to existing incidnet</dev:code>
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>HostpoolName</maml:name>
         <maml:description>
-          <maml:para>Enter the WVD Hostpool name</maml:para>
+          <maml:para>Enter the AVD Hostpool name</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -1550,7 +1981,7 @@ Add a comment to existing incidnet</dev:code>
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>ResourceGroupName</maml:name>
         <maml:description>
-          <maml:para>Enter the WVD Hostpool resourcegroup name</maml:para>
+          <maml:para>Enter the AVD Hostpool resourcegroup name</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -1582,7 +2013,7 @@ Add a comment to existing incidnet</dev:code>
     <command:examples>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
-        <dev:code>Remove-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.wvd.domain</dev:code>
+        <dev:code>Remove-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.AVD.domain</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
@@ -1864,7 +2295,7 @@ Add a comment to existing incidnet</dev:code>
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>HostpoolName</maml:name>
           <maml:description>
-            <maml:para>Enter the WVD Hostpool name</maml:para>
+            <maml:para>Enter the AVD Hostpool name</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -1876,7 +2307,7 @@ Add a comment to existing incidnet</dev:code>
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>ResourceGroupName</maml:name>
           <maml:description>
-            <maml:para>Enter the WVD Hostpool resourcegroup name</maml:para>
+            <maml:para>Enter the AVD Hostpool resourcegroup name</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -1962,7 +2393,7 @@ Add a comment to existing incidnet</dev:code>
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>HostpoolName</maml:name>
         <maml:description>
-          <maml:para>Enter the WVD Hostpool name</maml:para>
+          <maml:para>Enter the AVD Hostpool name</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -1974,7 +2405,7 @@ Add a comment to existing incidnet</dev:code>
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>ResourceGroupName</maml:name>
         <maml:description>
-          <maml:para>Enter the WVD Hostpool resourcegroup name</maml:para>
+          <maml:para>Enter the AVD Hostpool resourcegroup name</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -2186,6 +2617,246 @@ Add a comment to existing incidnet</dev:code>
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
     <command:details>
+      <command:name>Update-AvdSessionhost</command:name>
+      <command:verb>Update</command:verb>
+      <command:noun>AvdSessionhost</command:noun>
+      <maml:description>
+        <maml:para>Updating one or more sessionhosts. Assign new users or put them in drainmode or not.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>The function will update the current sessionhosts assigned user and drainmode</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Update-AvdSessionhost</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>HostpoolName</maml:name>
+          <maml:description>
+            <maml:para>Enter the source AVD Hostpool name</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ResourceGroupName</maml:name>
+          <maml:description>
+            <maml:para>Enter the source Hostpool resourcegroup name</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>allowNewSession</maml:name>
+          <maml:description>
+            <maml:para>Allowing new sessions or not. (Default: true).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>True</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>assignedUser</maml:name>
+          <maml:description>
+            <maml:para>Enter the new username for the current sessionhost. Only available if providing one sessionhost at a time.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>sessionHostName</maml:name>
+          <maml:description>
+            <maml:para>Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Update-AvdSessionhost</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>HostpoolName</maml:name>
+          <maml:description>
+            <maml:para>Enter the source AVD Hostpool name</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ResourceGroupName</maml:name>
+          <maml:description>
+            <maml:para>Enter the source Hostpool resourcegroup name</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>allowNewSession</maml:name>
+          <maml:description>
+            <maml:para>Allowing new sessions or not. (Default: true).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>True</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>sessionHostName</maml:name>
+          <maml:description>
+            <maml:para>Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>SessionHosts</maml:name>
+          <maml:description>
+            <maml:para>{{ Fill SessionHosts Description }}</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
+          <dev:type>
+            <maml:name>Object</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>HostpoolName</maml:name>
+        <maml:description>
+          <maml:para>Enter the source AVD Hostpool name</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ResourceGroupName</maml:name>
+        <maml:description>
+          <maml:para>Enter the source Hostpool resourcegroup name</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>allowNewSession</maml:name>
+        <maml:description>
+          <maml:para>Allowing new sessions or not. (Default: true).</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>True</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>assignedUser</maml:name>
+        <maml:description>
+          <maml:para>Enter the new username for the current sessionhost. Only available if providing one sessionhost at a time.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>sessionHostName</maml:name>
+        <maml:description>
+          <maml:para>Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>SessionHosts</maml:name>
+        <maml:description>
+          <maml:para>{{ Fill SessionHosts Description }}</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
+        <dev:type>
+          <maml:name>Object</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes />
+    <command:returnValues />
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
+        <dev:code>Update-AvdSessionhost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -AllowNewSession $true</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- EXAMPLE 2 --------------------------</maml:title>
+        <dev:code>$sessionHosts = Get-AvdSessionhost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01
+$sessionHosts | Update-AvdSessionhost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -AllowNewSession $true</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
       <command:name>Update-AvdSessionhostDrainMode</command:name>
       <command:verb>Update</command:verb>
       <command:noun>AvdSessionhostDrainMode</command:noun>
@@ -2229,7 +2900,7 @@ Add a comment to existing incidnet</dev:code>
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>HostpoolName</maml:name>
           <maml:description>
-            <maml:para>Enter the WVD Hostpool name</maml:para>
+            <maml:para>Enter the AVD Hostpool name</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -2241,7 +2912,7 @@ Add a comment to existing incidnet</dev:code>
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>ResourceGroupName</maml:name>
           <maml:description>
-            <maml:para>Enter the WVD Hostpool resourcegroup name</maml:para>
+            <maml:para>Enter the AVD Hostpool resourcegroup name</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -2292,7 +2963,7 @@ Add a comment to existing incidnet</dev:code>
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>HostpoolName</maml:name>
         <maml:description>
-          <maml:para>Enter the WVD Hostpool name</maml:para>
+          <maml:para>Enter the AVD Hostpool name</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -2304,7 +2975,7 @@ Add a comment to existing incidnet</dev:code>
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>ResourceGroupName</maml:name>
         <maml:description>
-          <maml:para>Enter the WVD Hostpool resourcegroup name</maml:para>
+          <maml:para>Enter the AVD Hostpool resourcegroup name</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -2348,14 +3019,14 @@ Add a comment to existing incidnet</dev:code>
     <command:examples>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
-        <dev:code>Set-WvdSessionhostDrainMode -HostpoolName wvd-hostpool-personal -ResourceGroupName rg-wvd-01 -SessionHostName wvd-host-1.wvd.domain -AllowNewSession $true</dev:code>
+        <dev:code>Set-AVDSessionhostDrainMode -HostpoolName AVD-hostpool-personal -ResourceGroupName rg-AVD-01 -SessionHostName AVD-host-1.AVD.domain -AllowNewSession $true</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 2 --------------------------</maml:title>
-        <dev:code>$sessionhosts | Set-WvdSessionhostDrainMode -AllowNewSession $false</dev:code>
+        <dev:code>$sessionhosts | Set-AVDSessionhostDrainMode -AllowNewSession $false</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
