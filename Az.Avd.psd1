@@ -12,7 +12,7 @@
     RootModule             = 'Az.Avd.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '1.2.3'
+    ModuleVersion          = '1.2.4'
 
     # Supported PSEditions
     CompatiblePSEditions   = 'Core', 'Desktop'
@@ -75,6 +75,7 @@
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport      = @(
+        'Create-AvdVmTemplate',
         'Enable-AvdDiagnostics',
         'Enable-AvdStartVmOnConnect',    
         'Export-AvdConfig',  
@@ -84,11 +85,12 @@
         'Get-AvdNetworkInfo',
         'Get-AvdSessionHost'
         'Get-AvdSessionHostResources',
-        "Move-AvdSessionHost",
-        "Remove-AvdSessionHost",
+        'Move-AvdSessionHost',
+        'Remove-AvdSessionHost',
         'Update-AvdDiagnostics',
-        "Update-AvdHostpool",
+        'Update-AvdHostpool',
         'Update-AvdRegistrationToken',
+        'Update-AvdSessionhost',
         'Update-AvdSessionhostDrainMode'
     )
 
