@@ -31,7 +31,7 @@ Update-AvdHostpool
 ## PARAMETERS
 
 ### -HostpoolName
-Enter the WVD Hostpool name
+Enter the AVD Hostpool name
 
 ```yaml
 Type: String
@@ -46,7 +46,7 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the WVD Hostpool resourcegroup name
+Enter the AVD Hostpool resourcegroup name
 
 ```yaml
 Type: String

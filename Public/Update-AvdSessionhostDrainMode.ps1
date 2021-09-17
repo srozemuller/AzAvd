@@ -7,17 +7,17 @@ function Update-AvdSessionhostDrainMode {
     .PARAMETER InputObject
     An sessionhost object or array of sessionhosts.
     .PARAMETER HostpoolName
-    Enter the WVD Hostpool name
+    Enter the AVD Hostpool name
     .PARAMETER ResourceGroupName
-    Enter the WVD Hostpool resourcegroup name
+    Enter the AVD Hostpool resourcegroup name
     .PARAMETER SessionHostName
     Enter the sessionhosts name
     .PARAMETER AllowNewSession
     Enter $true or $false.
     .EXAMPLE
-    Set-WvdSessionhostDrainMode -HostpoolName wvd-hostpool-personal -ResourceGroupName rg-wvd-01 -SessionHostName wvd-host-1.wvd.domain -AllowNewSession $true 
+    Set-AvdSessionhostDrainMode -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true 
     .EXAMPLE
-    $sessionhosts | Set-WvdSessionhostDrainMode -AllowNewSession $false
+    $sessionhosts | Update-AvdSessionhostDrainMode -AllowNewSession $false
     #>
     [CmdletBinding()]
     param (
@@ -65,10 +65,10 @@ function Update-AvdSessionhostDrainMode {
             }
         }
         if ($InputObject) {
-            $InputObject | foreach { Update-AzWvdSessionHost @Parameters }
+            $InputObject | foreach { Update-AvdSessionhost @Parameters }
         }
         else {    
-            Update-AzWvdSessionHost @Parameters
+            Update-AvdSessionhost @Parameters
         }
     }
 }

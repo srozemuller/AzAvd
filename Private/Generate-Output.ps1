@@ -3,14 +3,14 @@ function Generate-Output {
     .SYNOPSIS
     Exports the complete Windows Virtual Desktop environment, based on the hostpool name.
     .DESCRIPTION
-    The function will help you exporting the complete WVD environment to common output types as HTML and CSV.
+    The function will help you exporting the complete AVD environment to common output types as HTML and CSV.
     .PARAMETER HostpoolName
-    Enter the WVD hostpoolname name.
+    Enter the AVD hostpoolname name.
     .PARAMETER ResourceGroupName
-    Enter the WVD hostpool resource group name.
+    Enter the AVD hostpool resource group name.
     .PARAMETER 
     .EXAMPLE
-    Export-WvdConfig -Hostpoolname $hostpoolName -resourceGroup $ResourceGroup -Scope Hostpool,SessionHosts -Verbose -FilePath .\wvdexport.html
+    Export-AVDConfig -Hostpoolname $hostpoolName -resourceGroup $ResourceGroup -Scope Hostpool,SessionHosts -Verbose -FilePath .\AVDexport.html
     Add a comment to existing incidnet
     #>
     
@@ -41,10 +41,10 @@ function Generate-Output {
                 $Content.Values | foreach { $ExportBody.Add(($_ | ConvertTo-Html -Fragment -PreContent "<p>$($_.Name) information for $HostpoolName</p>")) }
                 $Css = Get-Content -Path "$PSScriptRoot\..\Private\exportconfig.css" -Raw
                 $ExportBody = $ExportBody -replace '<td>0</td>', '<td class="WrongStatus">False</td>'
-                $Logo = '<link rel="shortcut icon" href="./Private/wvd-logo.png" />'
+                $Logo = '<link rel="shortcut icon" href="./Private/AVD-logo.png" />'
                 $style = ("<style>`n") + $Css + ("`n</style>")
                 $HtmlParameters = @{
-                    Title       = "WVD Information Report"
+                    Title       = "AVD Information Report"
                     body        = $ExportBody
                     Head        = $Logo + $style
                     PostContent = "<H5><i>$(get-date)</i></H5>"

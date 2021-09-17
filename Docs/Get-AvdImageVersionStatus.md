@@ -30,13 +30,13 @@ The function will help you getting insights if there are session hosts started f
 
 ### EXAMPLE 1
 ```
-Get-WvdImageVersionStatus -HostpoolName wvd-hostpool-001 -ResourceGroupName rg-wvd-001
+Get-AVDImageVersionStatus -HostpoolName AVD-hostpool-001 -ResourceGroupName rg-AVD-001
 ```
 
 ## PARAMETERS
 
 ### -HostpoolName
-Enter the WVD Hostpool name
+Enter the AVD Hostpool name
 
 ```yaml
 Type: String
@@ -51,7 +51,7 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the WVD Hostpool resourcegroup name
+Enter the AVD Hostpool resourcegroup name
 
 ```yaml
 Type: String

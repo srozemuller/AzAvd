@@ -4,7 +4,7 @@ function Enable-AvdStartVmOnConnect {
     Enable AVD Start VM on Connect
     .DESCRIPTION
     This function will enable the start VM on connect option in the hostpool and will configure the Azure AD permissions.
-    It will create a new role (WVD Start VM on connect) in the Azure AD
+    It will create a new role (AVD Start VM on connect) in the Azure AD
     .PARAMETER HostPoolName
     Enter the name of the hostpool you want to enable start vm on connnect.
     .PARAMETER ResourceGroupName

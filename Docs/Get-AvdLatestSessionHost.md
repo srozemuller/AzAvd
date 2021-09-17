@@ -8,7 +8,7 @@ schema: 2.0.0
 # Get-AvdLatestSessionHost
 
 ## SYNOPSIS
-Gets the latest session host from the WVD Hostpool
+Gets the latest session host from the AVD Hostpool
 
 ## SYNTAX
 
@@ -23,20 +23,20 @@ Get-AvdLatestSessionHost -InputObject <PSObject> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The function will help you getting the latests session host from a WVD Hostpool. 
+The function will help you getting the latests session host from a AVD Hostpool. 
 By running this function you will able to define the next number for deploying new session hosts.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-WvdLatestSessionHost -WvdHostpoolName wvd-hostpool -ResourceGroupName wvd-resourcegroup
+Get-AVDLatestSessionHost -AVDHostpoolName AVD-hostpool -ResourceGroupName AVD-resourcegroup
 ```
 
 ## PARAMETERS
 
 ### -HostpoolName
-Enter the WVD Hostpool name
+Enter the AVD Hostpool name
 
 ```yaml
 Type: String
@@ -51,7 +51,7 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the WVD Hostpool resourcegroup name
+Enter the AVD Hostpool resourcegroup name
 
 ```yaml
 Type: String

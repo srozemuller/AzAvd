@@ -31,12 +31,12 @@ This can be one sessionhost or all of them.
 
 ### EXAMPLE 1
 ```
-Set-WvdSessionhostDrainMode -HostpoolName wvd-hostpool-personal -ResourceGroupName rg-wvd-01 -SessionHostName wvd-host-1.wvd.domain -AllowNewSession $true
+Set-AVDSessionhostDrainMode -HostpoolName AVD-hostpool-personal -ResourceGroupName rg-AVD-01 -SessionHostName AVD-host-1.AVD.domain -AllowNewSession $true
 ```
 
 ### EXAMPLE 2
 ```
-$sessionhosts | Set-WvdSessionhostDrainMode -AllowNewSession $false
+$sessionhosts | Set-AVDSessionhostDrainMode -AllowNewSession $false
 ```
 
 ## PARAMETERS
@@ -57,7 +57,7 @@ Accept wildcard characters: False
 ```
 
 ### -HostpoolName
-Enter the WVD Hostpool name
+Enter the AVD Hostpool name
 
 ```yaml
 Type: String
@@ -72,7 +72,7 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the WVD Hostpool resourcegroup name
+Enter the AVD Hostpool resourcegroup name
 
 ```yaml
 Type: String

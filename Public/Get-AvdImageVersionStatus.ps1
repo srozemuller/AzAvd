@@ -6,15 +6,15 @@ Function Get-AvdImageVersionStatus {
     .DESCRIPTION
     The function will help you getting insights if there are session hosts started from an old version in relation to the Shared Image Gallery
     .PARAMETER HostpoolName
-    Enter the WVD Hostpool name
+    Enter the AVD Hostpool name
     .PARAMETER ResourceGroupName
-    Enter the WVD Hostpool resourcegroup name
+    Enter the AVD Hostpool resourcegroup name
     .PARAMETER SessionHostName
     Enter the session host name.
     .PARAMETER NotLatest
     This is a switch parameter which let you control the output to show only the sessionhosts which are not started from the latest version.
     .EXAMPLE
-    Get-WvdImageVersionStatus -HostpoolName wvd-hostpool-001 -ResourceGroupName rg-wvd-001
+    Get-AvdImageVersionStatus -HostpoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
     #>
     [CmdletBinding(DefaultParameterSetName = 'Hostpool')]
     param (

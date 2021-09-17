@@ -8,7 +8,7 @@ schema: 2.0.0
 # Export-AvdConfig
 
 ## SYNOPSIS
-Exports the WVD environment, based on the hostpool name.
+Exports the AVD environment, based on the hostpool name.
 
 ## SYNTAX
 
@@ -24,24 +24,24 @@ Export-AvdConfig -HostpoolName <String> -ResourceGroupName <String> [-Console] [
 ```
 
 ## DESCRIPTION
-The function will help you exporting the complete WVD environment to common output types as HTML and CSV.
+The function will help you exporting the complete AVD environment to common output types as HTML and CSV.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Export-WvdConfig -Hostpoolname wvd-hostpool-001 -ResourceGroupName rg-wvd-001 -Format HTML -Verbose -Filename WVDExport
+Export-AVDConfig -Hostpoolname AVD-hostpool-001 -ResourceGroupName rg-AVD-001 -Format HTML -Verbose -Filename AVDExport
 ```
 
 ### EXAMPLE 2
 ```
-Export-WvdConfig -HostPoolName wvd-hostpool-001 -ResourceGroupName rg-wvd-001 -Format HTML,JSON -Verbose -Filename WVDExport
+Export-AVDConfig -HostPoolName AVD-hostpool-001 -ResourceGroupName rg-AVD-001 -Format HTML,JSON -Verbose -Filename AVDExport
 ```
 
 ## PARAMETERS
 
 ### -HostpoolName
-Enter the WVD hostpoolname name.
+Enter the AVD hostpoolname name.
 
 ```yaml
 Type: String
@@ -56,7 +56,7 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the WVD hostpool resource group name.
+Enter the AVD hostpool resource group name.
 
 ```yaml
 Type: String
