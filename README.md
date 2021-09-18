@@ -13,6 +13,7 @@ To install the module in PowerShell use the command below
 The module consists of the following commands:
 
 ## Commands
+- [Create-AvdVmTemplate](./Docs/Create-AvdVmTemplate.md)
 - [Enable-AvdDiagnostics](./Docs/Enable-AvdDiagnostics.md)
 - [Enable-AvdStartVmOnConnect](./Docs/Enable-AvdStartVmOnConnect.md)
 - [Export-AvdConfig](./Docs/Export-AvdConfig.md)
@@ -27,4 +28,5 @@ The module consists of the following commands:
 - [Update-AvdDiagnostics](./Docs/Update-AvdDiagnostics.md)
 - [Update-AvdHostpool](./Docs/Update-AvdHostpool.md)
 - [Update-AvdRegistrationToken](./Docs/Update-AvdRegistrationToken.md)
+- [Update-AvdSessionHost](./Docs/Update-AvdSessionHost.md)
 - [Update-AvdSessionhostDrainMode](./Docs/Update-AvdSessionhostDrainMode.md)
