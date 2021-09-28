@@ -52,7 +52,7 @@ function Export-AvdConfig {
             ResourceGroupName = $ResourceGroupName 
         }
         $Content = [ordered]@{
-            Hostpool     = Get-AvdHostPoolInfo @Parameters | Select-Object hostpoolName, hostpoolDescription, hostpoolLocation, resourceGroupName, resourceGroupLocation, domain, startVMOnConnect, expirationTime, validationEnvironment
+            Hostpool     = Get-AvdHostPool @Parameters | Select-Object name, @{N="Description";E={$_.properties.description}}, @{N="startVMOnConnect";E={$_.properties.startVMOnConnect}}, @{N="maxSessionLimit";E={$_.properties.maxSessionLimit}}, @{N="hostpoolType";E={$_.properties.hostpoolType}}
             SessionHosts = Get-AvdImageVersionStatus @Parameters | Select-Object vmLatestVersion, vmName, resourceGroupName, LastVersion, currentImageVersion, imageName, imageGallery, subscriptionId
             Network      = Get-AvdNetworkInfo @Parameters | Select-Object vmName, vmResourceGroup, ipAddress, nicName, nsgName, subnetName
         }
