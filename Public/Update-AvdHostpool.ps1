@@ -1,9 +1,9 @@
 function Update-AvdHostpool {
     <#
     .SYNOPSIS
-    Removing sessionhosts from an Azure Virtual Desktop hostpool.
+    Updates an Azure Virtual Desktop hostpool.
     .DESCRIPTION
-    The function will search for sessionhosts and will remove them from the Azure Virtual Desktop hostpool.
+    The function will update an Azure Virtual Desktop hostpool.
     .PARAMETER HostpoolName
     Enter the AVD Hostpool name
     .PARAMETER ResourceGroupName
@@ -41,6 +41,10 @@ function Update-AvdHostpool {
         [parameter()]
         [ValidateNotNullOrEmpty()]
         [string]$friendlyName,
+
+        [parameter()]
+        [ValidateNotNullOrEmpty()]
+        [string]$description,
 
         [parameter()]
         [ValidateSet("BreadthFirst", "DepthFirst")]
