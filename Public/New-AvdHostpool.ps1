@@ -21,7 +21,9 @@ function New-AvdHostpool {
     .PARAMETER Force
     use the force parameter if you want to override the current customrdpproperties. Otherwise it will add the provided properties.
     .EXAMPLE
-    New-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -customRdpProperty "targetisaadjoined:i:1"
+    New-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -location WestEurope -hostPoolType "Personal"
+    .EXAMPLE
+    New-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -location WestEurope -customRdpProperty "targetisaadjoined:i:1"
     #>
     [CmdletBinding()]
     param
@@ -63,7 +65,6 @@ function New-AvdHostpool {
         [parameter()]
         [ValidateNotNullOrEmpty()]
         [boolean]$startVMOnConnect,
-
         
         [parameter()]
         [ValidateNotNullOrEmpty()]
@@ -81,9 +82,9 @@ function New-AvdHostpool {
     Begin {
         Write-Verbose "Start searching"
         AuthenticationCheck
-        $token = GetAuthToken -resource "https://management.azure.com"
+        $token = GetAuthToken -resource $Script:AzureApiUrl
         $apiVersion = "?api-version=2019-12-10-preview"
-        $url = "https://management.azure.com/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + $apiVersion
+        $url = $Script:AzureApiUrl+"/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + $apiVersion
         $parameters = @{
             uri     = $url
             Headers = $token
@@ -94,10 +95,7 @@ function New-AvdHostpool {
                 hostPoolType = $hostPoolType
             }
         }
-        if ($customRdpProperty){
-            $getResults = Invoke-RestMethod @parameters
-            $currentCustomRdpProperty = $getResults.properties.customRdpProperty
-        }    
+        if ($customRdpProperty){$body.properties.Add("customRdpProperty", $customRdpProperty)}
         if ($friendlyName){$body.properties.Add("friendlyName", $friendlyName)}
         if ($description){$body.properties.Add("description", $description)}
         if ($loadBalancerType){$body.properties.Add("loadBalancerType", $loadBalancerType)}
@@ -107,18 +105,6 @@ function New-AvdHostpool {
         if ($maxSessionLimit){$body.properties.Add("maxSessionLimit", $maxSessionLimit)}
     }
     Process {
-         switch ($PsCmdlet.ParameterSetName) {
-            Change {
-                Write-Verbose "Force used, overwriting custom RDP properties."
-                Write-Verbose "Old properties where: $customRdpProperty"
-            }
-            default {
-                If (!($customRdpProperty.EndsWith(";"))) {
-                    $customRdpProperty = $customRdpProperty + ";"
-                }
-                $customRdpProperty = $currentCustomRdpProperty + $customRdpProperty
-            }
-        }
         $jsonBody = $body | ConvertTo-Json
         $parameters = @{
             uri     = $url
