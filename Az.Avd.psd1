@@ -76,25 +76,31 @@
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport      = @(
         'Add-AvdApplicationGroupPermissions',
+        'Copy-AvdApplicationGroupPermissions',
         'Create-AvdVmTemplate',
         'Enable-AvdDiagnostics',
         'Enable-AvdStartVmOnConnect',    
-        'Export-AvdConfig',  
+        'Export-AvdConfig',
+        'Get-AvdApplicationGroup',  
         'Get-AvdHostPool',
         'Get-AvdImageVersionStatus',
         'Get-AvdLatestSessionHost',
         'Get-AvdNetworkInfo',
         'Get-AvdSessionHost'
         'Get-AvdSessionHostResources',
+        'Get-AvdWorkspace',
         'Move-AvdSessionHost',
         'New-AvdApplicationGroup',
         'New-AvdHostpool',
+        'New-AvdWorkspace',
         'Remove-AvdSessionHost',
+        'Update-AvdDesktopApplication',
         'Update-AvdDiagnostics',
         'Update-AvdHostpool',
         'Update-AvdRegistrationToken',
         'Update-AvdSessionhost',
-        'Update-AvdSessionhostDrainMode'
+        'Update-AvdSessionhostDrainMode',
+        'Update-AvdWorkspace'
     )
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
