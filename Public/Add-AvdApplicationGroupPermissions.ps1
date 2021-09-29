@@ -59,14 +59,14 @@ function Add-AvdApplicationGroupPermissions {
 
         $token = GetAuthToken -resource $script:AzureApiUrl
         $applicationGroup = Get-AvdApplicationGroup -ApplicationGroupName $ApplicationGroupName -ResourceGroupName $ResourceGroupName
-        $roleDefinitionId = ($applicationGroup | ? {$_.assignments.properties.scope -eq $($applicationGroup.id)}).assignments.properties | ? {($_.Scope -eq $applicationGroup.id) }
-        
         $guid = (New-Guid).Guid
         $url = $script:AzureApiUrl+"/"+$applicationGroup.id+"/providers/Microsoft.Authorization/roleAssignments/$($guid)"+$apiVersion
        
+        # Used ID 1d18fff3-a72a-46b5-b4a9-0b38a3cd7e63 is default built-in role Desktop Virtualization User.
+        # Source: https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#desktop-virtualization-user
         $body = @{
             properties = @{
-                roleDefinitionId = $roleDefinitionId.roleDefinitionId[-1]
+                roleDefinitionId = "/subscriptions/"+$script:subscriptionId+"/providers/Microsoft.Authorization/roleDefinitions/1d18fff3-a72a-46b5-b4a9-0b38a3cd7e63"
                 principalId = $identityInfo.id
             }
         }
