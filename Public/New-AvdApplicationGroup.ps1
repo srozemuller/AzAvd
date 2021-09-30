@@ -23,15 +23,15 @@ If there is a workspace allready, fill in the workspace resource ID where to ass
 .PARAMETER type
 Enter the application group type. (eg. RemoteApp or Desktop)
 .EXAMPLE
-New-AvdApplicationGroup -ApplicationGroupName applicationGroupname -ResourceGroupName rg-avd-001 -location WestEurope -type Desktop -hostpoolResourceId "/resourceID"
+New-AvdApplicationGroup -Name applicationGroupname -ResourceGroupName rg-avd-001 -location WestEurope -ApplicationGroupType Desktop -HostPoolArmPath "/resourceID"
 .EXAMPLE
-New-AvdApplicationGroup -ApplicationGroupName applicationGroupname -ResourceGroupName rg-avd-001 -location WestEurope -type Desktop -tags @{tag="value"}
+New-AvdApplicationGroup -Name applicationGroupname -ResourceGroupName rg-avd-001 -location WestEurope -ApplicationGroupType Desktop -tags @{tag="value"}
 #>
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
-        [string]$ApplicationGroupName,
+        [string]$Name,
 
         [Parameter()]
         [ValidateNotNullOrEmpty()]
@@ -55,7 +55,7 @@ New-AvdApplicationGroup -ApplicationGroupName applicationGroupname -ResourceGrou
 
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
-        [string]$hostpoolResourceId,
+        [string]$HostPoolArmPath,
         
         [Parameter()]
         [ValidateNotNullOrEmpty()]
@@ -64,7 +64,7 @@ New-AvdApplicationGroup -ApplicationGroupName applicationGroupname -ResourceGrou
         [Parameter(Mandatory = $true)]
         [ValidateSet("RemoteApp", "Desktop")]
         [ValidateNotNullOrEmpty()]
-        [string]$type
+        [string]$ApplicationGroupType
 
     )
     Begin {
@@ -72,7 +72,7 @@ New-AvdApplicationGroup -ApplicationGroupName applicationGroupname -ResourceGrou
         AuthenticationCheck
         $token = GetAuthToken -resource $script:AzureApiUrl
         $apiVersion = "?api-version=2019-12-10-preview"
-        $url = $script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/applicationGroups/" + $ApplicationGroupName + $apiVersion
+        $url = $script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/applicationGroups/" + $Name + $apiVersion
     }
     Process {
         $body = @{
@@ -81,8 +81,8 @@ New-AvdApplicationGroup -ApplicationGroupName applicationGroupname -ResourceGrou
             properties = @{
               description = $description
               friendlyName = $friendlyName
-              hostPoolArmPath = $hostpoolResourceId
-              applicationGroupType = $type
+              hostPoolArmPath = $HostPoolArmPath
+              applicationGroupType = $ApplicationGroupType
             }
         }
         if ($workspaceResourceId){$body.properties.Add("workspaceArmPath", $workspaceResourceId)}

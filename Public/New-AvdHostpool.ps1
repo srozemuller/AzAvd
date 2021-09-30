@@ -54,6 +54,10 @@ function New-AvdHostpool {
         [string]$friendlyName,
 
         [parameter()]
+        [ValidateNotNullOrEmpty()]
+        [string]$description,
+
+        [parameter()]
         [ValidateSet("BreadthFirst", "DepthFirst")]
         [ValidateNotNullOrEmpty()]
         [string]$loadBalancerType,
@@ -65,7 +69,11 @@ function New-AvdHostpool {
         [parameter()]
         [ValidateNotNullOrEmpty()]
         [boolean]$startVMOnConnect,
-        
+         
+        [parameter()]
+        [ValidateNotNullOrEmpty()]
+        [string]$preferredAppGroupType,
+
         [parameter()]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("Automatic", "Direct")]
@@ -100,6 +108,7 @@ function New-AvdHostpool {
         if ($description){$body.properties.Add("description", $description)}
         if ($loadBalancerType){$body.properties.Add("loadBalancerType", $loadBalancerType)}
         if ($validationEnvironment){$body.properties.Add("validationEnvironment", $validationEnvironment)}
+        if ($preferredAppGroupType){$body.properties.Add("preferredAppGroupType", $preferredAppGroupType)}
         if ($startVMOnConnect){$body.properties.Add("startVMOnConnect", $startVMOnConnect)}
         if ($PersonalDesktopAssignmentType){$body.properties.Add("PersonalDesktopAssignmentType", $PersonalDesktopAssignmentType)}
         if ($maxSessionLimit){$body.properties.Add("maxSessionLimit", $maxSessionLimit)}
