@@ -1,9 +1,9 @@
-function Create-AvdVmTemplate {
+function New-AvdVmTemplate {
     <#
     .SYNOPSIS
-    Removing sessionhosts from an Azure Virtual Desktop hostpool.
+    Creates a VM template in the AVD hostpool. 
     .DESCRIPTION
-    The function will search for sessionhosts and will remove them from the Azure Virtual Desktop hostpool.
+    The function will create an AVD VM template for session hosts. This template is configured in the hostpool
     .PARAMETER HostpoolName
     Enter the AVD Hostpool name
     .PARAMETER ResourceGroupName
