@@ -24,6 +24,8 @@ function New-AvdHostpool {
     New-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -location WestEurope -hostPoolType "Personal"
     .EXAMPLE
     New-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -location WestEurope -customRdpProperty "targetisaadjoined:i:1"
+    .EXAMPLE
+    New-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -location WestEurope -vmTemplate "{"domain":"","osDiskType":"Premium_LRS","namePrefix":"avd","vmSize":{"cores":"2","ram":"8","id":"Standard_B2MS"},"galleryImageOffer":"","galleryImagePublisher":"","galleryImageSKU":"","imageType":"","imageUri":"","customImageId":"","useManagedDisks":"True","galleryItemId":null}"
     #>
     [CmdletBinding()]
     param
@@ -58,7 +60,7 @@ function New-AvdHostpool {
         [string]$description,
 
         [parameter()]
-        [ValidateSet("BreadthFirst", "DepthFirst")]
+        [ValidateSet("BreadthFirst", "DepthFirst","Persistent")]
         [ValidateNotNullOrEmpty()]
         [string]$loadBalancerType,
         
@@ -78,6 +80,10 @@ function New-AvdHostpool {
         [ValidateNotNullOrEmpty()]
         [ValidateSet("Automatic", "Direct")]
         [string]$PersonalDesktopAssignmentType = "Automatic",
+
+        [parameter()]
+        [ValidateNotNullOrEmpty()]
+        [string]$vmTemplate,
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
@@ -112,6 +118,7 @@ function New-AvdHostpool {
         if ($startVMOnConnect){$body.properties.Add("startVMOnConnect", $startVMOnConnect)}
         if ($PersonalDesktopAssignmentType){$body.properties.Add("PersonalDesktopAssignmentType", $PersonalDesktopAssignmentType)}
         if ($maxSessionLimit){$body.properties.Add("maxSessionLimit", $maxSessionLimit)}
+        if ($vmTemplate){$body.properties.Add("vmTemplate", $vmTemplate)}
     }
     Process {
         $jsonBody = $body | ConvertTo-Json
