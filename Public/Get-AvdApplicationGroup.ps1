@@ -1,5 +1,5 @@
 function Get-AvdApplicationGroup {
-<#
+    <#
 .SYNOPSIS
 Get AVD applicationgroup information with the assigned permissions.
 .DESCRIPTION
@@ -11,22 +11,36 @@ Enter the name of the resourcegroup where the hostpool resides in.
 .EXAMPLE
 Get-AvdApplicationGroup ApplicationGroupName applicationGroup -ResourceGroupName rg-avd-001
 #>
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = "Name")]
     param (
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory, ParameterSetName = "Name")]
         [ValidateNotNullOrEmpty()]
-        [string]$ApplicationGroupName,
+        [string]$Name,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory, ParameterSetName = "Name")]
         [ValidateNotNullOrEmpty()]
-        [string]$ResourceGroupName
+        [string]$ResourceGroupName,
+
+        [Parameter(Mandatory, ParameterSetName = "ResourceId")]
+        [ValidateNotNullOrEmpty()]
+        [string]$resourceId
+
     )
     Begin {
-        Write-Verbose "Start searching for hostpool $hostpoolName"
+        Write-Verbose "Start searching for application group $Name"
         AuthenticationCheck
         $token = GetAuthToken -resource $script:AzureApiUrl
         $apiVersion = "?api-version=2019-12-10-preview"
-        $url = $script:AzureApiUrl+"/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/applicationGroups/" + $ApplicationGroupName + $apiVersion
+        switch ($PsCmdlet.ParameterSetName) {
+            Name {
+                Write-Verbose "Name and ResourceGroup provided"
+                $url = $script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/applicationGroups/" + $Name + $apiVersion
+            }
+            ResourceId {
+                Write-Verbose "ResourceId provided"
+                $url = $script:AzureApiUrl + $resourceId + $apiVersion
+            }
+        }
         $parameters = @{
             uri     = $url
             Headers = $token
@@ -35,7 +49,7 @@ Get-AvdApplicationGroup ApplicationGroupName applicationGroup -ResourceGroupName
     }
     Process {
         $applicationResults = Invoke-RestMethod @parameters
-        $url = $script:AzureApiUrl+"/"+$applicationResults.id+"/providers/Microsoft.Authorization/roleAssignments?api-version=2021-04-01-preview"
+        $url = $script:AzureApiUrl + "/" + $applicationResults.id + "/providers/Microsoft.Authorization/roleAssignments?api-version=2021-04-01-preview"
         $parameters = @{
             uri     = $url
             Method  = "GET"
