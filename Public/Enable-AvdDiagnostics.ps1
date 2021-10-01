@@ -64,7 +64,7 @@ function Enable-AvdDiagnostics {
     )
     Begin {
        AuthenticationCheck
-       $token = GetAuthToken -resource "https://management.azure.com"
+       $token = GetAuthToken -resource $Script:AzureApiUrl
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -83,7 +83,7 @@ function Enable-AvdDiagnostics {
                         }
                     }
                 }
-                $url = "https://management.azure.com/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $LaResourceGroupName + "/providers/Microsoft.OperationalInsights/workspaces/" + $LAWorkspace + "?api-version=2020-08-01"
+                $url = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $LaResourceGroupName + "/providers/Microsoft.OperationalInsights/workspaces/" + $LAWorkspace + "?api-version=2020-08-01"
                 $loganalyticsParameters = @{
                     URI     = $url 
                     Method  = "PUT"
@@ -93,7 +93,7 @@ function Enable-AvdDiagnostics {
                 $laws = Invoke-RestMethod @loganalyticsParameters
             }
             Existing {
-                $url = "https://management.azure.com/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $LaResourceGroupName + "/providers/Microsoft.OperationalInsights/workspaces/" + $LAWorkspace + "?api-version=2020-08-01"
+                $url = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $LaResourceGroupName + "/providers/Microsoft.OperationalInsights/workspaces/" + $LAWorkspace + "?api-version=2020-08-01"
                 $loganalyticsParameters = @{
                     URI     = $url 
                     Method  = "GET"
@@ -122,7 +122,7 @@ function Enable-AvdDiagnostics {
             }
         }    
         $parameters = @{
-            uri     = "https://management.azure.com/$($Hostpool.Id)/providers/microsoft.insights/diagnosticSettings/$($diagnosticsName)?api-version=2017-05-01-preview"
+            uri     = $Script:AzureApiUrl + "/$($Hostpool.Id)/providers/microsoft.insights/diagnosticSettings/$($diagnosticsName)?api-version=2017-05-01-preview"
             Method  = "PUT"
             Headers = $token
             Body    = $diagnosticsBody | ConvertTo-Json -Depth 4
