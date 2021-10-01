@@ -61,7 +61,7 @@ function Export-AvdConfig {
                 return $Content
             }
             Default {
-                $Format | foreach { Generate-Output -Format $_ -Content $Content -FileName $FileName -Hostpoolname $HostpoolName }
+                $Format | ForEach-Object { Generate-Output -Format $_ -Content $Content -FileName $FileName -Hostpoolname $HostpoolName }
             }
         }
         
