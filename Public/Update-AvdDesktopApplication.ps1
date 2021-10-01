@@ -8,25 +8,33 @@ function Update-AvdDesktopApplication {
     Enter the AVD application group name
     .PARAMETER ResourceGroupName
     Enter the AVD application group resourcegroup name
+    .PARAMETER ResourceId
+    Enter the AVD application group resourceId
     .PARAMETER friendlyName
     Provide a displayname, this is the name you see in the webclient and Remote Desktop Client.
     .PARAMETER description
     Enter a description   
     .EXAMPLE
-    Update-AvdDesktopApplication -ApplicationGroupName avd-applicationgroup -DisplayName "Update Desktop"
+    Update-AvdDesktopApplication -ApplicationGroupName avd-applicationgroup -ResourceGroupName rg-avd-01 -DisplayName "Update Desktop"
+    .EXAMPLE
+    Update-AvdDesktopApplication -ResourceId "/subscriptions/../applicationName" -DisplayName "Update Desktop"
     #>
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = "Name")]
     param
     (
-        [parameter(Mandatory)]
+        [parameter(Mandatory, ParameterSetName="Name")]
         [ValidateNotNullOrEmpty()]
         [string]$ApplicationGroupName,
     
-        [parameter(Mandatory)]
+        [parameter(Mandatory, ParameterSetName="Name")]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
     
-        [parameter(Mandatory)]
+        [parameter(Mandatory, ParameterSetName="ResourceId")]
+        [ValidateNotNullOrEmpty()]
+        [string]$ResourceId,
+
+        [parameter()]
         [ValidateNotNullOrEmpty()]
         [string]$description,
 
@@ -40,7 +48,14 @@ function Update-AvdDesktopApplication {
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
         $apiVersion = "?api-version=2021-01-14-preview"
-        $url = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/applicationGroups/" + $ApplicationGroupName + "/desktops/SessionDesktop/" + $apiVersion        
+        switch ($PsCmdlet.ParameterSetName) {
+            Name {
+                $url = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/applicationGroups/" + $ApplicationGroupName + "/desktops/SessionDesktop/" + $apiVersion        
+            }
+            ResourceId {
+                $url = $Script:AzureApiUrl + $ResourceId + "/desktops/SessionDesktop/" + $apiVersion        
+            }
+        }
         $parameters = @{
             uri     = $url
             Headers = $token
