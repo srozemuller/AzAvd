@@ -24,9 +24,9 @@ Get-AvdHostPoolInfo -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
     Begin {
         Write-Verbose "Start searching for hostpool $hostpoolName"
         AuthenticationCheck
-        $token = GetAuthToken -resource "https://management.azure.com"
+        $token = GetAuthToken -resource $script:AzureApiUrl
         $apiVersion = "?api-version=2019-12-10-preview"
-        $url = "https://management.azure.com/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + $apiVersion
+        $url = $script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + $apiVersion
         $parameters = @{
             uri     = $url
             Headers = $token
