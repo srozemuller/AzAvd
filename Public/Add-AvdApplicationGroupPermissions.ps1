@@ -17,48 +17,77 @@ function Add-AvdApplicationGroupPermissions {
     .EXAMPLE
     Add-AvdApplicationGroupPermissions -ApplicationGroupName avd-application-group -ResourceGroupName rg-avd-01 -GroupName "All Users"
     #>
-    [CmdletBinding(DefaultParameterSetName = 'User')]
+    [CmdletBinding(DefaultParameterSetName = 'Name')]
     param
     (
-        [parameter(Mandatory)]
+        [parameter(Mandatory, ParameterSetName = 'Group')]
+        [parameter(Mandatory, ParameterSetName = 'PrincipalId')]
+        [parameter(Mandatory, ParameterSetName = 'User')]
         [ValidateNotNullOrEmpty()]
         [string]$ApplicationGroupName,
     
-        [parameter(Mandatory)]
+        [parameter(Mandatory, ParameterSetName = 'Group')]
+        [parameter(Mandatory, ParameterSetName = 'PrincipalId')]
+        [parameter(Mandatory, ParameterSetName = 'User')]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
+
+        [parameter(Mandatory, ParameterSetName = 'ResourceId-User')]
+        [parameter(Mandatory, ParameterSetName = 'ResourceId-Group')]
+        [parameter(Mandatory, ParameterSetName = 'ResourceId-PrincipalId')]
+        [ValidateNotNullOrEmpty()]
+        [string]$resourceId,
     
-        [parameter(Mandatory, ParameterSetName = 'User')]
+        [parameter(Mandatory, ParameterSetName = 'ResourceId-User')]
+        [parameter(Mandatory, ParameterSetName = 'Name-User')]
         [ValidateNotNullOrEmpty()]
         [string]$UserPrincipalName,
 
-        [parameter(ParameterSetName = 'Group')]
+        [parameter(Mandatory, ParameterSetName = 'ResourceId-Group')]
+        [parameter(Mandatory, ParameterSetName = 'Name-Group')]
         [ValidateNotNullOrEmpty()]
-        [string]$groupName
+        [string]$groupName,
+
+        [parameter(Mandatory, ParameterSetName = 'ResourceId-PrincipalId')]
+        [parameter(Mandatory, ParameterSetName = 'Name-PrincipalId')]
+        [ValidateNotNullOrEmpty()]
+        [string]$PrincipalId
         
     )
     Begin {
         Write-Verbose "Start searching"
         AuthenticationCheck
         $apiVersion = "?api-version=2021-04-01-preview"
+        $token = GetAuthToken -resource $script:AzureApiUrl
     }
     Process {
         $graphToken = GetAuthToken -resource $Script:GraphApiUrl
-        switch ($PsCmdlet.ParameterSetName) {
-            User {
+        switch -Wildcard ($PsCmdlet.ParameterSetName) {
+            *User {
                 Write-Verbose "UPN $UserPrincipalName provided, looking for user in Azure AD"
                 $graphUrl = $Script:GraphApiUrl + "/" + $script:GraphApiVersion + "/users/" + $UserPrincipalName
-                $identityInfo = Invoke-RestMethod -Method GET -Uri $graphUrl -Headers $graphToken
+                $identityInfo = (Invoke-RestMethod -Method GET -Uri $graphUrl -Headers $graphToken).id
             }
-            Group {
+            *Group {
                 Write-Verbose "Group name $groupName provided, looking for group in Azure AD"
                 $graphUrl = $Script:GraphApiUrl + "/" + $script:GraphApiVersion + "/groups?`$filter=displayName eq '$groupName'"
-                $identityInfo = (Invoke-RestMethod -Method GET -Uri $graphUrl -Headers $graphToken).value
+                $identityInfo = (Invoke-RestMethod -Method GET -Uri $graphUrl -Headers $graphToken).value.id
+            }
+            *PrincipalId {
+                Write-Verbose "looking for principal $PrincipalId in Azure AD"
+                $identityInfo = $PrincipalId
+            }
+            Default {
+                Write-Error "No UPN, group name or principal ID is provided"
             }
         }
-
-        $token = GetAuthToken -resource $script:AzureApiUrl
-        $applicationGroup = Get-AvdApplicationGroup -ApplicationGroupName $ApplicationGroupName -ResourceGroupName $ResourceGroupName
+        if ($ApplicationGroupName)
+        {
+            $applicationGroup = Get-AvdApplicationGroup -ApplicationGroupName $ApplicationGroupName -ResourceGroupName $ResourceGroupName
+        }
+        else {
+            $applicationGroup = Get-AvdApplicationGroup -resourceId $resourceId
+        }
         $guid = (New-Guid).Guid
         $url = $script:AzureApiUrl+"/"+$applicationGroup.id+"/providers/Microsoft.Authorization/roleAssignments/$($guid)"+$apiVersion
        
@@ -67,7 +96,7 @@ function Add-AvdApplicationGroupPermissions {
         $body = @{
             properties = @{
                 roleDefinitionId = "/subscriptions/"+$script:subscriptionId+"/providers/Microsoft.Authorization/roleDefinitions/1d18fff3-a72a-46b5-b4a9-0b38a3cd7e63"
-                principalId = $identityInfo.id
+                principalId = $identityInfo
             }
         }
         $jsonBody = $body | ConvertTo-Json
