@@ -43,6 +43,10 @@ function Enable-AvdStartVmOnConnect {
     )
     Begin {
         AuthenticationCheck
+        $GraphHeader = GetAuthToken -resource $Script:GraphApiUrl
+        $ServicePrincipalURL = "$($GraphResource)/beta/servicePrincipals?`$filter=displayName eq 'Windows Virtual Desktop'"
+        $ServicePrincipals = Invoke-RestMethod -Method GET -Uri $ServicePrincipalURL -Headers $GraphHeader
+        $AzureHeader = GetAuthToken -resource $Script:AzureApiUrl
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -58,6 +62,7 @@ function Enable-AvdStartVmOnConnect {
                     ResourceGroupName = $ResourceGroupName
                 }
                 $HostsResourceGroup = (Get-AzResource -ResourceID (Get-AvdLatestSessionHost @parameters).ResourceId).ResourceGroupName
+                $Scope = "subscriptions/"+ $script:subscriptionId +"/Resourcegroups/$HostsResourceGroup"
             }
         }
         $Hostpool = Get-AzWvdHostPool @parameters
@@ -69,15 +74,7 @@ function Enable-AvdStartVmOnConnect {
             Write-Verbose "Hostpool $($Hostpool.Hostpoolname) updated, StartVMOnConnect is set to $true"
         }    
         #Region get Windows Virtual Desktop Service Principal
-        $GraphResource = "https://graph.microsoft.com"
-        $GraphHeader = GetAuthToken -resource $GraphResource
-        $ServicePrincipalURL = "$($GraphResource)/beta/servicePrincipals?`$filter=displayName eq 'Windows Virtual Desktop'"
-        $ServicePrincipals = Invoke-RestMethod -Method GET -Uri $ServicePrincipalURL -Headers $GraphHeader
-        #Endregion
-        $SubscriptionId = [Microsoft.Azure.Commands.Common.Authentication.Abstractions.AzureRmProfileProvider]::Instance.Profile.DefaultContext.Subscription.Id
-        $Scope = "subscriptions/$($SubscriptionId)/Resourcegroups/$HostsResourceGroup"
-        $AzureResource = "https://management.azure.com"
-        $AzureHeader = GetAuthToken -resource $AzureResource
+
 
         #Region create custom role
         # Building a new role GUID
