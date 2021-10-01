@@ -12,47 +12,79 @@ function Copy-AvdApplicationGroupPermissions {
     Enter the AVD destination application group name
     .PARAMETER ToResourceGroupName
     Enter the AVD destination application group resourcegroup name
+    .PARAMETER FromAppGroupId
+    Enter the AVD source application group resourceId
+    .PARAMETER ToAppGroupId
+    Enter the AVD new application group resourceId
     .EXAMPLE
     Copy-AvdApplicationGroupPermissions -FromApplicationGroupName avd-appgroup-1 -FromResourceGroupName rg-avd-01 -ToApplicationGroupName avd-appgroup-2 -ToResourceGroupName rg-avd-01 
+    .EXAMPLE
+    Copy-AvdApplicationGroupPermissions -FromAppGroupId "/subscriptions/.../FromAppgroup" -ToAppGroupId "/subscriptions/.../ToAppgroup"
     #>
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName="Name")]
     param (
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory, ParameterSetName = "Name")]
         [ValidateNotNullOrEmpty()]
         [string]$FromApplicationGroupName,
 
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory, ParameterSetName = "Name")]
         [ValidateNotNullOrEmpty()]
         [string]$FromResourceGroupName,
 
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory, ParameterSetName = "Name")]
         [ValidateNotNullOrEmpty()]
         [string]$ToApplicationGroupName,
 
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory, ParameterSetName = "Name")]
         [ValidateNotNullOrEmpty()]
-        [string]$ToResourceGroupName
+        [string]$ToResourceGroupName,
+
+        [Parameter(Mandatory, ParameterSetName = "ResourceId")]
+        [ValidateNotNullOrEmpty()]
+        [string]$FromAppGroupId,
+
+        [Parameter(Mandatory, ParameterSetName = "ResourceId")]
+        [ValidateNotNullOrEmpty()]
+        [string]$ToAppGroupId
+
     )
     Begin {
-        Write-Verbose "Start searching for hostpool $hostpoolName"
+        Write-Verbose "Start copying permissions"
         AuthenticationCheck
+        $graphToken = GetAuthToken -resource $Script:GraphApiUrl
     }
     Process {
-        $FromApplicationResults = Get-AvdApplicationGroup -ApplicationGroupName $FromApplicationGroupName -ResourceGroupName $FromResourceGroupName
-        $graphToken = GetAuthToken -resource $Script:GraphApiUrl
-        $FromApplicationResults.assignments.properties | ? { $_.Scope -eq "/subscriptions/" + $Script:subscriptionId + "/resourcegroups/" + $FromResourceGroupName + "/providers/Microsoft.DesktopVirtualization/applicationgroups/" + $FromApplicationGroupName }  | ForEach {
+        switch ($PsCmdlet.ParameterSetName) {
+            Name {
+                Write-Verbose "Name and ResourceGroup provided"
+                $FromApplicationResults = Get-AvdApplicationGroup -ApplicationGroupName $FromApplicationGroupName -ResourceGroupName $FromResourceGroupName
+                $Scope = "/subscriptions/" + $Script:subscriptionId + "/resourcegroups/" + $FromResourceGroupName + "/providers/Microsoft.DesktopVirtualization/applicationgroups/" + $FromApplicationGroupName
+                $AppGroupPermissionsParameters = @{
+                    ApplicationGroupName = $ToApplicationGroupName
+                    ResourceGroupName = $ToResourceGroupName
+                }
+            }
+            ResourceId {
+                Write-Verbose "ResourceId provided"
+                $FromApplicationResults = Get-AvdApplicationGroup -ResourceId $FromAppGroupId
+                $Scope = $FromAppGroupId
+                $AppGroupPermissionsParameters = @{
+                    resourceId = $ToAppGroupId
+                }
+            }
+        }
+        $FromApplicationResults.assignments.properties | ? { $_.Scope -eq $Scope }  | ForEach-Object {
             If ($_.principalType -eq 'User') {
                 $graphUrl = $Script:GraphApiUrl + "/" + $script:GraphApiVersion + "/users/" + $_.principalId
                 $identityInfo = Invoke-RestMethod -Method GET -Uri $graphUrl -Headers $graphToken
                 Write-Verbose "Adding user $($identityInfo.userPrincipalName) to $ToApplicationGroupName"
-                Add-AvdApplicationGroupPermissions -ApplicationGroupName $ToApplicationGroupName -ResourceGroupName $ToResourceGroupName -UserPrincipalName $_.principalId
             }
             Else {
                 $graphUrl = $Script:GraphApiUrl + "/" + $script:GraphApiVersion + "/groups?`$filter=id eq '$($_.principalId)'"
                 $identityInfo = (Invoke-RestMethod -Method GET -Uri $graphUrl -Headers $graphToken).value
-                Write-Verbose "Adding group $($identityInfo.displayName) to $ToApplicationGroupName"
-                Add-AvdApplicationGroupPermissions -ApplicationGroupName $ToApplicationGroupName -ResourceGroupName $ToResourceGroupName -UserPrincipalName $_.principalId
+                Write-Verbose "Adding group $($identityInfo.displayName) to $ToApplicationGroupName"   
             }
+            Add-AvdApplicationGroupPermissions @AppGroupPermissionsParameters -PrincipalId $_.principalId
         }
     }
     End {}
