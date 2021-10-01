@@ -14,7 +14,7 @@ function New-AvdWorkspace {
     Change the workspace friendly name
     .PARAMETER description
     Enter a description   
-    .PARAMETER applicationGroupResourceIDs
+    .PARAMETER ApplicationGroupReference
     Provide the application group resource IDs where the workspace assign to.   
     .EXAMPLE
     New-AvdWorkspace -workspacename avd-workspace -resourceGroupName rg-avd-01 -location WestEurope -description "Work in space"
