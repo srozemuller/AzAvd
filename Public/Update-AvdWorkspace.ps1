@@ -1,37 +1,45 @@
 function Update-AvdWorkspace {
     <#
     .SYNOPSIS
-    Creates a new Azure Virtual Desktop workspace.
+    Updates a new Azure Virtual Desktop workspace.
     .DESCRIPTION
-    The function will create a new Azure Virtual Desktop workspace.
-    .PARAMETER WorkspaceName
-    Enter the AVD Hostpool name
+    The function will update an existing Azure Virtual Desktop workspace.
+    .PARAMETER Name
+    Enter the AVD workspace name
     .PARAMETER ResourceGroupName
-    Enter the AVD Hostpool resourcegroup name
+    Enter the AVD workspace resourcegroup name
+    .PARAMETER ResourceGroupName
+    Enter the AVD workspace resourceId 
     .PARAMETER location
     Enter the Azure location
     .PARAMETER friendlyName
     Change the workspace friendly name
     .PARAMETER description
     Enter a description   
-    .PARAMETER applicationGroupResourceIDs
+    .PARAMETER ApplicationGroupReference
     Provide the application group resource IDs where the workspace assign to.   
     .EXAMPLE
-    New-AvdWorkspace -workspacename avd-workspace -resourceGroupName rg-avd-01 -location WestEurope -description "Work in space"
+    Update-AvdWorkspace -name avd-workspace -resourceGroupName rg-avd-01 -location WestEurope -description "Work in space"
     .EXAMPLE
-    New-AvdWorkspace -workspacename avd-workspace -resourceGroupName rg-avd-01 -location WestEurope -applicationGroupResourceIDs @("id_1","id_2")
+    Update-AvdWorkspace -name avd-workspace -resourceGroupName rg-avd-01 -location WestEurope -ApplicationGroupReference @("id_1","id_2")
+    .EXAMPLE
+    Update-AvdWorkspace -resourceId "/subscriptions/../workspacename" -location WestEurope -ApplicationGroupReference @("id_1","id_2")
     #>
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName="Name")]
     param
     (
-        [parameter(Mandatory)]
+        [parameter(Mandatory,ParameterSetName = "Name")]
         [ValidateNotNullOrEmpty()]
-        [string]$WorkspaceName,
+        [string]$Name,
     
-        [parameter(Mandatory)]
+        [parameter(Mandatory, ParameterSetName = "Name")]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
     
+        [parameter(Mandatory, ParameterSetName = "ResourceId")]
+        [ValidateNotNullOrEmpty()]
+        [string]$ResourceId,
+
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [string]$location,
@@ -46,7 +54,7 @@ function Update-AvdWorkspace {
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
-        [array]$applicationGroupResourceIDs
+        [array]$ApplicationGroupReference
         
     )
     Begin {
@@ -54,7 +62,16 @@ function Update-AvdWorkspace {
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
         $apiVersion = "?api-version=2021-01-14-preview"
-        $url = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/workspaces/" + $WorkspaceName + $apiVersion        
+        switch ($PsCmdlet.ParameterSetName) {
+            Name {
+                $url = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/workspaces/" + $Name + $apiVersion        
+                $getResults = Get-AvdWorkspace -WorkspaceName $WorkspaceName -ResourceGroupName $ResourceGroupName
+            }
+            ResourceId {
+                $url = $Script:AzureApiUrl + $resourceId + $apiVersion 
+                $getResults = Get-AvdWorkspace -ResourceId $ResourceId 
+            }
+        }
         $parameters = @{
             uri     = $url
             Headers = $token
@@ -66,10 +83,9 @@ function Update-AvdWorkspace {
         }
         if ($friendlyName) { $body.properties.Add("friendlyName", $friendlyName) }
         if ($description) { $body.properties.Add("description", $description) }
-        if ($applicationGroupResourceIDs) {
-            $getResults = Get-AvdWorkspace -WorkspaceName $WorkspaceName -ResourceGroupName $ResourceGroupName
+        if ($ApplicationGroupReference) {
             $currentAppGroups = $getResults.properties.applicationGroupReferences
-            $applicationGroupResourceIDs | foreach {
+            $ApplicationGroupReference | foreach {
                 $newAppGroups = $currentAppGroups + $_
             }
             $body.properties.Add("applicationGroupReferences", $newAppGroups)
