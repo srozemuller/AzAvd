@@ -4,31 +4,45 @@ function Get-AvdWorkspace {
     Gets a new Azure Virtual Desktop workspace.
     .DESCRIPTION
     The function will search for a given Azure Virtual Desktop workspace.
-    .PARAMETER WorkspaceName
+    .PARAMETER Name
     Enter the AVD workspace name
     .PARAMETER ResourceGroupName
     Enter the AVD workspace resourcegroup name
+    .PARAMETER ResourceId
+    Enter the AVD workspace resourceId
     .EXAMPLE
-    Get-AvdWorkspace -workspacename avd-workspace -resourceGroupName rg-avd-01
+    Get-AvdWorkspace -name avd-workspace -resourceGroupName rg-avd-01
+    .EXAMPLE
+    Get-AvdWorkspace -resourceId "/subscriptions/../workspacename"
     #>
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName="Name")]
     param
     (
-        [parameter(Mandatory)]
+        [parameter(Mandatory,ParameterSetName = "Name")]
         [ValidateNotNullOrEmpty()]
-        [string]$WorkspaceName,
+        [string]$Name,
     
-        [parameter(Mandatory)]
+        [parameter(Mandatory, ParameterSetName = "Name")]
         [ValidateNotNullOrEmpty()]
-        [string]$ResourceGroupName
-        
+        [string]$ResourceGroupName,
+    
+        [parameter(Mandatory, ParameterSetName = "ResourceId", ValueFromPipeline)]
+        [ValidateNotNullOrEmpty()]
+        [string]$ResourceId
     )
     Begin {
         Write-Verbose "Searching for workspace $WorkspaceName"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
         $apiVersion = "?api-version=2021-01-14-preview"
-        $url = $Script:AzureApiUrl+"/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/workspaces/" + $WorkspaceName + $apiVersion        
+        switch ($PsCmdlet.ParameterSetName) {
+            Name {
+                $url = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/workspaces/" + $Name + $apiVersion        
+            }
+            ResourceId {
+                $url = $Script:AzureApiUrl + $resourceId + $apiVersion  
+            }
+        }
         $parameters = @{
             uri     = $url
             Headers = $token
