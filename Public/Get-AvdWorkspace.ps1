@@ -43,10 +43,6 @@ function Get-AvdWorkspace {
                 $url = $Script:AzureApiUrl + $resourceId + $apiVersion  
             }
         }
-        $parameters = @{
-            uri     = $url
-            Headers = $token
-        }
     }
     Process {
         $parameters = @{
