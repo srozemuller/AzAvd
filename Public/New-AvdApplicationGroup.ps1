@@ -1,7 +1,7 @@
 function New-AvdApplicationGroup {
 <#
 .SYNOPSIS
-Creates a new AVD applicationgroup information
+Creates a new AVD applicationgroup.
 .DESCRIPTION
 With this function you can create a new AVD application group.
 .PARAMETER ApplicationGroupName
