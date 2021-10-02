@@ -5,36 +5,46 @@ online version:
 schema: 2.0.0
 ---
 
-# Remove-AvdSessionhost
+# Get-AvdApplicationGroup
 
 ## SYNOPSIS
-Removing sessionhosts from an Azure Virtual Desktop hostpool.
+Get AVD applicationgroup information with the assigned permissions.
 
 ## SYNTAX
 
+### Name (Default)
 ```
-Remove-AvdSessionhost -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
- [<CommonParameters>]
+Get-AvdApplicationGroup -ApplicationGroupName <String> -ResourceGroupName <String> [<CommonParameters>]
+```
+
+### ResourceId
+```
+Get-AvdApplicationGroup -resourceId <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The function will search for sessionhosts and will remove them from the Azure Virtual Desktop hostpool.
+With this function you can get information about an AVD application group.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Remove-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.wvd.domain
+Get-AvdApplicationGroup -ApplicationGroupName applicationGroup -ResourceGroupName rg-avd-001
+```
+
+### EXAMPLE 2
+```
+Get-AvdApplicationGroup -ResourceId "/subscriptions/../applicationGroupname"
 ```
 
 ## PARAMETERS
 
-### -HostpoolName
-Enter the WVD Hostpool name
+### -ApplicationGroupName
+Enter the name of the application group you want information from.
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Name
 Aliases:
 
 Required: True
@@ -45,11 +55,11 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the WVD Hostpool resourcegroup name
+Enter the name of the resourcegroup where the hostpool resides in.
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Name
 Aliases:
 
 Required: True
@@ -59,12 +69,12 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -SessionHostName
-Enter the sessionhosts name
+### -resourceId
+Enter the applicationgroup resourceId.
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: ResourceId
 Aliases:
 
 Required: True

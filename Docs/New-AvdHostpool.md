@@ -5,27 +5,39 @@ online version:
 schema: 2.0.0
 ---
 
-# Update-AvdHostpool
+# New-AvdHostpool
 
 ## SYNOPSIS
-Updates an Azure Virtual Desktop hostpool.
+Creates a new Azure Virtual Desktop hostpool.
 
 ## SYNTAX
 
 ```
-Update-AvdHostpool -HostpoolName <String> -ResourceGroupName <String> [-customRdpProperty <String>]
- [-friendlyName <String>] [-description <String>] [-loadBalancerType <String>]
- [-validationEnvironment <Boolean>] [-maxSessionLimit <Int32>] [-Force] [<CommonParameters>]
+New-AvdHostpool -HostpoolName <String> -ResourceGroupName <String> -location <String> -hostPoolType <String>
+ [-customRdpProperty <String>] [-friendlyName <String>] [-description <String>] [-loadBalancerType <String>]
+ [-validationEnvironment <Boolean>] [-startVMOnConnect <Boolean>] [-preferredAppGroupType <String>]
+ [-PersonalDesktopAssignmentType <String>] [-vmTemplate <String>] [-maxSessionLimit <Int32>] [-Force]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The function will update an Azure Virtual Desktop hostpool.
+The function will create a new Azure Virtual Desktop hostpool.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Update-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -customRdpProperty "targetisaadjoined:i:1"
+New-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -location WestEurope -hostPoolType "Personal"
+```
+
+### EXAMPLE 2
+```
+New-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -location WestEurope -customRdpProperty "targetisaadjoined:i:1"
+```
+
+### EXAMPLE 3
+```
+New-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -location WestEurope -vmTemplate "{"domain":"","osDiskType":"Premium_LRS","namePrefix":"avd","vmSize":{"cores":"2","ram":"8","id":"Standard_B2MS"},"galleryImageOffer":"","galleryImagePublisher":"","galleryImageSKU":"","imageType":"","imageUri":"","customImageId":"","useManagedDisks":"True","galleryItemId":null}"
 ```
 
 ## PARAMETERS
@@ -47,6 +59,36 @@ Accept wildcard characters: False
 
 ### -ResourceGroupName
 Enter the AVD Hostpool resourcegroup name
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -location
+{{ Fill location Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -hostPoolType
+{{ Fill hostPoolType Description }}
 
 ```yaml
 Type: String
@@ -131,6 +173,66 @@ Aliases:
 Required: False
 Position: Named
 Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -startVMOnConnect
+{{ Fill startVMOnConnect Description }}
+
+```yaml
+Type: Boolean
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -preferredAppGroupType
+{{ Fill preferredAppGroupType Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PersonalDesktopAssignmentType
+{{ Fill PersonalDesktopAssignmentType Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: Automatic
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -vmTemplate
+{{ Fill vmTemplate Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

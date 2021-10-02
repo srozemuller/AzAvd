@@ -25,7 +25,6 @@ The function will create a new registration token, if needed, and will return th
 ### EXAMPLE 1
 ```
 Update-AvdRegistrationToken -HostpoolName avd-hostpool -ResourceGroupName avd-resourcegroup
-Add a comment to existing incidnet
 ```
 
 ## PARAMETERS

@@ -5,50 +5,53 @@ online version:
 schema: 2.0.0
 ---
 
-# Update-AvdSessionhost
+# Update-AvdWorkspace
 
 ## SYNOPSIS
-Updating one or more sessionhosts.
-Assign new users or put them in drainmode or not.
+Updates a new Azure Virtual Desktop workspace.
 
 ## SYNTAX
 
-### SingleObject (Default)
+### Name (Default)
 ```
-Update-AvdSessionhost -HostpoolName <String> -ResourceGroupName <String> [-allowNewSession <String>]
- [-assignedUser <String>] [-sessionHostName <String>] [<CommonParameters>]
+Update-AvdWorkspace -Name <String> -ResourceGroupName <String> -location <String> [-friendlyName <String>]
+ [-description <String>] [-ApplicationGroupReference <Array>] [<CommonParameters>]
 ```
 
-### InputObject
+### ResourceId
 ```
-Update-AvdSessionhost -HostpoolName <String> -ResourceGroupName <String> [-allowNewSession <String>]
- -sessionHostName <String> -SessionHosts <Object> [<CommonParameters>]
+Update-AvdWorkspace -ResourceId <String> -location <String> [-friendlyName <String>] [-description <String>]
+ [-ApplicationGroupReference <Array>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The function will update the current sessionhosts assigned user and drainmode
+The function will update an existing Azure Virtual Desktop workspace.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Update-AvdSessionhost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -AllowNewSession $true
+Update-AvdWorkspace -name avd-workspace -resourceGroupName rg-avd-01 -location WestEurope -description "Work in space"
 ```
 
 ### EXAMPLE 2
 ```
-$sessionHosts = Get-AvdSessionhost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01
-$sessionHosts | Update-AvdSessionhost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -AllowNewSession $true
+Update-AvdWorkspace -name avd-workspace -resourceGroupName rg-avd-01 -location WestEurope -ApplicationGroupReference @("id_1","id_2")
+```
+
+### EXAMPLE 3
+```
+Update-AvdWorkspace -resourceId "/subscriptions/../workspacename" -location WestEurope -ApplicationGroupReference @("id_1","id_2")
 ```
 
 ## PARAMETERS
 
-### -HostpoolName
-Enter the source AVD Hostpool name
+### -Name
+Enter the AVD workspace name
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Name
 Aliases:
 
 Required: True
@@ -59,7 +62,37 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the source Hostpool resourcegroup name
+Enter the AVD workspace resourcegroup name
+
+```yaml
+Type: String
+Parameter Sets: Name
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ResourceId
+{{ Fill ResourceId Description }}
+
+```yaml
+Type: String
+Parameter Sets: ResourceId
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -location
+Enter the Azure location
 
 ```yaml
 Type: String
@@ -73,9 +106,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -allowNewSession
-Allowing new sessions or not.
-(Default: true).
+### -friendlyName
+Change the workspace friendly name
 
 ```yaml
 Type: String
@@ -84,18 +116,17 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: True
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -assignedUser
-Enter the new username for the current sessionhost.
-Only available if providing one sessionhost at a time.
+### -description
+Enter a description
 
 ```yaml
 Type: String
-Parameter Sets: SingleObject
+Parameter Sets: (All)
 Aliases:
 
 Required: False
@@ -105,42 +136,15 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -sessionHostName
-Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
+### -ApplicationGroupReference
+Provide the application group resource IDs where the workspace assign to.
 
 ```yaml
-Type: String
-Parameter Sets: SingleObject
+Type: Array
+Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-```yaml
-Type: String
-Parameter Sets: InputObject
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -SessionHosts
-{{ Fill SessionHosts Description }}
-
-```yaml
-Type: Object
-Parameter Sets: InputObject
-Aliases:
-
-Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False

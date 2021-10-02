@@ -5,33 +5,38 @@ online version:
 schema: 2.0.0
 ---
 
-# Update-AvdHostpool
+# New-AvdApplicationGroup
 
 ## SYNOPSIS
-Updates an Azure Virtual Desktop hostpool.
+Creates a new AVD applicationgroup.
 
 ## SYNTAX
 
 ```
-Update-AvdHostpool -HostpoolName <String> -ResourceGroupName <String> [-customRdpProperty <String>]
- [-friendlyName <String>] [-description <String>] [-loadBalancerType <String>]
- [-validationEnvironment <Boolean>] [-maxSessionLimit <Int32>] [-Force] [<CommonParameters>]
+New-AvdApplicationGroup [-Name] <String> [[-description] <String>] [[-friendlyName] <String>]
+ [-ResourceGroupName] <String> [-location] <String> [[-tags] <Object>] [-HostPoolArmPath] <String>
+ [[-workspaceResourceId] <String>] [-ApplicationGroupType] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The function will update an Azure Virtual Desktop hostpool.
+With this function you can create a new AVD application group.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Update-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -customRdpProperty "targetisaadjoined:i:1"
+New-AvdApplicationGroup -Name applicationGroupname -ResourceGroupName rg-avd-001 -location WestEurope -ApplicationGroupType Desktop -HostPoolArmPath "/resourceID"
+```
+
+### EXAMPLE 2
+```
+New-AvdApplicationGroup -Name applicationGroupname -ResourceGroupName rg-avd-001 -location WestEurope -ApplicationGroupType Desktop -tags @{tag="value"}
 ```
 
 ## PARAMETERS
 
-### -HostpoolName
-Enter the AVD Hostpool name
+### -Name
+{{ Fill Name Description }}
 
 ```yaml
 Type: String
@@ -39,59 +44,14 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ResourceGroupName
-Enter the AVD Hostpool resourcegroup name
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -customRdpProperty
-If needed fill in the custom rdp properties (for example: targetisaadjoined:i:1 )
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -friendlyName
-Change the host pool friendly name
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -description
-{{ Fill description Description }}
+Enter the description of the application group.
 
 ```yaml
 Type: String
@@ -99,14 +59,14 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: Named
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -loadBalancerType
-Change the host pool loadBalancerType
+### -friendlyName
+Enter the friendlyName of the application group.
 
 ```yaml
 Type: String
@@ -114,54 +74,98 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: Named
+Position: 3
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -validationEnvironment
-Change the host pool validation environment
+### -ResourceGroupName
+Enter the name of the resourcegroup where to deploy the application group.
 
 ```yaml
-Type: Boolean
+Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: False
-Position: Named
-Default value: False
+Required: True
+Position: 4
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -maxSessionLimit
-Change the host pool max session limit (max 999999)
+### -location
+Enter the location where to deploy application group.
 
 ```yaml
-Type: Int32
+Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: False
-Position: Named
-Default value: 0
+Required: True
+Position: 5
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Force
-use the force parameter if you want to override the current customrdpproperties.
-Otherwise it will add the provided properties.
+### -tags
+If the resource needs tags, enter them in here.
 
 ```yaml
-Type: SwitchParameter
+Type: Object
 Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: Named
-Default value: False
+Position: 6
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -HostPoolArmPath
+{{ Fill HostPoolArmPath Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 7
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -workspaceResourceId
+If there is a workspace allready, fill in the workspace resource ID where to assign the application group to.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 8
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ApplicationGroupType
+{{ Fill ApplicationGroupType Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 9
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

@@ -1,6 +1,47 @@
-
 # Changelog
 All notable changes to this Az.Avd PowerShell will be documented in this file. 
+
+## [1.2.5] - 2021-10-02
+
+### :exclamation: BREAKING CHANGES!
+
+- Get-AvdHostpoolInfo is changed into Get-AvdHostpool [6ab2683] (https://github.com/srozemuller/AzAvd/commit/6ab2683cfaa1480369a705df4cb67e31ae11b2c3)
+- Create-AvdVmTemplate is changed into New-AvdVmTemplate [eae7dfa] (https://github.com/srozemuller/AzAvd/commit/eae7dfa195537ee94c53ccd23a6fcaa10ac06bb8)
+
+### Changes
+- Synopis changed at several commands.
+- Several help and examples updated.
+- Removed last legacy Az.DesktopVirtualization PowerShell module dependencies
+- New-AvdHostpool accepting VM template parameter
+- The following commands now accepting a resourceId:
+* Get-AvdApplicationGroup
+* Get-AvdWorkspace
+* Get-AvdHostpool
+* Update-AvdWorkspace
+
+
+[Bug-Fix] New-AvdHostpool now accepting Persistant loadBalancerType
+[Bug-Fix] Get-AvdSessionHost output null when requesting a single session host
+
+### Added Commands
+- Add-AvdApplicationGroupPermissions (Adds permissions to an Azure Virtual Desktop Applicationgroup)
+- Copy-AvdApplicationGroupPermissions (Copies application group assignments to another one)
+- Get-AvdWorkspace (Gets a new Azure Virtual Desktop workspace)
+- New-AvdWorkspace (Creates a new Azure Virtual Desktop workspace)
+- Update-AvdDesktopApplication (Updates the Virtual Desktop ApplicationGroup desktop application)
+- Get-AvdApplicationGroup (Get AVD applicationgroup information INCLUDING the assigned permissions)
+- Update-AvdWorkspace (Updates a new Azure Virtual Desktop workspace)
+- Update-AvdDesktopApplication (Updates the default SessionDesktop application, for example the displayname)
+
+
+## [1.2.4] - 2021-09-17
+
+### Changes
+- [Update] Removed old WVD commands, examples and synopsis [66548f1](https://github.com/srozemuller/AzAvd/commit/66548f19e0edffb94e546b6d5759ae1fbeb1df64)
+
+### Added Commands
+- Create-AvdVmTemplate (Creates a session host VM template in a hostpool)
+- Update-AvdSessionhost (For updating sessions host, for example drain mode)
 
 ## [1.2.3] - 2021-07-31
 

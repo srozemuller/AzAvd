@@ -5,86 +5,48 @@ online version:
 schema: 2.0.0
 ---
 
-# Enable-AvdStartVmOnConnect
+# Update-AvdDesktopApplication
 
 ## SYNOPSIS
-Enable AVD Start VM on Connect
+Updates the Virtual Desktop ApplicationGroup desktop application
 
 ## SYNTAX
 
-### Initial (Default)
+### Name (Default)
 ```
-Enable-AvdStartVmOnConnect [-HostpoolName <String>] [-ResourceGroupName <String>]
- [-HostsResourceGroup <String>] [-RoleName <String>] [-Force] [<CommonParameters>]
+Update-AvdDesktopApplication -ApplicationGroupName <String> -ResourceGroupName <String> [-description <String>]
+ [-friendlyName <String>] [<CommonParameters>]
 ```
 
-### Update
+### ResourceId
 ```
-Enable-AvdStartVmOnConnect [-HostpoolName <String>] [-ResourceGroupName <String>] -HostsResourceGroup <String>
- [-RoleName <String>] [-Force] [<CommonParameters>]
+Update-AvdDesktopApplication -ResourceId <String> [-description <String>] [-friendlyName <String>]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function will enable the start VM on connect option in the hostpool and will configure the Azure AD permissions.
-It will create a new role (AVD Start VM on connect) in the Azure AD
+The function will update the desktop application SessionDesktop with a friendlyname and/or displayname.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Enable-AvdStartVmOnConnect -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
+Update-AvdDesktopApplication -ApplicationGroupName avd-applicationgroup -ResourceGroupName rg-avd-01 -DisplayName "Update Desktop"
+```
+
+### EXAMPLE 2
+```
+Update-AvdDesktopApplication -ResourceId "/subscriptions/../applicationName" -DisplayName "Update Desktop"
 ```
 
 ## PARAMETERS
 
-### -HostpoolName
-Enter the name of the hostpool you want to enable start vm on connnect.
+### -ApplicationGroupName
+Enter the AVD application group name
 
 ```yaml
 Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ResourceGroupName
-Enter the name of the resourcegroup where the hostpool resides in.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -HostsResourceGroup
-{{ Fill HostsResourceGroup Description }}
-
-```yaml
-Type: String
-Parameter Sets: Initial
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-```yaml
-Type: String
-Parameter Sets: Update
+Parameter Sets: Name
 Aliases:
 
 Required: True
@@ -94,8 +56,38 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -RoleName
-{{ Fill RoleName Description }}
+### -ResourceGroupName
+Enter the AVD application group resourcegroup name
+
+```yaml
+Type: String
+Parameter Sets: Name
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ResourceId
+Enter the AVD application group resourceId
+
+```yaml
+Type: String
+Parameter Sets: ResourceId
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -description
+Enter a description
 
 ```yaml
 Type: String
@@ -109,17 +101,17 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Force
-Set these parameter to force changing the ValidationEnvironment to true.
+### -friendlyName
+Provide a displayname, this is the name you see in the webclient and Remote Desktop Client.
 
 ```yaml
-Type: SwitchParameter
+Type: String
 Parameter Sets: (All)
 Aliases:
 
 Required: False
 Position: Named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

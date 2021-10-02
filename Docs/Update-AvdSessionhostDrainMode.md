@@ -31,12 +31,12 @@ This can be one sessionhost or all of them.
 
 ### EXAMPLE 1
 ```
-Set-AVDSessionhostDrainMode -HostpoolName AVD-hostpool-personal -ResourceGroupName rg-AVD-01 -SessionHostName AVD-host-1.AVD.domain -AllowNewSession $true
+Set-AvdSessionhostDrainMode -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true
 ```
 
 ### EXAMPLE 2
 ```
-$sessionhosts | Set-AVDSessionhostDrainMode -AllowNewSession $false
+$sessionhosts | Update-AvdSessionhostDrainMode -AllowNewSession $false
 ```
 
 ## PARAMETERS
