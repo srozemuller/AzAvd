@@ -5,8 +5,8 @@ All notable changes to this Az.Avd PowerShell will be documented in this file.
 
 ### :exclamation: BREAKING CHANGES!
 
-- Get-AvdHostpoolInfo is changed into Get-AvdHostpool [6ab2683] (https://github.com/srozemuller/AzAvd/commit/6ab2683cfaa1480369a705df4cb67e31ae11b2c3)
-- Create-AvdVmTemplate is changed into New-AvdVmTemplate [eae7dfa] (https://github.com/srozemuller/AzAvd/commit/eae7dfa195537ee94c53ccd23a6fcaa10ac06bb8)
+- Get-AvdHostpoolInfo is changed into Get-AvdHostpool [6ab2683](https://github.com/srozemuller/AzAvd/commit/6ab2683cfaa1480369a705df4cb67e31ae11b2c3)
+- Create-AvdVmTemplate is changed into New-AvdVmTemplate [eae7dfa](https://github.com/srozemuller/AzAvd/commit/eae7dfa195537ee94c53ccd23a6fcaa10ac06bb8)
 
 ### Changes
 - Synopis changed at several commands.
@@ -20,8 +20,8 @@ All notable changes to this Az.Avd PowerShell will be documented in this file.
 * Update-AvdWorkspace
 
 
-[Bug-Fix] New-AvdHostpool now accepting Persistant loadBalancerType
-[Bug-Fix] Get-AvdSessionHost output null when requesting a single session host
+- [Bug-Fix] New-AvdHostpool now accepting Persistant loadBalancerType
+- [Bug-Fix] Get-AvdSessionHost output null when requesting a single session host
 
 ### Added Commands
 - Add-AvdApplicationGroupPermissions (Adds permissions to an Azure Virtual Desktop Applicationgroup)
