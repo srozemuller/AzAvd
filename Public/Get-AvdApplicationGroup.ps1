@@ -1,5 +1,5 @@
 function Get-AvdApplicationGroup {
-    <#
+<#
 .SYNOPSIS
 Get AVD applicationgroup information with the assigned permissions.
 .DESCRIPTION
@@ -8,14 +8,18 @@ With this function you can get information about an AVD application group.
 Enter the name of the application group you want information from.
 .PARAMETER ResourceGroupName
 Enter the name of the resourcegroup where the hostpool resides in.
+.PARAMETER ResourceId
+Enter the applicationgroup resourceId.
 .EXAMPLE
-Get-AvdApplicationGroup ApplicationGroupName applicationGroup -ResourceGroupName rg-avd-001
+Get-AvdApplicationGroup -ApplicationGroupName applicationGroup -ResourceGroupName rg-avd-001
+.EXAMPLE
+Get-AvdApplicationGroup -ResourceId "/subscriptions/../applicationGroupname"
 #>
     [CmdletBinding(DefaultParameterSetName = "Name")]
     param (
         [Parameter(Mandatory, ParameterSetName = "Name")]
         [ValidateNotNullOrEmpty()]
-        [string]$Name,
+        [string]$ApplicationGroupName,
 
         [Parameter(Mandatory, ParameterSetName = "Name")]
         [ValidateNotNullOrEmpty()]
