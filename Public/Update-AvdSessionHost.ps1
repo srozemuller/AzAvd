@@ -51,7 +51,7 @@ function Update-AvdSessionhost {
     Begin {
         Write-Verbose "Start moving session hosts"
         AuthenticationCheck
-        $token = GetAuthToken -resource "https://management.azure.com"
+        $token = GetAuthToken -resource $Script:AzureApiUrl
         $apiVersion = "?api-version=2021-01-14-preview"
     }
     Process {
@@ -72,7 +72,7 @@ function Update-AvdSessionhost {
             try {
                 $vmName = $_.Split("/")[-1]
                 Write-Verbose "Updating sessionhost $vmName"
-                $url = "https://management.azure.com/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + "/sessionHosts/" + $vmName + $apiVersion
+                $url = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + "/sessionHosts/" + $vmName + $apiVersion
                 $parameters = @{
                     uri     = $url
                     Headers = $token
