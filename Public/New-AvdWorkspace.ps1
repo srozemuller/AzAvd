@@ -54,7 +54,7 @@ function New-AvdWorkspace {
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
         $apiVersion = "?api-version=2021-01-14-preview"
-        $url = $Script:AzureApiUrl+"/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/workspaces/" + $Name + $apiVersion        
+        $url = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/workspaces/" + $Name + $apiVersion        
         $parameters = @{
             uri     = $url
             Headers = $token
