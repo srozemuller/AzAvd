@@ -9,24 +9,39 @@ Enter the name of the hostpool you want information from.
 .PARAMETER ResourceGroupName
 Enter the name of the resourcegroup where the hostpool resides in.
 .EXAMPLE
-Get-AvdHostPoolInfo -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
+Get-AvdHostPool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
+.EXAMPLE
+Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
 #>
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = "Name")]
     param (
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory, ParameterSetName = "Name")]
         [ValidateNotNullOrEmpty()]
         [string]$HostPoolName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory, ParameterSetName = "Name")]
         [ValidateNotNullOrEmpty()]
-        [string]$ResourceGroupName
+        [string]$ResourceGroupName,
+
+        [Parameter(Mandatory, ParameterSetName = "ResourceId")]
+        [ValidateNotNullOrEmpty()]
+        [string]$resourceId
     )
     Begin {
         Write-Verbose "Start searching for hostpool $hostpoolName"
         AuthenticationCheck
         $token = GetAuthToken -resource $script:AzureApiUrl
         $apiVersion = "?api-version=2019-12-10-preview"
-        $url = $script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + $apiVersion
+        switch ($PsCmdlet.ParameterSetName) {
+            Name {
+                Write-Verbose "Name and ResourceGroup provided"
+                $url = $script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + $apiVersion
+            }
+            ResourceId {
+                Write-Verbose "ResourceId provided"
+                $url = $script:AzureApiUrl + $resourceId + $apiVersion
+            }
+        }
         $parameters = @{
             uri     = $url
             Headers = $token
