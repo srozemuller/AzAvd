@@ -77,7 +77,6 @@
     FunctionsToExport      = @(
         'Add-AvdApplicationGroupPermissions',
         'Copy-AvdApplicationGroupPermissions',
-        'New-AvdVmTemplate',
         'Enable-AvdDiagnostics',
         'Enable-AvdStartVmOnConnect',    
         'Export-AvdConfig',
@@ -92,6 +91,7 @@
         'Move-AvdSessionHost',
         'New-AvdApplicationGroup',
         'New-AvdHostpool',
+        'New-AvdVmTemplate',
         'New-AvdWorkspace',
         'Remove-AvdSessionHost',
         'Update-AvdDesktopApplication',
