@@ -53,12 +53,12 @@ Function Get-AvdNetworkInfo {
             }
         }
         try {
-            $SessionHosts = Get-AzWvdSessionHost @Parameters
+            $SessionHosts = Get-AvdSessionHost @Parameters
         }
         catch {
             Throw "No sessionhosts found, $_"
         }
-        $sessionhostsIds = [system.String]::Join("`",`"", $SessionHosts.ResourceId)
+        $sessionhostsIds = [system.String]::Join("`",`"", $SessionHosts.properties.ResourceId)
         $Query = 
         'resources
         | where type =~ "microsoft.compute/virtualmachines"

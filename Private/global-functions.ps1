@@ -1,3 +1,4 @@
+# In this file all global functions are configured. 
 function AuthenticationCheck {
     <#
     .SYNOPSIS

@@ -50,12 +50,7 @@ function Get-AvdLatestSessionHost {
             }
         }
     }
-    try {
-        $SessionHosts = Get-AzWvdSessionHost @Parameters |  Sort-Object ResourceId -Descending
-    }
-    catch {
-        Throw "No session hosts found in AVD Hostpool $WvdHostpoolName, $_"
-    }
+    $SessionHosts = Get-AvdSessionHost @Parameters |  Sort-Object properties.ResourceId -Descending
     # Convert hosts to highest number to get initial value
     if ($null -eq $SessionHosts) {
         $InitialNumber = 0

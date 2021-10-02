@@ -5,42 +5,46 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdLatestSessionHost
+# Get-AvdWorkspace
 
 ## SYNOPSIS
-Gets the latest session host from the AVD Hostpool
+Gets a new Azure Virtual Desktop workspace.
 
 ## SYNTAX
 
-### Parameters (Default)
+### Name (Default)
 ```
-Get-AvdLatestSessionHost -HostpoolName <String> -ResourceGroupName <String> [-NumOnly] [<CommonParameters>]
+Get-AvdWorkspace -Name <String> -ResourceGroupName <String> [<CommonParameters>]
 ```
 
-### InputObject
+### ResourceId
 ```
-Get-AvdLatestSessionHost -InputObject <PSObject> [<CommonParameters>]
+Get-AvdWorkspace -ResourceId <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The function will help you getting the latests session host from a AVD Hostpool. 
-By running this function you will able to define the next number for deploying new session hosts.
+The function will search for a given Azure Virtual Desktop workspace.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdLatestSessionHost -HostpoolName avd-hostpool -ResourceGroupName avd-resourcegroup
+Get-AvdWorkspace -name avd-workspace -resourceGroupName rg-avd-01
+```
+
+### EXAMPLE 2
+```
+Get-AvdWorkspace -resourceId "/subscriptions/../workspacename"
 ```
 
 ## PARAMETERS
 
-### -HostpoolName
-Enter the AVD Hostpool name
+### -Name
+Enter the AVD workspace name
 
 ```yaml
 Type: String
-Parameter Sets: Parameters
+Parameter Sets: Name
 Aliases:
 
 Required: True
@@ -51,11 +55,11 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the AVD Hostpool resourcegroup name
+Enter the AVD workspace resourcegroup name
 
 ```yaml
 Type: String
-Parameter Sets: Parameters
+Parameter Sets: Name
 Aliases:
 
 Required: True
@@ -65,27 +69,12 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -NumOnly
-With this switch parameter you will set, you will get the next sessionhost number returned.
+### -ResourceId
+Enter the AVD workspace resourceId
 
 ```yaml
-Type: SwitchParameter
-Parameter Sets: Parameters
-Aliases:
-
-Required: False
-Position: Named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -InputObject
-You can put the hostpool object in here.
-
-```yaml
-Type: PSObject
-Parameter Sets: InputObject
+Type: String
+Parameter Sets: ResourceId
 Aliases:
 
 Required: True

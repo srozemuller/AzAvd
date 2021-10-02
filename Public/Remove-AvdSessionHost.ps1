@@ -31,13 +31,13 @@ function Remove-AvdSessionhost {
     Begin {
         Write-Verbose "Start removing sessionhosts"
         AuthenticationCheck
-        $token = GetAuthToken -resource "https://management.azure.com"
+        $token = GetAuthToken -resource $Script:AzureApiUrl
         $apiVersion = "?api-version=2021-03-09-preview"
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
             Parameters {
-                $url = "https://management.azure.com/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + "/sessionHosts/" + $SessionHostName + $apiVersion
+                $url = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + "/sessionHosts/" + $SessionHostName + $apiVersion
                 $parameters = @{
                     uri     = $url
                     Headers = $token

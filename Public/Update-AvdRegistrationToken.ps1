@@ -30,9 +30,9 @@ function Update-AvdRegistrationToken {
     Begin {
         Write-Verbose "Start updating registration token"
         AuthenticationCheck
-        $token = GetAuthToken -resource "https://management.azure.com"
+        $token = GetAuthToken -resource $Script:AzureApiUrl
         $apiVersion = "?api-version=2019-12-10-preview"
-        $hostpoolUrl = "https://management.azure.com/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + $apiVersion
+        $hostpoolUrl = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + $apiVersion
     }
     Process {
         $now = get-date

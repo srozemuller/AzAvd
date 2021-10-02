@@ -48,7 +48,7 @@ function Move-AvdSessionhost {
     Begin {
         Write-Verbose "Start moving session hosts"
         AuthenticationCheck
-        $token = GetAuthToken -resource "https://management.azure.com"
+        $token = GetAuthToken -resource $Script:AzureApiUrl
         $apiVersion = "?api-version=2021-04-01"
     }
     Process {
@@ -65,11 +65,11 @@ function Move-AvdSessionhost {
                 
             }
         }
-        $sessionHostName | foreach {
+        $sessionHostName | ForEach-Object {
             try {
                 $vmName = $_.Split("/")[-1]
                 Write-Verbose "Removing sessionhost $vmName from $FromHostPoolName"
-                $url = "https://management.azure.com/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + "/sessionHosts/" + $vmName + $apiVersion
+                $url = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + "/sessionHosts/" + $vmName + $apiVersion
                 $parameters = @{
                     uri     = $url
                     Headers = $token
@@ -90,7 +90,7 @@ function Move-AvdSessionhost {
                     commandId = "RunPowerShellScript"
                     script    = $script
                 }   
-                $url = "https://management.azure.com" + $($resourceId) + "/runCommand" + $apiVersion
+                $url = $Script:AzureApiUrl + $($resourceId) + "/runCommand" + $apiVersion
                 Write-Verbose "Moving sessionhost $name to $ToHostPoolName"
                 $parameters = @{
                     URI     = $url 

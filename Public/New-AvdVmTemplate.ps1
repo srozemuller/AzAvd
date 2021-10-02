@@ -1,9 +1,9 @@
-function Create-AvdVmTemplate {
+function New-AvdVmTemplate {
     <#
     .SYNOPSIS
-    Removing sessionhosts from an Azure Virtual Desktop hostpool.
+    Creates a VM template in the AVD hostpool. 
     .DESCRIPTION
-    The function will search for sessionhosts and will remove them from the Azure Virtual Desktop hostpool.
+    The function will create an AVD VM template for session hosts. This template is configured in the hostpool
     .PARAMETER HostpoolName
     Enter the AVD Hostpool name
     .PARAMETER ResourceGroupName
@@ -116,9 +116,9 @@ function Create-AvdVmTemplate {
     Begin {
         Write-Verbose "Start searching"
         AuthenticationCheck
-        $token = GetAuthToken -resource "https://management.azure.com"
+        $token = GetAuthToken -resource $Script:AzureApiUrl
         $apiVersion = "?api-version=2019-12-10-preview"
-        $url = "https://management.azure.com/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + $apiVersion
+        $url = $Script:AzureApiUrl + "subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + $apiVersion
         $parameters = @{
             uri     = $url
             Headers = $token

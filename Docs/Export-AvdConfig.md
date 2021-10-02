@@ -30,12 +30,12 @@ The function will help you exporting the complete AVD environment to common outp
 
 ### EXAMPLE 1
 ```
-Export-AVDConfig -Hostpoolname AVD-hostpool-001 -ResourceGroupName rg-AVD-001 -Format HTML -Verbose -Filename AVDExport
+Export-AvdConfig -Hostpoolname avd-hostpool-001 -ResourceGroupName rg-avd-001 -Format HTML -Verbose -Filename AVDExport
 ```
 
 ### EXAMPLE 2
 ```
-Export-AVDConfig -HostPoolName AVD-hostpool-001 -ResourceGroupName rg-AVD-001 -Format HTML,JSON -Verbose -Filename AVDExport
+Export-AvdConfig -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -Format HTML,JSON -Verbose -Filename AVDExport
 ```
 
 ## PARAMETERS
