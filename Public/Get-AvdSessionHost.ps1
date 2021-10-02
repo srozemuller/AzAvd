@@ -11,7 +11,10 @@ function Get-AvdSessionHost {
     .PARAMETER SessionHostName
     Enter the sessionhosts name
     .EXAMPLE
-     Get-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true 
+    Get-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true 
+    .EXAMPLE
+    Get-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
+    
     #>
     [CmdletBinding(DefaultParameterSetName = 'All')]
     param
@@ -33,25 +36,32 @@ function Get-AvdSessionHost {
     Begin {
         Write-Verbose "Start searching session hosts"
         AuthenticationCheck
-        $token = GetAuthToken -resource "https://management.azure.com"
-        $baseUrl = "https://management.azure.com/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + "/sessionHosts/"
+        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $baseUrl = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + "/sessionHosts/"
+        $apiVersion = "?api-version=2019-12-10-preview"
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
             All {
                 Write-Verbose 'Using base url for getting all session hosts in $hostpoolName'
             }
-            Hostname{
+            Hostname {
+                Write-Verbose "Looking for sessionhost $SessionHostName"
                 $baseUrl = $baseUrl + $SessionHostName 
             }
         }
-        $apiVersion = "?api-version=2019-12-10-preview"
         $parameters = @{
-            uri     = $baseUrl+$apiVersion
+            uri     = $baseUrl + $apiVersion
             Method  = "GET"
             Headers = $token
         }
         $results = Invoke-RestMethod @parameters
-        return $results.value
+        if ($SessionHostName){
+            return $results
+        }
+        else {
+            return $results.value
+        }
+        
     }
 }
