@@ -5,12 +5,18 @@ function Get-AvdSessionHostResources {
     Gets the Virtual Machines Azure resource from a AVD Session Host
     .DESCRIPTION
     The function will help you getting the virtual machine resource information which is behind the AVD Session Host
-    .PARAMETER SessionHost
+    .PARAMETER HostpoolName
+    Enter the AVD hostpool name
+    .PARAMETER ResourceGroupName
+    Enter the AVD hostpool resourcegroup
+    .PARAMETER SessionHostName
     Enter the AVD Session Host name
     .EXAMPLE
-    Get-AvdSessionHostResources -SessionHost SessionHostObject
+    Get-AvdSessionHostResources -Hostpoolname avd-hostpool -ResourceGroup rg-avd-01
+    .EXAMPLE
+    Get-AvdSessionHostResources -Hostpoolname avd-hostpool -ResourceGroup rg-avd-01
     #>
-    [CmdletBinding(DefaultParameterSetName = 'Sessionhost')]
+    [CmdletBinding(DefaultParameterSetName = 'Hostpool')]
     param (
         [parameter(Mandatory, ParameterSetName = 'Hostpool')]
         [parameter(Mandatory, ParameterSetName = 'Sessionhost')]
@@ -28,58 +34,44 @@ function Get-AvdSessionHostResources {
     )
     
     Begin {
-        Write-Verbose "Start searching"
         AuthenticationCheck
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
             Hostpool {
-                $HostpoolParameters = @{
+                $Parameters = @{
                     HostPoolName      = $HostpoolName
                     ResourceGroupName = $ResourceGroupName
                 }
             }
-            Default {
-                $SessionHostParameters = @{
+            Sessionhost {
+                $Parameters = @{
                     HostPoolName      = $HostpoolName
                     ResourceGroupName = $ResourceGroupName
-                    Name              = $SessionHostName
+                    SessionHostName   = $SessionHostName
                 }
             }
         }
-        if ($HostpoolParameters) {
-            Write-Verbose "Hostpool parameters provided"
-            try {
-                $SessionHosts = Get-AzWvdsessionhost @HostpoolParameters
-            }
-            catch {
-                Throw "No WVD Hostpool found with name $Hostpoolname in resourcegroup $ResourceGroupName or no sessionhosts"
-            }
-        }
-        if ($SessionHostParameters) {
-            Write-Verbose "Sessionhost parameters provided"
-            try {
-                $SessionHosts = Get-AzWvdsessionhost @SessionHostParameters
-            }
-            catch {
-                Throw "No WVD Hostpool found with name $Hostpoolname in resourcegroup $ResourceGroupName or no sessionhosts"
+        $SessionHosts = Get-AvdSessionhost @Parameters
+        if ($sessionHosts) {
+            $VirtualMachines = @()
+            $SessionHosts | Foreach-Object {
+                Write-Verbose "Searching for $($_.Name)"
+                $HasLatestVersion, $IsVirtualMachine = $False
+                try {
+                    $Resource = Get-AzResource -resourceId $_.Properties.ResourceId
+                }
+                catch {
+                    Throw "$($_.Name) has no Virtual Machine resource"
+                }
+                $VirtualMachines += Get-AzVm -name $Resource.Name
             }
         }
-        $VirtualMachines = @()
-        foreach ($SessionHost in $SessionHosts) {
-            Write-Verbose "Searching for $($SessionHost.Name)"
-            $HasLatestVersion, $IsVirtualMachine = $False
-            try {
-                $Resource = Get-AzResource -resourceId $SessionHost.ResourceId
-            }
-            catch {
-                Throw "$SessionHost has no Virtual Machine resource"
-            }
-            $VirtualMachines += Get-AzVm -name $Resource.Name
+        else {
+            Write-Error "No AVD Hostpool found with name $Hostpoolname in resourcegroup $ResourceGroupName or no sessionhosts"
         }
     }
     End {
         return $VirtualMachines
     }
-
 }
