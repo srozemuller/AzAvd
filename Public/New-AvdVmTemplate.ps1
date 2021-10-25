@@ -95,7 +95,7 @@ function New-AvdVmTemplate {
         [Parameter(Mandatory)]
         [ValidateSet("Standard_LRS", "Premium_LRS", "StandardSSD_LRS")]
         [ValidateNotNullOrEmpty()]
-        [string]$osDiskType = '',
+        [string]$osDiskType,
 
         [Parameter(Mandatory, HelpMessage = 'Please fill in a complete domain name (eg. Standard_B2ms)')]
         [ValidateNotNullOrEmpty()]
@@ -118,32 +118,32 @@ function New-AvdVmTemplate {
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
         $apiVersion = "?api-version=2019-12-10-preview"
-        $url = $Script:AzureApiUrl + "subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + $apiVersion
+        $url = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + $apiVersion
         $parameters = @{
             uri     = $url
             Headers = $token
         }
         $vmSize = @{
-            id=$vmSku
-            cores=$vmCores
-            ram=$vmRam
+            id    = $vmSku
+            cores = $vmCores
+            ram   = $vmRam
         }
-        $vmTemplate =  [PSCustomObject]@{
-            domain=$domain
-            osDiskType=$osDiskType
-            namePrefix = $namePrefix
-            vmSize = $vmSize
-            galleryImageOffer=$galleryImageOffer
-            galleryImagePublisher=$galleryImagePublisher
-            galleryImageSKU=$galleryImageSKU
-            imageType=$imageType
-            imageUri=$imageUri
-            customImageId=$customImageId
-            useManagedDisks=$useManagedDisks
-            galleryItemId=$galleryItemId
+        $vmTemplate = [PSCustomObject]@{
+            domain                = $domain
+            osDiskType            = $osDiskType
+            namePrefix            = $namePrefix
+            vmSize                = $vmSize
+            galleryImageOffer     = $galleryImageOffer
+            galleryImagePublisher = $galleryImagePublisher
+            galleryImageSKU       = $galleryImageSKU
+            imageType             = $imageType
+            imageUri              = $imageUri
+            customImageId         = $customImageId
+            useManagedDisks       = $useManagedDisks
+            galleryItemId         = $galleryItemId
         }
 
-        if ($CustomObject){
+        if ($CustomObject) {
             $CustomObject.GetEnumerator() | ForEach-Object {
                 $vmTemplate | Add-Member -NotePropertyName $_.Key -NotePropertyValue $_.Value
             }
@@ -151,7 +151,7 @@ function New-AvdVmTemplate {
         $body = @{
             properties = @{
                 vmTemplate = $vmTemplate | ConvertTo-Json -Compress
-                }
+            }
         }       
     }
     Process {

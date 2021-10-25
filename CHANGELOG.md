@@ -3,16 +3,21 @@
 
 All notable changes to this Az.Avd PowerShell will be documented in this file.
 
-  
+## [1.2.7] - 2021-10-25
+
+### Bugfixes
+- Bug fixed in New-AvdVmTemplate, osdisktype was default empty. Default value removed.
+- Bug fixed in New-AvdVmTemplate, typo in URL.
+
+## [1.2.6] - 2021-10-20
+
+### Added Commands
+
+- New-AvdAutoScaleRole (Creating an AVD scaling plan role in Azure AD)
+- New-AvdScalingPlan (Creating an AVD scaling plan)
 
 ## [1.2.5] - 2021-10-02
-
-  
-
 ### :exclamation: BREAKING CHANGES!
-
-  
-
 - Get-AvdHostpoolInfo is changed into Get-AvdHostpool [6ab2683](https://github.com/srozemuller/AzAvd/commit/6ab2683cfaa1480369a705df4cb67e31ae11b2c3)
 
 - Create-AvdVmTemplate is changed into New-AvdVmTemplate [eae7dfa](https://github.com/srozemuller/AzAvd/commit/eae7dfa195537ee94c53ccd23a6fcaa10ac06bb8)
