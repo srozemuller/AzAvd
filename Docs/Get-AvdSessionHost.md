@@ -33,11 +33,6 @@ This function will grab all the sessionhost from a specific Azure Virtual Deskto
 Get-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true
 ```
 
-### EXAMPLE 2
-```
-Get-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
-```
-
 ## PARAMETERS
 
 ### -HostpoolName

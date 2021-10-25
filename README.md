@@ -2,7 +2,7 @@
 This module will help you managing an Azure Virtual Desktop environment and all related Azure resources.
 |Current version| Required PowerShell Version |
 |--|--|
-|v1.2.5 | 5.1 |
+|v1.2.6 | 5.1 |
 
 ## Install module
 To install the module in PowerShell use the command below
@@ -27,8 +27,10 @@ The module consists of the following commands:
 - [Get-AvdSessionHostResources](./Docs/Get-AvdSessionHostResources.md)
 - [Get-AvdWorkspace](./Docs/Get-AvdWorkspace.md)
 - [Move-AvdSessionHost](./Docs/Move-AvdSessionhost.md)
+- [Move-New-AvdAutoScaleRole](./Docs/New-AvdAutoScaleRole.md)
 - [New-AvdApplicationGroup](./Docs/New-AvdApplicationGroup.md)
 - [New-AvdHostpool](./Docs/New-AvdHostpool.md)
+- [New-AvdScalingPlan](./Docs/New-AvdScalingPlan.md)
 - [New-AvdVmTemplate](./Docs/New-AvdVmTemplate.md)
 - [New-AvdWorkspace](./Docs/New-AvdWorkspace.md)
 - [Remove-AvdSessionHost](./Docs/Remove-AvdSessionhost.md)

@@ -8,18 +8,18 @@ schema: 2.0.0
 # Update-AvdHostpool
 
 ## SYNOPSIS
-Updates an Azure Virtual Desktop hostpool.
+Removing sessionhosts from an Azure Virtual Desktop hostpool.
 
 ## SYNTAX
 
 ```
 Update-AvdHostpool -HostpoolName <String> -ResourceGroupName <String> [-customRdpProperty <String>]
- [-friendlyName <String>] [-description <String>] [-loadBalancerType <String>]
- [-validationEnvironment <Boolean>] [-maxSessionLimit <Int32>] [-Force] [<CommonParameters>]
+ [-friendlyName <String>] [-loadBalancerType <String>] [-validationEnvironment <Boolean>]
+ [-maxSessionLimit <Int32>] [-Force] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The function will update an Azure Virtual Desktop hostpool.
+The function will search for sessionhosts and will remove them from the Azure Virtual Desktop hostpool.
 
 ## EXAMPLES
 
@@ -77,21 +77,6 @@ Accept wildcard characters: False
 
 ### -friendlyName
 Change the host pool friendly name
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -description
-{{ Fill description Description }}
 
 ```yaml
 Type: String

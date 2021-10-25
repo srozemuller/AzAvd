@@ -8,7 +8,7 @@ schema: 2.0.0
 # Get-AvdHostPoolInfo
 
 ## SYNOPSIS
-Get WVD Hostpool information, including the underlaying session hosts
+Get AVD Hostpool information, including the underlaying session hosts
 
 ## SYNTAX
 
@@ -17,13 +17,13 @@ Get-AvdHostPoolInfo [-HostPoolName] <String> [-ResourceGroupName] <String> [<Com
 ```
 
 ## DESCRIPTION
-With this function you can get information about a WVD hostpool that includes the information about the underlaying session hosts.
+With this function you can get information about a AVD hostpool that includes the information about the underlaying session hosts.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-WvdHostPoolInfo -HostPoolName wvd-hostpool-001 -ResourceGroupName rg-wvd-001
+Get-AvdHostPoolInfo -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
 ```
 
 ## PARAMETERS
