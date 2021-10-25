@@ -1,4 +1,4 @@
-function New-AutoScaleRole {
+function New-AvdAutoScaleRole {
     <#
     .SYNOPSIS
     Creates a new RBAC role for AVD autoscaling
@@ -13,9 +13,9 @@ function New-AutoScaleRole {
     .PARAMETER Assign
     If you like to assign directly, use this switch parameter
     .EXAMPLE
-    New-AutoScaleRole RoleName avd-autoscale RoleDescription "Plan for autoscale session hosts"
+    New-AvdAutoScaleRole RoleName avd-autoscale RoleDescription "Plan for autoscale session hosts"
     .EXAMPLE
-    New-AutoScaleRole RoleName avd-autoscale RoleDescription "Plan for autoscale session hosts" -resourcegroup rg-avd-001 -Assign
+    New-AvdAutoScaleRole RoleName avd-autoscale RoleDescription "Plan for autoscale session hosts" -resourcegroup rg-avd-001 -Assign
     #>
     [CmdletBinding()]
     param
