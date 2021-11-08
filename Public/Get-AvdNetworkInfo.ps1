@@ -91,6 +91,8 @@ Function Get-AvdNetworkInfo {
             $_ | Add-Member -NotePropertyName NetworkCardInfo -NotePropertyValue $networkInfo -Force
             $_ | Add-Member -NotePropertyName SubnetInfo -NotePropertyValue $nsgSubnetInfo.properties -Force
         }
+    }
+    End {
         $SessionHosts
     }
 }
