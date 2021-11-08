@@ -1,4 +1,3 @@
-#requires -module @{ModuleName = 'Az.ResourceGraph'; ModuleVersion = '0.7.6'}
 Function Get-AvdNetworkInfo {
     <#
     .SYNOPSIS
@@ -14,7 +13,7 @@ Function Get-AvdNetworkInfo {
     .EXAMPLE
     Get-AvdNetworkInfo -HostpoolName <string> -ResourceGroupName <string>
     .EXAMPLE
-    Get-AvdNetworkInfo -HostpoolName <string> -ResourceGroupName <string> -SessionHostName <string>
+    Get-AvdNetworkInfo -HostpoolName <string> -ResourceGroupName <string> -SessionHostName avd-0.domain.local
     #>
     [CmdletBinding(DefaultParameterSetName = 'Hostpool')]
     param (
@@ -33,8 +32,10 @@ Function Get-AvdNetworkInfo {
         [string]$SessionHostName
     )
     Begin {
-        Write-Verbose "Start searching"
+        Write-Verbose "Start searching for networkinfo."
         AuthenticationCheck
+        $token = GetAuthToken -resource $script:AzureApiUrl
+        $apiVersion = "?api-version=2021-03-01"
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -42,7 +43,7 @@ Function Get-AvdNetworkInfo {
                 $Parameters = @{
                     HostPoolName      = $HostpoolName
                     ResourceGroupName = $ResourceGroupName
-                    Name              = $SessionHostName
+                    SessionHostName   = $SessionHostName
                 }
             }
             Default {
@@ -53,37 +54,43 @@ Function Get-AvdNetworkInfo {
             }
         }
         try {
-            $SessionHosts = Get-AvdSessionHost @Parameters
+            $SessionHosts = Get-AvdSessionHostResources @Parameters
         }
         catch {
             Throw "No sessionhosts found, $_"
         }
-        $sessionhostsIds = [system.String]::Join("`",`"", $SessionHosts.properties.ResourceId)
-        $Query = 
-        'resources
-        | where type =~ "microsoft.compute/virtualmachines"
-        and id in~ ("'+ $sessionhostsIds + '")
-        | project vmId=tolower(id), vmName=name, vmResourceGroup=resourceGroup
-        | join kind=leftouter(
-            resources
-            | where type =~ "microsoft.network/networkinterfaces"
-            | extend vmId = tolower(properties.virtualMachine.id)
-            | mv-expand ipConfig = properties.ipConfigurations
-            | extend subnets = ipConfig.properties.subnet
-            | extend ipAddress = ipConfig.properties.privateIPAddress
-            | extend subnetName = split(subnets.id,"/")[-1]
-            | project subnetId = tostring(subnets.id), tostring(vmId), nicName=name, ipAddress, nicId=id, subnetName
-            | join kind=leftouter(
-                resources
-                | where type =~ "microsoft.network/networksecuritygroups"
-                | extend subnet = properties.subnets
-                | mvexpand subnet
-                | project subnetId = tostring(subnet.id), nsgName=name, nsgId=id
-            ) on subnetId
-        ) on vmId
-        | project vmId, vmName,vmResourceGroup,ipAddress, nicName, nicId, subnetName, subnetId, nsgName, nsgId
-        '
-        $Result = Search-AzGraph -Query $Query
-        return $Result 
+        $SessionHosts | ForEach-Object {
+            $nicParameters = @{
+                uri = $script:AzureApiUrl + $_.networkprofile.networkinterfaces.id + $apiVersion
+                Headers = $token    
+                Method = "GET"
+            }
+            $nsgNicParameters = @{
+                uri = $script:AzureApiUrl + $_.networkprofile.networkinterfaces.id + "/effectiveNetworkSecurityGroups" + $apiVersion
+                Headers = $token    
+                Method = "POST"
+            }
+
+            $requestNicInfo = Invoke-RestMethod @nicParameters
+            try {
+                $requestNicNsgInfo = (Invoke-RestMethod @nsgNicParameters).value
+            }
+            catch {
+                $requestNicNsgInfo = $false
+            }
+            $networkInfo = $requestNicInfo.properties.ipConfigurations.properties
+            $networkInfo | Add-Member -NotePropertyName nicId -NotePropertyValue $requestNicInfo.Id
+            $networkInfo | Add-Member -NotePropertyName nicNsg -NotePropertyValue $requestNicNsgInfo
+
+            $nsgSubnetParameters = @{
+                uri = $Script:AzureApiUrl+ $networkInfo.subnet.id + $apiVersion
+                Headers = $token    
+                Method = "GET"
+            }
+            $nsgSubnetInfo = Invoke-RestMethod @nsgSubnetParameters
+            $_ | Add-Member -NotePropertyName NetworkCardInfo -NotePropertyValue $networkInfo -Force
+            $_ | Add-Member -NotePropertyName SubnetInfo -NotePropertyValue $nsgSubnetInfo.properties -Force
+        }
+        $SessionHosts
     }
 }
