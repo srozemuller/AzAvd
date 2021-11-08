@@ -3,22 +3,18 @@
 
 All notable changes to this Az.Avd PowerShell will be documented in this file.
 
-## [1.2.8] - 2021-11-08
-### :exclamation: BREAKING CHANGES!
-- In Export-AvdConfig the network part names are changed.
-ipAddress -> privateIPAddress
-nicName -> nicId
-nsgName -> subnetNsgId
-subnetName -> subnetId
+## [1.2.7] - 2021-10-25
 
-### Changes
-- In Get-AvdNetworkInfo required module Az.ResourceGraph removed
+### Bugfixes
+- Bug fixed in New-AvdVmTemplate, osdisktype was default empty. Default value removed.
+- Bug fixed in New-AvdVmTemplate, typo in URL.
 
+## [1.2.6] - 2021-10-20
 
+### Added Commands
 
-## [1.2.5] - 2021-10-02
-
-  
+- New-AvdAutoScaleRole (Creating an AVD scaling plan role in Azure AD)
+- New-AvdScalingPlan (Creating an AVD scaling plan)
 
 ### :exclamation: BREAKING CHANGES!
 - Get-AvdHostpoolInfo is changed into Get-AvdHostpool [6ab2683](https://github.com/srozemuller/AzAvd/commit/6ab2683cfaa1480369a705df4cb67e31ae11b2c3)
