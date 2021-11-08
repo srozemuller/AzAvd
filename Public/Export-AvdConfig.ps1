@@ -54,7 +54,7 @@ function Export-AvdConfig {
         $Content = [ordered]@{
             Hostpool     = Get-AvdHostPool @Parameters | Select-Object name, @{N="Description";E={$_.properties.description}}, @{N="startVMOnConnect";E={$_.properties.startVMOnConnect}}, @{N="maxSessionLimit";E={$_.properties.maxSessionLimit}}, @{N="hostpoolType";E={$_.properties.hostpoolType}}
             SessionHosts = Get-AvdImageVersionStatus @Parameters | Select-Object vmLatestVersion, vmName, resourceGroupName, LastVersion, currentImageVersion, imageName, imageGallery, subscriptionId
-            Network      = Get-AvdNetworkInfo @Parameters | Select-Object vmName, vmResourceGroup, ipAddress, nicName, nsgName, subnetName
+            Network      = Get-AvdNetworkInfo @Parameters | Select-Object @{N="vmName";E={$_.Name}}, @{N="vmResourceGroup";E={$_.ResourceGroup}}, @{N="privateIPAddress";E={$_.networkcardinfo.privateIPAddress}}, @{N="nicId";E={$_.networkcardinfo.nicId}}, @{N="subnetNsgId";E={$_.SubnetInfo.networksecurityGroup}}, @{N="subnetId";E={$_.networkcardinfo.subnet.id}}
         }
         switch ($PsCmdlet.ParameterSetName) {
             Console { 

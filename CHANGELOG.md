@@ -16,7 +16,6 @@ All notable changes to this Az.Avd PowerShell will be documented in this file.
 - New-AvdAutoScaleRole (Creating an AVD scaling plan role in Azure AD)
 - New-AvdScalingPlan (Creating an AVD scaling plan)
 
-## [1.2.5] - 2021-10-02
 ### :exclamation: BREAKING CHANGES!
 - Get-AvdHostpoolInfo is changed into Get-AvdHostpool [6ab2683](https://github.com/srozemuller/AzAvd/commit/6ab2683cfaa1480369a705df4cb67e31ae11b2c3)
 

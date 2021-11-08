@@ -72,6 +72,6 @@ function Get-AvdSessionHostResources {
         }
     }
     End {
-        return $VirtualMachines
+        $VirtualMachines
     }
 }
