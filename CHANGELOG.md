@@ -3,16 +3,24 @@
 
 All notable changes to this Az.Avd PowerShell will be documented in this file.
 
-  
+## [1.2.8] - 2021-11-08
+### :exclamation: BREAKING CHANGES!
+- In Export-AvdConfig the network part names are changed.
+ipAddress -> privateIPAddress
+nicName -> nicId
+nsgName -> subnetNsgId
+subnetName -> subnetId
+
+### Changes
+- In Get-AvdNetworkInfo required module Az.ResourceGraph removed
+
+
 
 ## [1.2.5] - 2021-10-02
 
   
 
 ### :exclamation: BREAKING CHANGES!
-
-  
-
 - Get-AvdHostpoolInfo is changed into Get-AvdHostpool [6ab2683](https://github.com/srozemuller/AzAvd/commit/6ab2683cfaa1480369a705df4cb67e31ae11b2c3)
 
 - Create-AvdVmTemplate is changed into New-AvdVmTemplate [eae7dfa](https://github.com/srozemuller/AzAvd/commit/eae7dfa195537ee94c53ccd23a6fcaa10ac06bb8)
