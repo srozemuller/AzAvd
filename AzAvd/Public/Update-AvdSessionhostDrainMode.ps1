@@ -65,7 +65,7 @@ function Update-AvdSessionhostDrainMode {
             }
         }
         if ($InputObject) {
-            $InputObject | foreach { Update-AvdSessionhost @Parameters }
+            $InputObject | ForEach-Object { Update-AvdSessionhost @Parameters }
         }
         else {    
             Update-AvdSessionhost @Parameters

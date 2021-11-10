@@ -52,6 +52,6 @@ function Remove-AvdSessionhost {
 
             }
         }
-        return $results
+        $results
     }
 }

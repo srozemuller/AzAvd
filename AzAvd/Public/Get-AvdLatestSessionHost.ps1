@@ -57,8 +57,8 @@ function Get-AvdLatestSessionHost {
     }
     else {
         $All = [ordered]@{}
-        $Names = $SessionHosts | % { ($_.Name).Split("/")[-1].Split(".")[0] }
-        $Names | % { $All.add([int]($_).Split("-")[-1], $_) }
+        $Names = $SessionHosts | ForEach-Object { ($_.Name).Split("/")[-1].Split(".")[0] }
+        $Names | ForEach-Object { $All.add([int]($_).Split("-")[-1], $_) }
     
         $InitialNumber = ($All.GetEnumerator() | Sort-Object Name | Select-Object -Last 1).Key + 1
         $VirtualMachineName = $All.GetEnumerator() | Sort-Object Name | Select-Object -Last 1 -ExpandProperty Value

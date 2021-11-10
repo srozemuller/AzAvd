@@ -85,7 +85,7 @@ function Update-AvdWorkspace {
         if ($description) { $body.properties.Add("description", $description) }
         if ($ApplicationGroupReference) {
             $currentAppGroups = $getResults.properties.applicationGroupReferences
-            $ApplicationGroupReference | foreach {
+            $ApplicationGroupReference | ForEach-Object {
                 $newAppGroups = $currentAppGroups + $_
             }
             $body.properties.Add("applicationGroupReferences", $newAppGroups)
@@ -100,6 +100,6 @@ function Update-AvdWorkspace {
             Body    = $jsonBody
         }
         $results = Invoke-RestMethod @parameters
-        return $results
+        $results
     }
 }

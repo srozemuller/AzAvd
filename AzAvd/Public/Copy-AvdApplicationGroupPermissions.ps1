@@ -73,7 +73,7 @@ function Copy-AvdApplicationGroupPermissions {
                 }
             }
         }
-        $FromApplicationResults.assignments.properties | ? { $_.Scope -eq $Scope }  | ForEach-Object {
+        $FromApplicationResults.assignments.properties | Where-Object { $_.Scope -eq $Scope }  | ForEach-Object {
             If ($_.principalType -eq 'User') {
                 $graphUrl = $Script:GraphApiUrl + "/" + $script:GraphApiVersion + "/users/" + $_.principalId
                 $identityInfo = Invoke-RestMethod -Method GET -Uri $graphUrl -Headers $graphToken

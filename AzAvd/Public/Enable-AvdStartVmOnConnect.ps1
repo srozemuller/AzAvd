@@ -108,7 +108,7 @@ function Enable-AvdStartVmOnConnect {
 
         #region create assignment
         # New assignment GUID
-        $ServicePrincipals.value.id | foreach {
+        $ServicePrincipals.value.id | ForEach-Object {
             $AssignGuid = (New-Guid).Guid
             $AssignURL = "$AzureResource/$Scope/providers/Microsoft.Authorization/roleAssignments/$($AssignGuid)?api-version=2021-04-01-preview"
             $assignBody = @{
