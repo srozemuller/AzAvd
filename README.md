@@ -2,7 +2,7 @@
 This module will help you managing an Azure Virtual Desktop environment and all related Azure resources.
 |Current version| Required PowerShell Version |
 |--|--|
-|v1.2.6 | 5.1 |
+|v2.0.0 | 5.1 |
 
 ## Install module
 To install the module in PowerShell use the command below
