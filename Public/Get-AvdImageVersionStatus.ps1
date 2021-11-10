@@ -115,6 +115,11 @@ Function Get-AvdImageVersionStatus {
         }
     }
     End {
-        $sessionHosts
+        if ($NotLatest){
+            $sessionHosts | Where-Object {$_.imageInfo.isLatestVersion -eq $false}
+        }
+        else {
+            $sessionHosts
+        }
     }
 }
