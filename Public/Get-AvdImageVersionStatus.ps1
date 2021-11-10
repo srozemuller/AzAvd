@@ -38,6 +38,8 @@ Function Get-AvdImageVersionStatus {
     Begin {
         Write-Verbose "Start searching"
         AuthenticationCheck
+        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $apiVersion = "?api-version=2021-07-01"
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -56,50 +58,63 @@ Function Get-AvdImageVersionStatus {
             }
         }
         try {
-            $SessionHosts = Get-AzWvdSessionHost @Parameters
+            $sessionHosts = Get-AvdSessionHostResources @Parameters
         }
         catch {
             Throw "No sessionhosts found, $_"
         }
-        $sessionhostsIds = [system.String]::Join("`",`"", $SessionHosts.ResourceId)
-        $sessionhostsName = $SessionHosts.Name.Split("/")[-1]
-        $Query = 
-        'resources 
-        | where type =~ "microsoft.compute/virtualmachines" 
-        and isnotempty(properties.storageProfile.imageReference.exactVersion)
-        and id in~ ("'+ $sessionhostsIds + '")
-        | extend currentImageVersion = properties.storageProfile.imageReference.exactVersion
-        | extend imageName=split(properties.storageProfile.imageReference.id,"/")[10]
-        | project tostring(imageName), tostring(currentImageVersion), vmId=id, vmName=name, hostpoolName = tolower("'+ $HostpoolName + '"), ResourceGroupName = "' + $ResourceGroupName + '", sessionHostName = "' + $sessionhostsName + '"
-        | join kind=inner(
-        resources
-        | where type=~"microsoft.compute/galleries/images/versions"
-        | extend  imageName=split(id,"/")[10]
-        | project id, name, tostring(imageName)
-        | join kind=inner ( 
-        resources 
-        | where type =~ "microsoft.compute/galleries/images/versions"
-        | extend versionDetails=split(id,"/")
-        | project id, name, imageName=versionDetails[10], imageGallery=versionDetails[8], resourceGroup, subscriptionId
-        | summarize lastVersion=max(tostring(name)) by tostring(imageName) , tostring(imageGallery), resourceGroup, subscriptionId
-        ) on imageName
-        | extend latestVersion = case(name != lastVersion, false, true)
-        | where latestVersion == true
-        ) on imageName
-        | extend vmLatestVersion = case(currentImageVersion != lastVersion, false, true)
-        | extend vmDetails = split(vmId,"/")
-        | join kind=inner (
-        resources | where type =~ "microsoft.desktopvirtualization/hostpools" and name =~ "'+ $HostpoolName + '" and resourceGroup =~ "' + $ResourceGroupName + '"
-        | extend vmTemplate=parse_json(tostring(parse_json(properties.vmTemplate)))
-        | extend registrationInfo=properties.registrationInfo
-        | project hostpoolName=tolower(name), resourceGroup, domain=vmTemplate.domain
-        ) on hostpoolName
-        | project vmLatestVersion,vmName,imageName, currentImageVersion, vmId, imageGallery, resourceGroupName=resourceGroup, subscriptionId, lastVersion, hostpoolName, sessionHostName=strcat(vmName, ".", domain)
-        '
-        if ($NotLatest.IsPresent) {
-            $LatestQuery = '| where vmLatestVersion == false'
-            $Query = $Query + $LatestQuery
+        if ($sessionHosts) {
+            $sessionHosts | Foreach-Object {
+                $isLatestVersion = $false
+                $imageVersionId = $_.vmResources.properties.storageprofile.imagereference.id
+                if ($imageVersionId) {
+                    Write-Verbose "Searching for $($_.Name)"
+                    # Stripping last part from whole image version id. 
+                    $filterIdRegex = [Regex]::new("(.*)(?=/versions)")
+                    $imageId = $filterIdRegex.Match($imageVersionId).Value
+                    $imageNameRegex = [Regex]::new("(?<=images/)(.*)(?=/versions)")           
+                    $imageName = $imageNameRegex.Match($imageVersionId).Value
+                    $galleryNameRegex = [Regex]::new("(?<=galleries/)(.*)(?=/images)")
+                    $galleryName = $galleryNameRegex.Match($imageVersionId).Value     
+                    try {
+                        $requestParameters = @{
+                            uri    = $Script:AzureApiUrl + $imageId + "/versions" + $apiVersion
+                            header = $token
+                            method = "GET"
+                        }
+                        $allVersionsRequest = (Invoke-RestMethod @requestParameters).value | Sort-Object name
+                        if ($_.vmResources.properties.storageprofile.imagereference.exactVersion -eq $($allVersionsRequest.name | Select-Object -Last 1)) {
+                            $isLatestVersion = $true
+                        }
+                        else {
+                            $isLatestVersion = $false
+                        }
+                        $imageInfo = @{
+                            currentImageVersion = $_.vmResources.properties.storageprofile.imagereference.exactVersion
+                            latestVersion = $allVersionsRequest.name | Select-Object -Last 1
+                            isLatestVersion = $isLatestVersion
+                            imageName = $imageName
+                            imageId = $imageId
+                            imageVersionId = $imageVersionId
+                            galleryName = $galleryName
+                        }
+                    }
+                    catch {
+                        Write-Warning "Someting went wrong when crawling for info, $_"
+                    }
+                }
+                else {
+                    $imageInfo = $false
+                    Write-Warning "Sessionhost $($_.name) has no image version"
+                }
+                $_ | Add-Member -NotePropertyName imageInfo -NotePropertyValue $imageInfo -Force
+            }
         }
-        return Search-AzGraph -Query $Query   
+        else {
+            Write-Error "No Sessionhosts with resources found in hostpool $HostpoolName"
+        }
+    }
+    End {
+        $sessionHosts
     }
 }
