@@ -1,4 +1,3 @@
-#requires -module @{ModuleName = 'Az.Resources'; ModuleVersion = '3.2.1'}
 function Get-AvdSessionHostResources {
     <#
     .SYNOPSIS
@@ -34,7 +33,10 @@ function Get-AvdSessionHostResources {
     )
     
     Begin {
+        Write-Verbose "Start searching for resources"
         AuthenticationCheck
+        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $apiVersion = "?api-version=2021-07-01"
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -54,17 +56,20 @@ function Get-AvdSessionHostResources {
         }
         $SessionHosts = Get-AvdSessionhost @Parameters
         if ($sessionHosts) {
-            $VirtualMachines = @()
-            $SessionHosts | Foreach-Object {
+            $sessionHosts | Foreach-Object {
                 Write-Verbose "Searching for $($_.Name)"
-                $HasLatestVersion, $IsVirtualMachine = $False
                 try {
-                    $Resource = Get-AzResource -resourceId $_.Properties.ResourceId
+                    $requestParameters = @{
+                        uri = $Script:AzureApiUrl + $_.properties.resourceId + $apiVersion
+                        header = $token
+                        method = "GET"
+                    }
+                    $resource = Invoke-RestMethod @requestParameters 
                 }
                 catch {
-                    Throw "$($_.Name) has no Virtual Machine resource"
+                    Write-Warning "Sessionhost $($_.name) has no resources, consider deleting it. Use the Remove-AvdSessionHost command"
                 }
-                $VirtualMachines += Get-AzVm -name $Resource.Name
+                $_ | Add-Member -NotePropertyName vmResources -NotePropertyValue $resource -Force
             }
         }
         else {
@@ -72,6 +77,6 @@ function Get-AvdSessionHostResources {
         }
     }
     End {
-        $VirtualMachines
+       $sessionHosts
     }
 }

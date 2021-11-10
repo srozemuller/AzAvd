@@ -63,5 +63,4 @@ Get-AvdApplicationGroup -ResourceId "/subscriptions/../applicationGroupname"
         $applicationResults | Add-Member -NotePropertyName assignments -NotePropertyValue $applicationPermissions.value
         return $applicationResults
     }
-    End {}
 }

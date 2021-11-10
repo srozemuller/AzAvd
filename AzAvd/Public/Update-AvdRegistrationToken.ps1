@@ -51,7 +51,6 @@ function Update-AvdRegistrationToken {
             body    = $body | ConvertTo-Json
         }
         $results = Invoke-RestMethod @parameters
-        return $results
+        $results
     }
-    End {}
 }

@@ -226,6 +226,6 @@ function New-AvdScalingPlan {
             Headers = $token
         }
         $results = Invoke-RestMethod @parameters
-        return $results
+        $results
     }
 }
