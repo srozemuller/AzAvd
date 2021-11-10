@@ -76,6 +76,6 @@ function Update-AvdDesktopApplication {
             Body    = $jsonBody
         }
         $results = Invoke-RestMethod @parameters
-        return $results
+        $results
     }
 }

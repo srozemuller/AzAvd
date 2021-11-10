@@ -93,7 +93,6 @@ New-AvdApplicationGroup -Name applicationGroupname -ResourceGroupName rg-avd-001
             Headers = $token
         }
         $results = Invoke-RestMethod @parameters
-        return $results
+        $results
     }
-    End {}
 }

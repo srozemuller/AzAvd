@@ -54,7 +54,6 @@ Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
             Headers = $token
         }
         $results = Invoke-RestMethod @parameters
-        return $results
+        $results
     }
-    End {}
 }

@@ -108,7 +108,7 @@ function Enable-AvdDiagnostics {
         }
         $Hostpool = Get-AzWvdHostPool @parameters
         $categoryArray = @()
-        $Categories | foreach {
+        $Categories | ForEach-Object {
             $category = @{
                 Category = $_
                 Enabled  = $true
@@ -128,7 +128,7 @@ function Enable-AvdDiagnostics {
             Body    = $diagnosticsBody | ConvertTo-Json -Depth 4
         }
         $results = Invoke-RestMethod @parameters
-        return $results
+        $results
         Write-Verbose "Diagnostics enabled for $HostpoolName, sending info to $LAWorkspace"
     }
 }

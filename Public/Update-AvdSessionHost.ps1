@@ -68,7 +68,7 @@ function Update-AvdSessionhost {
                 
             }
         }
-        $sessionHostName | foreach {
+        $sessionHostName | ForEach-Object {
             try {
                 $vmName = $_.Split("/")[-1]
                 Write-Verbose "Updating sessionhost $vmName"

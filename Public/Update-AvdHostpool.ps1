@@ -108,6 +108,6 @@ function Update-AvdHostpool {
             Body    = $jsonBody
         }
         $results = Invoke-RestMethod @parameters
-        return $results
+        $results
     }
 }

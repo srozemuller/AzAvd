@@ -57,10 +57,10 @@ function Get-AvdSessionHost {
         }
         $results = Invoke-RestMethod @parameters
         if ($SessionHostName){
-            return $results
+            $results
         }
         else {
-            return $results.value
+            $results.value
         }
         
     }

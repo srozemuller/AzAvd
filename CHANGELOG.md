@@ -35,6 +35,7 @@ All notable changes to this Az.Avd PowerShell will be documented in this file.
 - In Get-AvdSessionHostResources required module Az.Recouces removed
 - In Get-AvdImageVersionStatus required module Az.ResourceGraph removed
 
+- Coding optimizations
 ## [1.2.7] - 2021-10-25
  
 
