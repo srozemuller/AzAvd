@@ -60,3 +60,12 @@ jobs:
               } else {
                   Write-Output "There were $($errors.Count) errors and $($warnings.Count) warnings total."
               }
+      - name: Install Pester module
+        shell: pwsh
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module Pester -ErrorAction Stop
+      - name: Check with Pester
+        shell: pwsh
+        run: |
+          Invoke-ScriptAnalyzer -Path ./Az.Avd.Tests.ps1
