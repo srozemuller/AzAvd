@@ -33,7 +33,7 @@ jobs:
       with:
         # Artifact name
         name: azModule
-        path: '/azModule'
+        path: 'AzAvd'
   check:
     runs-on: ubuntu-latest
     steps:
