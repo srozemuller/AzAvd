@@ -5,7 +5,7 @@ Describe "$module Global module tests" {
 
     Context 'Module Setup' {
         It "$module has the root module $module.psm1" {
-            $modulePath | Should -Exist
+            (Join-Path -Path $(Get-Location) -ChildPath "AzAvd" )| Should -Exist
         }
  
         It "$module has the a manifest file of $module.psm1" {
