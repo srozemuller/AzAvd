@@ -69,7 +69,7 @@ jobs:
         shell: pwsh
         run: |
           Get-Location
-          Get-ChildItem -Recurse
+          Get-ChildItem -Path $(Get-Location)
       - name: Check with Pester
         shell: pwsh
         run: |
