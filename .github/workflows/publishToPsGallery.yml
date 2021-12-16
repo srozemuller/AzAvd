@@ -68,4 +68,4 @@ jobs:
       - name: Check with Pester
         shell: pwsh
         run: |
-          Invoke-ScriptAnalyzer -Path ./Az.Avd.tests.ps1
+          Invoke-Pester -Path ./Az.Avd.tests.ps1
