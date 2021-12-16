@@ -27,13 +27,13 @@ jobs:
       with:
         # Repository name with owner. For example, actions/checkout
         repository: ${{ github.AzAvd }}
-        path: 'AzAvd'
+        path: ''
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.3.1
       with:
         # Artifact name
         name: azModule
-        path: 'AzAvd'
+        path: ''
   check:
     needs: build
     runs-on: ubuntu-latest
@@ -44,7 +44,7 @@ jobs:
           # Artifact name
           name: azModule
           # Destination path
-          #path: '$GITHUB_WORKSPACE'
+          path: '$GITHUB_WORKSPACE'
       - name: dirCheck
         shell: pwsh
         run: |
