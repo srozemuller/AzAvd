@@ -19,16 +19,44 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - name: Publish PowerShell Module
-      # You may pin to the exact commit or the version.
-      # uses: pcgeek86/publish-powershell-module-action@2a7837ce0746ea58c40574d8d6cbc6c44238edb7
-      uses: pcgeek86/publish-powershell-module-action@v19
+    - name: Checkout
+      uses: actions/checkout@v2.4.0
       with:
-        # The filesystem path to the module to import into the environment.
-        modulePath: /AzAvd
-        # The NuGet API Key for PowerShell Gallery, with permission to push this module.
-        NuGetApiKey: ${{ secrets.PS_GALLERY_KEY }}
+        # Repository name with owner. For example, actions/checkout
+        repository: ${{ github.AzAvd }}
+        path: ''
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.3.1
+      with:
+        # Artifact name
+        name: azModule
+        path: AzAvd
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2.1.0
+        with:
+          name: azModule
+      - name: Display structure of downloaded files
+        run: ls -R
+      - name: Install PSScriptAnalyzer module
+        shell: pwsh
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module PSScriptAnalyzer -ErrorAction Stop
+      - name: Lint with PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          Invoke-ScriptAnalyzer -Path ./Public/*.ps1 -Recurse -Outvariable issues
+              $errors   = $issues.Where({$_.Severity -eq 'Error'})
+              $warnings = $issues.Where({$_.Severity -eq 'Warning'})
+              if ($errors -or $warnings) {
+                  Write-Error "There were $($errors.Count) errors and $($warnings.Count) warnings total." -ErrorAction Stop
+              } else {
+                  Write-Output "There were $($errors.Count) errors and $($warnings.Count) warnings total."
+              }
