@@ -33,7 +33,7 @@ jobs:
       with:
         # Artifact name
         name: azModule
-        path: ''
+        path: AzAvd
   check:
     needs: build
     runs-on: ubuntu-latest
@@ -43,9 +43,8 @@ jobs:
         with:
           # Artifact name
           name: azModule
-          # Destination path
-          path: '$GITHUB_WORKSPACE'
       - name: dirCheck
         shell: pwsh
         run: |
+          dir $GITHUB_WORKSPACE
           dir $GITHUB_WORKSPACE/AzAvd
