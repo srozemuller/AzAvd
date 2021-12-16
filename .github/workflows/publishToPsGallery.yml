@@ -35,6 +35,7 @@ jobs:
         name: azModule
         path: 'AzAvd'
   check:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Download a Build Artifact
