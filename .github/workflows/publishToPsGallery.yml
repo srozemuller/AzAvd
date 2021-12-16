@@ -33,7 +33,7 @@ jobs:
       with:
         # Artifact name
         name: azModule
-        path: /
+        path: ''
   test:
     needs: build
     runs-on: ubuntu-latest
