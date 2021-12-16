@@ -68,9 +68,7 @@ jobs:
       - name: Dir check
         shell: pwsh
         run: |
-          $modulePath = Join-Path -Path $(Get-Location) -ChildPath "AzAvd"
-          Join-Path -Path $(Get-Location)
-          Get-ChildItem -Path (Join-Path -Path $modulePath -ChildPath "Public")
+          Get-ChildItem -Path (Join-Path -Path $(Get-Location) -ChildPath "Public")
       - name: Check with Pester
         shell: pwsh
         run: |
