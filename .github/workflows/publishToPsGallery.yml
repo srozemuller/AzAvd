@@ -73,4 +73,4 @@ jobs:
       - name: Check with Pester
         shell: pwsh
         run: |
-          Invoke-Pester -Path ./Az.Avd.tests.ps1 -Output detailed
+          Invoke-Pester -Path (Join-Path -Path $(Get-Location) -ChildPath "Az.Avd.tests.ps1") -Output detailed
