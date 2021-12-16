@@ -5,7 +5,8 @@ Describe "$module Global module tests" {
 
     Context 'Module Setup' {
         BeforeAll {
-            $modulePath = Join-Path -Path $(Get-Location) -ChildPath "AzAvd" 
+            $modulePath = Join-Path -Path $(Get-Location) -ChildPath "AzAvd"
+            $moduleCoreInfo = Get-Content -Path (Join-Path -Path $modulePath -ChildPath "Az.Avd.psd1")
         }
         It "$module has the root module $module.psm1" {
             $modulePath | Should -Exist
@@ -25,18 +26,24 @@ Describe "$module Global module tests" {
         }
         
         It "$module project URL should reachable" {
-            $content = Get-Content -Path (Join-Path -Path $modulePath -ChildPath "Az.Avd.psd1")
             $pattern = "ProjectUri ="
-            $url = ($content | Where-Object { $_ -match $pattern }).Replace($pattern, $null).Replace("'", $null)
+            $url = ($moduleCoreInfo | Where-Object { $_ -match $pattern }).Replace($pattern, $null).Replace("'", $null)
             try {
                 Invoke-WebRequest -Uri $Url -UseBasicParsing -DisableKeepAlive -method Head | Out-Null
-                $exits = $true
+                $exists = $true
             }
             catch {
-                $exits = $false
+                $exists = $false
             }
-            $errors.Count | Should -Be $true
+            $exists | Should -Be $true
         }
+
+        It "$module version should be greater than PSGallery" {
+            $pattern = "ModuleVersion"
+            $sourceVersion = ($moduleCoreInfo | Where-Object {$_ -match $pattern}).Split("'")[1]
+            $galleryVersion = (Find-Module -Name Az.Avd -Repository PSGallery).Version
+            [version]$sourceVersion | Should -BeGreaterThan ([version]$galleryVersion)
+        }      
 
         It "$module is valid PowerShell code" {
             $psFile = Get-Content -Path (Join-Path -Path $modulePath -ChildPath "Az.Avd.psm1") -ErrorAction Stop
