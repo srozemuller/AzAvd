@@ -1,5 +1,4 @@
 $module = 'Az.Avd'
-$modulePath = Join-Path -Path $(Get-Location) -ChildPath "AzAvd" 
 $functions = Get-ChildItem -Path (Join-Path -Path $modulePath -ChildPath "Public")
 Describe "$module Global module tests" {
 
@@ -33,7 +32,7 @@ Describe "$module Global module tests" {
         }
  
     } # Context 'Module Setup'
-    Context "Test functions in $module" -Foreach $functions[8] {
+    Context "Test functions in $module" -Foreach $functions {
         BeforeAll {
             $file = $_
             $content = Get-Content -Path $file
