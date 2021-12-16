@@ -68,6 +68,7 @@ jobs:
       - name: Dir check
         shell: pwsh
         run: |
+          Get-Location
           Get-ChildItem -Recurse
       - name: Check with Pester
         shell: pwsh
