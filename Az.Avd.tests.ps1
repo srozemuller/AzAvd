@@ -27,7 +27,7 @@ Describe "$module Global module tests" {
             (Join-Path -Path $modulePath -ChildPath "Private") | Should -Exist
         }
         
-        It "$module version should be greater than PSGallery" {
+        It "$module root module should be $binaryFile in $manifestFile" {
             $pattern = "RootModule"
             $rootModule = ($moduleCoreInfo | Where-Object {$_ -match $pattern}).Split("'")[1]
             $rootModule | Should -Be $binaryFile
