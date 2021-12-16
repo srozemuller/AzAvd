@@ -48,4 +48,4 @@ jobs:
       - name: dirCheck
         shell: pwsh
         run: |
-          dir
+          dir $GITHUB_WORKSPACE/AzAvd
