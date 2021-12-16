@@ -41,9 +41,6 @@ jobs:
       - name: Download a Build Artifact
         uses: actions/download-artifact@v2.1.0
         with:
-          # Artifact name
           name: azModule
-      - name: dirCheck
-        shell: pwsh
-        run: |
-          dir 
+      - name: Display structure of downloaded files
+        run: ls -R
