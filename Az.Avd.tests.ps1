@@ -1,5 +1,5 @@
 $module = 'Az.Avd'
-$modulePath = $(Get-Location)
+$modulePath = (Join-Path -Path $(Get-Location) -ChildPath "AzAvd") 
 $functions = Get-ChildItem -Path (Join-Path -Path $modulePath -ChildPath "Public")
 Describe "$module Global module tests" {
 
