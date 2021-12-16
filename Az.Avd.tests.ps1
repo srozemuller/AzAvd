@@ -6,15 +6,17 @@ Describe "$module Global module tests" {
     Context 'Module Setup' {
         BeforeAll {
             $modulePath = Join-Path -Path $(Get-Location) -ChildPath "AzAvd"
-            $moduleCoreInfo = Get-Content -Path (Join-Path -Path $modulePath -ChildPath "Az.Avd.psd1")
+            $binaryFile = "Az.Avd.psm1"
+            $manifestFile = "Az.Avd.psd1"
+            $moduleCoreInfo = Get-Content -Path (Join-Path -Path $modulePath -ChildPath $manifestFile)
         }
         It "$module has the root module $module.psm1" {
             $modulePath | Should -Exist
         }
  
         It "$module has the a manifest file of $module.psm1" {
-            (Join-Path -Path $modulePath -ChildPath "Az.Avd.psm1") | Should -Exist
-            (Join-Path -Path $modulePath -ChildPath "Az.Avd.psd1") | Should -Exist
+            (Join-Path -Path $modulePath -ChildPath $binaryFile) | Should -Exist
+            (Join-Path -Path $modulePath -ChildPath $manifestFile) | Should -Exist
         }
 
         It "$module folder has functions folder" {
@@ -25,9 +27,15 @@ Describe "$module Global module tests" {
             (Join-Path -Path $modulePath -ChildPath "Private") | Should -Exist
         }
         
+        It "$module version should be greater than PSGallery" {
+            $pattern = "RootModule"
+            $rootModule = ($moduleCoreInfo | Where-Object {$_ -match $pattern}).Split("'")[1]
+            $rootModule | Should -Be $binaryFile
+        } 
+        
         It "$module project URL should reachable" {
-            $pattern = "ProjectUri ="
-            $url = ($moduleCoreInfo | Where-Object { $_ -match $pattern }).Replace($pattern, $null).Replace("'", $null)
+            $pattern = "ProjectUri"
+            $url = ($moduleCoreInfo | Where-Object {$_ -match $pattern}).Split("'")[1]
             try {
                 Invoke-WebRequest -Uri $Url -UseBasicParsing -DisableKeepAlive -method Head | Out-Null
                 $exists = $true
@@ -46,7 +54,7 @@ Describe "$module Global module tests" {
         }      
 
         It "$module is valid PowerShell code" {
-            $psFile = Get-Content -Path (Join-Path -Path $modulePath -ChildPath "Az.Avd.psm1") -ErrorAction Stop
+            $psFile = Get-Content -Path (Join-Path -Path $modulePath -ChildPath $binaryFile) -ErrorAction Stop
             $errors = $null
             $null = [System.Management.Automation.PSParser]::Tokenize($psFile, [ref]$errors)
             $errors.Count | Should -Be 0
