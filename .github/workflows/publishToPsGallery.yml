@@ -26,7 +26,7 @@ jobs:
       uses: actions/checkout@v2.4.0
       with:
         # Repository name with owner. For example, actions/checkout
-        repository: ${{ github.AzAvd }}
+        #repository: ${{ github.AzAvd }}
         path: ''
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.3.1
