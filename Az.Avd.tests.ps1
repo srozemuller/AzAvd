@@ -4,8 +4,11 @@ $functions = Get-ChildItem -Path (Join-Path -Path $modulePath -ChildPath "Public
 Describe "$module Global module tests" {
 
     Context 'Module Setup' {
+        BeforeAll {
+            $modulePath = Join-Path -Path $(Get-Location) -ChildPath "AzAvd" 
+        }
         It "$module has the root module $module.psm1" {
-            (Join-Path -Path $(Get-Location) -ChildPath "AzAvd" )| Should -Exist
+            $modulePath | Should -Exist
         }
  
         It "$module has the a manifest file of $module.psm1" {
