@@ -44,12 +44,14 @@ jobs:
           name: azModule
       - name: Display structure of downloaded files
         run: ls -R
-      - name: Install PSScriptAnalyzer module
+      - name: Install needed modules
         shell: pwsh
         run: |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
           Install-Module PSScriptAnalyzer -ErrorAction Stop
-      - name: Lint with PSScriptAnalyzer
+          Install-Module Pester -ErrorAction Stop
+          Install-Module ./AzAvd/Az.Avd.psd1 -ErrorAction Stop
+      - name: PSSA check
         shell: pwsh
         run: |
           Invoke-ScriptAnalyzer -Path ./AzAvd/Public/*.ps1 -Recurse -Outvariable issues
@@ -60,18 +62,11 @@ jobs:
               } else {
                   Write-Output "There were $($errors.Count) errors and $($warnings.Count) warnings total."
               }
-      - name: Install Pester module
+      - name: Pester Module check
         shell: pwsh
         run: |
-          Set-PSRepository PSGallery -InstallationPolicy Trusted
-          Install-Module Pester -ErrorAction Stop
-      - name: Dir check
-        shell: pwsh
-        run: |
-          Get-Location
-          Get-ChildItem -Path $(Get-Location)
-      - name: Check with Pester
-        shell: pwsh
-        run: |
-          Test-Path (Join-Path -Path $(Get-Location) -ChildPath "Az.Avd.tests.ps1")
           Invoke-Pester -Path (Join-Path -Path $(Get-Location) -ChildPath "Az.Avd.tests.ps1") -Output detailed
+      - name: Pester Files check
+        shell: pwsh
+        run: |
+          Invoke-Pester -Path (Join-Path -Path $(Get-Location) -ChildPath "Az.Avd.Files.tests.ps1") -Output detailed
