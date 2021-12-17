@@ -50,6 +50,10 @@ jobs:
           Set-PSRepository PSGallery -InstallationPolicy Trusted
           Install-Module PSScriptAnalyzer -ErrorAction Stop
           Install-Module Pester -ErrorAction Stop
+      - name: Importing Az.Avd module
+        shell: pwsh
+        run: |
+          Import-Module ./AzAvd/Az.Avd.psd1 -ErrorAction Stop
       - name: PSSA check
         shell: pwsh
         run: |
