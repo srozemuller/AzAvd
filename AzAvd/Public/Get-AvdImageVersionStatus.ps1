@@ -1,4 +1,3 @@
-#requires -module @{ModuleName = 'Az.ResourceGraph'; ModuleVersion = '0.7.6'}
 Function Get-AvdImageVersionStatus {
     <#
     .SYNOPSIS
