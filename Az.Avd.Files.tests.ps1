@@ -1,80 +1,11 @@
-using namespace System.Management.Automation
-using namespace System.Management.Automation.Language
-
 BeforeAll {
-    Function Find-Requirements { 
-        [CmdletBinding(DefaultParameterSetName = 'Path')]
-        param(
-            [Parameter(ValueFromPipeline,
-                ValueFromPipelineByPropertyName,
-                ValueFromRemainingArguments,
-                ParameterSetName = 'Path',
-                Position = 1)]
-            [ValidateNotNull()]
-            [Alias('FilePath')]
-            [string[]]$FullPath = ('.\*.ps1', '.\*.psm1'),
-            [Parameter(Mandatory,
-                ValueFromPipelineByPropertyName,
-                ValueFromRemainingArguments,
-                ParameterSetName = 'Code')]
-            [string[]]$Code,
-            [Parameter(Mandatory,
-                ValueFromPipelineByPropertyName,
-                ValueFromRemainingArguments,
-                ParameterSetName = 'ScriptBlock')]
-            [scriptblock[]]$ScriptBlock,
-            [switch] $unique
-        )
-        switch ($PSCmdlet.ParameterSetName) {
-            'Path' {
-                Write-Verbose -Message 'Path Parameter Set Selected'
-                Write-Verbose "Path contains $FullPath"
-                $ast = [Parser]::ParseFile(
-                    $FullPath,
-                    [ref]$null,
-                    [ref]$null
-                )
-            }
-            'Code' {
-                Write-Verbose -Message 'Code Parameter Set Selected'
-                $ast = foreach ($c in $Code) {
-                    [System.Management.Automation.Language.Parser]::ParseInput($c, [ref]$null, [ref]$null)
-                }  
-            }
-            'ScriptBlock' {
-                Write-Verbose -Message 'ScriptBlock Parameter Set Selected'
-                $ast = $ScriptBlock.ast
-            }
-            'ScriptBlock' {
-                #figure out
-            }
-            default {
-            }
-        }
-        $astCommandSearch = {
-            param (
-                $astItem
-            ) 
-            $astItem -is [Commandast] 
-        }
-        $Commands = $ast.FindAll(
-            $astCommandSearch,
-            $false
-        ) | ForEach-Object { $_.CommandElements[0].value }
-        if ($unique) {
-            $commands | ForEach-Object { (Get-command $_).ModuleName } | Select-Object -Unique  
-        }
-        else {
-            $commands
-        }
-    }
     $moduleName = "Az.Avd"
 }
 
 $modulePath = Join-Path -Path $(Get-Location) -ChildPath "AzAvd"
 $psFiles = Get-ChildItem -Path (Join-Path -Path $modulePath -ChildPath "Public")
 Describe "Analyze code" -ForEach @(
-    foreach ($file in $psFiles) {
+    foreach ($file in $psFiles[9]) {
         @{
             file        = $file
             fileName    = $file.Name
@@ -97,26 +28,6 @@ Describe "Analyze code" -ForEach @(
     It "<fileName> should have help block" {
         $file | Should -FileContentMatch '<#'
         $file | Should -FileContentMatch '#>'
-    }
-
-    It "<filename> has requirements and no modules mentioned in #requires" {
-        $rawRequirements = Find-Requirements -fullpath $file 
-        $requirements = @()
-        $unfoundCommand = @()
-        $rawRequirements | ForEach-Object { try {
-                $requirements += $_ | Get-command -ErrorAction Stop | Where-Object { $_.source -notlike "microsoft.powershell.*" -and $_ -ne 'Push-OutputBinding' } 
-            }
-            catch {
-                $unfoundCommand += $_
-            }
-        }
-        
-        if ($requirements -and $requiresString.line -notmatch "-modules") { 
-            $requirements | should -be $null -because "Noone likes surprises "
-        }
-        if ($unfoundCommand -and $requiresString.line -notmatch "-modules") { 
-            "<<<<<<<<<<<<`n`nFound undetected commands, please review #requires statement`n$unfoundCommand`n`n>>>>>>>>>>>>>>" | Out-Default
-        }
     }
 
     It "<fileName> should have a SYNOPSIS section in the help block" {
@@ -145,6 +56,17 @@ Describe "Analyze code" -ForEach @(
     
     It "<fileName> should have a EXAMPLE section in the help block" {
         $file | Should -FileContentMatch '.EXAMPLE'
+    }
+    It "<example> should start with command <filebase>" -TestCases @(
+        foreach ($example in $helpInfo.examples.example) {
+            @{
+                example = [string]$example.title.Replace("-",$null)
+                code =  [string]$example.code
+            }
+        }
+    ) {
+        "GOT $code, $example" | Out-Default
+        $code.StartsWith($fileBase) | Should -Be $true -Because "Provide good examples" 
     }
     It "<filename> line <linenr> uses the # sign correctly"  -TestCases @(
         $correctUse = '^#Requires', '^<#', '^#>', '^#region', '^#endregion', '^# ', '##vso\[task.'
