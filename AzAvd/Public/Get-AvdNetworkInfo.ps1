@@ -11,9 +11,9 @@ Function Get-AvdNetworkInfo {
     .PARAMETER SessionHostName
     This parameter accepts a single sessionhost name
     .EXAMPLE
-    Get-AvdNetworkInfo -HostpoolName <string> -ResourceGroupName <string>
+    Get-AvdNetworkInfo -HostpoolName avd-hostpool -ResourceGroupName hostpool-resourcegroup
     .EXAMPLE
-    Get-AvdNetworkInfo -HostpoolName <string> -ResourceGroupName <string> -SessionHostName avd-0.domain.local
+    Get-AvdNetworkInfo -HostpoolName avd-hostpool -ResourceGroupName hostpool-resourcegroup -SessionHostName avd-0.domain.local
     #>
     [CmdletBinding(DefaultParameterSetName = 'Hostpool')]
     param (
