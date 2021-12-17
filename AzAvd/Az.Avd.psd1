@@ -12,7 +12,7 @@
     RootModule             = 'Az.Avd.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '2.0.0'
+    ModuleVersion          = '2.0.1'
 
     # Supported PSEditions
     CompatiblePSEditions   = 'Core', 'Desktop'
@@ -131,10 +131,10 @@
             LicenseUri = 'https://github.com/srozemuller/AzWvd/blob/main/LICENSE'
 
             # A URL to the main website for this project.
-            ProjectUri = 'https://github.com/srozemuller/Windows-Virtual-Desktop/tree/master/PowerShell-Modules/WVD-Automation'
+            ProjectUri = 'https://github.com/srozemuller/AzAvd'
 
             # A URL to an icon representing this module.
-            IconUri    = 'https://github.com/srozemuller/AzWvd/blob/main/Private/wvd-logo.png'
+            IconUri    = 'https://github.com/srozemuller/AzWvd/blob/main/Private/avd-logo.png'
 
             # ReleaseNotes of this module
             # ReleaseNotes = ''
