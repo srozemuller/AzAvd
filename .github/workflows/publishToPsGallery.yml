@@ -50,7 +50,6 @@ jobs:
           Set-PSRepository PSGallery -InstallationPolicy Trusted
           Install-Module PSScriptAnalyzer -ErrorAction Stop
           Install-Module Pester -ErrorAction Stop
-          Install-Module ./AzAvd/Az.Avd.psd1 -ErrorAction Stop
       - name: PSSA check
         shell: pwsh
         run: |
@@ -65,7 +64,7 @@ jobs:
       - name: Pester Module check
         shell: pwsh
         run: |
-          Invoke-Pester -Path (Join-Path -Path $(Get-Location) -ChildPath "Az.Avd.tests.ps1") -Output detailed
+          Invoke-Pester -Path (Join-Path -Path $(Get-Location) -ChildPath "Az.Avd.Module.tests.ps1") -Output detailed
       - name: Pester Files check
         shell: pwsh
         run: |
