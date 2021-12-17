@@ -1,4 +1,4 @@
-function Move-AvdSessionhost {
+function Move-AvdSessionHost {
     <#
     .SYNOPSIS
     Moving sessionhosts from an Azure Virtual Desktop hostpool to a new one.
@@ -15,7 +15,7 @@ function Move-AvdSessionhost {
     .PARAMETER SessionHostName
     Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
     .EXAMPLE
-    Move-AvdSessionhost -FromHostpoolName avd-hostpool -FromResourceGroupName rg-avd-01 -ToHostpoolName avd-hostpool-02 -ToResourceGroupName rg-avd-02 -SessionHostName avd-host-1.avd.domain
+    Move-AvdSessionHost -FromHostpoolName avd-hostpool -FromResourceGroupName rg-avd-01 -ToHostpoolName avd-hostpool-02 -ToResourceGroupName rg-avd-02 -SessionHostName avd-host-1.avd.domain
     #>
     [CmdletBinding(DefaultParameterSetName = 'SingleObject')]
     param
@@ -40,10 +40,12 @@ function Move-AvdSessionhost {
         [parameter(Mandatory)]
         [string]$SessionHostName
 
-        # TODO
-        #[parameter(ParameterSetName = 'InputObject')]
-        #[parameter(Mandatory)]
-        #[object]$SessionHosts
+        <# 
+        TODO
+        [parameter(ParameterSetName = 'InputObject')]
+        [parameter(Mandatory)]
+        [object]$SessionHosts
+        #>
         
     )
     Begin {

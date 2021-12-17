@@ -37,9 +37,9 @@ function New-AvdVmTemplate {
     .PARAMETER CustomObject
     Can be used to add extra values into the template. Please provide a PSCustomObject.
     .EXAMPLE
-    create-AvdVmTemplate -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -domain domain.local -namePrefix avd -vmSku 'Standard_B2ms' -vmCores 2 -vmRam 8 -osDiskType "Premium_LRS" -CustomObject $customObjects
+    New-AvdVmTemplate-HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -domain domain.local -namePrefix avd -vmSku 'Standard_B2ms' -vmCores 2 -vmRam 8 -osDiskType "Premium_LRS" -CustomObject $customObjects
     .EXAMPLE
-    create-AvdVmTemplate -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -domain domain.local -namePrefix avd -vmSku 'Standard_B2ms' -vmCores 2 -vmRam 8 -osDiskType "Premium_LRS" 
+    New-AvdVmTemplate -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -domain domain.local -namePrefix avd -vmSku 'Standard_B2ms' -vmCores 2 -vmRam 8 -osDiskType "Premium_LRS" 
     #>
     [CmdletBinding()]
     param
@@ -83,7 +83,7 @@ function New-AvdVmTemplate {
         
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string]$namePrefix,
+        [string]$NamePrefix,
         
         [Parameter()]
         [ValidateNotNullOrEmpty()]
@@ -128,7 +128,7 @@ function New-AvdVmTemplate {
         $vmTemplate = [PSCustomObject]@{
             domain                = $Domain
             osDiskType            = $OsDiskType
-            namePrefix            = $namePrefix
+            namePrefix            = $NamePrefix
             vmSize                = $vmSize
             galleryImageOffer     = $GalleryImageOffer
             galleryImagePublisher = $GalleryImagePublisher
