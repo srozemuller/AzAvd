@@ -8,7 +8,7 @@ Describe "Analyze code" -ForEach @(
             fileName    = $file.Name
             fileBase    = $file.BaseName
             content     = Get-Content -Path $file
-            helpInfo    = Get-Help $file.FullName
+            helpInfo    = Get-Help $file.BaseName
             IgnoreRules = @('PSUseApprovedVerbs')
             fileobj     = $file 
         }
