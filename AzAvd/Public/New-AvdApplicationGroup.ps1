@@ -8,19 +8,19 @@ With this function you can create a new AVD application group.
 Enter the name of the application group.
 .PARAMETER ResourceGroupName
 Enter the name of the resourcegroup where to deploy the application group.
-.PARAMETER description
+.PARAMETER Description
 Enter the description of the application group.
-.PARAMETER friendlyName
+.PARAMETER FriendlyName
 Enter the friendlyName of the application group.
-.PARAMETER location
+.PARAMETER Location
 Enter the location where to deploy application group.
-.PARAMETER tags
+.PARAMETER Tags
 If the resource needs tags, enter them in here.
-.PARAMETER hostpoolResourceId
+.PARAMETER HostpoolResourceId
 Enter the hostpool resource ID where to assign the application group to.
-.PARAMETER workspaceResourceId
+.PARAMETER WorkspaceResourceId
 If there is a workspace allready, fill in the workspace resource ID where to assign the application group to.
-.PARAMETER type
+.PARAMETER Type
 Enter the application group type. (eg. RemoteApp or Desktop)
 .EXAMPLE
 New-AvdApplicationGroup -Name applicationGroupname -ResourceGroupName rg-avd-001 -location WestEurope -ApplicationGroupType Desktop -HostPoolArmPath "/resourceID"
@@ -35,11 +35,11 @@ New-AvdApplicationGroup -Name applicationGroupname -ResourceGroupName rg-avd-001
 
         [Parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$description,
+        [string]$Description,
 
         [Parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$friendlyName,
+        [string]$FriendlyName,
 
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -47,11 +47,11 @@ New-AvdApplicationGroup -Name applicationGroupname -ResourceGroupName rg-avd-001
 
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
-        [string]$location,
+        [string]$Location,
 
         [Parameter()]
         [ValidateNotNullOrEmpty()]
-        [object]$tags,
+        [object]$Tags,
 
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -59,7 +59,7 @@ New-AvdApplicationGroup -Name applicationGroupname -ResourceGroupName rg-avd-001
         
         [Parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$workspaceResourceId,
+        [string]$WorkspaceResourceId,
 
         [Parameter(Mandatory = $true)]
         [ValidateSet("RemoteApp", "Desktop")]
@@ -76,16 +76,16 @@ New-AvdApplicationGroup -Name applicationGroupname -ResourceGroupName rg-avd-001
     }
     Process {
         $body = @{
-            location = $location
-            tags = $tags
+            location = $Location
+            tags = $Tags
             properties = @{
-              description = $description
-              friendlyName = $friendlyName
+              description = $Description
+              friendlyName = $FriendlyName
               hostPoolArmPath = $HostPoolArmPath
               applicationGroupType = $ApplicationGroupType
             }
         }
-        if ($workspaceResourceId){$body.properties.Add("workspaceArmPath", $workspaceResourceId)}
+        if ($WorkspaceResourceId){$body.properties.Add("workspaceArmPath", $WorkspaceResourceId)}
         $parameters = @{
             uri     = $url
             Method  = "PUT"

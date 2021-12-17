@@ -8,20 +8,20 @@ function Update-AvdHostpool {
     Enter the AVD Hostpool name
     .PARAMETER ResourceGroupName
     Enter the AVD Hostpool resourcegroup name
-    .PARAMETER customRdpProperty
+    .PARAMETER CustomRdpProperty
     If needed fill in the custom rdp properties (for example: targetisaadjoined:i:1 )
-    .PARAMETER friendlyName
+    .PARAMETER FriendlyName
     Change the host pool friendly name
-    .PARAMETER loadBalancerType
-    Change the host pool loadBalancerType   
-    .PARAMETER validationEnvironment
+    .PARAMETER LoadBalancerType
+    Change the host pool LoadBalancerType   
+    .PARAMETER ValidationEnvironment
     Change the host pool validation environment   
-    .PARAMETER maxSessionLimit
+    .PARAMETER MaxSessionLimit
     Change the host pool max session limit (max 999999)
     .PARAMETER Force
     use the force parameter if you want to override the current customrdpproperties. Otherwise it will add the provided properties.
     .EXAMPLE
-    Update-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -customRdpProperty "targetisaadjoined:i:1"
+    Update-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -CustomRdpProperty "targetisaadjoined:i:1"
     #>
     [CmdletBinding()]
     param
@@ -36,29 +36,29 @@ function Update-AvdHostpool {
     
         [parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$customRdpProperty,
+        [string]$CustomRdpProperty,
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$friendlyName,
+        [string]$FriendlyName,
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$description,
+        [string]$Description,
 
         [parameter()]
         [ValidateSet("BreadthFirst", "DepthFirst")]
         [ValidateNotNullOrEmpty()]
-        [string]$loadBalancerType,
+        [string]$LoadBalancerType,
         
         [parameter()]
         [ValidateNotNullOrEmpty()]
-        [boolean]$validationEnvironment,
+        [boolean]$ValidationEnvironment,
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
         [ValidateRange(1, 999999)]
-        [int]$maxSessionLimit,
+        [int]$MaxSessionLimit,
 
         [parameter(ParameterSetName = 'Change')]
         [switch]$Force
@@ -77,27 +77,27 @@ function Update-AvdHostpool {
             properties = @{
             }
         }
-        if ($customRdpProperty){
+        if ($CustomRdpProperty){
             $getResults = Invoke-RestMethod @parameters
-            $currentCustomRdpProperty = $getResults.properties.customRdpProperty
+            $currentCustomRdpProperty = $getResults.properties.CustomRdpProperty
         }    
-        if ($friendlyName){$body.properties.Add("friendlyName", $friendlyName)}
-        if ($description){$body.properties.Add("description", $description)}
-        if ($loadBalancerType){$body.properties.Add("loadBalancerType", $loadBalancerType)}
-        if ($validationEnvironment){$body.properties.Add("validationEnvironment", $validationEnvironment)}
-        if ($maxSessionLimit){$body.properties.Add("maxSessionLimit", $maxSessionLimit)}
+        if ($FriendlyName){$body.properties.Add("FriendlyName", $FriendlyName)}
+        if ($Description){$body.properties.Add("description", $Description)}
+        if ($LoadBalancerType){$body.properties.Add("LoadBalancerType", $LoadBalancerType)}
+        if ($ValidationEnvironment){$body.properties.Add("ValidationEnvironment", $ValidationEnvironment)}
+        if ($MaxSessionLimit){$body.properties.Add("MaxSessionLimit", $MaxSessionLimit)}
     }
     Process {
          switch ($PsCmdlet.ParameterSetName) {
             Change {
                 Write-Verbose "Force used, overwriting custom RDP properties."
-                Write-Verbose "Old properties where: $customRdpProperty"
+                Write-Verbose "Old properties where: $CustomRdpProperty"
             }
             default {
-                If (!($customRdpProperty.EndsWith(";"))) {
-                    $customRdpProperty = $customRdpProperty + ";"
+                If (!($CustomRdpProperty.EndsWith(";"))) {
+                    $CustomRdpProperty = $CustomRdpProperty + ";"
                 }
-                $customRdpProperty = $currentCustomRdpProperty + $customRdpProperty
+                $CustomRdpProperty = $currentCustomRdpProperty + $CustomRdpProperty
             }
         }
         $jsonBody = $body | ConvertTo-Json

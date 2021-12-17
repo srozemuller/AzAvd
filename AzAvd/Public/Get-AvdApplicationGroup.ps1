@@ -27,7 +27,7 @@ Get-AvdApplicationGroup -ResourceId "/subscriptions/../applicationGroupname"
 
         [Parameter(Mandatory, ParameterSetName = "ResourceId")]
         [ValidateNotNullOrEmpty()]
-        [string]$resourceId
+        [string]$ResourceId
 
     )
     Begin {
@@ -42,7 +42,7 @@ Get-AvdApplicationGroup -ResourceId "/subscriptions/../applicationGroupname"
             }
             ResourceId {
                 Write-Verbose "ResourceId provided"
-                $url = $script:AzureApiUrl + $resourceId + $apiVersion
+                $url = $script:AzureApiUrl + $ResourceId + $apiVersion
             }
         }
         $parameters = @{

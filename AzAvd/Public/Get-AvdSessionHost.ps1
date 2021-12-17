@@ -11,9 +11,9 @@ function Get-AvdSessionHost {
     .PARAMETER SessionHostName
     Enter the sessionhosts name
     .EXAMPLE
-    Get-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true 
+    Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true 
     .EXAMPLE
-    Get-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
+    Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
     
     #>
     [CmdletBinding(DefaultParameterSetName = 'All')]

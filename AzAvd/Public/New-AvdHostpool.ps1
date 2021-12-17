@@ -8,15 +8,15 @@ function New-AvdHostpool {
     Enter the AVD Hostpool name
     .PARAMETER ResourceGroupName
     Enter the AVD Hostpool resourcegroup name
-    .PARAMETER customRdpProperty
+    .PARAMETER CustomRdpProperty
     If needed fill in the custom rdp properties (for example: targetisaadjoined:i:1 )
-    .PARAMETER friendlyName
+    .PARAMETER FriendlyName
     Change the host pool friendly name
-    .PARAMETER loadBalancerType
+    .PARAMETER LoadBalancerType
     Change the host pool loadBalancerType   
-    .PARAMETER validationEnvironment
+    .PARAMETER ValidationEnvironment
     Change the host pool validation environment   
-    .PARAMETER maxSessionLimit
+    .PARAMETER MaxSessionLimit
     Change the host pool max session limit (max 999999)
     .PARAMETER Force
     use the force parameter if you want to override the current customrdpproperties. Otherwise it will add the provided properties.
@@ -40,41 +40,41 @@ function New-AvdHostpool {
     
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string]$location,
+        [string]$Location,
 
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("Pooled", "Personal")]
-        [string]$hostPoolType,
+        [string]$HostPoolType,
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$customRdpProperty,
+        [string]$CustomRdpProperty,
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$friendlyName,
+        [string]$FriendlyName,
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$description,
+        [string]$Description,
 
         [parameter()]
         [ValidateSet("BreadthFirst", "DepthFirst","Persistent")]
         [ValidateNotNullOrEmpty()]
-        [string]$loadBalancerType,
+        [string]$LoadBalancerType,
         
         [parameter()]
         [ValidateNotNullOrEmpty()]
-        [boolean]$validationEnvironment,
+        [boolean]$ValidationEnvironment,
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
-        [boolean]$startVMOnConnect,
+        [boolean]$StartVMOnConnect,
          
         [parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$preferredAppGroupType,
+        [string]$PreferredAppGroupType,
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
@@ -83,12 +83,12 @@ function New-AvdHostpool {
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$vmTemplate,
+        [string]$VmTemplate,
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
         [ValidateRange(1, 999999)]
-        [int]$maxSessionLimit,
+        [int]$MaxSessionLimit,
 
         [parameter(ParameterSetName = 'Change')]
         [switch]$Force
@@ -104,21 +104,21 @@ function New-AvdHostpool {
             Headers = $token
         }
         $body = @{
-            location = $location
+            location = $Location
             properties = @{
-                hostPoolType = $hostPoolType
+                hostPoolType = $HostPoolType
             }
         }
-        if ($customRdpProperty){$body.properties.Add("customRdpProperty", $customRdpProperty)}
-        if ($friendlyName){$body.properties.Add("friendlyName", $friendlyName)}
-        if ($description){$body.properties.Add("description", $description)}
-        if ($loadBalancerType){$body.properties.Add("loadBalancerType", $loadBalancerType)}
-        if ($validationEnvironment){$body.properties.Add("validationEnvironment", $validationEnvironment)}
-        if ($preferredAppGroupType){$body.properties.Add("preferredAppGroupType", $preferredAppGroupType)}
-        if ($startVMOnConnect){$body.properties.Add("startVMOnConnect", $startVMOnConnect)}
+        if ($CustomRdpProperty){$body.properties.Add("customRdpProperty", $CustomRdpProperty)}
+        if ($FriendlyName){$body.properties.Add("friendlyName", $FriendlyName)}
+        if ($Description){$body.properties.Add("description", $Description)}
+        if ($LoadBalancerType){$body.properties.Add("loadBalancerType", $LoadBalancerType)}
+        if ($ValidationEnvironment){$body.properties.Add("validationEnvironment", $ValidationEnvironment)}
+        if ($PreferredAppGroupType){$body.properties.Add("preferredAppGroupType", $PreferredAppGroupType)}
+        if ($StartVMOnConnect){$body.properties.Add("startVMOnConnect", $StartVMOnConnect)}
         if ($PersonalDesktopAssignmentType){$body.properties.Add("PersonalDesktopAssignmentType", $PersonalDesktopAssignmentType)}
-        if ($maxSessionLimit){$body.properties.Add("maxSessionLimit", $maxSessionLimit)}
-        if ($vmTemplate){$body.properties.Add("vmTemplate", $vmTemplate)}
+        if ($MaxSessionLimit){$body.properties.Add("maxSessionLimit", $MaxSessionLimit)}
+        if ($VmTemplate){$body.properties.Add("vmTemplate", $VmTemplate)}
     }
     Process {
         $jsonBody = $body | ConvertTo-Json

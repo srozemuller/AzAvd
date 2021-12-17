@@ -1,4 +1,4 @@
-function Update-AvdSessionhost {
+function Update-AvdSessionHost {
     <#
     .SYNOPSIS
     Updating one or more sessionhosts. Assign new users or put them in drainmode or not.
@@ -8,17 +8,14 @@ function Update-AvdSessionhost {
     Enter the source AVD Hostpool name
     .PARAMETER ResourceGroupName
     Enter the source Hostpool resourcegroup name
-    .PARAMETER allowNewSession
+    .PARAMETER AllowNewSession
     Allowing new sessions or not. (Default: true). 
-    .PARAMETER assignedUser
+    .PARAMETER AssignedUser
     Enter the new username for the current sessionhost. Only available if providing one sessionhost at a time. 
     .PARAMETER SessionHostName
     Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
     .EXAMPLE
-    Update-AvdSessionhost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -AllowNewSession $true
-    .EXAMPLE
-    $sessionHosts = Get-AvdSessionhost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01
-    $sessionHosts | Update-AvdSessionhost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -AllowNewSession $true
+    Update-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -AllowNewSession $true
     #>
     [CmdletBinding(DefaultParameterSetName = 'SingleObject')]
     param
@@ -34,15 +31,15 @@ function Update-AvdSessionhost {
         [parameter(ParameterSetName = 'SingleObject')]
         [parameter(ParameterSetName = 'InputObject')]
         [ValidateNotNullOrEmpty()]
-        [string]$allowNewSession = $true,
+        [string]$AllowNewSession = $true,
 
         [parameter(ParameterSetName = 'SingleObject')]
         [ValidateNotNullOrEmpty()]
-        [string]$assignedUser,
+        [string]$AssignedUser,
 
         [parameter(ParameterSetName = 'SingleObject')]
         [parameter(Mandatory)]
-        [string]$sessionHostName,
+        [string]$SessionHostName,
 
         [parameter(Mandatory,ParameterSetName = 'InputObject')]
         [object]$SessionHosts
@@ -58,7 +55,7 @@ function Update-AvdSessionhost {
         switch ($PsCmdlet.ParameterSetName) {
             InputObject {
                 try {
-                    $sessionHostName = $SessionHosts.value.name
+                    $SessionHostName = $SessionHosts.value.name
                 }
                 catch {
                     Write-Error "Please provide the Get-AvdSessionHost output"
@@ -68,7 +65,7 @@ function Update-AvdSessionhost {
                 
             }
         }
-        $sessionHostName | ForEach-Object {
+        $SessionHostName | ForEach-Object {
             try {
                 $vmName = $_.Split("/")[-1]
                 Write-Verbose "Updating sessionhost $vmName"
@@ -79,8 +76,8 @@ function Update-AvdSessionhost {
                 }
                 $body = @{
                     properties = @{
-                        allowNewSession = $allowNewSession
-                        assignedUser    = $assignedUser
+                        AllowNewSession = $AllowNewSession
+                        AssignedUser    = $AssignedUser
                     }
                 }
                 $parameters = @{

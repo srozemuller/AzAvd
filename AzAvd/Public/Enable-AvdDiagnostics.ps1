@@ -14,9 +14,9 @@ function Enable-AvdDiagnostics {
     Enter the name of the Log Analytics Workspace
     .PARAMETER LaResourceGroupName
     Enter the name of the Log Analyics Workspace resource group
-    .PARAMETER diagnosticsName
+    .PARAMETER DiagnosticsName
     The diagnostics name shown in the hostpool diagnostics overview
-    .PARAMETER categories
+    .PARAMETER Categories
     The categories you like to save in Log Analytics
     .PARAMETER RetentionInDays
     How long should the data be saved
@@ -50,7 +50,7 @@ function Enable-AvdDiagnostics {
         [string]$LaResourceGroupName,
         
         [parameter(ParameterSetName = 'Initial')]
-        [string]$diagnosticsName = "AVD-Diagnostics",
+        [string]$DiagnosticsName = "AVD-Diagnostics",
 
         [parameter(Mandatory)]
         [parameter(ParameterSetName = 'Initial')]
@@ -122,7 +122,7 @@ function Enable-AvdDiagnostics {
             }
         }    
         $parameters = @{
-            uri     = $Script:AzureApiUrl + "/$($Hostpool.Id)/providers/microsoft.insights/diagnosticSettings/$($diagnosticsName)?api-version=2017-05-01-preview"
+            uri     = $Script:AzureApiUrl + "/$($Hostpool.Id)/providers/microsoft.insights/diagnosticSettings/$($DiagnosticsName)?api-version=2017-05-01-preview"
             Method  = "PUT"
             Headers = $token
             Body    = $diagnosticsBody | ConvertTo-Json -Depth 4

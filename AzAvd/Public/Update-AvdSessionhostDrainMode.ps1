@@ -15,9 +15,7 @@ function Update-AvdSessionhostDrainMode {
     .PARAMETER AllowNewSession
     Enter $true or $false.
     .EXAMPLE
-    Set-AvdSessionhostDrainMode -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true 
-    .EXAMPLE
-    $sessionhosts | Update-AvdSessionhostDrainMode -AllowNewSession $false
+    Update-AvdSessionhostDrainMode -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true 
     #>
     [CmdletBinding()]
     param (
@@ -52,7 +50,7 @@ function Update-AvdSessionhostDrainMode {
                     HostpoolName      = $InputObject.HostpoolName
                     ResourceGroupName = $InputObject.ResourceGroupName
                     Name              = $InputObject.SessionHostName
-                    AllowNewSession = $AllowNewSession
+                    AllowNewSession   = $AllowNewSession
                 }
             }
             Default {
@@ -60,7 +58,7 @@ function Update-AvdSessionhostDrainMode {
                     Hostpoolname      = $HostpoolName 
                     ResourceGroupName = $ResourceGroupName 
                     Name              = $SessionHostName 
-                    AllowNewSession = $AllowNewSession
+                    AllowNewSession   = $AllowNewSession
                 }
             }
         }

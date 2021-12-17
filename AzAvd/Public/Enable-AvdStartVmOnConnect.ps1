@@ -44,7 +44,7 @@ function Enable-AvdStartVmOnConnect {
     Begin {
         AuthenticationCheck
         $GraphHeader = GetAuthToken -resource $Script:GraphApiUrl
-        $ServicePrincipalURL = "$($GraphResource)/beta/servicePrincipals?`$filter=displayName eq 'Windows Virtual Desktop'"
+        $ServicePrincipalURL = "$($Script:GraphApiUrl)/beta/servicePrincipals?`$filter=displayName eq 'Windows Virtual Desktop'"
         $ServicePrincipals = Invoke-RestMethod -Method GET -Uri $ServicePrincipalURL -Headers $GraphHeader
         $AzureHeader = GetAuthToken -resource $Script:AzureApiUrl
     }
@@ -61,23 +61,23 @@ function Enable-AvdStartVmOnConnect {
                     HostPoolName      = $HostpoolName 
                     ResourceGroupName = $ResourceGroupName
                 }
-                $HostsResourceGroup = (Get-AzResource -ResourceID (Get-AvdLatestSessionHost @parameters).ResourceId).ResourceGroupName
-                $Scope = "subscriptions/"+ $script:subscriptionId +"/Resourcegroups/$HostsResourceGroup"
+                $HostsResourceGroup = ((Get-AvdLatestSessionHost @parameters).Id -split "/")[4]
             }
         }
-        $Hostpool = Get-AzWvdHostPool @parameters
+        $Hostpool = Get-AvdHostPool @parameters
         if ($Force) {
-            Update-AzWvdHostPool @parameters -ValidationEnvironment:$true
+            Update-AvdHostPool @parameters -ValidationEnvironment:$true
         }
         if ($Hostpool.ValidationEnvironment -eq $true) {
-            Update-AzWvdHostPool @parameters -StartVMOnConnect:$true
-            Write-Verbose "Hostpool $($Hostpool.Hostpoolname) updated, StartVMOnConnect is set to $true"
+            Update-AvdHostPool @parameters -StartVMOnConnect:$true
+            Write-Verbose "Hostpool $($Hostpool.Name) updated, StartVMOnConnect is set to $true"
         }    
         #Region get Windows Virtual Desktop Service Principal
 
 
         #Region create custom role
         # Building a new role GUID
+        $Scope = "/subscriptions/"+ $script:subscriptionId +"/Resourcegroups/$HostsResourceGroup"
         $RoleGuid = (New-Guid).Guid
         # Generating the role body
         $RoleBody = @{
@@ -102,7 +102,7 @@ function Enable-AvdStartVmOnConnect {
             }
         }
         $RoleJsonBody = $RoleBody | ConvertTo-Json -Depth 5
-        $DefinitionUrl = "$($AzureResource)/$Scope/providers/Microsoft.Authorization/roleDefinitions/$($RoleGuid)?api-version=2018-07-01"
+        $DefinitionUrl = $Script:AzureApiUrl + $Scope + "/providers/Microsoft.Authorization/roleDefinitions/" +$RoleGuid + "?api-version=2018-07-01"
         $CustomRole = Invoke-RestMethod -Method PUT -Body $RoleJsonBody -Headers $AzureHeader -URi $DefinitionUrl
         #Endregion
 
@@ -110,7 +110,7 @@ function Enable-AvdStartVmOnConnect {
         # New assignment GUID
         $ServicePrincipals.value.id | ForEach-Object {
             $AssignGuid = (New-Guid).Guid
-            $AssignURL = "$AzureResource/$Scope/providers/Microsoft.Authorization/roleAssignments/$($AssignGuid)?api-version=2021-04-01-preview"
+            $AssignURL = $Script:AzureApiUrl + $Scope + "/providers/Microsoft.Authorization/roleAssignments/" + $AssignGuid + "?api-version=2021-04-01-preview"
             $assignBody = @{
                 properties = @{
                     roleDefinitionId = $CustomRole.id

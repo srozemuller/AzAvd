@@ -8,6 +8,8 @@ With this function you can get information about an AVD hostpool.
 Enter the name of the hostpool you want information from.
 .PARAMETER ResourceGroupName
 Enter the name of the resourcegroup where the hostpool resides in.
+.PARAMETER ResourceId
+Enter the hostpool ResourceId
 .EXAMPLE
 Get-AvdHostPool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
 .EXAMPLE
@@ -25,7 +27,7 @@ Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
 
         [Parameter(Mandatory, ParameterSetName = "ResourceId")]
         [ValidateNotNullOrEmpty()]
-        [string]$resourceId
+        [string]$ResourceId
     )
     Begin {
         Write-Verbose "Start searching for hostpool $hostpoolName"

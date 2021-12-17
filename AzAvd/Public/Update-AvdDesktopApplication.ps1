@@ -3,16 +3,16 @@ function Update-AvdDesktopApplication {
     .SYNOPSIS
     Updates the Virtual Desktop ApplicationGroup desktop application
     .DESCRIPTION
-    The function will update the desktop application SessionDesktop with a friendlyname and/or displayname.
+    The function will update the desktop application SessionDesktop with a FriendlyName and/or displayname.
     .PARAMETER ApplicationGroupName
     Enter the AVD application group name
     .PARAMETER ResourceGroupName
     Enter the AVD application group resourcegroup name
     .PARAMETER ResourceId
     Enter the AVD application group resourceId
-    .PARAMETER friendlyName
+    .PARAMETER FriendlyName
     Provide a displayname, this is the name you see in the webclient and Remote Desktop Client.
-    .PARAMETER description
+    .PARAMETER Description
     Enter a description   
     .EXAMPLE
     Update-AvdDesktopApplication -ApplicationGroupName avd-applicationgroup -ResourceGroupName rg-avd-01 -DisplayName "Update Desktop"
@@ -36,11 +36,11 @@ function Update-AvdDesktopApplication {
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$description,
+        [string]$Description,
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$friendlyName
+        [string]$FriendlyName
         
     )
     Begin {
@@ -64,8 +64,8 @@ function Update-AvdDesktopApplication {
             properties = @{
             }
         }
-        if ($friendlyName) { $body.properties.Add("friendlyName", $friendlyName) }
-        if ($description) { $body.properties.Add("description", $description) }
+        if ($FriendlyName) { $body.properties.Add("FriendlyName", $FriendlyName) }
+        if ($Description) { $body.properties.Add("description", $Description) }
     }
     Process {
         $jsonBody = $body | ConvertTo-Json

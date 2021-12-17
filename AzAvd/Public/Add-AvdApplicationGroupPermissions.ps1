@@ -10,7 +10,7 @@ function Add-AvdApplicationGroupPermissions {
     Enter the AVD application group resourcegroup name
     .PARAMETER UserPrincipalName
     Provide the user principal name (eg. user@domain.com)
-    .PARAMETER groupName
+    .PARAMETER GroupName
     Provide the group name (eg. All Users)
     .EXAMPLE
     Add-AvdApplicationGroupPermissions -ApplicationGroupName avd-application-group -ResourceGroupName rg-avd-01 -UserPrincipalName user@domain.com
@@ -36,7 +36,7 @@ function Add-AvdApplicationGroupPermissions {
         [parameter(Mandatory, ParameterSetName = 'ResourceId-Group')]
         [parameter(Mandatory, ParameterSetName = 'ResourceId-PrincipalId')]
         [ValidateNotNullOrEmpty()]
-        [string]$resourceId,
+        [string]$ResourceId,
     
         [parameter(Mandatory, ParameterSetName = 'ResourceId-User')]
         [parameter(Mandatory, ParameterSetName = 'Name-User')]
@@ -46,7 +46,7 @@ function Add-AvdApplicationGroupPermissions {
         [parameter(Mandatory, ParameterSetName = 'ResourceId-Group')]
         [parameter(Mandatory, ParameterSetName = 'Name-Group')]
         [ValidateNotNullOrEmpty()]
-        [string]$groupName,
+        [string]$GroupName,
 
         [parameter(Mandatory, ParameterSetName = 'ResourceId-PrincipalId')]
         [parameter(Mandatory, ParameterSetName = 'Name-PrincipalId')]
@@ -69,8 +69,8 @@ function Add-AvdApplicationGroupPermissions {
                 $identityInfo = (Invoke-RestMethod -Method GET -Uri $graphUrl -Headers $graphToken).id
             }
             *Group {
-                Write-Verbose "Group name $groupName provided, looking for group in Azure AD"
-                $graphUrl = $Script:GraphApiUrl + "/" + $script:GraphApiVersion + "/groups?`$filter=displayName eq '$groupName'"
+                Write-Verbose "Group name $GroupName provided, looking for group in Azure AD"
+                $graphUrl = $Script:GraphApiUrl + "/" + $script:GraphApiVersion + "/groups?`$filter=displayName eq '$GroupName'"
                 $identityInfo = (Invoke-RestMethod -Method GET -Uri $graphUrl -Headers $graphToken).value.id
             }
             *PrincipalId {
@@ -81,22 +81,21 @@ function Add-AvdApplicationGroupPermissions {
                 Write-Error "No UPN, group name or principal ID is provided"
             }
         }
-        if ($ApplicationGroupName)
-        {
+        if ($ApplicationGroupName) {
             $applicationGroup = Get-AvdApplicationGroup -ApplicationGroupName $ApplicationGroupName -ResourceGroupName $ResourceGroupName
         }
         else {
-            $applicationGroup = Get-AvdApplicationGroup -resourceId $resourceId
+            $applicationGroup = Get-AvdApplicationGroup -resourceId $ResourceId
         }
         $guid = (New-Guid).Guid
-        $url = $script:AzureApiUrl+"/"+$applicationGroup.id+"/providers/Microsoft.Authorization/roleAssignments/$($guid)"+$apiVersion
+        $url = $script:AzureApiUrl + "/" + $applicationGroup.id + "/providers/Microsoft.Authorization/roleAssignments/$($guid)" + $apiVersion
        
         # Used ID 1d18fff3-a72a-46b5-b4a9-0b38a3cd7e63 is default built-in role Desktop Virtualization User.
         # Source: https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#desktop-virtualization-user
         $body = @{
             properties = @{
-                roleDefinitionId = "/subscriptions/"+$script:subscriptionId+"/providers/Microsoft.Authorization/roleDefinitions/1d18fff3-a72a-46b5-b4a9-0b38a3cd7e63"
-                principalId = $identityInfo
+                roleDefinitionId = "/subscriptions/" + $script:subscriptionId + "/providers/Microsoft.Authorization/roleDefinitions/1d18fff3-a72a-46b5-b4a9-0b38a3cd7e63"
+                principalId      = $identityInfo
             }
         }
         $jsonBody = $body | ConvertTo-Json

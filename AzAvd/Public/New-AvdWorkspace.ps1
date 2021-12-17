@@ -8,11 +8,11 @@ function New-AvdWorkspace {
     Enter the AVD Hostpool name
     .PARAMETER ResourceGroupName
     Enter the AVD Hostpool resourcegroup name
-    .PARAMETER location
+    .PARAMETER Location
     Enter the Azure location
-    .PARAMETER friendlyName
+    .PARAMETER FriendlyName
     Change the workspace friendly name
-    .PARAMETER description
+    .PARAMETER Description
     Enter a description   
     .PARAMETER ApplicationGroupReference
     Provide the application group resource IDs where the workspace assign to.   
@@ -34,15 +34,15 @@ function New-AvdWorkspace {
     
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string]$location,
+        [string]$Location,
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$friendlyName,
+        [string]$FriendlyName,
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$description,
+        [string]$Description,
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
@@ -60,13 +60,13 @@ function New-AvdWorkspace {
             Headers = $token
         }
         $body = @{
-            location = $location
+            location = $Location
             properties = @{
             }
         }
-        if ($friendlyName){$body.properties.Add("friendlyName", $friendlyName)}
-        if ($description){$body.properties.Add("description", $description)}
-        if ($applicationGroupResourceIDs){$body.properties.Add("applicationGroupReferences", $ApplicationGroupReference)}
+        if ($FriendlyName){$body.properties.Add("friendlyName", $FriendlyName)}
+        if ($Description){$body.properties.Add("description", $Description)}
+        if ($ApplicationGroupReference){$body.properties.Add("applicationGroupReferences", $ApplicationGroupReference)}
     }
     Process {
         $jsonBody = $body | ConvertTo-Json

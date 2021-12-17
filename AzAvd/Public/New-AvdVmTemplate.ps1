@@ -8,39 +8,36 @@ function New-AvdVmTemplate {
     Enter the AVD Hostpool name
     .PARAMETER ResourceGroupName
     Enter the AVD Hostpool resourcegroup name
-    .PARAMETER domain
+    .PARAMETER Domain
     Enter the sessionhosts domain
-    .PARAMETER galleryImageOffer
+    .PARAMETER GalleryImageOffer
     Enter the gallery image offer
-    .PARAMETER galleryImagePublisher
+    .PARAMETER GalleryImagePublisher
     Enter the gallery image publisher
-    .PARAMETER galleryImageSKU
+    .PARAMETER GalleryImageSKU
     Enter the gallery image sku
-    .PARAMETER imageType
+    .PARAMETER ImageType
     Enter the image type. (default: CustomImage)
-    .PARAMETER imageUri
+    .PARAMETER ImageUri
     The url of an image (.vhd)
-    .PARAMETER customImageId
+    .PARAMETER CustomImageId
     The resourceId of an image or image version
-    .PARAMETER namePrefix
+    .PARAMETER NamePrefix
     The sessionhosts name prefix (avd-)
-    .PARAMETER useManagedDisks
+    .PARAMETER UseManagedDisks
     The use of a managed disk or not (default: True)
-    .PARAMETER osDiskType
+    .PARAMETER OsDiskType
     The OS disk type ("Standard_LRS", "Premium_LRS", "StandardSSD_LRS")
-    .PARAMETER vmSku
+    .PARAMETER VmSku
     This is the part of the VMsize information. (eg. Standard_B2ms)
-    .PARAMETER vmCores
+    .PARAMETER VmCores
     This is the part of the VMsize information. How many cores.
-    .PARAMETER vmRam
+    .PARAMETER VmRam
     This is the part of the VMsize information. The RAM size in GB.
     .PARAMETER CustomObject
     Can be used to add extra values into the template. Please provide a PSCustomObject.
     .EXAMPLE
-    $customObjects = @{
-        TestObject = 'TestValue'
-    }
-    create-AvdVmTemplate -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -domain domain.local -namePrefix avd -vmSku 'Standard_B2ms' -vmCores 2 -vmRam 8 -osDiskType "Premium_LRS" -CustomObjects $customObjects
+    create-AvdVmTemplate -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -domain domain.local -namePrefix avd -vmSku 'Standard_B2ms' -vmCores 2 -vmRam 8 -osDiskType "Premium_LRS" -CustomObject $customObjects
     .EXAMPLE
     create-AvdVmTemplate -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -domain domain.local -namePrefix avd -vmSku 'Standard_B2ms' -vmCores 2 -vmRam 8 -osDiskType "Premium_LRS" 
     #>
@@ -57,32 +54,32 @@ function New-AvdVmTemplate {
     
         [ValidatePattern("(?:[a-zA-Z0-9_\-]{1,63})+\.+(?:[a-zA-Z]{2,})$")]
         [Parameter(HelpMessage = 'Please fill in a complete domain name (eg. domain.local)')]
-        [string]$domain,
+        [string]$Domain,
 
         [Parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$galleryImageOffer,
+        [string]$GalleryImageOffer,
         
         [Parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$galleryImagePublisher,
+        [string]$GalleryImagePublisher,
         
         [Parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$galleryImageSKU,
+        [string]$GalleryImageSku,
         
         [Parameter()]
         [ValidateSet("CustomImage")]
         [ValidateNotNullOrEmpty()]
-        [string]$imageType,
+        [string]$ImageType,
         
         [Parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$imageUri,
+        [string]$ImageUri,
         
         [Parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$customImageId,
+        [string]$CustomImageId,
         
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
@@ -90,24 +87,24 @@ function New-AvdVmTemplate {
         
         [Parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$useManagedDisks = $true,
+        [string]$UseManagedDisks = $true,
         
         [Parameter(Mandatory)]
         [ValidateSet("Standard_LRS", "Premium_LRS", "StandardSSD_LRS")]
         [ValidateNotNullOrEmpty()]
-        [string]$osDiskType,
+        [string]$OsDiskType,
 
         [Parameter(Mandatory, HelpMessage = 'Please fill in a complete domain name (eg. Standard_B2ms)')]
         [ValidateNotNullOrEmpty()]
-        [String]$vmSku,
+        [String]$VmSku,
 
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [String]$vmCores,
+        [String]$VmCores,
 
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [String]$vmRam,
+        [String]$VmRam,
 
         [Parameter()]
         [ValidateNotNullOrEmpty()]
@@ -124,23 +121,23 @@ function New-AvdVmTemplate {
             Headers = $token
         }
         $vmSize = @{
-            id    = $vmSku
-            cores = $vmCores
-            ram   = $vmRam
+            id    = $VmSku
+            cores = $VmCores
+            ram   = $VmRam
         }
         $vmTemplate = [PSCustomObject]@{
-            domain                = $domain
-            osDiskType            = $osDiskType
+            domain                = $Domain
+            osDiskType            = $OsDiskType
             namePrefix            = $namePrefix
             vmSize                = $vmSize
-            galleryImageOffer     = $galleryImageOffer
-            galleryImagePublisher = $galleryImagePublisher
-            galleryImageSKU       = $galleryImageSKU
-            imageType             = $imageType
-            imageUri              = $imageUri
-            customImageId         = $customImageId
-            useManagedDisks       = $useManagedDisks
-            galleryItemId         = $galleryItemId
+            galleryImageOffer     = $GalleryImageOffer
+            galleryImagePublisher = $GalleryImagePublisher
+            galleryImageSKU       = $GalleryImageSku
+            imageType             = $ImageType
+            imageUri              = $ImageUri
+            customImageId         = $CustomImageId
+            useManagedDisks       = $UseManagedDisks
+            galleryItemId         = $GalleryItemId
         }
 
         if ($CustomObject) {

@@ -1,4 +1,4 @@
-function Remove-AvdSessionhost {
+function Remove-AvdSessionHost {
     <#
     .SYNOPSIS
     Removing sessionhosts from an Azure Virtual Desktop hostpool.
@@ -11,7 +11,7 @@ function Remove-AvdSessionhost {
     .PARAMETER SessionHostName
     Enter the sessionhosts name
     .EXAMPLE
-    Remove-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.wvd.domain
+    Remove-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.wvd.domain
     #>
     [CmdletBinding()]
     param

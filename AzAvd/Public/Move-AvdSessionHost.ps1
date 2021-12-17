@@ -4,13 +4,13 @@ function Move-AvdSessionhost {
     Moving sessionhosts from an Azure Virtual Desktop hostpool to a new one.
     .DESCRIPTION
     The function will move sessionhosts to a new Azure Virtual Desktop hostpool.
-    .PARAMETER fromHostpoolName
+    .PARAMETER FromHostpoolName
     Enter the source AVD Hostpool name
-    .PARAMETER fromResourceGroupName
+    .PARAMETER FromResourceGroupName
     Enter the source Hostpool resourcegroup name
-    .PARAMETER toHostpoolName
+    .PARAMETER ToHostpoolName
     Enter the destination AVD Hostpool name
-    .PARAMETER toResourceGroupName
+    .PARAMETER ToResourceGroupName
     Enter the destination Hostpool resourcegroup name
     .PARAMETER SessionHostName
     Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
@@ -22,24 +22,25 @@ function Move-AvdSessionhost {
     (
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string]$fromHostpoolName,
+        [string]$FromHostpoolName,
     
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string]$fromResourceGroupName,
+        [string]$FromResourceGroupName,
         
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string]$toHostpoolName,
+        [string]$ToHostpoolName,
     
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string]$toResourceGroupName,
+        [string]$ToResourceGroupName,
 
         [parameter(ParameterSetName = 'SingleObject')]
         [parameter(Mandatory)]
-        [string]$sessionHostName
+        [string]$SessionHostName
 
+        # TODO
         #[parameter(ParameterSetName = 'InputObject')]
         #[parameter(Mandatory)]
         #[object]$SessionHosts
@@ -48,14 +49,14 @@ function Move-AvdSessionhost {
     Begin {
         Write-Verbose "Start moving session hosts"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $Token = GetAuthToken -resource $Script:AzureApiUrl
         $apiVersion = "?api-version=2021-04-01"
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
             InputObject {
                 try {
-                    $sessionHostName = $SessionHosts.value.name
+                    $SessionHostName = $SessionHosts.value.name
                 }
                 catch {
                     Write-Error "Please provide the Get-AvdSessionHost output"
@@ -65,20 +66,20 @@ function Move-AvdSessionhost {
                 
             }
         }
-        $sessionHostName | ForEach-Object {
+        $SessionHostName | ForEach-Object {
             try {
                 $vmName = $_.Split("/")[-1]
                 Write-Verbose "Removing sessionhost $vmName from $FromHostPoolName"
                 $url = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + "/sessionHosts/" + $vmName + $apiVersion
                 $parameters = @{
                     uri     = $url
-                    Headers = $token
+                    Headers = $Token
                 }
-                $sessionHost = Get-AvdSessionHost -HostpoolName $fromHostpoolName -ResourceGroupName $fromResourceGroupName -SessionHostName $vmName
-                Remove-AvdSessionhost -HostpoolName $fromHostpoolName -ResourceGroupName $fromResourceGroupName -SessionHostName $vmName
+                $sessionHost = Get-AvdSessionHost -HostpoolName $FromHostpoolName -ResourceGroupName $FromResourceGroupName -SessionHostName $vmName
+                Remove-AvdSessionhost -HostpoolName $FromHostpoolName -ResourceGroupName $FromResourceGroupName -SessionHostName $vmName
                 $resourceId = $($sessionHost.properties.resourceId)
-                Write-Verbose "Requesting new token in hostpool $toHostpoolName"
-                $avdHostpoolToken = Update-AvdRegistrationToken -HostpoolName $toHostpoolName -ResourceGroupName $toResourceGroupName
+                Write-Verbose "Requesting new token in hostpool $ToHostpoolName"
+                $avdHostpoolToken = Update-AvdRegistrationToken -HostpoolName $ToHostpoolName -ResourceGroupName $ToResourceGroupName
                 
                 # Script part
                 $script = [System.Collections.ArrayList]@()
@@ -96,7 +97,7 @@ function Move-AvdSessionhost {
                     URI     = $url 
                     Method  = "POST"
                     Body    = $MoveBody | ConvertTo-Json
-                    Headers = $token
+                    Headers = $Token
                 }
                 Invoke-RestMethod @parameters
             }

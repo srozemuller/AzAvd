@@ -14,7 +14,7 @@ function New-AvdScalingPlan {
     If needed fill in the description
     .PARAMETER AssignToHostPool
     Enter the AVD Hostpool names and resource groups (eg. @{"Hostpool-1" = "RG-AVD-01"; "Hostpool-2" = "RG-AVD-02" } -ScheduleDays @("Monday", "WednesDay"))
-    .PARAMETER friendlyName
+    .PARAMETER FriendlyName
     Change the scaling plan friendly name
     .PARAMETER TimeZone
     Timezone where the plan lives. (default is the timezone where the script is running.)
@@ -22,35 +22,35 @@ function New-AvdScalingPlan {
     Enter the schedule name
     .PARAMETER ScheduleDays
     Enter the days when the schedule needs to work (eg. @("Monday", "WednesDay"))
-    .PARAMETER rampUpStartTime
+    .PARAMETER RampUpStartTime
     Enter the start time of the autoscale process
-    .PARAMETER rampUpLoadBalancingAlgorithm
+    .PARAMETER RampUpLoadBalancingAlgorithm
     How do you like the loadbalancing (DepthFirst, BreadthFirst)
-    .PARAMETER rampUpMinimumHostsPct
+    .PARAMETER RampUpMinimumHostsPct
     How many 
-    .PARAMETER rampUpCapacityThresholdPct
+    .PARAMETER RampUpCapacityThresholdPct
     
-    .PARAMETER peakStartTime
+    .PARAMETER PeakStartTime
     Enter the time of the maximum amount of hosts
-    .PARAMETER peakLoadBalancingAlgorithm
+    .PARAMETER PeakLoadBalancingAlgorithm
     How do you like the loadbalancing (DepthFirst, BreadthFirst)
-    .PARAMETER rampDownLoadBalancingAlgorithm
+    .PARAMETER RampDownLoadBalancingAlgorithm
     How do you like the loadbalancing (DepthFirst, BreadthFirst)
-    .PARAMETER rampDownStartTime
+    .PARAMETER RampDownStartTime
     What time needs the scaling plan shutdown hosts.
-    .PARAMETER rampDownMinimumHostsPct
+    .PARAMETER RampDownMinimumHostsPct
     Enter the percentage of hosts which needs to be online.
-    .PARAMETER rampDownCapacityThresholdPct
+    .PARAMETER RampDownCapacityThresholdPct
     Enter the usage percentage when to start a new host.
-    .PARAMETER rampDownForceLogoffUsers
+    .PARAMETER RampDownForceLogoffUsers
     Force logoff users?
-    .PARAMETER rampDownWaitTimeMinutes
+    .PARAMETER RampDownWaitTimeMinutes
     Number of minutes to wait to stop hosts during ramp down period.
-    .PARAMETER rampDownNotificationMessage
+    .PARAMETER RampDownNotificationMessage
     Provide the message to send to end users.
-    .PARAMETER offPeakStartTime
+    .PARAMETER OffPeakStartTime
     Whats the scaling plans end time?
-    .PARAMETER offPeakLoadBalancingAlgorithm
+    .PARAMETER OffPeakLoadBalancingAlgorithm
     How do you like the loadbalancing (DepthFirst, BreadthFirst)
     .EXAMPLE
     New-AvdScalingPlan -ScalingPlanName sp-avd-weekdays -resourceGroupName rg-avd-01 -location WestEurope -AssignToHostpool @{"Hostpool-1" = "RG-AVD-01"; "Hostpool-2" = "RG-AVD-02"} -ScheduleDays @("Monday", "WednesDay")
@@ -68,7 +68,7 @@ function New-AvdScalingPlan {
     
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string]$location,
+        [string]$Location,
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
@@ -101,68 +101,68 @@ function New-AvdScalingPlan {
 
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string]$rampUpStartTime,
+        [string]$RampUpStartTime,
 
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("BreadthFirst", "DepthFirst")]
-        [string]$rampUpLoadBalancingAlgorithm,
+        [string]$RampUpLoadBalancingAlgorithm,
 
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [int]$rampUpMinimumHostsPct,
+        [int]$RampUpMinimumHostsPct,
 
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [int]$rampUpCapacityThresholdPct,
+        [int]$RampUpCapacityThresholdPct,
 
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string]$peakStartTime,
+        [string]$PeakStartTime,
 
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("BreadthFirst", "DepthFirst")]
-        [string]$peakLoadBalancingAlgorithm,
+        [string]$PeakLoadBalancingAlgorithm,
         
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string]$rampDownStartTime,
+        [string]$RampDownStartTime,
 
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("BreadthFirst", "DepthFirst")]
-        [string]$rampDownLoadBalancingAlgorithm,
+        [string]$RampDownLoadBalancingAlgorithm,
 
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [int]$rampDownMinimumHostsPct,
+        [int]$RampDownMinimumHostsPct,
 
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [int]$rampDownCapacityThresholdPct,
+        [int]$RampDownCapacityThresholdPct,
 
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [boolean]$rampDownForceLogoffUsers,
+        [boolean]$RampDownForceLogoffUsers,
 
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [int]$rampDownWaitTimeMinutes,
+        [int]$RampDownWaitTimeMinutes,
 
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [ValidateLength(1, 250)]
-        [string]$rampDownNotificationMessage,
+        [string]$RampDownNotificationMessage,
 
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string]$offPeakStartTime,
+        [string]$OffPeakStartTime,
 
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("BreadthFirst", "DepthFirst")]
-        [string]$offPeakLoadBalancingAlgorithm
+        [string]$OffPeakLoadBalancingAlgorithm
     )
     
     Begin {
@@ -182,21 +182,21 @@ function New-AvdScalingPlan {
                         daysOfWeek                     = @(
                             $ScheduleDays
                         )
-                        rampUpStartTime                = $rampUpStartTime
-                        rampUpLoadBalancingAlgorithm   = $rampUpLoadBalancingAlgorithm
-                        rampUpMinimumHostsPct          = $rampUpMinimumHostsPct
-                        rampUpCapacityThresholdPct     = $rampUpCapacityThresholdPct
-                        peakStartTime                  = $peakStartTime
-                        peakLoadBalancingAlgorithm     = $peakLoadBalancingAlgorithm
-                        rampDownStartTime              = $rampDownStartTime
-                        rampDownLoadBalancingAlgorithm = $rampDownLoadBalancingAlgorithm
-                        rampDownMinimumHostsPct        = $rampDownMinimumHostsPct
-                        rampDownCapacityThresholdPct   = $rampDownCapacityThresholdPct
-                        rampDownForceLogoffUsers       = $rampDownForceLogoffUsers
-                        rampDownWaitTimeMinutes        = $rampDownWaitTimeMinutes
-                        rampDownNotificationMessage    = $rampDownNotificationMessage
-                        offPeakStartTime               = $offPeakStartTime
-                        offPeakLoadBalancingAlgorithm  = $offPeakLoadBalancingAlgorithm
+                        rampUpStartTime                = $RampUpStartTime
+                        rampUpLoadBalancingAlgorithm   = $RampUpLoadBalancingAlgorithm
+                        rampUpMinimumHostsPct          = $RampUpMinimumHostsPct
+                        rampUpCapacityThresholdPct     = $RampUpCapacityThresholdPct
+                        peakStartTime                  = $PeakStartTime
+                        peakLoadBalancingAlgorithm     = $PeakLoadBalancingAlgorithm
+                        rampDownStartTime              = $RampDownStartTime
+                        rampDownLoadBalancingAlgorithm = $RampDownLoadBalancingAlgorithm
+                        rampDownMinimumHostsPct        = $RampDownMinimumHostsPct
+                        rampDownCapacityThresholdPct   = $RampDownCapacityThresholdPct
+                        rampDownForceLogoffUsers       = $RampDownForceLogoffUsers
+                        rampDownWaitTimeMinutes        = $RampDownWaitTimeMinutes
+                        rampDownNotificationMessage    = $RampDownNotificationMessage
+                        offPeakStartTime               = $OffPeakStartTime
+                        offPeakLoadBalancingAlgorithm  = $OffPeakLoadBalancingAlgorithm
                     }
                 )
             }

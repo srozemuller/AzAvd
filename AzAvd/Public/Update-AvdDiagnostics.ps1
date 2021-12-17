@@ -55,7 +55,7 @@ function Update-AvdDiagnostics {
             HostPoolName      = $HostpoolName 
             ResourceGroupName = $ResourceGroupName
         }
-        $Hostpool = Get-AzWvdHostPool @parameters
+        $Hostpool = Get-AvdHostPool @parameters
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {

@@ -10,20 +10,20 @@ function Update-AvdWorkspace {
     Enter the AVD workspace resourcegroup name
     .PARAMETER ResourceGroupName
     Enter the AVD workspace resourceId 
-    .PARAMETER location
+    .PARAMETER Location
     Enter the Azure location
-    .PARAMETER friendlyName
+    .PARAMETER FriendlyName
     Change the workspace friendly name
-    .PARAMETER description
+    .PARAMETER Description
     Enter a description   
     .PARAMETER ApplicationGroupReference
     Provide the application group resource IDs where the workspace assign to.   
     .EXAMPLE
-    Update-AvdWorkspace -name avd-workspace -resourceGroupName rg-avd-01 -location WestEurope -description "Work in space"
+    Update-AvdWorkspace -name avd-workspace -resourceGroupName rg-avd-01 -Location WestEurope -description "Work in space"
     .EXAMPLE
-    Update-AvdWorkspace -name avd-workspace -resourceGroupName rg-avd-01 -location WestEurope -ApplicationGroupReference @("id_1","id_2")
+    Update-AvdWorkspace -name avd-workspace -resourceGroupName rg-avd-01 -Location WestEurope -ApplicationGroupReference @("id_1","id_2")
     .EXAMPLE
-    Update-AvdWorkspace -resourceId "/subscriptions/../workspacename" -location WestEurope -ApplicationGroupReference @("id_1","id_2")
+    Update-AvdWorkspace -resourceId "/subscriptions/../workspacename" -Location WestEurope -ApplicationGroupReference @("id_1","id_2")
     #>
     [CmdletBinding(DefaultParameterSetName="Name")]
     param
@@ -42,15 +42,15 @@ function Update-AvdWorkspace {
 
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string]$location,
+        [string]$Location,
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$friendlyName,
+        [string]$FriendlyName,
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$description,
+        [string]$Description,
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
@@ -77,12 +77,12 @@ function Update-AvdWorkspace {
             Headers = $token
         }
         $body = @{
-            location   = $location
+            location   = $Location
             properties = @{
             }
         }
-        if ($friendlyName) { $body.properties.Add("friendlyName", $friendlyName) }
-        if ($description) { $body.properties.Add("description", $description) }
+        if ($FriendlyName) { $body.properties.Add("friendlyName", $FriendlyName) }
+        if ($Description) { $body.properties.Add("description", $Description) }
         if ($ApplicationGroupReference) {
             $currentAppGroups = $getResults.properties.applicationGroupReferences
             $ApplicationGroupReference | ForEach-Object {
