@@ -1,7 +1,3 @@
-BeforeAll {
-    $moduleName = "Az.Avd"
-}
-
 $modulePath = Join-Path -Path $(Get-Location) -ChildPath "AzAvd"
 $psFiles = Get-ChildItem -Path (Join-Path -Path $modulePath -ChildPath "Public")
 Describe "Analyze code" -ForEach @(
@@ -120,7 +116,7 @@ Describe "Analyze code" -ForEach @(
     
     It "<fileBase> function should be available in module" {
         try {
-            Get-Command $fileBase -Module $moduleName
+            Get-Command $fileBase -Module "Az.Avd"
         }
         catch {
             "$fileBase is not found in commmand list"
