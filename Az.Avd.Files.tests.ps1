@@ -1,7 +1,7 @@
 $modulePath = Join-Path -Path $(Get-Location) -ChildPath "AzAvd"
 $psFiles = Get-ChildItem -Path (Join-Path -Path $modulePath -ChildPath "Public")
 Describe "Analyze code" -ForEach @(
-    foreach ($file in $psFiles[9]) {
+    foreach ($file in $psFiles) {
         @{
             file        = $file
             fileName    = $file.Name
