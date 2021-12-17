@@ -54,7 +54,6 @@ jobs:
         shell: pwsh
         run: |
           Import-Module ./AzAvd/Az.Avd.psd1 -Force -ErrorAction Stop
-          Get-Command -Module Az.Avd
       - name: PSSA check
         shell: pwsh
         run: |
@@ -73,5 +72,4 @@ jobs:
       - name: Pester Files check
         shell: pwsh
         run: |
-          $PSVersionTable
           Invoke-Pester -Path (Join-Path -Path $(Get-Location) -ChildPath "Az.Avd.Files.tests.ps1") -Output detailed
