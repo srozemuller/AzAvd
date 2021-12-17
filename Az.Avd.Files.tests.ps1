@@ -1,5 +1,6 @@
 $modulePath = Join-Path -Path $(Get-Location) -ChildPath "AzAvd"
 $psFiles = Get-ChildItem -Path (Join-Path -Path $modulePath -ChildPath "Public")
+
 Describe "Analyze code" -ForEach @(
     foreach ($file in $psFiles) {
         @{
@@ -7,7 +8,7 @@ Describe "Analyze code" -ForEach @(
             fileName    = $file.Name
             fileBase    = $file.BaseName
             content     = Get-Content -Path $file
-            helpInfo    = Get-Help $file.FullName
+            helpInfo    = Get-Help $file.BaseName
             IgnoreRules = @('PSUseApprovedVerbs')
             fileobj     = $file 
         }
@@ -61,7 +62,6 @@ Describe "Analyze code" -ForEach @(
             }
         }
     ) {
-        "GOT $code, $example" | Out-Default
         $code.StartsWith($fileBase) | Should -Be $true -Because "Provide good examples" 
     }
     It "<filename> line <linenr> uses the # sign correctly"  -TestCases @(
@@ -130,12 +130,5 @@ Describe "Analyze code" -ForEach @(
         }
     ) {
         $name | Should -MatchExactly '^[A-Z].*' -Because "PascalCasing" 
-    }
-    
-    It "<fileName> is valid PowerShell code" {
-        $psFile = Get-Content -Path $file -ErrorAction Stop
-        $errors = $null
-        $null = [System.Management.Automation.PSParser]::Tokenize($psFile, [ref]$errors)
-        $errors.Count | Should -Be 0
     }
 }
