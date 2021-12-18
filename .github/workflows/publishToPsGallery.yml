@@ -94,12 +94,12 @@ jobs:
         shell: pwsh
         run: |
           ./Compiler/Az.Avd.generateHelp.ps1
-      - name: Commit files  # transfer the new html files back into the repository
+      - name: Commit files
         run: |
-          git config --local user.name  ${{ github.actor }}
+          git config --local user.name  ${{ secrets.user }}
           git add ./Docs
           git commit -m "Updating the repository with new content"
-      - name: Push changes  # push the output folder to your repo
+      - name: Push changes 
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.secret }}
