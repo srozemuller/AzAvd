@@ -7,5 +7,5 @@ $modulePath = Join-Path -Path (Join-Path ".././" -ChildPath "AzAvd") -ChildPath 
 
 Import-Module -Force $modulePath
 Update-MarkdownHelpModule -Path $helpFolder
-New-MarkdownHelp -Module $moduleName -OutputFolder $helpFolder
+New-MarkdownHelp -Module $moduleName -OutputFolder $helpFolder -Force
 New-ExternalHelp -Path $HelpFolder -OutputPath "$modulePath\$HelpCultureInfo" -Force
