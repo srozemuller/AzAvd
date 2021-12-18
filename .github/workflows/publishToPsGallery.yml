@@ -90,7 +90,7 @@ jobs:
         run: |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
           Install-Module PlatyPS -ErrorAction Stop
-      - name: Install PSPlaty module
+      - name: Generate help files
         shell: pwsh
         run: |
           ./Compiler/Az.Avd.generateHelp.ps1
