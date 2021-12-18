@@ -75,11 +75,9 @@ jobs:
           Import-Module ./AzAvd/Az.Avd.psd1 -Force -ErrorAction Stop
           Invoke-Pester -Path (Join-Path -Path $(Get-Location) -ChildPath "Az.Avd.Files.tests.ps1") -Output detailed
   docs:
-      # The type of runner that the job will run on
       runs-on: ubuntu-latest
-      # Steps represent a sequence of tasks that will be executed as part of the job
+      needs: test
       steps:
-        # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Install needed modules
         shell: pwsh
         run: |
