@@ -68,12 +68,13 @@ jobs:
       - name: Pester Module check
         shell: pwsh
         run: |
-          Invoke-Pester -Path (Join-Path -Path $(Get-Location) -ChildPath "Az.Avd.Module.tests.ps1") -Output detailed
+          $testLocation = (Join-Path -Path "./Compiler" -ChildPath "Az.Avd.Module.tests.ps1")
+          Invoke-Pester -Path $testLocation -Output detailed
       - name: Pester Files check
         shell: pwsh
         run: |
-          Import-Module ./AzAvd/Az.Avd.psd1 -Force -ErrorAction Stop
-          Invoke-Pester -Path (Join-Path -Path $(Get-Location) -ChildPath "Az.Avd.Files.tests.ps1") -Output detailed
+          Import-Module ./Az.Avd/Az.Avd.psd1 -Force -ErrorAction Stop
+          Invoke-Pester -Path (Join-Path -Path "./Compiler" -ChildPath "Az.Avd.Files.tests.ps1") -Output detailed
   docs:
       runs-on: ubuntu-latest
       needs: test
