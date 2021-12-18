@@ -1,4 +1,4 @@
-$modulePath = Join-Path -Path "../" -ChildPath "AzAvd"
+$modulePath = Join-Path -Path ".././" -ChildPath "Az.Avd"
 $psFiles = Get-ChildItem -Path (Join-Path -Path $modulePath -ChildPath "Public")
 
 Describe "Analyze code" -ForEach @(

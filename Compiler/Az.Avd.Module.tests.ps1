@@ -2,7 +2,7 @@ $module = 'Az.Avd'
 Describe "$module Global module tests" {
     Context 'Module Setup' {
         BeforeAll {
-            $modulePath = Join-Path -Path "../" -ChildPath "AzAvd"
+            $modulePath = Join-Path -Path ".././" -ChildPath "Az.Avd"
             $binaryFile = "Az.Avd.psm1"
             $manifestFile = "Az.Avd.psd1"
             $moduleContent = Get-Content -Path (Join-Path -Path $modulePath -ChildPath $manifestFile)
