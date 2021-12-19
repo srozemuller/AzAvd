@@ -83,8 +83,6 @@ jobs:
         uses: actions/download-artifact@v2.1.0
         with:
           name: azModule
-      - name: Display structure of downloaded files
-        run: ls -R
       - name: Install PSPlaty module
         shell: pwsh
         run: |
