@@ -1,6 +1,9 @@
-$modulePath = Join-Path -Path (Join-Path ".././" -ChildPath "AzAvd") -ChildPath "Az.Avd"
+#$modulePath = Join-Path -Path (Join-Path ".././" -ChildPath "AzAvd") -ChildPath "Az.Avd"
+$modulePath = Join-Path -Path "..\.\" -ChildPath "Az.Avd"
 $moduleFunctions = (Import-PowerShellDataFile (Join-Path -Path $modulePath -ChildPath "Az.Avd.psd1")).FunctionsToExport
-
+BeforeAll {
+    $psFiles = (Get-ChildItem -Path (Join-Path -Path "..\.\Az.Avd" -ChildPath "Public")).BaseName #(Get-ChildItem -Path (Join-Path -Path $modulePath -ChildPath "Public")).BaseName
+}
 
 Describe "Analyze code" -ForEach @(
     foreach ($function in $moduleFunctions) {
@@ -11,11 +14,7 @@ Describe "Analyze code" -ForEach @(
             fileobj     = $file 
         }
     }
-)   
-BeforeAll {
-    $psFiles = (Get-ChildItem -Path (Join-Path -Path $modulePath -ChildPath "Public")).BaseName
-}
-{
+){
     It "<function> should exist in file base" {
         $function -in $psFiles | Should -Be $true
     }
@@ -46,7 +45,7 @@ BeforeAll {
             }
         }
     ) {
-        $code.StartsWith($fileBase) | Should -Be $true -Because "Provide good examples" 
+        $code.StartsWith($function) | Should -Be $true -Because "Provide good examples" 
     }
     It "Uses PascalCase for function <function>" {
         $function | Should -MatchExactly '^[A-Z].*' -Because "PascalCasing" 

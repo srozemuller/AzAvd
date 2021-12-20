@@ -97,7 +97,7 @@
         'Update-AvdDiagnostics',
         'Update-AvdHostpool',
         'Update-AvdRegistrationToken',
-        'Update-AvdSessionhost',
+        'Update-AvdSessionHost',
         'Update-AvdSessionhostDrainMode',
         'Update-AvdWorkspace'
     )
