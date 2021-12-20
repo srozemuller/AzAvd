@@ -6,8 +6,7 @@ param (
 $env:ProjectName = "Az.Avd"
 if ($env:GITHUB_REF_NAME -eq 'main') {
     try {
-        $modulePath = Join-Path -Path (Join-Path ".././AzAvd" -ChildPath $env:ProjectName) -ChildPath "Az.Avd.psd1"     
-        Publish-Module -Path (Join-Path ".././AzAvd" -ChildPath $env:ProjectName) -NuGetApiKey $PS_GALLERY_KEY -RequiredVersion (Import-PowerShellDataFile $modulePath).ModuleVersion
+        Publish-Module -Path (Join-Path ".././AzAvd" -ChildPath $env:ProjectName) -NuGetApiKey $PS_GALLERY_KEY
         write-host "Module $env:ProjectName published"
     }   
     catch {
