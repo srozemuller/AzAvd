@@ -5,58 +5,36 @@ online version:
 schema: 2.0.0
 ---
 
-# Update-AvdSessionhostDrainMode
+# Move-AvdSessionHost
 
 ## SYNOPSIS
-Updates sessionhosts for accepting or denying connections.
+Moving sessionhosts from an Azure Virtual Desktop hostpool to a new one.
 
 ## SYNTAX
 
-### InputObject
 ```
-Update-AvdSessionhostDrainMode -InputObject <PSObject> -AllowNewSession <Boolean> [<CommonParameters>]
-```
-
-### Parameters
-```
-Update-AvdSessionhostDrainMode -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
- -AllowNewSession <Boolean> [<CommonParameters>]
+Move-AvdSessionHost -FromHostpoolName <String> -FromResourceGroupName <String> -ToHostpoolName <String>
+ -ToResourceGroupName <String> [-SessionHostName <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The function will update sessionhosts drainmode to true or false.
-This can be one sessionhost or all of them.
+The function will move sessionhosts to a new Azure Virtual Desktop hostpool.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Update-AvdSessionhostDrainMode -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true
+Move-AvdSessionHost -FromHostpoolName avd-hostpool -FromResourceGroupName rg-avd-01 -ToHostpoolName avd-hostpool-02 -ToResourceGroupName rg-avd-02 -SessionHostName avd-host-1.avd.domain
 ```
 
 ## PARAMETERS
 
-### -InputObject
-An sessionhost object or array of sessionhosts.
-
-```yaml
-Type: PSObject
-Parameter Sets: InputObject
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: True (ByValue)
-Accept wildcard characters: False
-```
-
-### -HostpoolName
-Enter the AVD Hostpool name
+### -FromHostpoolName
+Enter the source AVD Hostpool name
 
 ```yaml
 Type: String
-Parameter Sets: Parameters
+Parameter Sets: (All)
 Aliases:
 
 Required: True
@@ -66,12 +44,42 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ResourceGroupName
-Enter the AVD Hostpool resourcegroup name
+### -FromResourceGroupName
+Enter the source Hostpool resourcegroup name
 
 ```yaml
 Type: String
-Parameter Sets: Parameters
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ToHostpoolName
+Enter the destination AVD Hostpool name
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ToResourceGroupName
+Enter the destination Hostpool resourcegroup name
+
+```yaml
+Type: String
+Parameter Sets: (All)
 Aliases:
 
 Required: True
@@ -82,31 +90,16 @@ Accept wildcard characters: False
 ```
 
 ### -SessionHostName
-Enter the sessionhosts name
+Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
 
 ```yaml
 Type: String
-Parameter Sets: Parameters
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -AllowNewSession
-Enter $true or $false.
-
-```yaml
-Type: Boolean
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

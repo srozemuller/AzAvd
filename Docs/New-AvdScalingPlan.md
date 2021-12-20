@@ -1,6 +1,6 @@
 ---
 external help file: Az.Avd-help.xml
-Module Name: az.avd
+Module Name: Az.Avd
 online version:
 schema: 2.0.0
 ---
@@ -13,15 +13,15 @@ Creates a new Azure Virtual Desktop Scaling plan.
 ## SYNTAX
 
 ```
-New-AvdScalingPlan [-ScalingPlanName] <String> [-ResourceGroupName] <String> [-location] <String>
+New-AvdScalingPlan [-ScalingPlanName] <String> [-ResourceGroupName] <String> [-Location] <String>
  [[-HostpoolType] <String>] [[-Description] <String>] [[-FriendlyName] <String>] [[-AssignToHostPool] <Object>]
- [[-TimeZone] <String>] [-ScheduleName] <String> [-ScheduleDays] <Array> [-rampUpStartTime] <String>
- [-rampUpLoadBalancingAlgorithm] <String> [-rampUpMinimumHostsPct] <Int32>
- [-rampUpCapacityThresholdPct] <Int32> [-peakStartTime] <String> [-peakLoadBalancingAlgorithm] <String>
- [-rampDownStartTime] <String> [-rampDownLoadBalancingAlgorithm] <String> [-rampDownMinimumHostsPct] <Int32>
- [-rampDownCapacityThresholdPct] <Int32> [-rampDownForceLogoffUsers] <Boolean>
- [-rampDownWaitTimeMinutes] <Int32> [-rampDownNotificationMessage] <String> [-offPeakStartTime] <String>
- [-offPeakLoadBalancingAlgorithm] <String> [<CommonParameters>]
+ [[-TimeZone] <String>] [-ScheduleName] <String> [-ScheduleDays] <Array> [-RampUpStartTime] <String>
+ [-RampUpLoadBalancingAlgorithm] <String> [-RampUpMinimumHostsPct] <Int32>
+ [-RampUpCapacityThresholdPct] <Int32> [-PeakStartTime] <String> [-PeakLoadBalancingAlgorithm] <String>
+ [-RampDownStartTime] <String> [-RampDownLoadBalancingAlgorithm] <String> [-RampDownMinimumHostsPct] <Int32>
+ [-RampDownCapacityThresholdPct] <Int32> [-RampDownForceLogoffUsers] <Boolean>
+ [-RampDownWaitTimeMinutes] <Int32> [-RampDownNotificationMessage] <String> [-OffPeakStartTime] <String>
+ [-OffPeakLoadBalancingAlgorithm] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -66,7 +66,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -location
+### -Location
 Enter the location
 
 ```yaml
@@ -189,7 +189,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -rampUpStartTime
+### -RampUpStartTime
 Enter the start time of the autoscale process
 
 ```yaml
@@ -204,7 +204,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -rampUpLoadBalancingAlgorithm
+### -RampUpLoadBalancingAlgorithm
 How do you like the loadbalancing (DepthFirst, BreadthFirst)
 
 ```yaml
@@ -219,7 +219,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -rampUpMinimumHostsPct
+### -RampUpMinimumHostsPct
 How many
 
 ```yaml
@@ -234,7 +234,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -rampUpCapacityThresholdPct
+### -RampUpCapacityThresholdPct
 {{ Fill rampUpCapacityThresholdPct Description }}
 
 ```yaml
@@ -249,7 +249,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -peakStartTime
+### -PeakStartTime
 Enter the time of the maximum amount of hosts
 
 ```yaml
@@ -264,7 +264,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -peakLoadBalancingAlgorithm
+### -PeakLoadBalancingAlgorithm
 How do you like the loadbalancing (DepthFirst, BreadthFirst)
 
 ```yaml
@@ -279,7 +279,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -rampDownStartTime
+### -RampDownStartTime
 What time needs the scaling plan shutdown hosts.
 
 ```yaml
@@ -294,7 +294,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -rampDownLoadBalancingAlgorithm
+### -RampDownLoadBalancingAlgorithm
 How do you like the loadbalancing (DepthFirst, BreadthFirst)
 
 ```yaml
@@ -309,7 +309,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -rampDownMinimumHostsPct
+### -RampDownMinimumHostsPct
 Enter the percentage of hosts which needs to be online.
 
 ```yaml
@@ -324,7 +324,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -rampDownCapacityThresholdPct
+### -RampDownCapacityThresholdPct
 Enter the usage percentage when to start a new host.
 
 ```yaml
@@ -339,7 +339,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -rampDownForceLogoffUsers
+### -RampDownForceLogoffUsers
 Force logoff users?
 
 ```yaml
@@ -354,7 +354,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -rampDownWaitTimeMinutes
+### -RampDownWaitTimeMinutes
 Number of minutes to wait to stop hosts during ramp down period.
 
 ```yaml
@@ -369,7 +369,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -rampDownNotificationMessage
+### -RampDownNotificationMessage
 Provide the message to send to end users.
 
 ```yaml
@@ -384,7 +384,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -offPeakStartTime
+### -OffPeakStartTime
 Whats the scaling plans end time?
 
 ```yaml
@@ -399,7 +399,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -offPeakLoadBalancingAlgorithm
+### -OffPeakLoadBalancingAlgorithm
 How do you like the loadbalancing (DepthFirst, BreadthFirst)
 
 ```yaml
