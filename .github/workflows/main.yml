@@ -95,7 +95,7 @@ jobs:
       - name: Commit & Push changes
         uses: actions-js/push@master
         with:
-          github_token: ${{ secrets.secret }}
+          github_token: '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'
           message: 'TestFromGA'
           directory: ./Docs
           author_name: ${{ secrets.user }}
