@@ -95,6 +95,7 @@ jobs:
       - name: Commit files
         run: |
           git config --local user.name  ${{ secrets.user }}
+          git config --local user.email ${{ secrets.email }}
           git add ./Docs
           git commit -m "Updating the repository with new content"
       - name: Push changes 
