@@ -1,20 +1,19 @@
+[CmdletBinding()]
+param (
+    [Parameter()]
+    [string]$GitHubKey
+)
 Write-Host "Executing Deploy.PS1"
 $env:ProjectName = "Az.Avd"
 if (
     $env:BuildSystem -eq 'GitHub Actions'
 ) {
-    if ($env:BranchName -eq 'master' -and
-        $env:NuGetApiKey -and
-        $env:GitHubKey
-    ) {
-        Write-Information "Publishing to PowerShell Gallery "
+    if ($env:BranchName -eq 'master' -and $GitHubKey) {
+        Write-Host "Creating GitHub release" -ForegroundColor Green
         $modulePath = "./$env:ProjectName/$env:ProjectName.psd1"
         $manifest = Import-PowerShellDataFile -Path $modulePath
         Import-Module $modulePath
-        Publish-Module -Name $env:ProjectName -NuGetApiKey $env:PS_GALLERY_KEY
-
-
-        Write-Host "Creating GitHub release" -ForegroundColor Green
+        #Publish-Module -Name $env:ProjectName -NuGetApiKey $env:PS_GALLERY_KEY
         $releaseData = @{
             tag_name = '{0}' -f $manifest.ModuleVersion
             target_commitish = $env:GITHUB_SHA
@@ -25,11 +24,14 @@ if (
         }
 
         $releaseParams = @{
-            Uri = "https://api.github.com/repos/$env:GITHUB_REPOSITORY/releases?access_token=$env:GitHubKey"
+            Uri = "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases"
             Method = 'POST'
-            ContentType = 'application/json'
             Body = (ConvertTo-Json $releaseData -Compress)
             UseBasicParsing = $true
+            Header = @{
+                ContentType = 'application/json'
+                Authorization = "$GitHubKey"
+            }
         }
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $newRelease = Invoke-RestMethod @releaseParams
@@ -40,7 +42,7 @@ if (
             Uri = ($newRelease.upload_url -replace '\{\?name.*\}', '?name=AzAvd_') +
                 $manifest.ModuleVersion +
                 '.zip&access_token=' +
-                $env:GitHubKey
+                $GitHubKey
             Method = 'POST'
             ContentType = 'application/zip'
             InFile = "./BuildOutput/$($env:ProjectName)_$($manifest.ModuleVersion).zip"
@@ -50,8 +52,7 @@ if (
     } else {
         write-host "Did not comply with release conditions"
         Write-Host "BranchName: $env:BranchName"
-        Write-Host "NuGetApiKey: $env:NuGetApiKey"
-        Write-Host "GitHubKey: $env:GitHubKey"
+        Write-Host "GitHubKey: $GitHubKey"
         Write-Host "CommitMessage: $env:CommitMessage"
     }
 } else {
