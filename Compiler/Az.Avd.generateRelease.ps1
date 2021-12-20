@@ -9,11 +9,11 @@ if ($env:GITHUB_REF_NAME -eq 'main' -and $GitHubKey) {
     Write-Host "Creating GitHub release" -ForegroundColor Green
     $modulePath = "./$env:ProjectName/$env:ProjectName.psd1"
     $manifest = Import-PowerShellDataFile -Path $modulePath
-    Import-Module $modulePath
+    Import-Module $modulePath -Force
     #Publish-Module -Name $env:ProjectName -NuGetApiKey $env:PS_GALLERY_KEY
     $releaseData = @{
         tag_name         = '{0}' -f $manifest.ModuleVersion
-        target_commitish = $env:GITHUB_SHA
+        #target_commitish = $env:GITHUB_SHA
         name             = '{0}' -f $manifest.ModuleVersion
         body             = $manifest.PrivateData.PSData.ReleaseNotes
         draft            = $false
@@ -21,28 +21,29 @@ if ($env:GITHUB_REF_NAME -eq 'main' -and $GitHubKey) {
     }
 
     $releaseParams = @{
-        Uri             = "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases"
+        Uri             = "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases?access_token=$GitHubKey"
         Method          = 'POST'
         Body            = (ConvertTo-Json $releaseData -Compress)
         UseBasicParsing = $true
         Header          = @{
-            ContentType   = 'application/json'
-            Authorization = "$GitHubKey"
+            Accept   = 'application/vnd.github.v3+json'
+            Authorization = "token $GitHubKey"
         }
     }
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     $newRelease = Invoke-RestMethod @releaseParams
 
-    Compress-Archive -DestinationPath "./BuildOutput/$($env:ProjectName)_$($manifest.ModuleVersion).zip" -Path "./$env:ProjectName/*"
+    Compress-Archive -DestinationPath "./$($env:ProjectName)_$($manifest.ModuleVersion).zip" -Path "./$env:ProjectName/*"
 
     $uploadParams = @{
         Uri         = ($newRelease.upload_url -replace '\{\?name.*\}', '?name=AzAvd_') +
-        $manifest.ModuleVersion +
-        '.zip&access_token=' +
-        $GitHubKey
+        $manifest.ModuleVersion + '.zip'
         Method      = 'POST'
         ContentType = 'application/zip'
-        InFile      = "./BuildOutput/$($env:ProjectName)_$($manifest.ModuleVersion).zip"
+        InFile      = "./$($env:ProjectName)_$($manifest.ModuleVersion).zip"
+        Header          = @{
+            Authorization = "token $GitHubKey"
+        }
     }
 
     $null = Invoke-RestMethod @uploadParams

@@ -137,7 +137,7 @@
             IconUri    = 'https://github.com/srozemuller/AzWvd/blob/main/Private/avd-logo.png'
 
             # ReleaseNotes of this module
-            ReleaseNotes = ' Fixes :
+            ReleaseNotes = 'Fixes :
             * Code optimized and structured #11
             * project- and icon URL updated https://github.com/srozemuller/AzAvd/commit/e2fe72edb51ebcd22b964c00b362a8f949f0e622'
 
