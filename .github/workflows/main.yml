@@ -137,7 +137,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
-      - name: Creating release
+      - name: Publishing module
         shell: pwsh
         run: |
           ./Compiler/Az.Avd.publishPSgallery.ps1 -PS_GALLERY_KEY ${{ secrets.PS_GALLERY_KEY }}
