@@ -1,8 +1,7 @@
-#$modulePath = Join-Path -Path (Join-Path ".././" -ChildPath "AzAvd") -ChildPath "Az.Avd"
-$modulePath = Join-Path -Path "..\.\" -ChildPath "Az.Avd"
+$modulePath = Join-Path -Path (Join-Path ".././" -ChildPath "AzAvd") -ChildPath "Az.Avd"
 $moduleFunctions = (Import-PowerShellDataFile (Join-Path -Path $modulePath -ChildPath "Az.Avd.psd1")).FunctionsToExport
 BeforeAll {
-    $psFiles = (Get-ChildItem -Path (Join-Path -Path "..\.\Az.Avd" -ChildPath "Public")).BaseName #(Get-ChildItem -Path (Join-Path -Path $modulePath -ChildPath "Public")).BaseName
+    $psFiles = (Get-ChildItem -Path (Join-Path -Path $modulePath -ChildPath "Public")).BaseName
 }
 
 Describe "Analyze code" -ForEach @(
