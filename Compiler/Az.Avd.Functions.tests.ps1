@@ -1,7 +1,7 @@
-$modulePath = Join-Path -Path (Join-Path ".././" -ChildPath "AzAvd") -ChildPath "Az.Avd"
-Write-Host $modulePath
-$moduleFunctions = (Import-PowerShellDataFile (Join-Path -Path $modulePath -ChildPath "Az.Avd.psd1")).FunctionsToExport
 BeforeAll {
+    $modulePath = Join-Path -Path (Join-Path ".././" -ChildPath "AzAvd") -ChildPath "Az.Avd"
+    Write-Host $modulePath
+    $moduleFunctions = (Import-PowerShellDataFile (Join-Path -Path $modulePath -ChildPath "Az.Avd.psd1")).FunctionsToExport
     Write-Host "In before $modulePath"
     (Join-Path -Path $modulePath -ChildPath "Public")
     $psFiles = (Get-ChildItem -Path (Join-Path -Path $modulePath -ChildPath "Public")).BaseName
