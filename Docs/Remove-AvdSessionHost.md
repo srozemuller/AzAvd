@@ -5,43 +5,32 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdNetworkInfo
+# Remove-AvdSessionHost
 
 ## SYNOPSIS
-Gets the sessionhost network information
+Removing sessionhosts from an Azure Virtual Desktop hostpool.
 
 ## SYNTAX
 
-### Hostpool (Default)
 ```
-Get-AvdNetworkInfo -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
-```
-
-### Sessionhost
-```
-Get-AvdNetworkInfo -HostpoolName <String> -ResourceGroupName <String> [-SessionHostName <String>]
+Remove-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
  [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The function will help you getting insights about the AVD network configuration.
+The function will search for sessionhosts and will remove them from the Azure Virtual Desktop hostpool.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdNetworkInfo -HostpoolName avd-hostpool -ResourceGroupName hostpool-resourcegroup
-```
-
-### EXAMPLE 2
-```
-Get-AvdNetworkInfo -HostpoolName avd-hostpool -ResourceGroupName hostpool-resourcegroup -SessionHostName avd-0.domain.local
+Remove-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.wvd.domain
 ```
 
 ## PARAMETERS
 
 ### -HostpoolName
-Enter the AVD Hostpool name
+Enter the WVD Hostpool name
 
 ```yaml
 Type: String
@@ -56,7 +45,7 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the AVD Hostpool resourcegroup name
+Enter the WVD Hostpool resourcegroup name
 
 ```yaml
 Type: String
@@ -71,14 +60,14 @@ Accept wildcard characters: False
 ```
 
 ### -SessionHostName
-This parameter accepts a single sessionhost name
+Enter the sessionhosts name
 
 ```yaml
 Type: String
-Parameter Sets: Sessionhost
+Parameter Sets: (All)
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False

@@ -19,7 +19,7 @@ Get-AvdHostPool -HostPoolName <String> -ResourceGroupName <String> [<CommonParam
 
 ### ResourceId
 ```
-Get-AvdHostPool -resourceId <String> [<CommonParameters>]
+Get-AvdHostPool -ResourceId <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -69,8 +69,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -resourceId
-{{ Fill resourceId Description }}
+### -ResourceId
+Enter the hostpool ResourceId
 
 ```yaml
 Type: String

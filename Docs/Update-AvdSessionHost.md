@@ -5,33 +5,40 @@ online version:
 schema: 2.0.0
 ---
 
-# Update-AvdHostpool
+# Update-AvdSessionHost
 
 ## SYNOPSIS
-Updates an Azure Virtual Desktop hostpool.
+Updating one or more sessionhosts.
+Assign new users or put them in drainmode or not.
 
 ## SYNTAX
 
+### SingleObject (Default)
 ```
-Update-AvdHostpool -HostpoolName <String> -ResourceGroupName <String> [-CustomRdpProperty <String>]
- [-FriendlyName <String>] [-Description <String>] [-LoadBalancerType <String>]
- [-ValidationEnvironment <Boolean>] [-MaxSessionLimit <Int32>] [-Force] [<CommonParameters>]
+Update-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [-AllowNewSession <String>]
+ [-AssignedUser <String>] [-SessionHostName <String>] [<CommonParameters>]
+```
+
+### InputObject
+```
+Update-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [-AllowNewSession <String>]
+ -SessionHostName <String> -SessionHosts <Object> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The function will update an Azure Virtual Desktop hostpool.
+The function will update the current sessionhosts assigned user and drainmode
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Update-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -CustomRdpProperty "targetisaadjoined:i:1"
+Update-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -AllowNewSession $true
 ```
 
 ## PARAMETERS
 
 ### -HostpoolName
-Enter the AVD Hostpool name
+Enter the source AVD Hostpool name
 
 ```yaml
 Type: String
@@ -46,7 +53,7 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the AVD Hostpool resourcegroup name
+Enter the source Hostpool resourcegroup name
 
 ```yaml
 Type: String
@@ -60,12 +67,29 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -CustomRdpProperty
-If needed fill in the custom rdp properties (for example: targetisaadjoined:i:1 )
+### -AllowNewSession
+Allowing new sessions or not.
+(Default: true).
 
 ```yaml
 Type: String
 Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: True
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -AssignedUser
+Enter the new username for the current sessionhost.
+Only available if providing one sessionhost at a time.
+
+```yaml
+Type: String
+Parameter Sets: SingleObject
 Aliases:
 
 Required: False
@@ -75,12 +99,12 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -FriendlyName
-Change the host pool friendly name
+### -SessionHostName
+Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: SingleObject
 Aliases:
 
 Required: False
@@ -90,78 +114,29 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Description
-{{ Fill Description Description }}
-
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: InputObject
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -LoadBalancerType
-Change the host pool LoadBalancerType
+### -SessionHosts
+{{ Fill SessionHosts Description }}
 
 ```yaml
-Type: String
-Parameter Sets: (All)
+Type: Object
+Parameter Sets: InputObject
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ValidationEnvironment
-Change the host pool validation environment
-
-```yaml
-Type: Boolean
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -MaxSessionLimit
-Change the host pool max session limit (max 999999)
-
-```yaml
-Type: Int32
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: 0
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Force
-use the force parameter if you want to override the current customrdpproperties.
-Otherwise it will add the provided properties.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
