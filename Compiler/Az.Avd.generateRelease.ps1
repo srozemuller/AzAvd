@@ -5,7 +5,7 @@ param (
 )
 $env:ProjectName = "Az.Avd"
 
-if ($env:BranchName -eq 'master' -and $GitHubKey) {
+if ($env:GITHUB_REF_NAME -eq 'main' -and $GitHubKey) {
     Write-Host "Creating GitHub release" -ForegroundColor Green
     $modulePath = "./$env:ProjectName/$env:ProjectName.psd1"
     $manifest = Import-PowerShellDataFile -Path $modulePath
