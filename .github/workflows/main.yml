@@ -94,12 +94,14 @@ jobs:
           ./Compiler/Az.Avd.generateHelp.ps1
       - name: Commit files
         run: |
-          git config --local user.name  ${{ secrets.user }}
-          git config --local user.email ${{ secrets.email }}
+          git config user.name  ${{ secrets.user }}
+          git config  user.email ${{ secrets.email }}
+          git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
+          git pull github ${GITHUB_REF} --ff-only
+          git add .
+          if [ -z "$(git status --porcelain)" ]; then
+            exit 0
+          fi
           git add ./Docs
           git commit -m "Updating the repository with new content"
-      - name: Push changes 
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.secret }}
-          force: true
+          git push github HEAD:${GITHUB_REF}
