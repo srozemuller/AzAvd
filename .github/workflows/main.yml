@@ -92,9 +92,11 @@ jobs:
         shell: pwsh
         run: |
           ./Compiler/Az.Avd.generateHelp.ps1
+      
       - name: Commit & Push changes
         uses: actions-js/push@master
         with:
           github_token: ${{ secrets.secret }}
           message: 'TestFromGA'
           directory: ./Docs
+
