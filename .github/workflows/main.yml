@@ -94,8 +94,8 @@ jobs:
           ./Compiler/Az.Avd.generateHelp.ps1
       - name: Commit files
         run: |
-          git config user.name  ${{ secrets.user }}
-          git config  user.email ${{ secrets.email }}
+          git config --local user.email "$(git log --format='%ae' HEAD^!)"
+          git config --local user.name "$(git log --format='%an' HEAD^!)"
           git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
           git pull github ${GITHUB_REF} --ff-only
           git add .
