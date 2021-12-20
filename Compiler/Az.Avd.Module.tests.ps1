@@ -26,7 +26,7 @@ Describe "$module Global module tests" {
         }
         
         It "$module root module should be $binaryFile in $manifestFile" {
-           $binaryFile -eq $moduleContent.RootModule | Should -Be $binaryFile
+           $binaryFile -eq $moduleContent.RootModule | Should -Be $true
         } 
 
         It "$module should have a semver version" {
