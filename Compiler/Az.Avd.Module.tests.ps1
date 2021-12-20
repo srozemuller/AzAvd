@@ -5,8 +5,9 @@ Describe "$module Global module tests" {
             $modulePath = Join-Path -Path (Join-Path ".././" -ChildPath "AzAvd") -ChildPath "Az.Avd"
             $binaryFile = "Az.Avd.psm1"
             $manifestFile = "Az.Avd.psd1"
-            $moduleContent = Get-Content -Path (Join-Path -Path $modulePath -ChildPath $manifestFile)
+            $moduleContent = Import-PowerShellDataFile (Join-Path -Path $modulePath -ChildPath $manifestFile)
         }
+        
         It "$module has the root module $module.psm1" {
             $modulePath | Should -Exist
         }
@@ -25,16 +26,20 @@ Describe "$module Global module tests" {
         }
         
         It "$module root module should be $binaryFile in $manifestFile" {
-            $pattern = "RootModule"
-            $rootModule = ($moduleContent | Where-Object { $_ -match $pattern }).Split("'")[1]
-            $rootModule | Should -Be $binaryFile
+           $binaryFile -eq $moduleContent.RootModule | Should -Be $binaryFile
         } 
+
+        It "$module should have a semver version" {
+            $moduleContent.ModuleVersion -match "^([0-9]).([0-9]).([0-9])$" | Should -Be $true
+        }
+        It "$module version should be greater than PSGallery" {
+            $galleryVersion = (Find-Module -Name Az.Avd -Repository PSGallery).Version
+            [version]$moduleContent.ModuleVersion | Should -BeGreaterThan ([version]$galleryVersion)
+        }     
         
         It "$module project URL should reachable" {
-            $pattern = "ProjectUri"
-            $url = ($moduleContent | Where-Object { $_ -match $pattern }).Split("'")[1]
             try {
-                Invoke-WebRequest -Uri $Url -UseBasicParsing -DisableKeepAlive -method Head | Out-Null
+                Invoke-WebRequest -Uri $moduleContent.PrivateData.PSData.ProjectUri -UseBasicParsing -DisableKeepAlive -method Head | Out-Null
                 $exists = $true
             }
             catch {
@@ -42,13 +47,6 @@ Describe "$module Global module tests" {
             }
             $exists | Should -Be $true
         }
-
-        It "$module version should be greater than PSGallery" {
-            $pattern = "ModuleVersion"
-            $sourceVersion = ($moduleContent | Where-Object { $_ -match $pattern }).Split("'")[1]
-            $galleryVersion = (Find-Module -Name Az.Avd -Repository PSGallery).Version
-            [version]$sourceVersion | Should -BeGreaterThan ([version]$galleryVersion)
-        }      
 
         It "$module is valid PowerShell code" {
             $psFile = Get-Content -Path (Join-Path -Path $modulePath -ChildPath $binaryFile) -ErrorAction Stop

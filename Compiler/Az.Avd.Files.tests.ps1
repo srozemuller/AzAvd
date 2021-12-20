@@ -30,27 +30,11 @@ Describe "Analyze code" -ForEach @(
     It "<fileName> should have a SYNOPSIS section in the help block" {
         $file | Should -FileContentMatch '.SYNOPSIS'
     }
-    It  "<filename> has a synopsis that is valid" { 
-        if ( $helpInfo.synopsis -eq $null) {
-            $helpInfo.synopsis | Should -not -Be $null -Because 'every ps1 file should have a synopsis block'
-        }
-        elseif ( $helpInfo.synopsis -eq 'Short description') {
-            $helpInfo.synopsis | Should -not -Be 'Short description' -Because 'thats just lazy'
-        }
-    }
-    
+     
     It "<fileName> should have a DESCRIPTION section in the help block" {
         $file | Should -FileContentMatch '.DESCRIPTION'
     }
-    It  "<filename> has a description that is valid" { 
-        if ( $helpInfo.description -eq $null) {
-            $helpInfo.description | Should -not -Be $null -Because 'every ps1 file should have a synopsis block'
-        }
-        elseif ( $helpInfo.description -eq 'Long description') {
-            $helpInfo.description | Should -not -Be 'Long description' -Because 'thats just lazy'
-        }
-    }
-    
+      
     It "<fileName> should have a EXAMPLE section in the help block" {
         $file | Should -FileContentMatch '.EXAMPLE'
     }
