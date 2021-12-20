@@ -92,15 +92,10 @@ jobs:
         shell: pwsh
         run: |
           ./Compiler/Az.Avd.generateHelp.ps1
-      - name: Reset config files
-        run: |
-          git config --unset-all credential.helper
-          git config --global --unset-all credential.helper
-          git config --system --unset-all credential.helper
       - name: Commit & Push changes
         uses: actions-js/push@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.secret }}
           message: 'TestFromGA'
           directory: ./Docs
           author_name: ${{ secrets.user }}
