@@ -92,12 +92,15 @@ jobs:
         shell: pwsh
         run: |
           ./Compiler/Az.Avd.generateHelp.ps1
-      - name: Commit & Push changes
-        uses: actions-js/push@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          message: 'TestFromGA'
-          directory: ./Docs
-          author_name: ${{ secrets.user }}
-          author_email: ${{ secrets.email }}
-
+      - name: Commit files
+        run: |
+          git config --local user.email "$(git log --format='%ae' HEAD^!)"
+          git config --local user.name "$(git log --format='%an' HEAD^!)"
+          git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
+          git pull github ${GITHUB_REF} --ff-only
+          git add .
+          if [ -z "$(git status --porcelain)" ]; then
+            exit 0
+          fi
+          git commit -m "Fix a[href] in Webflow exported html"
+          git push github HEAD:${GITHUB_REF}
