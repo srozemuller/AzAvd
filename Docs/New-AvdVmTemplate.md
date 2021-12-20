@@ -13,10 +13,10 @@ Creates a VM template in the AVD hostpool.
 ## SYNTAX
 
 ```
-New-AvdVmTemplate [-HostpoolName] <String> [-ResourceGroupName] <String> [[-domain] <String>]
- [[-galleryImageOffer] <String>] [[-galleryImagePublisher] <String>] [[-galleryImageSKU] <String>]
- [[-imageType] <String>] [[-imageUri] <String>] [[-customImageId] <String>] [-namePrefix] <String>
- [[-useManagedDisks] <String>] [-osDiskType] <String> [-vmSku] <String> [-vmCores] <String> [-vmRam] <String>
+New-AvdVmTemplate [-HostpoolName] <String> [-ResourceGroupName] <String> [[-Domain] <String>]
+ [[-GalleryImageOffer] <String>] [[-GalleryImagePublisher] <String>] [[-GalleryImageSku] <String>]
+ [[-ImageType] <String>] [[-ImageUri] <String>] [[-CustomImageId] <String>] [-NamePrefix] <String>
+ [[-UseManagedDisks] <String>] [-OsDiskType] <String> [-VmSku] <String> [-VmCores] <String> [-VmRam] <String>
  [[-CustomObject] <Object>] [<CommonParameters>]
 ```
 
@@ -28,15 +28,12 @@ This template is configured in the hostpool
 
 ### EXAMPLE 1
 ```
-$customObjects = @{
-    TestObject = 'TestValue'
-}
-create-AvdVmTemplate -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -domain domain.local -namePrefix avd -vmSku 'Standard_B2ms' -vmCores 2 -vmRam 8 -osDiskType "Premium_LRS" -CustomObjects $customObjects
+New-AvdVmTemplate-HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -domain domain.local -namePrefix avd -vmSku 'Standard_B2ms' -vmCores 2 -vmRam 8 -osDiskType "Premium_LRS" -CustomObject $customObjects
 ```
 
 ### EXAMPLE 2
 ```
-create-AvdVmTemplate -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -domain domain.local -namePrefix avd -vmSku 'Standard_B2ms' -vmCores 2 -vmRam 8 -osDiskType "Premium_LRS"
+New-AvdVmTemplate -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -domain domain.local -namePrefix avd -vmSku 'Standard_B2ms' -vmCores 2 -vmRam 8 -osDiskType "Premium_LRS"
 ```
 
 ## PARAMETERS
@@ -71,7 +68,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -domain
+### -Domain
 Enter the sessionhosts domain
 
 ```yaml
@@ -86,7 +83,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -galleryImageOffer
+### -GalleryImageOffer
 Enter the gallery image offer
 
 ```yaml
@@ -101,7 +98,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -galleryImagePublisher
+### -GalleryImagePublisher
 Enter the gallery image publisher
 
 ```yaml
@@ -116,7 +113,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -galleryImageSKU
+### -GalleryImageSku
 Enter the gallery image sku
 
 ```yaml
@@ -131,7 +128,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -imageType
+### -ImageType
 Enter the image type.
 (default: CustomImage)
 
@@ -147,7 +144,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -imageUri
+### -ImageUri
 The url of an image (.vhd)
 
 ```yaml
@@ -162,7 +159,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -customImageId
+### -CustomImageId
 The resourceId of an image or image version
 
 ```yaml
@@ -177,7 +174,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -namePrefix
+### -NamePrefix
 The sessionhosts name prefix (avd-)
 
 ```yaml
@@ -192,7 +189,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -useManagedDisks
+### -UseManagedDisks
 The use of a managed disk or not (default: True)
 
 ```yaml
@@ -207,7 +204,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -osDiskType
+### -OsDiskType
 The OS disk type ("Standard_LRS", "Premium_LRS", "StandardSSD_LRS")
 
 ```yaml
@@ -222,7 +219,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -vmSku
+### -VmSku
 This is the part of the VMsize information.
 (eg.
 Standard_B2ms)
@@ -239,7 +236,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -vmCores
+### -VmCores
 This is the part of the VMsize information.
 How many cores.
 
@@ -255,7 +252,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -vmRam
+### -VmRam
 This is the part of the VMsize information.
 The RAM size in GB.
 

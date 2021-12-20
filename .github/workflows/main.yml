@@ -75,7 +75,12 @@ jobs:
         run: |
           Import-Module ./Az.Avd/Az.Avd.psd1 -Force -ErrorAction Stop
           Invoke-Pester -Path (Join-Path -Path "./Compiler" -ChildPath "Az.Avd.Files.tests.ps1") -Output detailed
-  docs:
+      - name: Pester Functions check
+        shell: pwsh
+        run: |
+          Import-Module ./Az.Avd/Az.Avd.psd1 -Force -ErrorAction Stop
+          Invoke-Pester -Path (Join-Path -Path "./Compiler" -ChildPath "Az.Avd.Functions.tests.ps1") -Output detailed
+  write:
     runs-on: ubuntu-latest
     needs: test
     steps:
@@ -83,8 +88,10 @@ jobs:
         uses: actions/download-artifact@v2.1.0
         with:
           name: azModule
-      - name: Display structure of downloaded files
-        run: ls -R
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
       - name: Install PSPlaty module
         shell: pwsh
         run: |
@@ -94,13 +101,43 @@ jobs:
         shell: pwsh
         run: |
           ./Compiler/Az.Avd.generateHelp.ps1
-      - name: Commit files
-        run: |
-          git config --local user.name  ${{ secrets.user }}
-          git add ./Docs
-          git commit -m "Updating the repository with new content"
-      - name: Push changes 
-        uses: ad-m/github-push-action@master
+      - name: Commit & Push changes
+        uses: actions-js/push@master
         with:
-          github_token: ${{ secrets.secret }}
-          force: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          message: 'CommitFromGitAction'
+          directory: ./Docs
+          author_name: ${{ secrets.user }}
+          author_email: ${{ secrets.email }}
+  release:
+    runs-on: ubuntu-latest
+    needs: write
+    steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2.1.0
+        with:
+          name: azModule
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Creating release
+        shell: pwsh
+        run: |
+          ./Compiler/Az.Avd.generateRelease.ps1 -GitHubKey ${{ secrets.GITHUB_TOKEN }}
+  publish:
+    runs-on: ubuntu-latest
+    needs: release
+    steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2.1.0
+        with:
+          name: azModule
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Publishing module
+        shell: pwsh
+        run: |
+          ./Compiler/Az.Avd.publishPSgallery.ps1 -PS_GALLERY_KEY ${{ secrets.PS_GALLERY_KEY }}

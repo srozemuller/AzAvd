@@ -12,15 +12,15 @@ Gets the Virtual Machines Azure resource from a AVD Session Host
 
 ## SYNTAX
 
-### Sessionhost (Default)
+### Hostpool (Default)
+```
+Get-AvdSessionHostResources -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+```
+
+### Sessionhost
 ```
 Get-AvdSessionHostResources -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
  [<CommonParameters>]
-```
-
-### Hostpool
-```
-Get-AvdSessionHostResources -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,13 +30,18 @@ The function will help you getting the virtual machine resource information whic
 
 ### EXAMPLE 1
 ```
-Get-AvdSessionHostResources -SessionHost SessionHostObject
+Get-AvdSessionHostResources -Hostpoolname avd-hostpool -ResourceGroup rg-avd-01
+```
+
+### EXAMPLE 2
+```
+Get-AvdSessionHostResources -Hostpoolname avd-hostpool -ResourceGroup rg-avd-01
 ```
 
 ## PARAMETERS
 
 ### -HostpoolName
-{{ Fill HostpoolName Description }}
+Enter the AVD hostpool name
 
 ```yaml
 Type: String
@@ -51,7 +56,7 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-{{ Fill ResourceGroupName Description }}
+Enter the AVD hostpool resourcegroup
 
 ```yaml
 Type: String
@@ -66,7 +71,7 @@ Accept wildcard characters: False
 ```
 
 ### -SessionHostName
-{{ Fill SessionHostName Description }}
+Enter the AVD Session Host name
 
 ```yaml
 Type: String

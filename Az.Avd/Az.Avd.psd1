@@ -97,7 +97,7 @@
         'Update-AvdDiagnostics',
         'Update-AvdHostpool',
         'Update-AvdRegistrationToken',
-        'Update-AvdSessionhost',
+        'Update-AvdSessionHost',
         'Update-AvdSessionhostDrainMode',
         'Update-AvdWorkspace'
     )
@@ -137,7 +137,10 @@
             IconUri    = 'https://github.com/srozemuller/AzWvd/blob/main/Private/avd-logo.png'
 
             # ReleaseNotes of this module
-            # ReleaseNotes = ''
+            ReleaseNotes = 'Fixes :
+            * Code optimized and structured #11
+            * project- and icon URL updated https://github.com/srozemuller/AzAvd/commit/e2fe72edb51ebcd22b964c00b362a8f949f0e622
+            * Required module removed in Get-AvdImageVersionStatus https://github.com/srozemuller/AzAvd/commit/2f28328316e4e3ee75dfdacbf9e5c93139a5a26e'
 
             # Prerelease string of this module
             # Prerelease = ''

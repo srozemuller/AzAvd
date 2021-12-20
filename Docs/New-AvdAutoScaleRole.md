@@ -5,43 +5,52 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdNetworkInfo
+# New-AvdAutoScaleRole
 
 ## SYNOPSIS
-Gets the sessionhost network information
+Creates a new RBAC role for AVD autoscaling
 
 ## SYNTAX
 
-### Hostpool (Default)
 ```
-Get-AvdNetworkInfo -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
-```
-
-### Sessionhost
-```
-Get-AvdNetworkInfo -HostpoolName <String> -ResourceGroupName <String> [-SessionHostName <String>]
+New-AvdAutoScaleRole -RoleName <String> -RoleDescription <String> -ResourceGroupName <String> [-Assign]
  [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The function will help you getting insights about the AVD network configuration.
+The function will create a new RBAC role and assign it at subscription or resourcegroup level.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdNetworkInfo -HostpoolName avd-hostpool -ResourceGroupName hostpool-resourcegroup
+New-AvdAutoScaleRole RoleName avd-autoscale RoleDescription "Plan for autoscale session hosts"
 ```
 
 ### EXAMPLE 2
 ```
-Get-AvdNetworkInfo -HostpoolName avd-hostpool -ResourceGroupName hostpool-resourcegroup -SessionHostName avd-0.domain.local
+New-AvdAutoScaleRole RoleName avd-autoscale RoleDescription "Plan for autoscale session hosts" -resourcegroup rg-avd-001 -Assign
 ```
 
 ## PARAMETERS
 
-### -HostpoolName
-Enter the AVD Hostpool name
+### -RoleName
+Enter the role name
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -RoleDescription
+Enter the role description
 
 ```yaml
 Type: String
@@ -56,7 +65,8 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the AVD Hostpool resourcegroup name
+If you like to scope at resourcegroup level, provide the resourcegroup name.
+(Default subscription scope)
 
 ```yaml
 Type: String
@@ -70,17 +80,17 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -SessionHostName
-This parameter accepts a single sessionhost name
+### -Assign
+If you like to assign directly, use this switch parameter
 
 ```yaml
-Type: String
-Parameter Sets: Sessionhost
+Type: SwitchParameter
+Parameter Sets: (All)
 Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
