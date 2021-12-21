@@ -1,4 +1,4 @@
-function Get-AvdSessionHost {
+function Restart-AvdSessionHost {
     <#
     .SYNOPSIS
     Gets the current AVD Session hosts from a specific hostpool.
@@ -11,10 +11,7 @@ function Get-AvdSessionHost {
     .PARAMETER SessionHostName
     Enter the sessionhosts name
     .EXAMPLE
-    Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true 
-    .EXAMPLE
-    Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
-    
+    Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
     #>
     [CmdletBinding(DefaultParameterSetName = 'All')]
     param
@@ -44,23 +41,35 @@ function Get-AvdSessionHost {
         switch ($PsCmdlet.ParameterSetName) {
             All {
                 Write-Verbose 'Using base url for getting all session hosts in $hostpoolName'
+                
             }
             Hostname {
                 Write-Verbose "Looking for sessionhost $SessionHostName"
-                $baseUrl = $baseUrl + $SessionHostName 
+                $sessionHostUrl = "{0}{1}" -f $baseUrl, $SessionHostName 
             }
         }
         $parameters = @{
-            uri     = $baseUrl + $apiVersion
+            uri     = $sessionHostUrl + $apiVersion
             Method  = "GET"
             Headers = $token
         }
-        $results = Invoke-RestMethod @parameters
-        if ($SessionHostName){
-            $results
+        try {
+            $sessionHost = Invoke-RestMethod @parameters
+            if ($sessionHost) {
+                $apiVersion = "?api-version=2021-11-01"
+                $restartParameters = @{
+                    uri     = "{0}{1}/restart{2}" -f $Script:AzureApiUrl, $sessionHost.properties.resourceId, $apiVersion
+                    Method  = "POST"
+                    Headers = $token
+                }
+                Invoke-RestMethod @restartParameters
+            }
+            else {
+                Write-Error "Sessionhost $sessionHostName not found, $_"
+            }
         }
-        else {
-            $results.value
+        catch {
+            Throw "Not able to execute request, $_"
         }
         
     }
