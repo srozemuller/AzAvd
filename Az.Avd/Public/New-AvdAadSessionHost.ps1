@@ -84,7 +84,7 @@ function New-AvdAadSessionHost {
         [string]$LocalPass
     )
     Begin {
-        Write-Verbose "Start searching session hosts"
+        Write-Verbose "Start creating session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
         $apiVersion = "?api-version=2021-07-01"
