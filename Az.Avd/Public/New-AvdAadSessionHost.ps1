@@ -30,6 +30,8 @@ function New-AvdAadSessionHost {
     Enter the session host local admin account
     .PARAMETER LocalPass
     Enter the session host local admins password
+    .PARAMETER Prefix
+    Enter the session host prefix
     .PARAMETER SubnetId
     Enter the subnet resource ID where the session host is in
     .EXAMPLE
@@ -180,7 +182,7 @@ function New-AvdAadSessionHost {
                         }
                     }
                 }
-                $vmUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}?api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $vmName, $apiVersion
+                $vmUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}?api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $vmName, '2021-11-01'
                 $vmJsonBody = $vmBody | ConvertTo-Json -Depth 99
                 Invoke-RestMethod -Method PUT -Uri $vmUrl -Headers $script:token -Body $vmJsonBody
             }
