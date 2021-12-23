@@ -86,6 +86,7 @@
         'Get-AvdSessionHostResources',
         'Get-AvdWorkspace',
         'Move-AvdSessionHost',
+        'New-AvdAadSessionHost',
         'New-AvdAutoScaleRole',
         'New-AvdApplicationGroup',
         'New-AvdHostpool',
