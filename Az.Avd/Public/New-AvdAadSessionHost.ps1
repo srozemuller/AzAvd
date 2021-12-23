@@ -24,18 +24,20 @@ function New-AvdAadSessionHost {
     In case of an Azure Markeplace image, provide the version (default latest)
     .PARAMETER Location
     Enter the session host location
-    .PARAMETER diskType
+    .PARAMETER DiskType
     Enter the session host diskType
     .PARAMETER LocalAdmin
     Enter the session host local admin account
     .PARAMETER LocalPass
     Enter the session host local admins password
+    .PARAMETER SubnetId
+    Enter the subnet resource ID where the session host is in
     .EXAMPLE
     New-AvdAadSessionHost -HostpoolName avd-hostpool -HostpoolResourceGroup rg-avd-01 -sessionHostCount 1 -ResourceGroupName rg-sessionhosts-01 -Publisher "MicrosoftWindowsDesktop" -Offer "windows-10" -Sku "21h1-ent-g2" -VmSize "Standard_D2s_v3"
-    -Location "westeurope" -diskType "Standard_LRS" -LocalAdmin "ladmin" -LocalPass "lpass"
+    -Location "westeurope" -diskType "Standard_LRS" -LocalAdmin "ladmin" -LocalPass "lpass" -Prefix "AVD" -SubnetId "/subscriptions/../resourceGroups/../providers/Microsoft.Network/virtualNetworks/../subnets/../"
     .EXAMPLE
     New-AvdAadSessionHost -HostpoolName avd-hostpool -HostpoolResourceGroup rg-avd-01 -sessionHostCount 1 -ResourceGroupName rg-sessionhosts-01 -imageVersionId "/subscriptions/..galleries/../images/../version/21.0.0" -VmSize "Standard_D2s_v3"
-    -Location "westeurope" -diskType "Standard_LRS" -LocalAdmin "ladmin" -LocalPass "lpass"
+    -Location "westeurope" -diskType "Standard_LRS" -LocalAdmin "ladmin" -LocalPass "lpass" -Prefix "AVD" -SubnetId "/subscriptions/../resourceGroups/../providers/Microsoft.Network/virtualNetworks/../subnets/../"
     #>
     [CmdletBinding(DefaultParameterSetName = 'MarketPlace')]
     param
@@ -51,6 +53,9 @@ function New-AvdAadSessionHost {
         
         [parameter(Mandatory)]
         [int]$sessionHostCount,
+
+        [parameter(Mandatory)]
+        [string]$Prefix,
 
         [parameter(Mandatory)]
         [string]$ResourceGroupName,
@@ -75,13 +80,16 @@ function New-AvdAadSessionHost {
 
         [parameter(Mandatory)]
         [ValidateSet("Premium_LRS", "Premium_ZRS","StandardSSD_LRS","StandardSSD_ZRS","Standard_LRS","UltraSSD_LRS")]
-        [string]$diskType,
+        [string]$DiskType,
 
         [parameter(Mandatory)]
         [string]$LocalAdmin,
 
         [parameter(Mandatory)]
-        [string]$LocalPass
+        [string]$LocalPass,
+
+        [parameter(Mandatory)]
+        [string]$subnetId
     )
     Begin {
         Write-Verbose "Start creating session hosts"
