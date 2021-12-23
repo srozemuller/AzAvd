@@ -10,6 +10,8 @@ function New-AvdAadSessionHost {
     Enter the AVD Hostpool resourcegroup name
     .PARAMETER SessionHostCount
     Integer value how many session hosts will be deployed
+    .PARAMETER InitialNumber
+    The start number of the sessionhost (use Get-AvdLatestSessionhost -numonly)
     .PARAMETER ResourceGroupName
     The session hosts resource group
     .PARAMETER imageVersionId
@@ -34,9 +36,11 @@ function New-AvdAadSessionHost {
     Enter the session host prefix
     .PARAMETER SubnetId
     Enter the subnet resource ID where the session host is in
+    .PARAMETER Intune
+    Switch parameter if you want to add the session host into Intune
     .EXAMPLE
     New-AvdAadSessionHost -HostpoolName avd-hostpool -HostpoolResourceGroup rg-avd-01 -sessionHostCount 1 -ResourceGroupName rg-sessionhosts-01 -Publisher "MicrosoftWindowsDesktop" -Offer "windows-10" -Sku "21h1-ent-g2" -VmSize "Standard_D2s_v3"
-    -Location "westeurope" -diskType "Standard_LRS" -LocalAdmin "ladmin" -LocalPass "lpass" -Prefix "AVD" -SubnetId "/subscriptions/../resourceGroups/../providers/Microsoft.Network/virtualNetworks/../subnets/../"
+    -Location "westeurope" -diskType "Standard_LRS" -LocalAdmin "ladmin" -LocalPass "lpass" -Prefix "AVD" -SubnetId "/subscriptions/../resourceGroups/../providers/Microsoft.Network/virtualNetworks/../subnets/../" -Intune
     .EXAMPLE
     New-AvdAadSessionHost -HostpoolName avd-hostpool -HostpoolResourceGroup rg-avd-01 -sessionHostCount 1 -ResourceGroupName rg-sessionhosts-01 -imageVersionId "/subscriptions/..galleries/../images/../version/21.0.0" -VmSize "Standard_D2s_v3"
     -Location "westeurope" -diskType "Standard_LRS" -LocalAdmin "ladmin" -LocalPass "lpass" -Prefix "AVD" -SubnetId "/subscriptions/../resourceGroups/../providers/Microsoft.Network/virtualNetworks/../subnets/../"
@@ -55,6 +59,9 @@ function New-AvdAadSessionHost {
         
         [parameter(Mandatory)]
         [int]$sessionHostCount,
+
+        [parameter()]
+        [int]$initialNumber = 0,
 
         [parameter(Mandatory)]
         [string]$Prefix,
@@ -91,12 +98,15 @@ function New-AvdAadSessionHost {
         [string]$LocalPass,
 
         [parameter(Mandatory)]
-        [string]$subnetId
+        [string]$subnetId,
+
+        [parameter()]
+        [switch]$Intune
     )
     Begin {
         Write-Verbose "Start creating session hosts"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $script:token = GetAuthToken -resource $Script:AzureApiUrl
         $apiVersion = "?api-version=2021-07-01"
         $registrationToken = Update-AvdRegistrationToken -HostpoolName $Hostpoolname $resourceGroupName -HoursActive 4 | Select-Object -ExpandProperty properties
     }
@@ -120,9 +130,8 @@ function New-AvdAadSessionHost {
             }
         }
         Do {
-            $script:InitialNumber = 0
-            $vmName = "{0}-{1}" -f $Prefix, $script:InitialNumber
-            $nicName = "nic-{0}" -f $vmName
+            $vmName = "{0}-{1}" -f $Prefix, $InitialNumber
+            $nicName = "{0}-nic" -f $vmName
             $nicBody = @{
                 "properties" = @{
                     "enableAcceleratedNetworking" = $true
@@ -161,7 +170,7 @@ function New-AvdAadSessionHost {
                                 "managedDisk"  = @{
                                     "storageAccountType" = $diskType
                                 }
-                                "name"         = "disk-{0}" -f $vmName
+                                "name"         = "{0}-os" -f $vmName
                                 "createOption" = "FromImage"
                             }
                         }
@@ -188,7 +197,7 @@ function New-AvdAadSessionHost {
             }
             catch {
                 "VM $vmName not created, $_"
-                Continue
+                Throw
             }
             Do {
                 $status = Invoke-RestMethod -Method GET -Uri $vmUrl -Headers $script:token
@@ -196,26 +205,26 @@ function New-AvdAadSessionHost {
             }
             While ($status.properties.provisioningState -ne "Succeeded") {
                 Write-Verbose "Host $vmName is ready"
-            }
-
-                       
-            $method = "PUT"
+            }          
             try {
                 $extensionName = "AADLoginForWindows"
-                $domainJoinUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $vmName, $domainJoinName , '2021-11-01'
+                $domainJoinUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $vmName, $extensionName , '2021-11-01'
                 $domainJoinExtension = @{
                     properties = @{
                         Type               = "AADLoginForWindows"
-                        Settings           = @{
-                            mdmId = "0000000a-0000-0000-c000-000000000000"
-                        }
                         Publisher          = "Microsoft.Azure.ActiveDirectory"
                         typeHandlerVersion = "1.0"
                     }
                     location   = $Location
                 }
+                if ($mem.isPresent){
+                    $settings = @{
+                        mdmId = "0000000a-0000-0000-c000-000000000000"
+                }
+                $domainJoinExtension.properties.Add("Settings",$settings)
+                }
                 $domainJoinBody = $domainJoinExtension | ConvertTo-Json -Depth 99
-                Invoke-RestMethod -Method $method -Uri $domainJoinUrl -Headers $script:token -Body $domainJoinBody
+                Invoke-RestMethod -Method PUT -Uri $domainJoinUrl -Headers $script:token -Body $domainJoinBody
                 Do {
                     $status = Invoke-RestMethod -Method GET -Uri $domainJoinUrl -Headers $script:token
                     Start-Sleep 5
@@ -223,15 +232,9 @@ function New-AvdAadSessionHost {
                 While ($status.properties.provisioningState -ne "Succeeded") {
                     Write-Verbose "Extension $domainJoinName is ready"
                 }
-            }
-            catch {
-                Throw $_
-                continue
-            }
 
-            try {
                 $extensionName = "Microsoft.PowerShell.DSC"
-                $domainJoinUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $vmName, $extensionName , '2021-11-01'
+                $avdUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $vmName, $extensionName , '2021-11-01'
                 $avdDscExtension = @{
                     properties         = @{
                         Type               = "DSC"
@@ -250,21 +253,20 @@ function New-AvdAadSessionHost {
                     location           = $Location
                 }
                 $avdExtensionBody = $avdDscExtension | ConvertTo-Json -Depth 99
-                Invoke-RestMethod -Method $method -Uri $domainJoinUrl -Headers $script:token -Body $avdExtensionBody
+                Invoke-RestMethod -Method PUT -Uri $avdUrl -Headers $script:token -Body $avdExtensionBody
                 Do {
-                    $status = Invoke-RestMethod -Method GET -Uri $domainJoinUrl -Headers $script:token
+                    $status = Invoke-RestMethod -Method GET -Uri $avdUrl -Headers $script:token
                     Start-Sleep 5
                 }
                 While ($status.properties.provisioningState -ne "Succeeded") {
-                    Write-Verbose "Extension $domainJoinName is ready"
+                    Write-Verbose "Extension for AVD is ready"
                 }
             }
             catch {
                 Throw $_
-                continue
             }
             
-            $script:InitialNumber++
+            $InitialNumber++
             $sessionHostCount--
 
             Write-Output "$($vmName) deployed"
