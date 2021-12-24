@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdSessionHost
+# Get-AvdUserSessions
 
 ## SYNOPSIS
 Gets the current AVD Session hosts from a specific hostpool.
@@ -14,13 +14,14 @@ Gets the current AVD Session hosts from a specific hostpool.
 
 ### All (Default)
 ```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+Get-AvdUserSessions -HostpoolName <String> -ResourceGroupName <String> [-LoginName <String>]
+ [<CommonParameters>]
 ```
 
 ### Hostname
 ```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
- [<CommonParameters>]
+Get-AvdUserSessions -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
+ [-LoginName <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,12 +31,7 @@ This function will grab all the sessionhost from a specific Azure Virtual Deskto
 
 ### EXAMPLE 1
 ```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true
-```
-
-### EXAMPLE 2
-```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
+Get-AvdUserSessions -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true
 ```
 
 ## PARAMETERS
@@ -79,6 +75,21 @@ Parameter Sets: Hostname
 Aliases:
 
 Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -LoginName
+{{ Fill LoginName Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False

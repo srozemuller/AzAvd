@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdSessionHost
+# Disconnect-AvdUserSessions
 
 ## SYNOPSIS
 Gets the current AVD Session hosts from a specific hostpool.
@@ -14,13 +14,14 @@ Gets the current AVD Session hosts from a specific hostpool.
 
 ### All (Default)
 ```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+Disconnect-AvdUserSessions -HostpoolName <String> -ResourceGroupName <String> [-LogonName <String>] [-All]
+ [<CommonParameters>]
 ```
 
 ### Hostname
 ```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
- [<CommonParameters>]
+Disconnect-AvdUserSessions -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
+ [-LogonName <String>] [-All] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,12 +31,7 @@ This function will grab all the sessionhost from a specific Azure Virtual Deskto
 
 ### EXAMPLE 1
 ```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true
-```
-
-### EXAMPLE 2
-```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
+Disconnect-AvdUserSessions -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true
 ```
 
 ## PARAMETERS
@@ -81,6 +77,36 @@ Aliases:
 Required: True
 Position: Named
 Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -LogonName
+{{ Fill LogonName Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -All
+Switch parameter to logoff all sessions on a session host
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

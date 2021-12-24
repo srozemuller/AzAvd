@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdSessionHost
+# Restart-AvdSessionHost
 
 ## SYNOPSIS
 Gets the current AVD Session hosts from a specific hostpool.
@@ -14,12 +14,12 @@ Gets the current AVD Session hosts from a specific hostpool.
 
 ### All (Default)
 ```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+Restart-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
 ```
 
 ### Hostname
 ```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
+Restart-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
  [<CommonParameters>]
 ```
 
@@ -30,12 +30,7 @@ This function will grab all the sessionhost from a specific Azure Virtual Deskto
 
 ### EXAMPLE 1
 ```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true
-```
-
-### EXAMPLE 2
-```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
+Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
 ```
 
 ## PARAMETERS
