@@ -96,6 +96,7 @@
         'New-AvdVmTemplate',
         'New-AvdWorkspace',
         'Remove-AvdSessionHost',
+        'Restart-AvdSessionHost',
         'Update-AvdDesktopApplication',
         'Update-AvdDiagnostics',
         'Update-AvdHostpool',
@@ -142,7 +143,8 @@
             # ReleaseNotes of this module
             ReleaseNotes = 'Fixes :
             * New-AvdAadSessionHosts command added #12
-            * Logoff-AvdUserSessions command added #12
+            * Restart-AvdSessionHost command added #12
+            * Disconnect-AvdUserSessions command added #12
             * Get-AvdUserSessions command added #12 
             * Error handling added for enable start vm on connect command #12
             '
