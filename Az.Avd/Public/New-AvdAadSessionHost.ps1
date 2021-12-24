@@ -55,13 +55,13 @@ function New-AvdAadSessionHost {
         [string]$HostpoolResourceGroup,
     
         [parameter(Mandatory, ParameterSetName = 'Sig')]
-        [string]$imageVersionId,
+        [string]$ImageVersionId,
         
         [parameter(Mandatory)]
-        [int]$sessionHostCount,
+        [int]$SessionHostCount,
 
         [parameter()]
-        [int]$initialNumber = 0,
+        [int]$InitialNumber = 0,
 
         [parameter(Mandatory)]
         [string]$Prefix,
@@ -98,7 +98,7 @@ function New-AvdAadSessionHost {
         [string]$LocalPass,
 
         [parameter(Mandatory)]
-        [string]$subnetId,
+        [string]$SubnetId,
 
         [parameter()]
         [switch]$Intune
@@ -107,14 +107,13 @@ function New-AvdAadSessionHost {
         Write-Verbose "Start creating session hosts"
         AuthenticationCheck
         $script:token = GetAuthToken -resource $Script:AzureApiUrl
-        $apiVersion = "?api-version=2021-07-01"
         $registrationToken = Update-AvdRegistrationToken -HostpoolName $Hostpoolname $resourceGroupName -HoursActive 4 | Select-Object -ExpandProperty properties
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
             Sig {
                 $imageReference = @{
-                    sharedGalleryImageId = $imageVersionId
+                    sharedGalleryImageId = $ImageVersionId
                 }
             }
             MarketPlace {
@@ -140,7 +139,7 @@ function New-AvdAadSessionHost {
                             "name"       = "ipconfig1"
                             "properties" = @{
                                 "subnet" = @{
-                                    id = $subnetId
+                                    id = $SubnetId
                                 }
                             }
                         }
@@ -175,9 +174,9 @@ function New-AvdAadSessionHost {
                             }
                         }
                         "osProfile"       = @{
-                            "adminUsername" = $localAdmin
+                            "adminUsername" = $LocalAdmin
                             "computerName"  = $vmName
-                            "adminPassword" = $localPass
+                            "adminPassword" = $LocalPass
                         }
                         "networkProfile"  = @{
                             "networkInterfaces" = @(

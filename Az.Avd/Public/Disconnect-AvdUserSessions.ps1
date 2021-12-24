@@ -46,7 +46,6 @@ function Disconnect-AvdUserSessions {
         Write-Verbose "Start searching session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
-        #$baseUrl = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + "/sessionHosts/"
         $apiVersion = "?api-version=2021-07-12"
         $avdParameters = @{
             HostpoolName      = $HostpoolName
