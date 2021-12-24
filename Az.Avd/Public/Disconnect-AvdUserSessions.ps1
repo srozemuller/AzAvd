@@ -1,4 +1,4 @@
-function Logoff-AvdUserSessions {
+function Disconnect-AvdUserSessions {
     <#
     .SYNOPSIS
     Gets the current AVD Session hosts from a specific hostpool.
@@ -13,7 +13,7 @@ function Logoff-AvdUserSessions {
     .PARAMETER All
     Switch parameter to logoff all sessions on a session host
     .EXAMPLE
-    Logoff-AvdUserSessions -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true 
+    Disconnect-AvdUserSessions -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true 
     #>
     [CmdletBinding(DefaultParameterSetName = 'All')]
     param
