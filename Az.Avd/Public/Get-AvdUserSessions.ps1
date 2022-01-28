@@ -10,8 +10,12 @@ function Get-AvdUserSessions {
     Enter the AVD Hostpool resourcegroup name
     .PARAMETER SessionHostName
     Enter the sessionhosts name
+    .PARAMETER LoginName
+    Enter the user principal name
     .EXAMPLE
-    Get-AvdUserSessions -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true 
+    Get-AvdUserSessions -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain 
+    .EXAMPLE
+    Get-AvdUserSessions -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -LoginName user@domain.com
     #>
     [CmdletBinding(DefaultParameterSetName = 'All')]
     param
