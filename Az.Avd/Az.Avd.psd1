@@ -12,7 +12,7 @@
     RootModule             = 'Az.Avd.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '2.1.1'
+    ModuleVersion          = '2.1.2'
 
     # Supported PSEditions
     CompatiblePSEditions   = 'Core', 'Desktop'
@@ -142,11 +142,7 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = 'Fixes :
-            * New-AvdAadSessionHosts command added #12
-            * Restart-AvdSessionHost command added #12
-            * Disconnect-AvdUserSessions command added #12
-            * Get-AvdUserSessions command added #12 
-            * Error handling added for enable start vm on connect command #12
+            * Bug fix in Get- and Disconnect-AVDSessions commandlet #13
             '
             # Prerelease string of this module
             # Prerelease = ''
