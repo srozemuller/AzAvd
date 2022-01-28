@@ -97,7 +97,6 @@
         'New-AvdWorkspace',
         'Remove-AvdSessionHost',
         'Restart-AvdSessionHost',
-        'Set-AvdResourceProvider',
         'Update-AvdDesktopApplication',
         'Update-AvdDiagnostics',
         'Update-AvdHostpool',
