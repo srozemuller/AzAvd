@@ -8,7 +8,7 @@ schema: 2.0.0
 # Disconnect-AvdUserSessions
 
 ## SYNOPSIS
-Gets the current AVD Session hosts from a specific hostpool.
+Gets the current connect users on an AVD from a specific hostpool.
 
 ## SYNTAX
 
@@ -25,13 +25,23 @@ Disconnect-AvdUserSessions -HostpoolName <String> -ResourceGroupName <String> -S
 ```
 
 ## DESCRIPTION
-This function will grab all the sessionhost from a specific Azure Virtual Desktop hostpool.
+This function will grab all the logged in users sessions from a specific Azure Virtual Desktop hostpool.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Disconnect-AvdUserSessions -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true
+Disconnect-AvdUserSessions -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -LogonName user@domain.com
+```
+
+### EXAMPLE 2
+```
+Disconnect-AvdUserSessions -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -All
+```
+
+### EXAMPLE 3
+```
+Disconnect-AvdUserSessions -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -All
 ```
 
 ## PARAMETERS
