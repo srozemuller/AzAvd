@@ -1,0 +1,2 @@
+New-Alias -Name Assign-AvdUser -Description "Command to assign a user to an AVD sessionhost" -Value Update-AvdSessionHost -Force
+New-Alias -Name UnAssign-AvdUser -Description "Command to remove a user from an AVD sessionhost" -Value Update-AvdSessionHost -Force
