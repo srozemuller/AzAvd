@@ -16,6 +16,8 @@ function Update-AvdSessionHost {
     Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
     .EXAMPLE
     Update-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -AllowNewSession $true
+    .EXAMPLE
+    Update-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -AssignedUser "" -Force
     #>
     [CmdletBinding(DefaultParameterSetName = 'SingleObject')]
     param
@@ -34,7 +36,8 @@ function Update-AvdSessionHost {
         [string]$AllowNewSession = $true,
 
         [parameter(ParameterSetName = 'SingleObject')]
-        [ValidateNotNullOrEmpty()]
+        [parameter(Mandatory, ParameterSetName = 'UserMutation')]
+        [AllowEmptyString()]
         [string]$AssignedUser,
 
         [parameter(ParameterSetName = 'SingleObject')]
@@ -42,14 +45,23 @@ function Update-AvdSessionHost {
         [string]$SessionHostName,
 
         [parameter(Mandatory,ParameterSetName = 'InputObject')]
-        [object]$SessionHosts
+        [object]$SessionHosts,
+
+        [parameter(Mandatory, ParameterSetName = 'UserMutation')]
+        [switch]$Force
         
     )
     Begin {
         Write-Verbose "Start moving session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
-        $apiVersion = "?api-version=2021-01-14-preview"
+        $apiVersion = "2021-09-03-preview"
+        if ($Force.IsPresent){
+            $forceString = "true"
+        }
+        else {
+            $forceString = "false"
+        }
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -69,7 +81,7 @@ function Update-AvdSessionHost {
             try {
                 $vmName = $_.Split("/")[-1]
                 Write-Verbose "Updating sessionhost $vmName"
-                $url = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + "/sessionHosts/" + $vmName + $apiVersion
+                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/sessionHosts/{4}?api-version={5}&force={6}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName, $vmName, $apiVersion, $forceString
                 $parameters = @{
                     uri     = $url
                     Headers = $token

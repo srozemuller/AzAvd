@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Move-AvdSessionhost
+# Move-AvdSessionHost
 
 ## SYNOPSIS
 Moving sessionhosts from an Azure Virtual Desktop hostpool to a new one.
@@ -13,8 +13,8 @@ Moving sessionhosts from an Azure Virtual Desktop hostpool to a new one.
 ## SYNTAX
 
 ```
-Move-AvdSessionhost -fromHostpoolName <String> -fromResourceGroupName <String> -toHostpoolName <String>
- -toResourceGroupName <String> [-sessionHostName <String>] [<CommonParameters>]
+Move-AvdSessionHost -FromHostpoolName <String> -FromResourceGroupName <String> -ToHostpoolName <String>
+ -ToResourceGroupName <String> [-SessionHostName <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -24,12 +24,12 @@ The function will move sessionhosts to a new Azure Virtual Desktop hostpool.
 
 ### EXAMPLE 1
 ```
-Move-AvdSessionhost -FromHostpoolName avd-hostpool -FromResourceGroupName rg-avd-01 -ToHostpoolName avd-hostpool-02 -ToResourceGroupName rg-avd-02 -SessionHostName avd-host-1.avd.domain
+Move-AvdSessionHost -FromHostpoolName avd-hostpool -FromResourceGroupName rg-avd-01 -ToHostpoolName avd-hostpool-02 -ToResourceGroupName rg-avd-02 -SessionHostName avd-host-1.avd.domain
 ```
 
 ## PARAMETERS
 
-### -fromHostpoolName
+### -FromHostpoolName
 Enter the source AVD Hostpool name
 
 ```yaml
@@ -44,7 +44,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -fromResourceGroupName
+### -FromResourceGroupName
 Enter the source Hostpool resourcegroup name
 
 ```yaml
@@ -59,7 +59,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -toHostpoolName
+### -ToHostpoolName
 Enter the destination AVD Hostpool name
 
 ```yaml
@@ -74,7 +74,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -toResourceGroupName
+### -ToResourceGroupName
 Enter the destination Hostpool resourcegroup name
 
 ```yaml
@@ -89,7 +89,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -sessionHostName
+### -SessionHostName
 Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
 
 ```yaml

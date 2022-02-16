@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Update-AvdSessionhost
+# Update-AvdSessionHost
 
 ## SYNOPSIS
 Updating one or more sessionhosts.
@@ -15,14 +15,14 @@ Assign new users or put them in drainmode or not.
 
 ### SingleObject (Default)
 ```
-Update-AvdSessionhost -HostpoolName <String> -ResourceGroupName <String> [-allowNewSession <String>]
- [-assignedUser <String>] [-sessionHostName <String>] [<CommonParameters>]
+Update-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [-AllowNewSession <String>]
+ [-AssignedUser <String>] [-SessionHostName <String>] [<CommonParameters>]
 ```
 
 ### InputObject
 ```
-Update-AvdSessionhost -HostpoolName <String> -ResourceGroupName <String> [-allowNewSession <String>]
- -sessionHostName <String> -SessionHosts <Object> [<CommonParameters>]
+Update-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [-AllowNewSession <String>]
+ -SessionHostName <String> -SessionHosts <Object> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -32,13 +32,7 @@ The function will update the current sessionhosts assigned user and drainmode
 
 ### EXAMPLE 1
 ```
-Update-AvdSessionhost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -AllowNewSession $true
-```
-
-### EXAMPLE 2
-```
-$sessionHosts = Get-AvdSessionhost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01
-$sessionHosts | Update-AvdSessionhost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -AllowNewSession $true
+Update-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -AllowNewSession $true
 ```
 
 ## PARAMETERS
@@ -73,7 +67,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -allowNewSession
+### -AllowNewSession
 Allowing new sessions or not.
 (Default: true).
 
@@ -89,7 +83,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -assignedUser
+### -AssignedUser
 Enter the new username for the current sessionhost.
 Only available if providing one sessionhost at a time.
 
@@ -105,7 +99,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -sessionHostName
+### -SessionHostName
 Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
 
 ```yaml

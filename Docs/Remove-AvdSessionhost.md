@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Remove-AvdSessionhost
+# Remove-AvdSessionHost
 
 ## SYNOPSIS
 Removing sessionhosts from an Azure Virtual Desktop hostpool.
@@ -13,7 +13,7 @@ Removing sessionhosts from an Azure Virtual Desktop hostpool.
 ## SYNTAX
 
 ```
-Remove-AvdSessionhost -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
+Remove-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
  [<CommonParameters>]
 ```
 
@@ -24,7 +24,7 @@ The function will search for sessionhosts and will remove them from the Azure Vi
 
 ### EXAMPLE 1
 ```
-Remove-AvdSessionhost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.wvd.domain
+Remove-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.wvd.domain
 ```
 
 ## PARAMETERS

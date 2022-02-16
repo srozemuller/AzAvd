@@ -12,7 +12,7 @@
     RootModule             = 'Az.Avd.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '2.1.2'
+    ModuleVersion          = '2.1.3'
 
     # Supported PSEditions
     CompatiblePSEditions   = 'Core', 'Desktop'
@@ -113,7 +113,10 @@
     VariablesToExport      = '*'
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport        = @()
+    AliasesToExport        = @(
+        'Assign-AvdUser',
+        'UnAssign-AvdUser'
+    )
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()
@@ -142,7 +145,8 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = 'Fixes :
-            * Bug fix in Get- and Disconnect-AVDSessions commandlet #13
+            * Aliasses added Assign-AvdUser, UnAssign-AvdUser #16
+            * Added Force option in Update-AvdSessionhost #16
             '
             # Prerelease string of this module
             # Prerelease = ''
