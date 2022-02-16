@@ -1,0 +1,2 @@
+New-Alias -Name Assign-AvdUser -Description "Alias for Update-AvdSessionHost" -Value Update-AvdSessionHost -Force
+New-Alias -Name UnAssign-AvdUser -Description "Alias for Update-AvdSessionHost" -Value Update-AvdSessionHost -Force
