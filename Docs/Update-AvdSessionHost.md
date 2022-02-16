@@ -25,6 +25,12 @@ Update-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [-Allow
  -SessionHostName <String> -SessionHosts <Object> [<CommonParameters>]
 ```
 
+### UserMutation
+```
+Update-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -AssignedUser <String>
+ -SessionHostName <String> [-Force] [<CommonParameters>]
+```
+
 ## DESCRIPTION
 The function will update the current sessionhosts assigned user and drainmode
 
@@ -33,6 +39,11 @@ The function will update the current sessionhosts assigned user and drainmode
 ### EXAMPLE 1
 ```
 Update-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -AllowNewSession $true
+```
+
+### EXAMPLE 2
+```
+Update-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -AssignedUser "" -Force
 ```
 
 ## PARAMETERS
@@ -73,7 +84,7 @@ Allowing new sessions or not.
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: SingleObject, InputObject
 Aliases:
 
 Required: False
@@ -99,6 +110,18 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+```yaml
+Type: String
+Parameter Sets: UserMutation
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -SessionHostName
 Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
 
@@ -116,7 +139,7 @@ Accept wildcard characters: False
 
 ```yaml
 Type: String
-Parameter Sets: InputObject
+Parameter Sets: InputObject, UserMutation
 Aliases:
 
 Required: True
@@ -137,6 +160,21 @@ Aliases:
 Required: True
 Position: Named
 Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Force
+{{ Fill Force Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: UserMutation
+Aliases:
+
+Required: True
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
