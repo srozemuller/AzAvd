@@ -5,7 +5,16 @@ param (
 )
 $env:ProjectName = "Az.Avd"
 
-if ($env:GITHUB_REF_NAME -eq 'main' -and $GitHubKey) {
+switch ($env:GITHUB_REF_NAME){
+    beta {
+        $releaseName = '{0}-{1}-beta' -f $manifest.ModuleVersion, $env:GITHUB_RUN_ID
+    }
+    default {
+        $releaseName = '{0}' -f $manifest.ModuleVersion 
+    }
+}
+
+if ($GitHubKey) {
     Write-Host "Creating GitHub release" -ForegroundColor Green
     $modulePath = "./$env:ProjectName/$env:ProjectName.psd1"
     $manifest = Import-PowerShellDataFile -Path $modulePath
@@ -14,7 +23,7 @@ if ($env:GITHUB_REF_NAME -eq 'main' -and $GitHubKey) {
     $releaseData = @{
         tag_name         = '{0}' -f $manifest.ModuleVersion
         #target_commitish = $env:GITHUB_SHA
-        name             = '{0}' -f $manifest.ModuleVersion
+        name             = $releaseName
         body             = $manifest.PrivateData.PSData.ReleaseNotes
         draft            = $false
         prerelease       = $false
