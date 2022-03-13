@@ -12,7 +12,7 @@
     RootModule             = 'Az.Avd.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '2.1.3'
+    ModuleVersion          = '2.1.4'
 
     # Supported PSEditions
     CompatiblePSEditions   = 'Core', 'Desktop'
@@ -145,8 +145,7 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = 'Fixes :
-            * Aliasses added Assign-AvdUser, UnAssign-AvdUser #16
-            * Added Force option in Update-AvdSessionhost #16
+            * Subscription missing bug in Get-AvdImageVersionStatus fixed #17
             '
             # Prerelease string of this module
             # Prerelease = ''
