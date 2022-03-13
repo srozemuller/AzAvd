@@ -69,15 +69,9 @@ Function Get-AvdImageVersionStatus {
                 if ($imageVersionId) {
                     Write-Verbose "Searching for $($_.Name)"
                     # Stripping last part from whole image version id. 
-                    $filterIdRegex = [Regex]::new("(.*)(?=/versions)")
-                    $imageId = $filterIdRegex.Match($imageVersionId).Value
-                    $imageNameRegex = [Regex]::new("(?<=images/)(.*)(?=/versions)")           
-                    $imageName = $imageNameRegex.Match($imageVersionId).Value
-                    $galleryNameRegex = [Regex]::new("(?<=galleries/)(.*)(?=/images)")
-                    $galleryName = $galleryNameRegex.Match($imageVersionId).Value     
                     try {
                         $requestParameters = @{
-                            uri    = $Script:AzureApiUrl + $imageId + "/versions" + $apiVersion
+                            uri    = $Script:AzureApiUrl + $imageVersionId + "/versions" + $apiVersion
                             header = $token
                             method = "GET"
                         }
@@ -92,10 +86,10 @@ Function Get-AvdImageVersionStatus {
                             currentImageVersion = $_.vmResources.properties.storageprofile.imagereference.exactVersion
                             latestVersion = $allVersionsRequest.name | Select-Object -Last 1
                             isLatestVersion = $isLatestVersion
-                            imageName = $imageName
-                            imageId = $imageId
-                            imageVersionId = $imageVersionId
-                            galleryName = $galleryName
+                            imageName = [Regex]::new("(?<=images/)(.*)").Match($imageVersionId).Value
+                            imageId =  $imageVersionId
+                            imageVersionId = "{0}/{1}" -f $imageVersionId, $_.vmResources.properties.storageprofile.imagereference.exactVersion
+                            galleryName = [Regex]::new("(?<=galleries/)(.*)(?=/images)").Match($imageVersionId).Value   
                         }
                     }
                     catch {
