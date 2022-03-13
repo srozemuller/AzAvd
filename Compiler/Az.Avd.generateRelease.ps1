@@ -3,30 +3,28 @@ param (
     [Parameter()]
     [string]$GitHubKey
 )
-$env:ProjectName = "Az.Avd"
-
-switch ($env:GITHUB_REF_NAME){
-    beta {
-        $releaseName = '{0}-{1}-beta' -f $manifest.ModuleVersion, $env:GITHUB_RUN_ID
-    }
-    default {
-        $releaseName = '{0}' -f $manifest.ModuleVersion 
-    }
-}
-
 if ($GitHubKey) {
+    $env:ProjectName = "Az.Avd"
     Write-Host "Creating GitHub release" -ForegroundColor Green
     $modulePath = "./$env:ProjectName/$env:ProjectName.psd1"
     $manifest = Import-PowerShellDataFile -Path $modulePath
     Import-Module $modulePath -Force
+    switch ($env:GITHUB_REF_NAME) {
+        beta {
+            $releaseName = '{0}-{1}-beta' -f $manifest.ModuleVersion, $env:GITHUB_RUN_NUMBER
+        }
+        default {
+            $releaseName = '{0}' -f $manifest.ModuleVersion 
+        }
+    }
     #Publish-Module -Name $env:ProjectName -NuGetApiKey $env:PS_GALLERY_KEY
     $releaseData = @{
-        tag_name         = '{0}' -f $manifest.ModuleVersion
+        tag_name   = '{0}' -f $manifest.ModuleVersion
         #target_commitish = $env:GITHUB_SHA
-        name             = $releaseName
-        body             = $manifest.PrivateData.PSData.ReleaseNotes
-        draft            = $false
-        prerelease       = $false
+        name       = $releaseName
+        body       = $manifest.PrivateData.PSData.ReleaseNotes
+        draft      = $false
+        prerelease = $false
     }
 
     $releaseParams = @{
@@ -35,7 +33,7 @@ if ($GitHubKey) {
         Body            = (ConvertTo-Json $releaseData -Compress)
         UseBasicParsing = $true
         Header          = @{
-            Accept   = 'application/vnd.github.v3+json'
+            Accept        = 'application/vnd.github.v3+json'
             Authorization = "token $GitHubKey"
         }
     }
@@ -50,7 +48,7 @@ if ($GitHubKey) {
         Method      = 'POST'
         ContentType = 'application/zip'
         InFile      = "./$($env:ProjectName)_$($manifest.ModuleVersion).zip"
-        Header          = @{
+        Header      = @{
             Authorization = "token $GitHubKey"
         }
     }
