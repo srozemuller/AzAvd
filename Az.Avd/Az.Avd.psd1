@@ -86,6 +86,7 @@
         'Get-AvdSessionHost'
         'Get-AvdSessionHostResources',
         'Get-AvdUserSessions',
+        'Get-AvdVmTemplate',
         'Get-AvdWorkspace',
         'Move-AvdSessionHost',
         'New-AvdAadSessionHost',
@@ -145,8 +146,10 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = 'Fixes :
-            * Aliasses added Assign-AvdUser, UnAssign-AvdUser #16
-            * Added Force option in Update-AvdSessionhost #16
+            * Return if VM template is added #18
+            
+            New command:
+            Get-AvdVmTemplate #18
             '
             # Prerelease string of this module
             # Prerelease = ''
