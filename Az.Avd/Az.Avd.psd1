@@ -147,7 +147,6 @@
             # ReleaseNotes of this module
             ReleaseNotes = 'Fixes :
             * Return if VM template is added #18
-            
             New command:
             Get-AvdVmTemplate #18
             '
