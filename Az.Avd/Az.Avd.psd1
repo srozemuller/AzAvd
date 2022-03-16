@@ -12,7 +12,7 @@
     RootModule             = 'Az.Avd.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '2.1.3'
+    ModuleVersion          = '2.1.4'
 
     # Supported PSEditions
     CompatiblePSEditions   = 'Core', 'Desktop'
@@ -149,6 +149,7 @@
             * Return if VM template is added #18
             New command:
             Get-AvdVmTemplate #18
+            * Subscription missing bug in Get-AvdImageVersionStatus fixed #17
             '
             # Prerelease string of this module
             # Prerelease = ''
