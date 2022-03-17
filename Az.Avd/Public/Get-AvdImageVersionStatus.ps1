@@ -72,12 +72,6 @@ Function Get-AvdImageVersionStatus {
                 if ($imageVersionId) {
                     Write-Verbose "Image id found!, $imageVersionId"
                     # Stripping last part from whole image version id. 
-                    $filterIdRegex = [Regex]::new("(.*)(?=/versions)")
-                    $imageId = $filterIdRegex.Match($imageVersionId).Value
-                    $imageNameRegex = [Regex]::new("(?<=images/)(.*)(?=/versions)")           
-                    $imageName = $imageNameRegex.Match($imageVersionId).Value
-                    $galleryNameRegex = [Regex]::new("(?<=galleries/)(.*)(?=/images)")
-                    $galleryName = $galleryNameRegex.Match($imageVersionId).Value     
                     try {
                         $requestParameters = @{
                             uri    = "{0}{1}/versions{2}" -f $Script:AzureApiUrl, $imageId, $apiVersion
