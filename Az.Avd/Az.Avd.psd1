@@ -97,6 +97,8 @@
         'New-AvdWorkspace',
         'Remove-AvdSessionHost',
         'Restart-AvdSessionHost',
+        'Start-AvdSessionHost',
+        'Stop-AvdSessionHost',
         'Update-AvdDesktopApplication',
         'Update-AvdDiagnostics',
         'Update-AvdHostpool',
@@ -145,8 +147,9 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = 'Fixes :
-            * Aliasses added Assign-AvdUser, UnAssign-AvdUser #16
-            * Added Force option in Update-AvdSessionhost #16
+            -
+            New commands:
+            * Start-AvdSessionHost
             '
             # Prerelease string of this module
             # Prerelease = ''
