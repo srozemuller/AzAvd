@@ -14,6 +14,8 @@ Function Get-AvdImageVersionStatus {
     This is a switch parameter which let you control the output to show only the sessionhosts which are not started from the latest version.
     .EXAMPLE
     Get-AvdImageVersionStatus -HostpoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
+    .EXAMPLE
+    Get-AvdImageVersionStatus -HostpoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -NotLatest
     #>
     [CmdletBinding(DefaultParameterSetName = 'Hostpool')]
     param (
