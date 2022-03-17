@@ -31,7 +31,11 @@ function Stop-AvdSessionHost {
         [ValidatePattern('^(?:(?!\/).)*$', ErrorMessage = "It looks like you also provided a hostpool, a sessionhost name is enough. Provided value {0}")]
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
-        [string]$SessionHostName
+        [string]$SessionHostName,
+
+        [parameter(ParameterSetName = 'All')]
+        [ValidateNotNullOrEmpty()]
+        [switch]$Force
     )
     Begin {
         Write-Verbose "Start searching session hosts"
@@ -46,6 +50,12 @@ function Stop-AvdSessionHost {
         switch ($PsCmdlet.ParameterSetName) {
             All {
                 Write-Verbose "No specific host provided, starting all hosts in $hostpoolName"
+                Write-Information -MessageData "HINT: use -Force to skip this message." -InformationAction Continue
+                $confirmation = Read-Host "Are you sure you want to stop all session hosts? [y/n]"
+                while ($confirmation -ne "y") {
+                    if ($confirmation -eq 'n') { exit }
+                    $confirmation = Read-Host "Yes/No? [y/n]"
+                }
             }
             Hostname {
                 Write-Verbose "Looking for sessionhost $SessionHostName"
