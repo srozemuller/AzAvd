@@ -16,6 +16,8 @@ Function Get-AvdImageVersionStatus {
     Get-AvdImageVersionStatus -HostpoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
     .EXAMPLE
     Get-AvdImageVersionStatus -HostpoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -NotLatest
+    .EXAMPLE
+    Get-AvdImageVersionStatus -HostpoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -SessionHostName avd.host -NotLatest
     #>
     [CmdletBinding(DefaultParameterSetName = 'Hostpool')]
     param (
