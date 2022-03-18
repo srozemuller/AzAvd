@@ -1,7 +1,9 @@
 [CmdletBinding()]
 param (
     [Parameter(Mandatory)]
-    [string]$GitHubKey
+    [string]$GitHubKey,
+    [Parameter(Mandatory)]
+    [string]$BranchName
 )
 try {
     $githubUrl = "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases?access_token=$GitHubKey"
@@ -13,7 +15,7 @@ try {
             Authorization = "token $GitHubKey"
         }
     }
-    $newRelease = Invoke-RestMethod @getReleaseParams
+    $releases = Invoke-RestMethod @getReleaseParams
 }
 catch {
     Throw "Not able to find releases"
@@ -28,16 +30,19 @@ try {
 catch {
     Throw "Not able to import $env:ProjectName and determine current version"
 }
-switch ($env:GITHUB_REF_NAME) {
+switch ($BranchName) {
     beta {
-        $betaNumberLocation = $lastRelease[0].tag_name.lastindexOf(".")
+        $betaNumberLocation = $releases[0].tag_name.lastindexOf(".")
         $newNumber = [int]$newRelease[0].tag_name.substring($betaNumberLocation + 1) + 1
         $releaseName = 'v{0}-beta.{1}' -f $manifest.ModuleVersion, $newNumber
     }
     #default is main branch
-    default {
+    main {
         $releaseName = 'v{0}-stable' -f $manifest.ModuleVersion 
     }
+    default {
+        $releaseName = 'v{0}-{1}' -f $manifest.ModuleVersion, $BranchName
+    }  
 }
 try {
     #Publish-Module -Name $env:ProjectName -NuGetApiKey $env:PS_GALLERY_KEY
