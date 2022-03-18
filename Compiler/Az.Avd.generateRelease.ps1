@@ -32,8 +32,9 @@ catch {
 }
 switch ($BranchName) {
     beta {
+        Write-Information "Found $($releases[0])" -InformationAction Continue
         $betaNumberLocation = $releases[0].tag_name.lastindexOf(".")
-        $newNumber = [int]$newRelease[0].tag_name.substring($betaNumberLocation + 1) + 1
+        $newNumber = [int]$releases[0].tag_name.substring($betaNumberLocation + 1) + 1
         $releaseName = 'v{0}-beta.{1}' -f $manifest.ModuleVersion, $newNumber
     }
     #default is main branch
