@@ -1,43 +1,26 @@
+# Az.Avd PowerShell module
+This module will help you managing an Azure Virtual Desktop environments and all related Azure resources.
 
-This module will help you managing an Azure Virtual Desktop environment and all related Azure resources.
-|Current version| Required PowerShell Version |
-|--|--|
-|v2.0.0 | 5.1 |
+##### General module information
+<a href="https://github.com/srozemuller/azavd" target="_blank"><img src="https://img.shields.io/github/v/release/srozemuller/azavd?label=latest-release&style=flat-square" alt="CurrentVersion"></a> <a href="https://github.com/srozemuller/AzAvd/issues" target="_blank"><img src="https://img.shields.io/github/issues/srozemuller/azavd?style=flat-square" alt="Issues"></a> </a><a href="https://github.com/srozemuller/AzAvd/tree/beta" target="_blank"><img src="https://img.shields.io/maintenance/yes/2022?style=flat-square" alt="Beta"></a> </a><a href="https://github.com/srozemuller/AzAvd/tree/beta" target="_blank"><img src="https://img.shields.io/github/license/srozemuller/azavd?style=flat-square" alt="Beta"></a>
+##### PowerShell Gallery information
+<a href="https://www.powershellgallery.com/packages/Az.Avd" target="_blank"><img src="https://img.shields.io/powershellgallery/v/az.avd?style=flat-square" alt="Main"></a> <a href="https://www.powershellgallery.com/packages/Az.Avd" target="_blank"><img src="https://img.shields.io/powershellgallery/dt/az.avd?style=flat-square" alt="Downloads"></a>
+
+##### Update information
+<a href="https://github.com/srozemuller/azavd"  target="_blank"><img src="https://img.shields.io/github/last-commit/srozemuller/azavd?label=main%20update&style=flat-square" alt="LastCommit"></a> <a href="https://github.com/srozemuller/AzAvd/tree/beta" target="_blank"><img src="https://img.shields.io/github/last-commit/srozemuller/azavd/beta?label=beta%20update&style=flat-square" alt="Beta">
+
 
 ## Install module
-To install the module in PowerShell use the command below
 
-    Install-Module Az.Avd
-    Import-Module Az.Avd
+To install the module in PowerShell use the command below
+```
+Install-Module Az.Avd
+Import-Module Az.Avd
+```
 
 The module consists of the following commands:
 
-## Commands
-- [Add-AvdApplicationGroupPermissions](./Docs/Add-AvdApplicationGroupPermissions.md)
-- [Copy-AvdApplicationGroupPermissions](./Docs/Copy-AvdApplicationGroupPermissions.md)
-- [Enable-AvdDiagnostics](./Docs/Enable-AvdDiagnostics.md)
-- [Enable-AvdStartVmOnConnect](./Docs/Enable-AvdStartVmOnConnect.md)
-- [Export-AvdConfig](./Docs/Export-AvdConfig.md)
-- [Get-AvdApplicationGroup](./Docs/Get-AvdApplicationGroup.md)
-- [Get-AvdHostPool](./Docs/Get-AvdHostPool.md)
-- [Get-AvdImageVersionStatus](./Docs/Get-AvdImageVersionStatus.md)
-- [Get-AvdLatestSessionHost](./Docs/Get-AvdLatestSessionHost.md)
-- [Get-AvdNetworkInfo](./Docs/Get-AvdNetworkInfo.md)
-- [Get-AvdSessionHost](./Docs/Get-AvdSessionHost.md)
-- [Get-AvdSessionHostResources](./Docs/Get-AvdSessionHostResources.md)
-- [Get-AvdWorkspace](./Docs/Get-AvdWorkspace.md)
-- [Move-AvdSessionHost](./Docs/Move-AvdSessionhost.md)
-- [Move-New-AvdAutoScaleRole](./Docs/New-AvdAutoScaleRole.md)
-- [New-AvdApplicationGroup](./Docs/New-AvdApplicationGroup.md)
-- [New-AvdHostpool](./Docs/New-AvdHostpool.md)
-- [New-AvdScalingPlan](./Docs/New-AvdScalingPlan.md)
-- [New-AvdVmTemplate](./Docs/New-AvdVmTemplate.md)
-- [New-AvdWorkspace](./Docs/New-AvdWorkspace.md)
-- [Remove-AvdSessionHost](./Docs/Remove-AvdSessionhost.md)
-- [Update-AvdDesktopApplication](./Docs/Update-AvdDesktopApplication.md)
-- [Update-AvdDiagnostics](./Docs/Update-AvdDiagnostics.md)
-- [Update-AvdHostpool](./Docs/Update-AvdHostpool.md)
-- [Update-AvdRegistrationToken](./Docs/Update-AvdRegistrationToken.md)
-- [Update-AvdSessionHost](./Docs/Update-AvdSessionHost.md)
-- [Update-AvdSessionhostDrainMode](./Docs/Update-AvdSessionhostDrainMode.md)
-- [Update-AvdWorkspace](./Docs/Update-AvdWorkspace.md)
+## Documentation
+The documentation is stored at this location: https://github.com/srozemuller/AzAvd/tree/main/Docs
+
+For practical examples check my blog: https://rozemuller.com/?s=az.avd

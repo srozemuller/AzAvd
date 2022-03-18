@@ -11,7 +11,7 @@ if ($GitHubKey) {
     Import-Module $modulePath -Force
     switch ($env:GITHUB_REF_NAME) {
         beta {
-            $releaseName = '{0}-{1}-beta' -f $manifest.ModuleVersion, $env:GITHUB_RUN_NUMBER
+            $releaseName = '{0}-beta.{1}' -f $manifest.ModuleVersion, $env:COMMIT_HASH
         }
         default {
             $releaseName = '{0}' -f $manifest.ModuleVersion 
