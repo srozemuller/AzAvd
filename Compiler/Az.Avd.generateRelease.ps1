@@ -11,10 +11,12 @@ if ($GitHubKey) {
     Import-Module $modulePath -Force
     switch ($env:GITHUB_REF_NAME) {
         beta {
-            $releaseName = '{0}-beta.{1}' -f $manifest.ModuleVersion, $env:COMMIT_HASH
+            $releaseName = 'v{0}-beta.{1}' -f $manifest.ModuleVersion, $env:COMMIT_HASH
+            $preRelease = $true
         }
         default {
             $releaseName = '{0}' -f $manifest.ModuleVersion 
+            $preRelease = $false
         }
     }
     #Publish-Module -Name $env:ProjectName -NuGetApiKey $env:PS_GALLERY_KEY
@@ -24,7 +26,7 @@ if ($GitHubKey) {
         name       = $releaseName
         body       = $manifest.PrivateData.PSData.ReleaseNotes
         draft      = $false
-        prerelease = $false
+        prerelease = $preRelease
     }
 
     $releaseParams = @{
