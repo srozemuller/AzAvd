@@ -19,7 +19,7 @@ if ($GitHubKey) {
     }
     #Publish-Module -Name $env:ProjectName -NuGetApiKey $env:PS_GALLERY_KEY
     $releaseData = @{
-        tag_name   = $releaseName
+        tag_name   = $manifest.ModuleVersion
         #target_commitish = $env:GITHUB_SHA
         name       = $releaseName
         body       = $manifest.PrivateData.PSData.ReleaseNotes
