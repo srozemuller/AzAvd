@@ -94,9 +94,19 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
-      - name: Create version and tag
-        id: tag_version
+  release-on-push:
+    needs: test
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - id: release
         uses: rymndhng/release-on-push-action@master
         with:
           bump_version_scheme: minor
-          use_github_release_notes: true
+          tag_prefix: v
+          
+      - name: Check Output Parameters
+        run: |
+          echo "Got tag name ${{ steps.release.outputs.tag_name }}"
+          echo "Got release version ${{ steps.release.outputs.version }}"
