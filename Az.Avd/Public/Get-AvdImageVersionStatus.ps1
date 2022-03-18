@@ -38,7 +38,7 @@ Function Get-AvdImageVersionStatus {
         Write-Verbose "Start searching"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
-        $apiVersion = "?api-version=2021-07-01"
+        $apiVersion = "?api-version=2022-01-03"
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -64,10 +64,11 @@ Function Get-AvdImageVersionStatus {
         }
         if ($sessionHosts) {
             $sessionHosts | Foreach-Object {
+                Write-Verbose "Searching for $($_.Name)"
                 $isLatestVersion = $false
                 $imageVersionId = $_.vmResources.properties.storageprofile.imagereference.id
                 if ($imageVersionId) {
-                    Write-Verbose "Searching for $($_.Name)"
+                    Write-Verbose "Image id found!, $imageVersionId"
                     # Stripping last part from whole image version id. 
                     $filterIdRegex = [Regex]::new("(.*)(?=/versions)")
                     $imageId = $filterIdRegex.Match($imageVersionId).Value
@@ -77,12 +78,12 @@ Function Get-AvdImageVersionStatus {
                     $galleryName = $galleryNameRegex.Match($imageVersionId).Value     
                     try {
                         $requestParameters = @{
-                            uri    = $Script:AzureApiUrl + $imageId + "/versions" + $apiVersion
+                            uri    = "{0}{1}/versions{2}" -f $Script:AzureApiUrl, $imageId, $apiVersion
                             header = $token
                             method = "GET"
                         }
-                        $allVersionsRequest = (Invoke-RestMethod @requestParameters).value | Sort-Object name
-                        if ($_.vmResources.properties.storageprofile.imagereference.exactVersion -eq $($allVersionsRequest.name | Select-Object -Last 1)) {
+                        $allVersionsRequest = (Invoke-RestMethod @requestParameters).value | Select-Object Name -Last 1
+                        if ($_.vmResources.properties.storageprofile.imagereference.exactVersion -eq $($allVersionsRequest.name)) {
                             $isLatestVersion = $true
                         }
                         else {
@@ -90,16 +91,18 @@ Function Get-AvdImageVersionStatus {
                         }
                         $imageInfo = @{
                             currentImageVersion = $_.vmResources.properties.storageprofile.imagereference.exactVersion
-                            latestVersion = $allVersionsRequest.name | Select-Object -Last 1
+                            latestVersion = $allVersionsRequest.name
                             isLatestVersion = $isLatestVersion
-                            imageName = $imageName
                             imageId = $imageId
+                            imageName = $imageName
                             imageVersionId = $imageVersionId
                             galleryName = $galleryName
+                            hostpoolName = $HostpoolName
+                            sessionHostName = $_.Name
                         }
                     }
                     catch {
-                        Write-Warning "Someting went wrong when crawling for info, $_"
+                        Write-Warning "Someting went wrong when crawling for info at url $($requestParameters.uri), $_"
                     }
                 }
                 else {
