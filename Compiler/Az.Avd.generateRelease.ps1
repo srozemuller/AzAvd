@@ -1,24 +1,45 @@
 [CmdletBinding()]
 param (
-    [Parameter()]
+    [Parameter(Mandatory)]
     [string]$GitHubKey
 )
-if ($GitHubKey) {
+try {
+    $githubUrl = "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases?access_token=$GitHubKey"
+    $getReleaseParams = @{
+        Uri    = $githubUrl
+        Method = 'GET'
+        Header = @{
+            Accept        = 'application/vnd.github.v3+json'
+            Authorization = "token $GitHubKey"
+        }
+    }
+    $newRelease = Invoke-RestMethod @getReleaseParams
+}
+catch {
+    Throw "Not able to find releases"
+}
+try {
     $env:ProjectName = "Az.Avd"
     Write-Host "Creating GitHub release" -ForegroundColor Green
     $modulePath = "./$env:ProjectName/$env:ProjectName.psd1"
     $manifest = Import-PowerShellDataFile -Path $modulePath
     Import-Module $modulePath -Force
-    switch ($env:GITHUB_REF_NAME) {
-        beta {
-            $releaseName = 'v{0}-beta.{1}' -f $manifest.ModuleVersion, $env:COMMIT_HASH
-            $preRelease = $true
-        }
-        default {
-            $releaseName = '{0}' -f $manifest.ModuleVersion 
-            $preRelease = $false
-        }
+}
+catch {
+    Throw "Not able to import $env:ProjectName and determine current version"
+}
+switch ($env:GITHUB_REF_NAME) {
+    beta {
+        $betaNumberLocation = $lastRelease[0].tag_name.lastindexOf(".")
+        $newNumber = [int]$newRelease[0].tag_name.substring($betaNumberLocation + 1) + 1
+        $releaseName = 'v{0}-beta.{1}' -f $manifest.ModuleVersion, $newNumber
     }
+    #default is main branch
+    default {
+        $releaseName = 'v{0}-stable' -f $manifest.ModuleVersion 
+    }
+}
+try {
     #Publish-Module -Name $env:ProjectName -NuGetApiKey $env:PS_GALLERY_KEY
     $releaseData = @{
         tag_name   = $releaseName
@@ -26,10 +47,10 @@ if ($GitHubKey) {
         name       = $releaseName
         body       = $manifest.PrivateData.PSData.ReleaseNotes
         draft      = $false
-        prerelease = $preRelease
+        prerelease = $false
     }
 
-    $releaseParams = @{
+    $postReleaseParams = @{
         Uri             = "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases?access_token=$GitHubKey"
         Method          = 'POST'
         Body            = (ConvertTo-Json $releaseData -Compress)
@@ -40,9 +61,13 @@ if ($GitHubKey) {
         }
     }
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    $newRelease = Invoke-RestMethod @releaseParams
-
-    Compress-Archive -DestinationPath "./$($env:ProjectName)_$($manifest.ModuleVersion).zip" -Path "./$env:ProjectName/*"
+    $newRelease = Invoke-RestMethod @postReleaseParams
+}
+catch {
+    Throw "Not able to create a release, $_"
+}
+try {
+    Compress-Archive -DestinationPath "./$($env:ProjectName)_$($manifest.ModuleVersion).zip" -Path "./$env:ProjectName/Az.Avd*"
 
     $uploadParams = @{
         Uri         = ($newRelease.upload_url -replace '\{\?name.*\}', '?name=AzAvd_') +
@@ -54,12 +79,8 @@ if ($GitHubKey) {
             Authorization = "token $GitHubKey"
         }
     }
-
     $null = Invoke-RestMethod @uploadParams
 }
-else {
-    write-host "Did not comply with release conditions"
-    Write-Host "BranchName: $env:GITHUB_REF_NAME"
-    Write-Host "GitHubKey: $GitHubKey"
-    Write-Host "CommitMessage: $env:GITHUB_RUN_ID"
+catch {
+    Throw "Not able to upload files to release. $_"
 }
