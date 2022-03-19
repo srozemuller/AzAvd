@@ -96,31 +96,24 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
       - name: Bump version and push tag
-        uses: anothrNick/github-tag-action@1.36.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
-      - name: Creating release
-        shell: pwsh
-        run: |
-          ./Compiler/Az.Avd.generateRelease.ps1 -GitHubKey ${{ secrets.GITHUB_TOKEN }} -BranchName $env:GITHUB_REF_NAME -ChangeLog ${{ steps.tag_version.outputs.changelog }}
-  rls:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Bump version and push tag
+        id: tag_generator
         uses: anothrNick/github-tag-action@1.36.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
           DRY_RUN: true
           DEFAULT_BUMP: patch
-          PRERELEASE_SUFFIX: beta-
+          PRERELEASE_SUFFIX: beta
       - name: "Build Changelog"
         id: build_changelog
         uses: mikepenz/release-changelog-builder-action@v2.9.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Creating release
+        shell: pwsh
+        run: |
+          ./Compiler/Az.Avd.generateRelease.ps1 -GitHubKey ${{ secrets.GITHUB_TOKEN }} -BranchName $env:GITHUB_REF_NAME -ChangeLog ${{ steps.tag_version.outputs.changelog }} -TagName ${{ steps.tag_generator.outputs.new_tag }} -PreRelease $true
+
 
 
 

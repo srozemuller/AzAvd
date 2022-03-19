@@ -5,7 +5,11 @@ param (
     [Parameter(Mandatory)]
     [string]$BranchName,
     [Parameter(Mandatory)]
-    [string]$ChangeLog
+    [string]$ChangeLog,
+    [Parameter(Mandatory)]
+    [string]$TagName,
+    [Parameter(Mandatory)]
+    [boolean]$PreRelease
 )
 try {
     $githubUrl = "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases?access_token=$GitHubKey"
@@ -53,12 +57,12 @@ switch ($BranchName) {
 try {
     #Publish-Module -Name $env:ProjectName -NuGetApiKey $env:PS_GALLERY_KEY
     $releaseData = @{
-        tag_name   = $releaseName
+        tag_name   = $TagName
         #target_commitish = $env:GITHUB_SHA
-        name       = $releaseName
+        name       = $TagName
         body       = $ChangeLog
         draft      = $false
-        prerelease = $false
+        prerelease = $PreRelease
     }
 
     $postReleaseParams = @{
