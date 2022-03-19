@@ -3,7 +3,9 @@ param (
     [Parameter(Mandatory)]
     [string]$GitHubKey,
     [Parameter(Mandatory)]
-    [string]$BranchName
+    [string]$BranchName,
+    [Parameter(Mandatory)]
+    [string]$ChangeLog
 )
 try {
     $githubUrl = "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases?access_token=$GitHubKey"
@@ -54,7 +56,7 @@ try {
         tag_name   = $releaseName
         #target_commitish = $env:GITHUB_SHA
         name       = $releaseName
-        body       = $manifest.PrivateData.PSData.ReleaseNotes
+        body       = $ChangeLog
         draft      = $false
         prerelease = $false
     }
