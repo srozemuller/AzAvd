@@ -81,7 +81,6 @@ jobs:
           Import-Module ./Az.Avd/Az.Avd.psd1 -Force -ErrorAction Stop
           Invoke-Pester -Path (Join-Path -Path "./Compiler" -ChildPath "Az.Avd.Functions.tests.ps1") -Output detailed
   release:
-    if: false
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
