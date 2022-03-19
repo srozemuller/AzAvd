@@ -95,10 +95,16 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dry_run: true
       - name: Creating release
         shell: pwsh
         run: |
-          ./Compiler/Az.Avd.generateRelease.ps1 -GitHubKey ${{ secrets.GITHUB_TOKEN }} -BranchName $env:GITHUB_REF_NAME
+          ./Compiler/Az.Avd.generateRelease.ps1 -GitHubKey ${{ secrets.GITHUB_TOKEN }} -BranchName $env:GITHUB_REF_NAME -ChangeLog ${{ steps.tag_version.outputs.changelog }}
   rls:
     runs-on: ubuntu-latest
     steps:
@@ -109,6 +115,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           dry_run: true
+          default_bump: minor
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:
