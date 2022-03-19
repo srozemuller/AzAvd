@@ -6,9 +6,9 @@ name: BetaCompiler
 on:
   # Triggers the workflow on push or pull request events but only for the beta branch
   push:
-    branches: [ main ]
+    branches: [ beta ]
   pull_request:
-    branches: [ main ]
+    branches: [ beta ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -114,7 +114,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
           DRY_RUN: true
-          DEFAULT_BUMP: minor
+          DEFAULT_BUMP: patch
+          PRERELEASE_SUFFIX: beta-
       - name: "Build Changelog"
         id: build_changelog
         uses: mikepenz/release-changelog-builder-action@v2.9.0
