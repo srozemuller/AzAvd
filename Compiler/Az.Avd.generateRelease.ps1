@@ -3,8 +3,6 @@ param (
     [Parameter(Mandatory)]
     [string]$GitHubKey,
     [Parameter(Mandatory)]
-    [string]$BranchName,
-    [Parameter(Mandatory)]
     [string]$ChangeLog,
     [Parameter(Mandatory)]
     [string]$TagName,
