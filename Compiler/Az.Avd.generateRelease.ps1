@@ -40,6 +40,7 @@ catch {
     Throw "Not able to create a release, $_"
 }
 try {
+    Get-ChildItem .\
     Compress-Archive -DestinationPath $env:zipLocation -Path "./$env:ProjectName/Az.Avd"
 }
 catch {
