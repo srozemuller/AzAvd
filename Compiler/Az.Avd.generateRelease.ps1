@@ -40,8 +40,12 @@ catch {
     Throw "Not able to create a release, $_"
 }
 try {
-    Compress-Archive -DestinationPath $env:zipLocation -Path "./$env:ProjectName/Az.Avd*"
-
+    Compress-Archive -DestinationPath $env:zipLocation -Path "./$env:ProjectName/Az.Avd"
+}
+catch {
+    Throw "No able to compress package, $_"
+}
+    try {
     $uploadParams = @{
         Uri         = ($newRelease.upload_url -replace '\{\?name.*\}', '?name=AzAvd_') + $TagName + '.zip'
         Method      = 'POST'
