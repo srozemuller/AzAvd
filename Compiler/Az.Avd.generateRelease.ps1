@@ -40,9 +40,7 @@ catch {
     Throw "Not able to create a release, $_"
 }
 try {
-    Get-ChildItem .\
-    ls -als
-    Compress-Archive -DestinationPath $env:zipLocation -Path "./$env:ProjectName/Az.Avd"
+    Compress-Archive -DestinationPath $env:zipLocation -Path "./Az.Avd"
 }
 catch {
     Throw "No able to compress package, $_"
