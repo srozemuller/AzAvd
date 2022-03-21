@@ -41,6 +41,7 @@ catch {
 }
 try {
     Get-ChildItem .\
+    ls -als
     Compress-Archive -DestinationPath $env:zipLocation -Path "./$env:ProjectName/Az.Avd"
 }
 catch {
