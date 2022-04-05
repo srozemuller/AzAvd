@@ -33,6 +33,16 @@ The function will help you getting insights if there are session hosts started f
 Get-AvdImageVersionStatus -HostpoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
 ```
 
+### EXAMPLE 2
+```
+Get-AvdImageVersionStatus -HostpoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -NotLatest
+```
+
+### EXAMPLE 3
+```
+Get-AvdImageVersionStatus -HostpoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -SessionHostName avd.host -NotLatest
+```
+
 ## PARAMETERS
 
 ### -HostpoolName
