@@ -14,6 +14,10 @@ Function Get-AvdImageVersionStatus {
     This is a switch parameter which let you control the output to show only the sessionhosts which are not started from the latest version.
     .EXAMPLE
     Get-AvdImageVersionStatus -HostpoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
+    .EXAMPLE
+    Get-AvdImageVersionStatus -HostpoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -NotLatest
+    .EXAMPLE
+    Get-AvdImageVersionStatus -HostpoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -SessionHostName avd.host -NotLatest
     #>
     [CmdletBinding(DefaultParameterSetName = 'Hostpool')]
     param (
@@ -70,12 +74,6 @@ Function Get-AvdImageVersionStatus {
                 if ($imageVersionId) {
                     Write-Verbose "Image id found!, $imageVersionId"
                     # Stripping last part from whole image version id. 
-                    $filterIdRegex = [Regex]::new("(.*)(?=/versions)")
-                    $imageId = $filterIdRegex.Match($imageVersionId).Value
-                    $imageNameRegex = [Regex]::new("(?<=images/)(.*)(?=/versions)")           
-                    $imageName = $imageNameRegex.Match($imageVersionId).Value
-                    $galleryNameRegex = [Regex]::new("(?<=galleries/)(.*)(?=/images)")
-                    $galleryName = $galleryNameRegex.Match($imageVersionId).Value     
                     try {
                         $requestParameters = @{
                             uri    = "{0}{1}/versions{2}" -f $Script:AzureApiUrl, $imageId, $apiVersion

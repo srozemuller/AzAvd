@@ -86,6 +86,7 @@
         'Get-AvdSessionHost'
         'Get-AvdSessionHostResources',
         'Get-AvdUserSessions',
+        'Get-AvdVmTemplate',
         'Get-AvdWorkspace',
         'Move-AvdSessionHost',
         'New-AvdAadSessionHost',
@@ -145,6 +146,9 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = 'Fixes :
+            * Return if VM template is added #18
+            New command:
+            Get-AvdVmTemplate #18
             * Subscription missing bug in Get-AvdImageVersionStatus fixed #17
             '
             # Prerelease string of this module
