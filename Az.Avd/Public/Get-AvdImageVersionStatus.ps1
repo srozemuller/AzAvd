@@ -71,9 +71,24 @@ Function Get-AvdImageVersionStatus {
                 Write-Verbose "Searching for $($_.Name)"
                 $isLatestVersion = $false
                 $imageVersionId = $_.vmResources.properties.storageprofile.imagereference.id
+                $filterIdRegex = [Regex]::new("(.*)(?=/versions)") 
                 if ($imageVersionId) {
-                    Write-Verbose "Image id found!, $imageVersionId"
-                    # Stripping last part from whole image version id. 
+                    if ($filterIdRegex.Match($imageVersionId).Value) {
+                        # Stripping last part from whole image version id. 
+                        Write-Verbose "Image ID has a version in it, grabbing the image itself"
+                        $imageId = $filterIdRegex.Match($imageVersionId).Value    
+                        $imageNameRegex = [Regex]::new("(?<=images/)(.*)(?=/versions)")      
+                        $imageName = $imageNameRegex.Match($imageVersionId).Value
+                    }
+                    else {
+                        Write-Verbose "Image ID is without a version. Image ID is correct allready"
+                        $imageId = $imageVersionId
+                        $imageNameRegex = [Regex]::new("(?<=images/)(.*)")      
+                        $imageName = $imageNameRegex.Match($imageVersionId).Value
+                    }
+                    $galleryNameRegex = [Regex]::new("(?<=galleries/)(.*)(?=/images)")
+                    $galleryName = $galleryNameRegex.Match($imageVersionId).Value
+                    Write-Verbose "Image ID found!, $imageId"
                     try {
                         $requestParameters = @{
                             uri    = "{0}{1}/versions{2}" -f $Script:AzureApiUrl, $imageId, $apiVersion
@@ -89,14 +104,14 @@ Function Get-AvdImageVersionStatus {
                         }
                         $imageInfo = @{
                             currentImageVersion = $_.vmResources.properties.storageprofile.imagereference.exactVersion
-                            latestVersion = $allVersionsRequest.name
-                            isLatestVersion = $isLatestVersion
-                            imageId = $imageId
-                            imageName = $imageName
-                            imageVersionId = $imageVersionId
-                            galleryName = $galleryName
-                            hostpoolName = $HostpoolName
-                            sessionHostName = $_.Name
+                            latestVersion       = $allVersionsRequest.name
+                            isLatestVersion     = $isLatestVersion
+                            imageId             = $imageId
+                            imageName           = $imageName
+                            imageVersionId      = $imageVersionId
+                            galleryName         = $galleryName
+                            hostpoolName        = $HostpoolName
+                            sessionHostName     = $_.Name
                         }
                     }
                     catch {
@@ -115,8 +130,8 @@ Function Get-AvdImageVersionStatus {
         }
     }
     End {
-        if ($NotLatest){
-            $sessionHosts | Where-Object {$_.imageInfo.isLatestVersion -eq $false}
+        if ($NotLatest) {
+            $sessionHosts | Where-Object { $_.imageInfo.isLatestVersion -eq $false }
         }
         else {
             $sessionHosts
