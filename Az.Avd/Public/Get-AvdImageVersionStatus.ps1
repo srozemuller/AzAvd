@@ -67,6 +67,7 @@ Function Get-AvdImageVersionStatus {
             Throw "No sessionhosts found, $_"
         }
         if ($sessionHosts) {
+            $returnObject = [System.Collections.ArrayList]@()
             $sessionHosts | Foreach-Object {
                 Write-Verbose "Searching for $($_.Name)"
                 $isLatestVersion = $false
@@ -102,7 +103,7 @@ Function Get-AvdImageVersionStatus {
                         else {
                             $isLatestVersion = $false
                         }
-                        $imageInfo = @{
+                        $imageInfo = [PSCustomObject]@{
                             currentImageVersion = $_.vmResources.properties.storageprofile.imagereference.exactVersion
                             latestVersion       = $allVersionsRequest.name
                             isLatestVersion     = $isLatestVersion
@@ -112,6 +113,8 @@ Function Get-AvdImageVersionStatus {
                             galleryName         = $galleryName
                             hostpoolName        = $HostpoolName
                             sessionHostName     = $_.Name
+                            sessionHostId       = $_.Id
+                            vmId                = $_.vmResources.id
                         }
                     }
                     catch {
@@ -122,7 +125,7 @@ Function Get-AvdImageVersionStatus {
                     $imageInfo = $false
                     Write-Warning "Sessionhost $($_.name) has no image version"
                 }
-                $_ | Add-Member -NotePropertyName imageInfo -NotePropertyValue $imageInfo -Force
+                $returnObject.Add($imageInfo) | Out-Null  #$_ | Add-Member -NotePropertyName imageInfo -NotePropertyValue $imageInfo -Force
             }
         }
         else {
@@ -130,11 +133,11 @@ Function Get-AvdImageVersionStatus {
         }
     }
     End {
-        if ($NotLatest) {
-            $sessionHosts | Where-Object { $_.imageInfo.isLatestVersion -eq $false }
+        if ($NotLatest.IsPresent) {
+            $returnObject | Where-Object { $_.isLatestVersion -eq $false }
         }
         else {
-            $sessionHosts
+            $returnObject
         }
     }
 }
