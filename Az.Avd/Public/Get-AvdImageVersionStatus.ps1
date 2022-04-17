@@ -125,7 +125,7 @@ Function Get-AvdImageVersionStatus {
                     $imageInfo = $false
                     Write-Warning "Sessionhost $($_.name) has no image version"
                 }
-                $returnObject.Add($imageInfo) | Out-Null  #$_ | Add-Member -NotePropertyName imageInfo -NotePropertyValue $imageInfo -Force
+                $returnObject.Add($imageInfo) | Out-Null
             }
         }
         else {
