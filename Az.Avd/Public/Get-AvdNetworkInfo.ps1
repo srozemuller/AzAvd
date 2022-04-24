@@ -61,12 +61,12 @@ Function Get-AvdNetworkInfo {
         }
         $SessionHosts | ForEach-Object {
             $nicParameters = @{
-                uri = $script:AzureApiUrl + $_.networkprofile.networkinterfaces.id + $apiVersion
+                uri = $script:AzureApiUrl + $_.vmResources.properties.networkprofile.networkinterfaces.id + $apiVersion
                 Headers = $token    
                 Method = "GET"
             }
             $nsgNicParameters = @{
-                uri = $script:AzureApiUrl + $_.networkprofile.networkinterfaces.id + "/effectiveNetworkSecurityGroups" + $apiVersion
+                uri = $script:AzureApiUrl + $_.vmResources.properties.networkprofile.networkinterfaces.id + "/effectiveNetworkSecurityGroups" + $apiVersion
                 Headers = $token    
                 Method = "POST"
             }
@@ -88,11 +88,13 @@ Function Get-AvdNetworkInfo {
                 Method = "GET"
             }
             $nsgSubnetInfo = Invoke-RestMethod @nsgSubnetParameters
-            $_ | Add-Member -NotePropertyName NetworkCardInfo -NotePropertyValue $networkInfo -Force
-            $_ | Add-Member -NotePropertyName SubnetInfo -NotePropertyValue $nsgSubnetInfo.properties -Force
+            $result = [PSCustomObject]@{
+                SessionHostName = $_.Name
+                Id = $_.id
+                NetworkInfo = $networkInfo
+                SubnetInfo = $nsgSubnetInfo.properties
+            }
+            $result
         }
-    }
-    End {
-        $SessionHosts
     }
 }
