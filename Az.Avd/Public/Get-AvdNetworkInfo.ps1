@@ -91,8 +91,9 @@ Function Get-AvdNetworkInfo {
             $result = [PSCustomObject]@{
                 SessionHostName = $_.Name
                 Id = $_.id
-                NetworkInfo = $networkInfo
-                SubnetInfo = $nsgSubnetInfo.properties
+                VnetId = $nsgSubnetInfo.id -replace "/subnets/{0}" -f $nsgSubnetInfo.name,$null
+                NetworkCardInfo = $networkInfo
+                SubnetInfo = $nsgSubnetInfo
             }
             $result
         }
