@@ -1,8 +1,5 @@
 name: 'CI'
-on:
-  push:
-    tags:
-      - '*'
+on: workflow_dispatch
 jobs:
   release:
     runs-on: ubuntu-latest
