@@ -95,4 +95,4 @@ jobs:
       - name: Creating release
         shell: pwsh
         run: |
-          ./Compiler/Az.Avd.generateRelease.ps1 -GitHubKey ${{ secrets.GITHUB_TOKEN }}
+          ./Compiler/Az.Avd.generateRelease.ps1 -GitHubKey ${{ secrets.GITHUB_TOKEN }} -PreRelease $false -BranchName 'main'
