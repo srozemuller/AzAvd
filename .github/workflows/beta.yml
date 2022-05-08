@@ -115,8 +115,7 @@ jobs:
       - name: Creating release
         shell: pwsh
         run: |
-          ./Compiler/Az.Avd.generateRelease.ps1 -GitHubKey ${{ secrets.GITHUB_TOKEN }} -ChangeLog "${{ steps.build_changelog.outputs.changelog }}" -TagName ${{ steps.tag_generator.outputs.new_tag }} -PreRelease $true
-
+          ./Compiler/Az.Avd.generateRelease.ps1 -GitHubKey ${{ secrets.GITHUB_TOKEN }} -PreRelease $false -BranchName 'beta'  
 
 
 
