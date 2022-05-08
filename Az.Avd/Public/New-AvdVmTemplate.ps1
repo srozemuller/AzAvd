@@ -160,22 +160,13 @@ function New-AvdVmTemplate {
                 Headers = $token
                 Body    = $jsonBody
             }
-            Write-Information "VM template added to hostpool $HostpoolName" -InformationAction Continue
+            Write-Information "VM template added to hostpool $HostpoolName"
             Write-Verbose "Template added with following values (in JSON format):"
             Write-Verbose $vmTemplate
             Invoke-RestMethod @parameters
         }
         catch {
             "Template not added, $_"
-        }
-    }
-    End {
-        try {
-            Write-Information "Testing for template in hostpool $HostpoolName" -InformationAction Continue
-            (Invoke-RestMethod @parameters).properties.vmTemplate | ConvertFrom-Json
-        }
-        catch {
-            Throw "No template found! $_"
         }
     }
 }
