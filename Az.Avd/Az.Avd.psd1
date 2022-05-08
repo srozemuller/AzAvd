@@ -12,7 +12,7 @@
     RootModule             = 'Az.Avd.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '2.2.4'
+    ModuleVersion          = '2.1.5'
 
     # Supported PSEditions
     CompatiblePSEditions   = 'Core', 'Desktop'
@@ -145,12 +145,7 @@
             IconUri    = 'https://github.com/srozemuller/AzWvd/blob/main/Private/avd-logo.png'
 
             # ReleaseNotes of this module
-            ReleaseNotes = 'Fixes :
-            * Return if VM template is added #18
-            New command:
-            Get-AvdVmTemplate #18
-            * Subscription missing bug in Get-AvdImageVersionStatus fixed #17
-            '
+            ReleaseNotes = ''
             # Prerelease string of this module
             # Prerelease = ''
 

@@ -1,29 +1,35 @@
 [CmdletBinding()]
 param (
-    [Parameter(Mandatory)]
-    [string]$GitHubKey,
-    [Parameter(Mandatory)]
-    [string]$ChangeLog,
-    [Parameter(Mandatory)]
-    [string]$TagName,
-    [Parameter(Mandatory)]
-    [boolean]$PreRelease
+    [Parameter()]
+    [string]$GitHubKey
 )
-$env:ProjectName = "AzAvd"
-$env:zipLocation = "./{0}_{1}.zip" -f $env:ProjectName, $TagName
-
-try {
+if ($GitHubKey) {
+    $env:ProjectName = "Az.Avd"
+    Write-Host "Creating GitHub release" -ForegroundColor Green
+    $modulePath = "./$env:ProjectName/$env:ProjectName.psd1"
+    $manifest = Import-PowerShellDataFile -Path $modulePath
+    Import-Module $modulePath -Force
+    switch ($env:GITHUB_REF_NAME) {
+        beta {
+            $releaseName = 'v{0}-beta.{1}' -f $manifest.ModuleVersion, $env:COMMIT_HASH
+            $preRelease = $true
+        }
+        default {
+            $releaseName = '{0}' -f $manifest.ModuleVersion 
+            $preRelease = $false
+        }
+    }
     #Publish-Module -Name $env:ProjectName -NuGetApiKey $env:PS_GALLERY_KEY
     $releaseData = @{
-        tag_name   = $TagName
+        tag_name   = $releaseName
         #target_commitish = $env:GITHUB_SHA
-        name       = $TagName
-        body       = $ChangeLog
+        name       = $releaseName
+        body       = $manifest.PrivateData.PSData.ReleaseNotes
         draft      = $false
-        prerelease = $PreRelease
+        prerelease = $preRelease
     }
 
-    $postReleaseParams = @{
+    $releaseParams = @{
         Uri             = "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases?access_token=$GitHubKey"
         Method          = 'POST'
         Body            = (ConvertTo-Json $releaseData -Compress)
@@ -34,29 +40,26 @@ try {
         }
     }
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    $newRelease = Invoke-RestMethod @postReleaseParams
-}
-catch {
-    Throw "Not able to create a release, $_"
-}
-try {
-    Compress-Archive -DestinationPath $env:zipLocation -Path "./Az.Avd"
-}
-catch {
-    Throw "No able to compress package, $_"
-}
-    try {
+    $newRelease = Invoke-RestMethod @releaseParams
+
+    Compress-Archive -DestinationPath "./$($env:ProjectName)_$($manifest.ModuleVersion).zip" -Path "./$env:ProjectName/*"
+
     $uploadParams = @{
-        Uri         = ($newRelease.upload_url -replace '\{\?name.*\}', '?name=AzAvd_') + $TagName + '.zip'
+        Uri         = ($newRelease.upload_url -replace '\{\?name.*\}', '?name=AzAvd_') +
+        $manifest.ModuleVersion + '.zip'
         Method      = 'POST'
         ContentType = 'application/zip'
-        InFile      =  $env:zipLocation
+        InFile      = "./$($env:ProjectName)_$($manifest.ModuleVersion).zip"
         Header      = @{
             Authorization = "token $GitHubKey"
         }
     }
+
     $null = Invoke-RestMethod @uploadParams
 }
-catch {
-    Throw "Not able to upload files to release. $_"
+else {
+    write-host "Did not comply with release conditions"
+    Write-Host "BranchName: $env:GITHUB_REF_NAME"
+    Write-Host "GitHubKey: $GitHubKey"
+    Write-Host "CommitMessage: $env:GITHUB_RUN_ID"
 }
