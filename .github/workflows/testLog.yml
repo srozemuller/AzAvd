@@ -16,7 +16,7 @@ jobs:
       - name: Create Release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ github.ref }}
+          tag_name: "v3.0.1-beta.3"
           release_name: ${{ github.ref }}
           body: ${{steps.github_release.outputs.changelog}}
         env:
