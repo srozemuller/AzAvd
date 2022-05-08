@@ -3,6 +3,7 @@ on:
   # Triggers the workflow on push or pull request events but only for the beta branch
   push:
     branches: [ beta ]
+  pull_request:
 
 jobs:
   release:
