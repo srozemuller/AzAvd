@@ -3,7 +3,9 @@ param (
     [Parameter(Mandatory)]
     [string]$GitHubKey,
     [Parameter(Mandatory)]
-    [string]$BranchName
+    [string]$BranchName,
+    [Parameter(Mandatory)]
+    [boolean]$PreRelease
 )
 try {
     $githubUrl = "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases?access_token=$GitHubKey"
@@ -53,7 +55,7 @@ try {
         name       = $releaseName
         body       = $manifest.PrivateData.PSData.ReleaseNotes
         draft      = $false
-        prerelease = $false
+        prerelease = $PreRelease
     }
 
     $postReleaseParams = @{
