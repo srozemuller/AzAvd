@@ -1,0 +1,20 @@
+name: 'CI'
+on: workflow_dispatch
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v2.9.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        with:
+          tag_name: "v3.0.1-beta.3"
+          release_name: ${{ github.ref }}
+          body: ${{steps.github_release.outputs.changelog}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -7,8 +7,12 @@ on:
   # Triggers the workflow on push or pull request events but only for the beta branch
   push:
     branches: [ beta ]
+    paths:
+      - az.avd/**
   pull_request:
     branches: [ beta ]
+    paths:
+      - az.avd/**
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -82,6 +86,8 @@ jobs:
           Invoke-Pester -Path (Join-Path -Path "./Compiler" -ChildPath "Az.Avd.Functions.tests.ps1") -Output detailed
   release:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     needs: test
     steps:
       - name: Download a Build Artifact
@@ -92,7 +98,26 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
+      - name: Bump version and push tag
+        id: tag_generator
+        uses: anothrNick/github-tag-action@1.36.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          DRY_RUN: true
+          DEFAULT_BUMP: patch
+          PRERELEASE_SUFFIX: beta
+      - name: "Build Changelog"
+        id: build_changelog
+        uses: mikepenz/release-changelog-builder-action@v2.9.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Creating release
         shell: pwsh
         run: |
-          ./Compiler/Az.Avd.generateRelease.ps1 -GitHubKey ${{ secrets.GITHUB_TOKEN }}
+          ./Compiler/Az.Avd.generateRelease.ps1 -GitHubKey ${{ secrets.GITHUB_TOKEN }} -ChangeLog "${{ steps.build_changelog.outputs.changelog }}" -TagName ${{ steps.tag_generator.outputs.new_tag }} -PreRelease $true
+
+
+
+
+
