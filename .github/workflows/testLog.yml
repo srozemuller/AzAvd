@@ -7,7 +7,10 @@ jobs:
     steps:
       - name: Build Changelog
         id: github_release
-        uses: mikepenz/release-changelog-builder-action@v1
+        uses: mikepenz/release-changelog-builder-action@v2.9.0
+        with:
+          fromTag: "v3.0.1-beta.2"
+          toTag: "v3.0.1-beta.3"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
