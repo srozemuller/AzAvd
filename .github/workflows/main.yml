@@ -144,7 +144,7 @@ jobs:
       - name: Creating release
         shell: pwsh
         run: |
-          ./Compiler/Az.Avd.generateRelease.ps1 -GitHubKey ${{ secrets.GITHUB_TOKEN }} -PreRelease $false -BranchName ${{ github.ref }}
+          ./Compiler/Az.Avd.generateRelease.ps1 -GitHubKey ${{ secrets.GITHUB_TOKEN }} -PreRelease $false -BranchName 'main'
   publish:
     runs-on: ubuntu-latest
     needs: test
