@@ -19,19 +19,19 @@ function Stop-AvdSessionHost {
     param
     (
         [parameter(Mandatory, ParameterSetName = 'All')]
-        [parameter(Mandatory, ParameterSetName = 'Hostname')]
+        [parameter(Mandatory, ParameterSetName = 'Hostname', ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
     
         [parameter(Mandatory, ParameterSetName = 'All')]
-        [parameter(Mandatory, ParameterSetName = 'Hostname')]
+        [parameter(Mandatory, ParameterSetName = 'Hostname', ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
     
-        [ValidatePattern('^(?:(?!\/).)*$', ErrorMessage = "It looks like you also provided a hostpool, a sessionhost name is enough. Provided value {0}")]
-        [parameter(Mandatory, ParameterSetName = 'Hostname')]
+        # [ValidatePattern('^(?:(?!\/).)*$', ErrorMessage = "It looks like you also provided a hostpool, a sessionhost name is enough. Provided value {0}")]
+        [parameter(Mandatory, ParameterSetName = 'Hostname', ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
-        [string]$SessionHostName,
+        [string]$Name,
 
         [parameter(ParameterSetName = 'All')]
         [ValidateNotNullOrEmpty()]
@@ -58,8 +58,13 @@ function Stop-AvdSessionHost {
                 }
             }
             Hostname {
-                Write-Verbose "Looking for sessionhost $SessionHostName"
-                $sessionHostParameters.Add("SessionHostName", $SessionHostName)
+                Write-Verbose "Looking for sessionhost $Name"
+                if ($Name -match '^(?:(?!\/).)*$'){
+                    $Name = $Name.Split('/')[-1]
+                    Write-Verbose "It looks like you also provided a hostpool, a sessionhost name is enough. Provided value {0}"
+                    Write-Verbose "Picking only the hostname which is $Name"
+                }
+                $sessionHostParameters.Add("SessionHostName", $Name)
             }
         }
         try {

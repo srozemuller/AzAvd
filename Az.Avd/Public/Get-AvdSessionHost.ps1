@@ -31,7 +31,7 @@ function Get-AvdSessionHost {
     
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
-        [string]$SessionHostName
+        [string]$Name
     )
     Begin {
         Write-Verbose "Start searching session hosts"
@@ -46,8 +46,8 @@ function Get-AvdSessionHost {
                 Write-Verbose 'Using base url for getting all session hosts in $hostpoolName'
             }
             Hostname {
-                Write-Verbose "Looking for sessionhost $SessionHostName"
-                $baseUrl = $baseUrl + $SessionHostName 
+                Write-Verbose "Looking for sessionhost $Name"
+                $baseUrl = $baseUrl + $Name 
             }
         }
         $parameters = @{
@@ -55,13 +55,19 @@ function Get-AvdSessionHost {
             Method  = "GET"
             Headers = $token
         }
-        $results = Invoke-RestMethod @parameters
-        if ($SessionHostName){
+        try {
+            $results = Invoke-RestMethod @parameters
+        }
+        catch {
+            Write-Error "No sessionhost results in $HostpoolName"
+        }
+        if ($SessionHostName) {
             $results
         }
         else {
             $results.value
         }
+
         
     }
 }
