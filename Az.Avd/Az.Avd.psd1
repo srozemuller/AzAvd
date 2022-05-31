@@ -12,7 +12,7 @@
     RootModule             = 'Az.Avd.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '2.1.1'
+    ModuleVersion          = '2.1.3'
 
     # Supported PSEditions
     CompatiblePSEditions   = 'Core', 'Desktop'
@@ -97,6 +97,8 @@
         'New-AvdWorkspace',
         'Remove-AvdSessionHost',
         'Restart-AvdSessionHost',
+        'Start-AvdSessionHost',
+        'Stop-AvdSessionHost',
         'Update-AvdDesktopApplication',
         'Update-AvdDiagnostics',
         'Update-AvdHostpool',
@@ -113,7 +115,10 @@
     VariablesToExport      = '*'
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport        = @()
+    AliasesToExport        = @(
+        'Assign-AvdUser',
+        'UnAssign-AvdUser'
+    )
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()
@@ -142,11 +147,9 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = 'Fixes :
-            * New-AvdAadSessionHosts command added #12
-            * Restart-AvdSessionHost command added #12
-            * Disconnect-AvdUserSessions command added #12
-            * Get-AvdUserSessions command added #12 
-            * Error handling added for enable start vm on connect command #12
+            -
+            New commands:
+            * Start-AvdSessionHost
             '
             # Prerelease string of this module
             # Prerelease = ''
