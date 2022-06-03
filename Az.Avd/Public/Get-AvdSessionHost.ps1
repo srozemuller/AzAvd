@@ -16,7 +16,7 @@ function Get-AvdSessionHost {
     Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
     
     #>
-    [CmdletBinding(DefaultParameterSetName = 'All')]
+    [CmdletBinding(DefaultParameterSetName = 'Resource')]
     param
     (
         [parameter(Mandatory, ParameterSetName = 'All')]
@@ -31,7 +31,13 @@ function Get-AvdSessionHost {
     
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
-        [string]$Name
+        [string]$Name,
+
+        [parameter(Mandatory, ParameterSetName = 'Resource')]
+        [ValidateNotNullOrEmpty()]
+        [string]$Id
+
+
     )
     Begin {
         Write-Verbose "Start searching session hosts"
@@ -47,7 +53,11 @@ function Get-AvdSessionHost {
             }
             Hostname {
                 Write-Verbose "Looking for sessionhost $Name"
-                $baseUrl = $baseUrl + $Name 
+                $baseUrl = "{0}{1}" -f $baseUrl, $Name 
+            }
+            Resource {
+                Write-Verbose "Looking for sessionhost base on resourceId $ResourceId"
+                $baseUrl = "{0}{1}" -f $Script:AzureApiUrl, $Id 
             }
         }
         $parameters = @{
@@ -57,17 +67,19 @@ function Get-AvdSessionHost {
         }
         try {
             $results = Invoke-RestMethod @parameters
+            if ($Name -or $Id) {
+                $results | ForEach {
+                    $_ | Add-Member -MemberType NoteProperty -Name HostpoolName -Value $HostpoolName
+                    $_ | Add-Member -MemberType NoteProperty -Name ResourceGroupName -Value $ResourceGroupName
+                }
+                $results
+            }
+            else {
+                $results.value
+            }   
         }
         catch {
-            Write-Error "No sessionhost results in $HostpoolName"
+            Write-Error "No sessionhost results in $HostpoolName, $_"
         }
-        if ($SessionHostName) {
-            $results
-        }
-        else {
-            $results.value
-        }
-
-        
     }
 }

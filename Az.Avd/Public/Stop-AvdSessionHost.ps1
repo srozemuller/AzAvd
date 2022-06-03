@@ -19,26 +19,33 @@ function Stop-AvdSessionHost {
     param
     (
         [parameter(Mandatory, ParameterSetName = 'All')]
+        [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
         [parameter(Mandatory, ParameterSetName = 'Hostname', ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
     
         [parameter(Mandatory, ParameterSetName = 'All')]
+        [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
         [parameter(Mandatory, ParameterSetName = 'Hostname', ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
     
-        # [ValidatePattern('^(?:(?!\/).)*$', ErrorMessage = "It looks like you also provided a hostpool, a sessionhost name is enough. Provided value {0}")]
-        [parameter(Mandatory, ParameterSetName = 'Hostname', ValueFromPipelineByPropertyName)]
+        [parameter(Mandatory, ParameterSetName = 'All')]
+        [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$Name,
+
+        # [ValidatePattern('^(?:(?!\/).)*$', ErrorMessage = "It looks like you also provided a hostpool, a sessionhost name is enough. Provided value {0}")]
+        [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [object]$Id,
 
         [parameter(ParameterSetName = 'All')]
         [ValidateNotNullOrEmpty()]
         [switch]$Force
     )
     Begin {
-        Write-Verbose "Start searching session hosts"
+        Write-Verbose "Stopping session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
         $sessionHostParameters = @{
@@ -58,25 +65,36 @@ function Stop-AvdSessionHost {
                 }
             }
             Hostname {
-                Write-Verbose "Looking for sessionhost $Name"
-                if ($Name -match '^(?:(?!\/).)*$'){
+                if ($Name -match '^(?:(?!\/).)*$') {
                     $Name = $Name.Split('/')[-1]
                     Write-Verbose "It looks like you also provided a hostpool, a sessionhost name is enough. Provided value {0}"
                     Write-Verbose "Picking only the hostname which is $Name"
                 }
-                $sessionHostParameters.Add("SessionHostName", $Name)
+                else {
+                    Write-Verbose "Session hostname provided, looking for sessionhost $Name"
+                }
+                $sessionHostParameters.Add("Name", $Name)
+            }
+            Resource {
+                Write-Verbose "Got a resource object, looking for $Id"
+                $sessionHostParameters = @{
+                    Id =  $Id
+                }
+            }
+            default {
+
             }
         }
         try {
             $sessionHosts = Get-AvdSessionHost @sessionHostParameters
         }
         catch {
-            Throw "No sessionhosts found in $HostpoolName ($ResourceGroupName)"
+            Throw "No sessionhosts ($name) found in $HostpoolName ($ResourceGroupName), $_"
         }
         $sessionHosts | ForEach-Object {
             try {
                 Write-Verbose "Found $($sessionHosts.Count) host(s)"
-                Write-Verbose "Starting $($_.name)"
+                Write-Verbose "Stopping $($_.name)"
                 $apiVersion = "?api-version=2021-11-01"
                 $powerOffParameters = @{
                     uri     = "{0}{1}/powerOff{2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
@@ -87,7 +105,7 @@ function Stop-AvdSessionHost {
                 Write-Information -MessageData "$($_.name) stopped" -InformationAction Continue
             }
             catch {
-                Throw "Not able to start $($_.name), $_"
+                Throw "Not able to stop $($_.name), $_"
             }
         }
     }       
