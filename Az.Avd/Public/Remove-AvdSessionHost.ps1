@@ -28,8 +28,7 @@ function Remove-AvdSessionHost {
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
     
-        [parameter(Mandatory, ParameterSetName = 'All')]
-        [parameter(Mandatory, ParameterSetName = 'Hostname')]
+        [parameter(Mandatory, ParameterSetName = 'Hostname', ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [string]$Name,
 
@@ -42,7 +41,7 @@ function Remove-AvdSessionHost {
         [parameter(ParameterSetName = 'Resource')]
         [parameter(ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
-        [switch]$DeleteResources,
+        [switch]$DeleteAssociated,
 
         [parameter(ParameterSetName = 'All')]
         [ValidateNotNullOrEmpty()]
@@ -52,8 +51,10 @@ function Remove-AvdSessionHost {
     Begin {
         Write-Verbose "Start removing sessionhosts"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
-        $apiVersion = "?api-version=2021-03-09-preview"
+        $sessionHostParameters = @{
+            hostpoolName      = $HostpoolName
+            resourceGroupName = $ResourceGroupName
+        }
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -80,7 +81,7 @@ function Remove-AvdSessionHost {
             Resource {
                 Write-Verbose "Got a resource object, looking for $Id"
                 $sessionHostParameters = @{
-                    Id =  $Id
+                    Id = $Id
                 }
             }
             default {
@@ -97,14 +98,26 @@ function Remove-AvdSessionHost {
             try {
                 Write-Verbose "Found $($sessionHosts.Count) host(s)"
                 Write-Verbose "Starting $($_.name)"
-                $apiVersion = "?api-version=2021-11-01"
-                $deleteParameters = @{
-                    uri     = "{0}{1}{2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
-                    Method  = "DELETE"
-                    Headers = $token
-                }
-                Invoke-RestMethod @deleteParameters
+                Remove-Resource -resourceId $_.properties.resourceId
                 Write-Information -MessageData "$($_.name) deleted" -InformationAction Continue
+                try {
+                    if ($DeleteAssociated.IsPresent) {
+                        Write-Verbose "Associated resources (disk & NIC) also will be removed"
+                        Write-Verbose "Looking for network resources"
+                        $_.vmResources.properties.networkprofile.networkInterfaces.id | ForEach-Object {
+                            Remove-Resource -resourceId $_
+                        }
+                        Write-Verbose "Looking for OS disk"
+                        Remove-Resource -resourceId $_.vmResources.properties.storageProfile.osDisk
+                        Write-Verbose "Looking for data disks"
+                        $_.vmResources.properties.storageProfile.dataDisks.ManagedDisk | ForEach-Object {
+                            Remove-Resource -resourceId $_.id
+                        }
+                    }
+                }
+                catch {
+                    Write-Error "Not able to remove associated resources, $_"
+                }
             }
             catch {
                 Throw "Not able to delete $($_.name), $_"
