@@ -36,47 +36,48 @@ function Get-AvdSessionHostResources {
         Write-Verbose "Start searching for resources"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
-        $apiVersion = "?api-version=2021-07-01"
+        $apiVersion = "?api-version=2022-03-01"
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
             Hostpool {
-                $Parameters = @{
+                $parameters = @{
                     HostPoolName      = $HostpoolName
                     ResourceGroupName = $ResourceGroupName
                 }
             }
             Sessionhost {
-                $Parameters = @{
-                    HostPoolName      = $HostpoolName
-                    ResourceGroupName = $ResourceGroupName
-                    SessionHostName   = $SessionHostName
+                $parameters = @{
+                    hostPoolName      = $HostpoolName
+                    resourceGroupName = $ResourceGroupName
+                    name   = $SessionHostName
                 }
             }
         }
-        $SessionHosts = Get-AvdSessionhost @Parameters
-        if ($sessionHosts) {
-            $sessionHosts | Foreach-Object {
-                Write-Verbose "Searching for $($_.Name)"
-                try {
-                    $requestParameters = @{
-                        uri = $Script:AzureApiUrl + $_.properties.resourceId + $apiVersion
-                        header = $token
-                        method = "GET"
-                    }
-                    $resource = Invoke-RestMethod @requestParameters 
-                }
-                catch {
-                    Write-Warning "Sessionhost $($_.name) has no resources, consider deleting it. Use the Remove-AvdSessionHost command"
-                }
-                $_ | Add-Member -NotePropertyName vmResources -NotePropertyValue $resource -Force
-            }
+        try {
+            $sessionHosts = Get-AvdSessionHost @parameters
         }
-        else {
-            Write-Error "No AVD Hostpool found with name $Hostpoolname in resourcegroup $ResourceGroupName or no sessionhosts"
+        catch {
+            Throw "No sessionhosts ($name) found in $HostpoolName ($ResourceGroupName), $_"
+        }        
+
+        $sessionHosts | Foreach-Object {
+            Write-Verbose "Searching for $($_.Name)"
+            try {
+                $requestParameters = @{
+                    uri    = "{0}{1}{2}&`$expand=instanceView" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
+                    header = $token
+                    method = "GET"
+                }
+                $resource = Invoke-RestMethod @requestParameters 
+            }
+            catch {
+                Write-Warning "Sessionhost $($_.name) has no resources, consider deleting it. Use the Remove-AvdSessionHost command, $_. URI is $($requestparameters.uri)"
+            }
+            $_ | Add-Member -NotePropertyName vmResources -NotePropertyValue $resource -Force
         }
     }
     End {
-       $sessionHosts
+        $sessionHosts
     }
 }
