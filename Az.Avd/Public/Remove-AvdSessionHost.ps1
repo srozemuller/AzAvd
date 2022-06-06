@@ -68,6 +68,7 @@ function Remove-AvdSessionHost {
                 }
             }
             Hostname {
+                Write-Verbose "Got Name $Name"
                 if ($Name -match '^(?:(?!\/).)*$') {
                     $Name = $Name.Split('/')[-1]
                     Write-Verbose "It looks like you also provided a hostpool, a sessionhost name is enough. Provided value {0}"
@@ -76,7 +77,7 @@ function Remove-AvdSessionHost {
                 else {
                     Write-Verbose "Session hostname provided, looking for sessionhost $Name"
                 }
-                $sessionHostParameters.Add("Name", $Name)
+                $sessionHostParameters.Add("SessionhostName", $Name)
             }
             Resource {
                 Write-Verbose "Got a resource object, looking for $Id"
@@ -85,33 +86,36 @@ function Remove-AvdSessionHost {
                 }
             }
             default {
-
+                Throw "Please provide proper parameters, at lease a hostpool and resourcegroup name"
             }
         }
         try {
-            $sessionHosts = Get-AvdSessionHost @sessionHostParameters
+            $sessionHosts = Get-AvdSessionHostResources @sessionHostParameters
         }
         catch {
             Throw "No sessionhosts ($name) found in $HostpoolName ($ResourceGroupName), $_"
         }
-        $sessionHosts | ForEach-Object {
+        ForEach ($sh in $sessionHosts) {
             try {
                 Write-Verbose "Found $($sessionHosts.Count) host(s)"
-                Write-Verbose "Starting $($_.name)"
-                Remove-Resource -resourceId $_.properties.resourceId
-                Write-Information -MessageData "$($_.name) deleted" -InformationAction Continue
+                Write-Verbose "Starting $($sh.name), with id $($sh.id)"
+                Remove-Resource -resourceId $sh.id -apiVersion "2022-02-10-preview"
+                Write-Information -MessageData "$($sh.name) deleted" -InformationAction Continue
+                Remove-Resource -resourceId $sh.vmresources.id -apiVersion "2022-03-01"
+                Write-Information -MessageData "$($sh.name) deleted" -InformationAction Continue
                 try {
                     if ($DeleteAssociated.IsPresent) {
+                        Write-Warning "Delete associated resources provided."
                         Write-Verbose "Associated resources (disk & NIC) also will be removed"
-                        Write-Verbose "Looking for network resources"
-                        $_.vmResources.properties.networkprofile.networkInterfaces.id | ForEach-Object {
-                            Remove-Resource -resourceId $_
+                        Write-Information "Looking for network resources" -InformationAction Continue
+                        $sh.vmResources.properties.networkprofile.networkInterfaces.id | ForEach-Object {
+                            Remove-Resource -resourceId $_ -apiVersion "2022-01-01"
                         }
-                        Write-Verbose "Looking for OS disk"
-                        Remove-Resource -resourceId $_.vmResources.properties.storageProfile.osDisk
-                        Write-Verbose "Looking for data disks"
-                        $_.vmResources.properties.storageProfile.dataDisks.ManagedDisk | ForEach-Object {
-                            Remove-Resource -resourceId $_.id
+                        Write-Information "Looking for OS disk" -InformationAction Continue
+                        Remove-Resource -resourceId $sh.vmResources.properties.storageProfile.osDisk
+                        Write-Information "Looking for data disks" -InformationAction Continue
+                        $sh.vmResources.properties.storageProfile.dataDisks.ManagedDisk | ForEach-Object {
+                            Remove-Resource -resourceId $_.id -apiVersion "2022-03-02"
                         }
                     }
                 }
@@ -120,7 +124,7 @@ function Remove-AvdSessionHost {
                 }
             }
             catch {
-                Throw "Not able to delete $($_.name), $_"
+                Throw "Not able to delete $($sh.name), $_"
             }
         }
     }
