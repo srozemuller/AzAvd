@@ -45,3 +45,18 @@ function Create-CategoryArray ($Categories) {
     }
     return  $categoryArray    
 }
+
+function Remove-Resource ($resourceId) {
+    try {
+        Write-Information "Removing resource with ID $resourceId" -InformationAction Continue
+        $deleteResourceParameters = @{
+            uri     = "{0}{1}{2}" -f $Script:AzureApiUrl, $resourceId, $apiVersion
+            Method  = "DELETE"
+            Headers = (GetAuthToken -resource $Script:AzureApiUrl)
+        }
+        Invoke-RestMethod $deleteResourceParameters
+    }
+    catch {
+        Write-Error "Removing $resourceId not succesful, $_"
+    }
+}
