@@ -46,15 +46,23 @@ function Create-CategoryArray ($Categories) {
     return  $categoryArray    
 }
 
-function Remove-Resource ($resourceId) {
+function Remove-Resource () {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory)]
+        [string]$ResourceId,
+        [Parameter(Mandatory)]
+        [string]$apiVersion
+    )
     try {
         Write-Information "Removing resource with ID $resourceId" -InformationAction Continue
+        $apiVersion = "?api-version={0}" -f $apiVersion
         $deleteResourceParameters = @{
             uri     = "{0}{1}{2}" -f $Script:AzureApiUrl, $resourceId, $apiVersion
             Method  = "DELETE"
             Headers = (GetAuthToken -resource $Script:AzureApiUrl)
         }
-        Invoke-RestMethod $deleteResourceParameters
+        Invoke-RestMethod @deleteResourceParameters
     }
     catch {
         Write-Error "Removing $resourceId not succesful, $_"
