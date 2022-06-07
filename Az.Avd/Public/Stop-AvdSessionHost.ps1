@@ -41,6 +41,12 @@ function Stop-AvdSessionHost {
         [object]$Id,
 
         [parameter(ParameterSetName = 'All')]
+        [parameter(ParameterSetName = 'Resource')]
+        [parameter(ParameterSetName = 'Hostname')]
+        [ValidateNotNullOrEmpty()]
+        [switch]$Deallocate,
+
+        [parameter(ParameterSetName = 'All')]
         [ValidateNotNullOrEmpty()]
         [switch]$Force
     )
@@ -93,16 +99,22 @@ function Stop-AvdSessionHost {
         }
         $sessionHosts | ForEach-Object {
             try {
-                Write-Verbose "Found $($sessionHosts.Count) host(s)"
-                Write-Verbose "Stopping $($_.name)"
-                $apiVersion = "?api-version=2021-11-01"
-                $powerOffParameters = @{
-                    uri     = "{0}{1}/powerOff{2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
-                    Method  = "POST"
-                    Headers = $token
+                if ($Deallocate.IsPresent) {
+                    Deallocate-AvdSessionHost -id $_.properties.resourceId
                 }
-                Invoke-RestMethod @powerOffParameters
-                Write-Information -MessageData "$($_.name) stopped" -InformationAction Continue
+                else {
+                    Write-Verbose "Found $($sessionHosts.Count) host(s)"
+                    Write-Verbose "Stopping $($_.name)"
+                    $apiVersion = "?api-version=2021-11-01"
+                    $powerOffParameters = @{
+                        uri     = "{0}{1}/powerOff{2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
+                        Method  = "POST"
+                        Headers = $token
+                    }
+                    Invoke-RestMethod @powerOffParameters
+                    Write-Information -MessageData "$($_.name) stopped" -InformationAction Continue
+                }
+
             }
             catch {
                 Throw "Not able to stop $($_.name), $_"
