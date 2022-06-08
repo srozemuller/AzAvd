@@ -1,4 +1,4 @@
-function Deallocate-AvdSessionHost {
+function DeallocateAvdSessionHost {
     <#
     .SYNOPSIS
     Deallocates AVD Session hosts in a specific hostpool.
