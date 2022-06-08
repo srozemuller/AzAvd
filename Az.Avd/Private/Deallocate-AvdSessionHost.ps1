@@ -1,19 +1,25 @@
-function Restart-AvdSessionHost {
+function DeallocateAvdSessionHost {
     <#
     .SYNOPSIS
-    Restarts AVD Session hosts in a specific hostpool.
+    Deallocates AVD Session hosts in a specific hostpool.
     .DESCRIPTION
-    This function restarts sessionshosts in a specific Azure Virtual Desktop hostpool. If you want to start a specific session host then also provide the name, 
+    It is almost the same as the Stop-AvdSessionHost command but this function also deallocates the session host in a specific Azure Virtual Desktop hostpool. Deallocated machines does not have an Azure consumption which saves money.
     .PARAMETER HostpoolName
     Enter the AVD Hostpool name
     .PARAMETER ResourceGroupName
     Enter the AVD Hostpool resourcegroup name
-    .PARAMETER SessionHostName
+    .PARAMETER Name
     Enter the session hosts name
+    .PARAMETER Id
+    Enter the sessionhost's resource ID
+    .PARAMETER Force
+    Use this switch parameter to force deallocate all machine. Only needed when if you did not provide a sessionhost name.
     .EXAMPLE
-    Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
+    Deallocate-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -Force
     .EXAMPLE
-    Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
+    Deallocate-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -Name avd-host-1.avd.domain
+    .EXAMPLE
+    Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -Name avd-host-1.avd.domain | Deallocate-AvdSessionHost
     #>
     [CmdletBinding(DefaultParameterSetName = 'All')]
     param
@@ -35,25 +41,26 @@ function Restart-AvdSessionHost {
 
         [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
-        [object]$Id,
+        [string]$Id,
 
         [parameter(ParameterSetName = 'All')]
         [ValidateNotNullOrEmpty()]
         [switch]$Force
     )
     Begin {
-        Write-Verbose "Starting session hosts"
+        Write-Verbose "Deallocating session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
         $sessionHostParameters = @{
             hostpoolName      = $HostpoolName
             resourceGroupName = $ResourceGroupName
         }
+        $apiVersion = "?api-version=2022-03-01"
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
             All {
-                CheckForce -Force:$force -Task $MyInvocation.MyCommand
+                CheckForce -Force:$Force -Task $MyInvocation.MyCommand
             }
             Hostname {
                 $Name = ConcatSessionHostName -name $Name
@@ -62,10 +69,11 @@ function Restart-AvdSessionHost {
             Resource {
                 Write-Verbose "Got a resource object, looking for $Id"
                 $sessionHostParameters = @{
-                    Id = $Id
+                    Id =  $Id
                 }
             }
             default {
+
             }
         }
         try {
@@ -77,18 +85,17 @@ function Restart-AvdSessionHost {
         $sessionHosts | ForEach-Object {
             try {
                 Write-Verbose "Found $($sessionHosts.Count) host(s)"
-                Write-Verbose "Restarting $($_.name)"
-                $apiVersion = "?api-version=2021-11-01"
-                $restartParameters = @{
-                    uri     = "{0}{1}/restart{2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
+                Write-Verbose "Deallocating $($_.name)"
+                $powerOffParameters = @{
+                    uri     = "{0}{1}/deallocate{2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
                     Method  = "POST"
                     Headers = $token
                 }
-                Invoke-RestMethod @restartParameters
-                Write-Information -MessageData "$($_.name) restarted" -InformationAction Continue
+                Invoke-RestMethod @powerOffParameters
+                Write-Information -MessageData "$($_.name) deallocated" -InformationAction Continue
             }
             catch {
-                Throw "Not able to restart $($_.name), $_"
+                Throw "Not able to deallocate $($_.name), $_"
             }
         }
     }       

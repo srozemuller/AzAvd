@@ -1,9 +1,9 @@
-function Restart-AvdSessionHost {
+function Start-AvdSessionHost {
     <#
     .SYNOPSIS
-    Restarts AVD Session hosts in a specific hostpool.
+    Starts AVD Session hosts in a specific hostpool.
     .DESCRIPTION
-    This function restarts sessionshosts in a specific Azure Virtual Desktop hostpool. If you want to start a specific session host then also provide the name, 
+    This function starts sessionshosts in a specific Azure Virtual Desktop hostpool. If you want to start a specific session host then also provide the name, 
     .PARAMETER HostpoolName
     Enter the AVD Hostpool name
     .PARAMETER ResourceGroupName
@@ -11,9 +11,9 @@ function Restart-AvdSessionHost {
     .PARAMETER SessionHostName
     Enter the session hosts name
     .EXAMPLE
-    Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
+    Start-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
     .EXAMPLE
-    Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
+    Start-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
     #>
     [CmdletBinding(DefaultParameterSetName = 'All')]
     param
@@ -33,6 +33,7 @@ function Restart-AvdSessionHost {
         [ValidateNotNullOrEmpty()]
         [string]$Name,
 
+        # [ValidatePattern('^(?:(?!\/).)*$', ErrorMessage = "It looks like you also provided a hostpool, a sessionhost name is enough. Provided value {0}")]
         [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [object]$Id,
@@ -77,18 +78,18 @@ function Restart-AvdSessionHost {
         $sessionHosts | ForEach-Object {
             try {
                 Write-Verbose "Found $($sessionHosts.Count) host(s)"
-                Write-Verbose "Restarting $($_.name)"
+                Write-Verbose "Starting $($_.name)"
                 $apiVersion = "?api-version=2021-11-01"
-                $restartParameters = @{
-                    uri     = "{0}{1}/restart{2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
+                $powerOffParameters = @{
+                    uri     = "{0}{1}/start{2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
                     Method  = "POST"
                     Headers = $token
                 }
-                Invoke-RestMethod @restartParameters
-                Write-Information -MessageData "$($_.name) restarted" -InformationAction Continue
+                Invoke-RestMethod @powerOffParameters
+                Write-Information -MessageData "$($_.name) started" -InformationAction Continue
             }
             catch {
-                Throw "Not able to restart $($_.name), $_"
+                Throw "Not able to start $($_.name), $_"
             }
         }
     }       

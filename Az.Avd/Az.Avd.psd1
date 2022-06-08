@@ -12,7 +12,7 @@
     RootModule             = 'Az.Avd.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '2.1.5'
+    ModuleVersion          = '2.2.0'
 
     # Supported PSEditions
     CompatiblePSEditions   = 'Core', 'Desktop'
@@ -74,8 +74,10 @@
     FunctionsToExport      = @(
         'Add-AvdApplicationGroupPermissions',
         'Copy-AvdApplicationGroupPermissions',
+        'Disable-AvdSessionHost',
         'Disconnect-AvdUserSessions',
         'Enable-AvdDiagnostics',
+        'Enable-AvdSessionHost',
         'Enable-AvdStartVmOnConnect',    
         'Export-AvdConfig',
         'Get-AvdApplicationGroup',  
@@ -88,6 +90,7 @@
         'Get-AvdUserSessions',
         'Get-AvdVmTemplate',
         'Get-AvdWorkspace',
+        'Grant-AvdSessionHost',
         'Move-AvdSessionHost',
         'New-AvdAadSessionHost',
         'New-AvdAutoScaleRole',
@@ -98,6 +101,8 @@
         'New-AvdWorkspace',
         'Remove-AvdSessionHost',
         'Restart-AvdSessionHost',
+        'Start-AvdSessionHost',
+        'Stop-AvdSessionHost',
         'Update-AvdDesktopApplication',
         'Update-AvdDiagnostics',
         'Update-AvdHostpool',
