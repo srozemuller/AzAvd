@@ -74,8 +74,10 @@
     FunctionsToExport      = @(
         'Add-AvdApplicationGroupPermissions',
         'Copy-AvdApplicationGroupPermissions',
+        'Deallocate-AvdSessionHost',
         'Disconnect-AvdUserSessions',
         'Enable-AvdDiagnostics',
+        'Enable-AvdSessionHost',
         'Enable-AvdStartVmOnConnect',    
         'Export-AvdConfig',
         'Get-AvdApplicationGroup',  
@@ -87,6 +89,7 @@
         'Get-AvdSessionHostResources',
         'Get-AvdUserSessions',
         'Get-AvdWorkspace',
+        'Grant-AvdSessionHost',
         'Move-AvdSessionHost',
         'New-AvdAadSessionHost',
         'New-AvdAutoScaleRole',
