@@ -38,7 +38,7 @@ Describe "Analyze code" -ForEach @(
     It "<fileName> should have a EXAMPLE section in the help block" {
         $file | Should -FileContentMatch '.EXAMPLE'
     }
-    It "<example> should start with command <filebase>" -TestCases @(
+    It "<example> should start with <filebase> or contain | <filebase>" -TestCases @(
         foreach ($example in $helpInfo.examples.example) {
             @{
                 example = [string]$example.title.Replace("-",$null)
