@@ -15,7 +15,7 @@ function Disable-AvdSessionHost {
     .PARAMETER Force
     Use the -Force switch to disable session hosts without interaction
     .EXAMPLE
-    Disable-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -Nameavd-host-1.avd.domain
+    Disable-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -Name avd-host-1.avd.domain
     .EXAMPLE
     Disable-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -Force
     .EXAMPLE
