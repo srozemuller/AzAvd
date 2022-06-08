@@ -74,6 +74,7 @@
     FunctionsToExport      = @(
         'Add-AvdApplicationGroupPermissions',
         'Copy-AvdApplicationGroupPermissions',
+        'Disable-AvdSessionHost',
         'Disconnect-AvdUserSessions',
         'Enable-AvdDiagnostics',
         'Enable-AvdSessionHost',
