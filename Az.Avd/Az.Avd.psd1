@@ -88,6 +88,7 @@
         'Get-AvdSessionHost'
         'Get-AvdSessionHostResources',
         'Get-AvdUserSessions',
+        'Get-AvdVmTemplate',
         'Get-AvdWorkspace',
         'Grant-AvdSessionHost',
         'Move-AvdSessionHost',
@@ -149,11 +150,7 @@
             IconUri    = 'https://github.com/srozemuller/AzWvd/blob/main/Private/avd-logo.png'
 
             # ReleaseNotes of this module
-            ReleaseNotes = 'Fixes :
-            -
-            New commands:
-            * Start-AvdSessionHost
-            '
+            ReleaseNotes = ''
             # Prerelease string of this module
             # Prerelease = ''
 

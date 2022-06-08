@@ -114,7 +114,7 @@ function New-AvdVmTemplate {
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
         $apiVersion = "?api-version=2019-12-10-preview"
-        $url = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + $apiVersion
+        $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}{4}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName, $apiVersion
         $parameters = @{
             uri     = $url
             Headers = $token
@@ -151,14 +151,21 @@ function New-AvdVmTemplate {
         }       
     }
     Process {
-        $jsonBody = $body | ConvertTo-Json
-        $parameters = @{
-            uri     = $url
-            Method  = "PATCH"
-            Headers = $token
-            Body    = $jsonBody
+        try {
+            $jsonBody = $body | ConvertTo-Json
+            $parameters = @{
+                uri     = $url
+                Method  = "PATCH"
+                Headers = $token
+                Body    = $jsonBody
+            }
+            Write-Information "VM template added to hostpool $HostpoolName"
+            Write-Verbose "Template added with following values (in JSON format):"
+            Write-Verbose $vmTemplate
+            Invoke-RestMethod @parameters
         }
-        $results = Invoke-RestMethod @parameters
-        $results
+        catch {
+            "Template not added, $_"
+        }
     }
 }
