@@ -57,6 +57,11 @@ function Stop-AvdSessionHost {
             hostpoolName      = $HostpoolName
             resourceGroupName = $ResourceGroupName
         }
+        $task = 'powerOff'
+        if ($Deallocate.IsPresent)
+        {
+            $task = 'deallocate'
+        }
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -87,7 +92,7 @@ function Stop-AvdSessionHost {
                 Write-Verbose "Found $($sessionHosts.Count) host(s)"
                 Write-Verbose "Starting $($_.name)"
                 $powerOffParameters = @{
-                    uri     = "{0}{1}/powerOff{2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
+                    uri     = "{0}{1}/{2}{3}" -f $Script:AzureApiUrl, $_.properties.resourceId, $task, $apiVersion
                     Method  = "POST"
                     Headers = $token
                 }
