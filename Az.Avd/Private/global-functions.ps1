@@ -68,3 +68,41 @@ function Remove-Resource () {
         Write-Error "Removing $resourceId not succesful, $_"
     }
 }
+
+function CheckForce {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory)]
+        [string]$Task,
+        [Parameter(Mandatory)]
+        [boolean]$Force
+    )
+    if (!$Force) {
+        Write-Verbose "No specific host provided, starting all hosts in $hostpoolName"
+        Write-Information -MessageData "HINT: use -Force to skip this message." -InformationAction Continue
+        $confirmation = Read-Host "Are you sure you want to run $Task to all session hosts? [y/n]"
+        while ($confirmation -ne "y") {
+            if ($confirmation -eq 'n') { 
+                exit 
+            }
+            $confirmation = Read-Host "Yes/No? [y/n]"
+        }
+    }
+}
+
+function ConcatSessionHostName {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory)]
+        [string]$Name
+    )
+    if ($Name -match '^(?:(?!\/).)*$') {
+        $Name = $Name.Split('/')[-1]
+        Write-Verbose "It looks like you also provided a hostpool, a sessionhost name is enough. Provided value {0}"
+        Write-Verbose "Picking only the hostname which is $Name"
+    }
+    else {
+        Write-Verbose "Session hostname provided, looking for sessionhost $Name"
+    }
+    $name
+}
