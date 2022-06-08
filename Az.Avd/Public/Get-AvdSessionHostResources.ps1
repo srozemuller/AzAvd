@@ -1,9 +1,9 @@
 function Get-AvdSessionHostResources {
     <#
     .SYNOPSIS
-    Gets the Virtual Machines Azure resource from a AVD Session Host
+    Gets the Azure resources from a AVD Session Host
     .DESCRIPTION
-    The function will help you getting the virtual machine resource information which is behind the AVD Session Host
+    The function will help you getting the associated Azure resource information which is behind the AVD Session Host
     .PARAMETER HostpoolName
     Enter the AVD hostpool name
     .PARAMETER ResourceGroupName
@@ -13,23 +13,31 @@ function Get-AvdSessionHostResources {
     .EXAMPLE
     Get-AvdSessionHostResources -Hostpoolname avd-hostpool -ResourceGroup rg-avd-01
     .EXAMPLE
-    Get-AvdSessionHostResources -Hostpoolname avd-hostpool -ResourceGroup rg-avd-01
+    Get-AvdSessionHostResources -Hostpoolname avd-hostpool -ResourceGroup rg-avd-01 -Name avd-0
+    .EXAMPLE
+    Get-AvdSessionHostResources -Id sessionhostId
+    .EXAMPLE
+    Get-AvdSessionHost -Id sessionhostId | Get-AvdSessionHostResources
     #>
-    [CmdletBinding(DefaultParameterSetName = 'Hostpool')]
+    [CmdletBinding(DefaultParameterSetName = 'All')]
     param (
-        [parameter(Mandatory, ParameterSetName = 'Hostpool')]
-        [parameter(Mandatory, ParameterSetName = 'Sessionhost')]
+        [parameter(Mandatory, ParameterSetName = 'All')]
+        [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
 
-        [parameter(Mandatory, ParameterSetName = 'Hostpool')]
-        [parameter(Mandatory, ParameterSetName = 'Sessionhost')]
+        [parameter(Mandatory, ParameterSetName = 'All')]
+        [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
 
-        [parameter(Mandatory, ParameterSetName = 'Sessionhost')]
+        [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
-        [string]$SessionHostName
+        [string]$Name,
+
+        [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Id
     )
     
     Begin {
@@ -40,17 +48,23 @@ function Get-AvdSessionHostResources {
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
-            Hostpool {
+            All {
                 $parameters = @{
                     HostPoolName      = $HostpoolName
                     ResourceGroupName = $ResourceGroupName
                 }
             }
-            Sessionhost {
+            Hostname {
                 $parameters = @{
                     hostPoolName      = $HostpoolName
                     resourceGroupName = $ResourceGroupName
-                    name   = $SessionHostName
+                    name   = $Name
+                }
+            }
+            Resource {
+                Write-Verbose "Got a resource object, looking for $Id"
+                $parameters = @{
+                    Id =  $Id
                 }
             }
         }

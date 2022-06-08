@@ -8,13 +8,16 @@ function Get-AvdSessionHost {
     Enter the AVD Hostpool name
     .PARAMETER ResourceGroupName
     Enter the AVD Hostpool resourcegroup name
-    .PARAMETER SessionHostName
-    Enter the sessionhosts name
+    .PARAMETER Name
+    Enter the session hosts name
+    .PARAMETER Id
+    Enter the sessionhost's resource ID
     .EXAMPLE
-    Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true 
+    Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -Name avd-host-1.avd.domain
     .EXAMPLE
     Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
-    
+    .EXAMPLE
+    Get-AvdSessionHost -Id sessionhostId
     #>
     [CmdletBinding(DefaultParameterSetName = 'Resource')]
     param
@@ -33,7 +36,7 @@ function Get-AvdSessionHost {
         [ValidateNotNullOrEmpty()]
         [string]$Name,
 
-        [parameter(Mandatory, ParameterSetName = 'Resource')]
+        [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [string]$Id
 
@@ -43,7 +46,7 @@ function Get-AvdSessionHost {
         Write-Verbose "Start searching session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
-        $baseUrl = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + "/sessionHosts/"
+        $baseUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/sessionHosts/" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName
         $apiVersion = "?api-version=2021-07-12"
     }
     Process {
@@ -61,14 +64,14 @@ function Get-AvdSessionHost {
             }
         }
         $parameters = @{
-            uri     = $baseUrl + $apiVersion
+            uri     = "{0}{1}" -f $baseUrl, $apiVersion
             Method  = "GET"
             Headers = $token
         }
         try {
             $results = Invoke-RestMethod @parameters
             if ($Name -or $Id) {
-                $results | ForEach {
+                $results | ForEach-Object {
                     $_ | Add-Member -MemberType NoteProperty -Name HostpoolName -Value $HostpoolName
                     $_ | Add-Member -MemberType NoteProperty -Name ResourceGroupName -Value $ResourceGroupName
                 }

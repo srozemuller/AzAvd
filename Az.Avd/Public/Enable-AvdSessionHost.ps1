@@ -1,40 +1,41 @@
-function Deallocate-AvdSessionHost {
+function Enable-AvdSessionHost {
     <#
     .SYNOPSIS
-    Deallocates AVD Session hosts in a specific hostpool.
+    Enable login for sessionhosts.
     .DESCRIPTION
-    It is almost the same as the Stop-AvdSessionHost command but this function also deallocates the session host in a specific Azure Virtual Desktop hostpool. Deallocated machines does not have an Azure consumption which saves money.
+    The function gets a session host out of drainmode, which means that users are able to login to that host. 
     .PARAMETER HostpoolName
-    Enter the AVD Hostpool name
+    Enter the source AVD Hostpool name
     .PARAMETER ResourceGroupName
-    Enter the AVD Hostpool resourcegroup name
+    Enter the source Hostpool resourcegroup name
     .PARAMETER Name
-    Enter the session hosts name
+    Enter the sessionhosts name avd-host-1.avd.domain
     .PARAMETER Id
-    Enter the sessionhost's resource ID
+    Enter the session host's resource ID
     .PARAMETER Force
-    Use this switch parameter to force deallocate all machine. Only needed when if you did not provide a sessionhost name.
+    Use the -Force switch to disable session hosts without interaction
     .EXAMPLE
-    Deallocate-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -Force
+    Enable-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -Nameavd-host-1.avd.domain
     .EXAMPLE
-    Deallocate-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -Name avd-host-1.avd.domain
+    Enable-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -Force
     .EXAMPLE
-    Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -Name avd-host-1.avd.domain | Deallocate-AvdSessionHost
+    Get-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 | Enable-AvdSessionHost -Force
+    .EXAMPLE
+    Get-AvdSessionHost -Id sessionhostId | Enable-AvdSessionHost 
     #>
     [CmdletBinding(DefaultParameterSetName = 'All')]
     param
     (
-        [parameter(Mandatory, ParameterSetName = 'All')]
+        [parameter(Mandatory, ParameterSetName = 'All')]    
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
     
-        [parameter(Mandatory, ParameterSetName = 'All')]
+        [parameter(Mandatory, ParameterSetName = 'All')]    
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
     
-        [parameter(Mandatory, ParameterSetName = 'All')]
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$Name,
@@ -48,14 +49,14 @@ function Deallocate-AvdSessionHost {
         [switch]$Force
     )
     Begin {
-        Write-Verbose "Deallocating session hosts"
+        Write-Verbose "Enabling session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
+        $apiVersion = "?api-version=2022-02-10-preview"
         $sessionHostParameters = @{
             hostpoolName      = $HostpoolName
             resourceGroupName = $ResourceGroupName
         }
-        $apiVersion = "?api-version=2022-03-01"
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -69,11 +70,8 @@ function Deallocate-AvdSessionHost {
             Resource {
                 Write-Verbose "Got a resource object, looking for $Id"
                 $sessionHostParameters = @{
-                    Id =  $Id
+                    Id = $Id
                 }
-            }
-            default {
-
             }
         }
         try {
@@ -82,21 +80,27 @@ function Deallocate-AvdSessionHost {
         catch {
             Throw "No sessionhosts ($name) found in $HostpoolName ($ResourceGroupName), $_"
         }
-        $sessionHosts | ForEach-Object {
-            try {
-                Write-Verbose "Found $($sessionHosts.Count) host(s)"
-                Write-Verbose "Deallocating $($_.name)"
-                $powerOffParameters = @{
-                    uri     = "{0}{1}/deallocate{2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
-                    Method  = "POST"
-                    Headers = $token
+        try {
+            $sessionHosts | ForEach-Object {
+                Write-Verbose "Found $($_.Count) host(s)"
+                Write-Verbose "Enable login for $($_.name)"
+                $body = @{
+                    properties = @{
+                        AllowNewSession = $true
+                    }
                 }
-                Invoke-RestMethod @powerOffParameters
-                Write-Information -MessageData "$($_.name) deallocated" -InformationAction Continue
-            }
-            catch {
-                Throw "Not able to deallocate $($_.name), $_"
+                $enableParameters = @{
+                    uri     = "{0}{1}{2}" -f $Script:AzureApiUrl, $_.id, $apiVersion
+                    Method  = "PATCH"
+                    Headers = $token
+                    Body    = $body | ConvertTo-Json
+                }
+                Invoke-RestMethod @enableParameters
+                Write-Information -MessageData "Login is enabled for $($_.name)" -InformationAction Continue
             }
         }
-    }       
+        catch {
+            Throw "Not able to enable login for $($_.name), $_"
+        }
+    }
 }

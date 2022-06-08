@@ -19,14 +19,12 @@ function Stop-AvdSessionHost {
     param
     (
         [parameter(Mandatory, ParameterSetName = 'All')]
-        [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
-        [parameter(Mandatory, ParameterSetName = 'Hostname', ValueFromPipelineByPropertyName)]
+        [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
     
         [parameter(Mandatory, ParameterSetName = 'All')]
-        [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
-        [parameter(Mandatory, ParameterSetName = 'Hostname', ValueFromPipelineByPropertyName)]
+        [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
     
@@ -54,6 +52,7 @@ function Stop-AvdSessionHost {
         Write-Verbose "Stopping session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
+        $apiVersion = "?api-version=2021-11-01"
         $sessionHostParameters = @{
             hostpoolName      = $HostpoolName
             resourceGroupName = $ResourceGroupName
@@ -62,33 +61,19 @@ function Stop-AvdSessionHost {
     Process {
         switch ($PsCmdlet.ParameterSetName) {
             All {
-                Write-Verbose "No specific host provided, starting all hosts in $hostpoolName"
-                Write-Information -MessageData "HINT: use -Force to skip this message." -InformationAction Continue
-                $confirmation = Read-Host "Are you sure you want to stop all session hosts? [y/n]"
-                while ($confirmation -ne "y") {
-                    if ($confirmation -eq 'n') { exit }
-                    $confirmation = Read-Host "Yes/No? [y/n]"
-                }
+                CheckForce -Force:$force -Task $MyInvocation.MyCommand
             }
             Hostname {
-                if ($Name -match '^(?:(?!\/).)*$') {
-                    $Name = $Name.Split('/')[-1]
-                    Write-Verbose "It looks like you also provided a hostpool, a sessionhost name is enough. Provided value {0}"
-                    Write-Verbose "Picking only the hostname which is $Name"
-                }
-                else {
-                    Write-Verbose "Session hostname provided, looking for sessionhost $Name"
-                }
+                $Name = ConcatSessionHostName -name $Name
                 $sessionHostParameters.Add("Name", $Name)
             }
             Resource {
                 Write-Verbose "Got a resource object, looking for $Id"
                 $sessionHostParameters = @{
-                    Id =  $Id
+                    Id = $Id
                 }
             }
             default {
-
             }
         }
         try {
@@ -99,22 +84,15 @@ function Stop-AvdSessionHost {
         }
         $sessionHosts | ForEach-Object {
             try {
-                if ($Deallocate.IsPresent) {
-                    Deallocate-AvdSessionHost -id $_.properties.resourceId
+                Write-Verbose "Found $($sessionHosts.Count) host(s)"
+                Write-Verbose "Starting $($_.name)"
+                $powerOffParameters = @{
+                    uri     = "{0}{1}/powerOff{2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
+                    Method  = "POST"
+                    Headers = $token
                 }
-                else {
-                    Write-Verbose "Found $($sessionHosts.Count) host(s)"
-                    Write-Verbose "Stopping $($_.name)"
-                    $apiVersion = "?api-version=2021-11-01"
-                    $powerOffParameters = @{
-                        uri     = "{0}{1}/powerOff{2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
-                        Method  = "POST"
-                        Headers = $token
-                    }
-                    Invoke-RestMethod @powerOffParameters
-                    Write-Information -MessageData "$($_.name) stopped" -InformationAction Continue
-                }
-
+                Invoke-RestMethod @powerOffParameters
+                Write-Information -MessageData "$($_.name) stopped" -InformationAction Continue
             }
             catch {
                 Throw "Not able to stop $($_.name), $_"

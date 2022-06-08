@@ -19,14 +19,12 @@ function Start-AvdSessionHost {
     param
     (
         [parameter(Mandatory, ParameterSetName = 'All')]
-        [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
-        [parameter(Mandatory, ParameterSetName = 'Hostname', ValueFromPipelineByPropertyName)]
+        [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
     
         [parameter(Mandatory, ParameterSetName = 'All')]
-        [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
-        [parameter(Mandatory, ParameterSetName = 'Hostname', ValueFromPipelineByPropertyName)]
+        [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
     
@@ -45,7 +43,7 @@ function Start-AvdSessionHost {
         [switch]$Force
     )
     Begin {
-        Write-Verbose "Stopping session hosts"
+        Write-Verbose "Starting session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
         $sessionHostParameters = @{
@@ -56,33 +54,19 @@ function Start-AvdSessionHost {
     Process {
         switch ($PsCmdlet.ParameterSetName) {
             All {
-                Write-Verbose "No specific host provided, starting all hosts in $hostpoolName"
-                Write-Information -MessageData "HINT: use -Force to skip this message." -InformationAction Continue
-                $confirmation = Read-Host "Are you sure you want to stop all session hosts? [y/n]"
-                while ($confirmation -ne "y") {
-                    if ($confirmation -eq 'n') { exit }
-                    $confirmation = Read-Host "Yes/No? [y/n]"
-                }
+                CheckForce -Force:$force -Task $MyInvocation.MyCommand
             }
             Hostname {
-                if ($Name -match '^(?:(?!\/).)*$') {
-                    $Name = $Name.Split('/')[-1]
-                    Write-Verbose "It looks like you also provided a hostpool, a sessionhost name is enough. Provided value {0}"
-                    Write-Verbose "Picking only the hostname which is $Name"
-                }
-                else {
-                    Write-Verbose "Session hostname provided, looking for sessionhost $Name"
-                }
+                $Name = ConcatSessionHostName -name $Name
                 $sessionHostParameters.Add("Name", $Name)
             }
             Resource {
                 Write-Verbose "Got a resource object, looking for $Id"
                 $sessionHostParameters = @{
-                    Id =  $Id
+                    Id = $Id
                 }
             }
             default {
-
             }
         }
         try {
@@ -102,10 +86,10 @@ function Start-AvdSessionHost {
                     Headers = $token
                 }
                 Invoke-RestMethod @powerOffParameters
-                Write-Information -MessageData "$($_.name) stopped" -InformationAction Continue
+                Write-Information -MessageData "$($_.name) started" -InformationAction Continue
             }
             catch {
-                Throw "Not able to stop $($_.name), $_"
+                Throw "Not able to start $($_.name), $_"
             }
         }
     }       

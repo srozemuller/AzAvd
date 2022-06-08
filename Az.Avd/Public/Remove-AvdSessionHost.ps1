@@ -13,29 +13,26 @@ function Remove-AvdSessionHost {
     .EXAMPLE
     Remove-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
     #>
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'HostName')]
     param
     (
         [parameter(Mandatory, ParameterSetName = 'All')]
-        [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
-        [parameter(Mandatory, ParameterSetName = 'Hostname', ValueFromPipelineByPropertyName)]
+        [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
     
         [parameter(Mandatory, ParameterSetName = 'All')]
-        [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
-        [parameter(Mandatory, ParameterSetName = 'Hostname', ValueFromPipelineByPropertyName)]
+        [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
     
-        [parameter(Mandatory, ParameterSetName = 'Hostname', ValueFromPipelineByPropertyName)]
+        [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$Name,
 
-        # [ValidatePattern('^(?:(?!\/).)*$', ErrorMessage = "It looks like you also provided a hostpool, a sessionhost name is enough. Provided value {0}")]
         [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
-        [object]$Id,
+        [string]$Id,
 
         [parameter(ParameterSetName = 'All')]
         [parameter(ParameterSetName = 'Resource')]
@@ -59,25 +56,11 @@ function Remove-AvdSessionHost {
     Process {
         switch ($PsCmdlet.ParameterSetName) {
             All {
-                Write-Verbose "No specific host provided, starting all hosts in $hostpoolName"
-                Write-Information -MessageData "HINT: use -Force to skip this message." -InformationAction Continue
-                $confirmation = Read-Host "Are you sure you want to remove all session hosts? [y/n]"
-                while ($confirmation -ne "y") {
-                    if ($confirmation -eq 'n') { exit }
-                    $confirmation = Read-Host "Yes/No? [y/n]"
-                }
+                CheckForce -Force:$force -Task $MyInvocation.MyCommand
             }
             Hostname {
-                Write-Verbose "Got Name $Name"
-                if ($Name -match '^(?:(?!\/).)*$') {
-                    $Name = $Name.Split('/')[-1]
-                    Write-Verbose "It looks like you also provided a hostpool, a sessionhost name is enough. Provided value {0}"
-                    Write-Verbose "Picking only the hostname which is $Name"
-                }
-                else {
-                    Write-Verbose "Session hostname provided, looking for sessionhost $Name"
-                }
-                $sessionHostParameters.Add("SessionhostName", $Name)
+                $Name = ConcatSessionHostName -name $Name
+                $sessionHostParameters.Add("Name", $Name)
             }
             Resource {
                 Write-Verbose "Got a resource object, looking for $Id"
