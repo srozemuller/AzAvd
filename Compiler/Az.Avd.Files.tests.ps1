@@ -46,7 +46,7 @@ Describe "Analyze code" -ForEach @(
             }
         }
     ) {
-        (($code.StartsWith($fileBase)) -or $code.Contains("| {0}" -f $fileBase) ) | Should -Be $true -Because "Provide good examples" 
+        (($code.StartsWith($fileBase)) -or ($code.Contains("| {0}" -f $fileBase) )) | Should -Be $true -Because "Provide good examples" 
     }
     It "<filename> line <linenr> uses the # sign correctly"  -TestCases @(
         $correctUse = '^#Requires', '^<#', '^#>', '^#region', '^#endregion', '^# ', '##vso\[task.'
