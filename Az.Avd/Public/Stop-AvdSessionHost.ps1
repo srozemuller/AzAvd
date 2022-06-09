@@ -1,9 +1,9 @@
-function Restart-AvdSessionHost {
+function Stop-AvdSessionHost {
     <#
     .SYNOPSIS
-    Restarts AVD Session hosts in a specific hostpool.
+    Stops AVD Session hosts in a specific hostpool.
     .DESCRIPTION
-    This function restarts sessionshosts in a specific Azure Virtual Desktop hostpool. If you want to start a specific session host then also provide the name, 
+    This function stops sessionshosts in a specific Azure Virtual Desktop hostpool. If you want to start a specific session host then also provide the name, 
     .PARAMETER HostpoolName
     Enter the AVD Hostpool name
     .PARAMETER ResourceGroupName
@@ -11,9 +11,9 @@ function Restart-AvdSessionHost {
     .PARAMETER SessionHostName
     Enter the session hosts name
     .EXAMPLE
-    Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
+    Stop-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
     .EXAMPLE
-    Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
+    Stop-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
     #>
     [CmdletBinding(DefaultParameterSetName = 'All')]
     param
@@ -33,21 +33,34 @@ function Restart-AvdSessionHost {
         [ValidateNotNullOrEmpty()]
         [string]$Name,
 
+        # [ValidatePattern('^(?:(?!\/).)*$', ErrorMessage = "It looks like you also provided a hostpool, a sessionhost name is enough. Provided value {0}")]
         [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [object]$Id,
+
+        [parameter(ParameterSetName = 'All')]
+        [parameter(ParameterSetName = 'Resource')]
+        [parameter(ParameterSetName = 'Hostname')]
+        [ValidateNotNullOrEmpty()]
+        [switch]$Deallocate,
 
         [parameter(ParameterSetName = 'All')]
         [ValidateNotNullOrEmpty()]
         [switch]$Force
     )
     Begin {
-        Write-Verbose "Starting session hosts"
+        Write-Verbose "Stopping session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
+        $apiVersion = "?api-version=2021-11-01"
         $sessionHostParameters = @{
             hostpoolName      = $HostpoolName
             resourceGroupName = $ResourceGroupName
+        }
+        $task = 'powerOff'
+        if ($Deallocate.IsPresent)
+        {
+            $task = 'deallocate'
         }
     }
     Process {
@@ -77,18 +90,17 @@ function Restart-AvdSessionHost {
         $sessionHosts | ForEach-Object {
             try {
                 Write-Verbose "Found $($sessionHosts.Count) host(s)"
-                Write-Verbose "Restarting $($_.name)"
-                $apiVersion = "?api-version=2021-11-01"
-                $restartParameters = @{
-                    uri     = "{0}{1}/restart{2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
+                Write-Verbose "Starting $($_.name)"
+                $powerOffParameters = @{
+                    uri     = "{0}{1}/{2}{3}" -f $Script:AzureApiUrl, $_.properties.resourceId, $task, $apiVersion
                     Method  = "POST"
                     Headers = $token
                 }
-                Invoke-RestMethod @restartParameters
-                Write-Information -MessageData "$($_.name) restarted" -InformationAction Continue
+                Invoke-RestMethod @powerOffParameters
+                Write-Information -MessageData "$($_.name) stopped" -InformationAction Continue
             }
             catch {
-                Throw "Not able to restart $($_.name), $_"
+                Throw "Not able to stop $($_.name), $_"
             }
         }
     }       

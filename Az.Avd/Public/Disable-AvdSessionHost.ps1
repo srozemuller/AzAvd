@@ -1,50 +1,54 @@
-function Restart-AvdSessionHost {
+function Disable-AvdSessionHost {
     <#
     .SYNOPSIS
-    Restarts AVD Session hosts in a specific hostpool.
+    Disable login for sessionhosts.
     .DESCRIPTION
-    This function restarts sessionshosts in a specific Azure Virtual Desktop hostpool. If you want to start a specific session host then also provide the name, 
+    The function sets a session host into drainmode, which means that users are not able to login to that host. 
     .PARAMETER HostpoolName
-    Enter the AVD Hostpool name
+    Enter the source AVD Hostpool name
     .PARAMETER ResourceGroupName
-    Enter the AVD Hostpool resourcegroup name
-    .PARAMETER SessionHostName
-    Enter the session hosts name
+    Enter the source Hostpool resourcegroup name
+    .PARAMETER Name
+    Enter the sessionhosts name avd-host-1.avd.domain
+    .PARAMETER Id
+    Enter the session host's resource ID
+    .PARAMETER Force
+    Use the -Force switch to disable session hosts without interaction
     .EXAMPLE
-    Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
+    Disable-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -Name avd-host-1.avd.domain
     .EXAMPLE
-    Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
+    Disable-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -Force
     #>
-    [CmdletBinding(DefaultParameterSetName = 'All')]
+    [CmdletBinding(DefaultParameterSetName = 'Hostname')]
     param
     (
-        [parameter(Mandatory, ParameterSetName = 'All')]
+        [parameter(Mandatory, ParameterSetName = 'All')]    
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
     
-        [parameter(Mandatory, ParameterSetName = 'All')]
+        [parameter(Mandatory, ParameterSetName = 'All')]    
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
     
-        [parameter(Mandatory, ParameterSetName = 'All')]
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$Name,
 
         [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
-        [object]$Id,
+        [string]$Id,
 
         [parameter(ParameterSetName = 'All')]
         [ValidateNotNullOrEmpty()]
         [switch]$Force
     )
     Begin {
-        Write-Verbose "Starting session hosts"
+        Write-Verbose "Ssession hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
+        $apiVersion = "?api-version=2022-02-10-preview"
         $sessionHostParameters = @{
             hostpoolName      = $HostpoolName
             resourceGroupName = $ResourceGroupName
@@ -65,8 +69,6 @@ function Restart-AvdSessionHost {
                     Id = $Id
                 }
             }
-            default {
-            }
         }
         try {
             $sessionHosts = Get-AvdSessionHost @sessionHostParameters
@@ -74,22 +76,27 @@ function Restart-AvdSessionHost {
         catch {
             Throw "No sessionhosts ($name) found in $HostpoolName ($ResourceGroupName), $_"
         }
-        $sessionHosts | ForEach-Object {
-            try {
-                Write-Verbose "Found $($sessionHosts.Count) host(s)"
-                Write-Verbose "Restarting $($_.name)"
-                $apiVersion = "?api-version=2021-11-01"
-                $restartParameters = @{
-                    uri     = "{0}{1}/restart{2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
-                    Method  = "POST"
-                    Headers = $token
+        try {
+            $sessionHosts | ForEach-Object {
+                Write-Verbose "Found $($_.Count) host(s)"
+                Write-Verbose "Disable login for $($_.name)"
+                $body = @{
+                    properties = @{
+                        AllowNewSession = $false
+                    }
                 }
-                Invoke-RestMethod @restartParameters
-                Write-Information -MessageData "$($_.name) restarted" -InformationAction Continue
-            }
-            catch {
-                Throw "Not able to restart $($_.name), $_"
+                $disableParameters = @{
+                    uri     = "{0}{1}{2}" -f $Script:AzureApiUrl, $_.id, $apiVersion
+                    Method  = "PATCH"
+                    Headers = $token
+                    Body    = $body | ConvertTo-Json
+                }
+                Invoke-RestMethod @disableParameters
+                Write-Information -MessageData "Login is disabled for $($_.name)" -InformationAction Continue
             }
         }
-    }       
+        catch {
+            Throw "Not able to disable login for $($_.name), $_"
+        }
+    }
 }

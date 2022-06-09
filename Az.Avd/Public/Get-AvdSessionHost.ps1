@@ -8,15 +8,18 @@ function Get-AvdSessionHost {
     Enter the AVD Hostpool name
     .PARAMETER ResourceGroupName
     Enter the AVD Hostpool resourcegroup name
-    .PARAMETER SessionHostName
-    Enter the sessionhosts name
+    .PARAMETER Name
+    Enter the session hosts name
+    .PARAMETER Id
+    Enter the sessionhost's resource ID
     .EXAMPLE
-    Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true 
+    Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -Name avd-host-1.avd.domain
     .EXAMPLE
     Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
-    
+    .EXAMPLE
+    Get-AvdSessionHost -Id sessionhostId
     #>
-    [CmdletBinding(DefaultParameterSetName = 'All')]
+    [CmdletBinding(DefaultParameterSetName = 'Resource')]
     param
     (
         [parameter(Mandatory, ParameterSetName = 'All')]
@@ -31,13 +34,19 @@ function Get-AvdSessionHost {
     
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
-        [string]$SessionHostName
+        [string]$Name,
+
+        [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Id
+
+
     )
     Begin {
         Write-Verbose "Start searching session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
-        $baseUrl = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + "/sessionHosts/"
+        $baseUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/sessionHosts/" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName
         $apiVersion = "?api-version=2021-07-12"
     }
     Process {
@@ -46,22 +55,34 @@ function Get-AvdSessionHost {
                 Write-Verbose 'Using base url for getting all session hosts in $hostpoolName'
             }
             Hostname {
-                Write-Verbose "Looking for sessionhost $SessionHostName"
-                $baseUrl = $baseUrl + $SessionHostName 
+                Write-Verbose "Looking for sessionhost $Name"
+                $baseUrl = "{0}{1}" -f $baseUrl, $Name 
+            }
+            Resource {
+                Write-Verbose "Looking for sessionhost base on resourceId $ResourceId"
+                $baseUrl = "{0}{1}" -f $Script:AzureApiUrl, $Id 
             }
         }
         $parameters = @{
-            uri     = $baseUrl + $apiVersion
+            uri     = "{0}{1}" -f $baseUrl, $apiVersion
             Method  = "GET"
             Headers = $token
         }
-        $results = Invoke-RestMethod @parameters
-        if ($SessionHostName){
-            $results
+        try {
+            $results = Invoke-RestMethod @parameters
+            if ($Name -or $Id) {
+                $results | ForEach-Object {
+                    $_ | Add-Member -MemberType NoteProperty -Name HostpoolName -Value $HostpoolName
+                    $_ | Add-Member -MemberType NoteProperty -Name ResourceGroupName -Value $ResourceGroupName
+                }
+                $results
+            }
+            else {
+                $results.value
+            }   
         }
-        else {
-            $results.value
+        catch {
+            Write-Error "No sessionhost results in $HostpoolName, $_"
         }
-        
     }
 }
