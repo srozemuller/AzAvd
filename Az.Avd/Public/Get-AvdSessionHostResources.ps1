@@ -16,8 +16,6 @@ function Get-AvdSessionHostResources {
     Get-AvdSessionHostResources -Hostpoolname avd-hostpool -ResourceGroup rg-avd-01 -Name avd-0
     .EXAMPLE
     Get-AvdSessionHostResources -Id sessionhostId
-    .EXAMPLE
-    Get-AvdSessionHost -Id sessionhostId | Get-AvdSessionHostResources
     #>
     [CmdletBinding(DefaultParameterSetName = 'All')]
     param (

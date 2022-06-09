@@ -18,10 +18,6 @@ function Enable-AvdSessionHost {
     Enable-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -Nameavd-host-1.avd.domain
     .EXAMPLE
     Enable-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -Force
-    .EXAMPLE
-    Get-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 | Enable-AvdSessionHost -Force
-    .EXAMPLE
-    Get-AvdSessionHost -Id sessionhostId | Enable-AvdSessionHost 
     #>
     [CmdletBinding(DefaultParameterSetName = 'All')]
     param

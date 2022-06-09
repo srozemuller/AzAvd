@@ -18,10 +18,6 @@ function Disable-AvdSessionHost {
     Disable-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -Name avd-host-1.avd.domain
     .EXAMPLE
     Disable-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -Force
-    .EXAMPLE
-    Get-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 | Disable-AvdSessionHost -Force
-    .EXAMPLE
-    Get-AvdSessionHost -Id sessionhostId | Disable-AvdSessionHost 
     #>
     [CmdletBinding(DefaultParameterSetName = 'Hostname')]
     param
