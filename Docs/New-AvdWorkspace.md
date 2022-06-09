@@ -5,57 +5,45 @@ online version:
 schema: 2.0.0
 ---
 
-# Restart-AvdSessionHost
+# New-AvdWorkspace
 
 ## SYNOPSIS
-Restarts AVD Session hosts in a specific hostpool.
+Creates a new Azure Virtual Desktop workspace.
 
 ## SYNTAX
 
-### All (Default)
 ```
-Restart-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [-Force]
- [<CommonParameters>]
-```
-
-### Hostname
-```
-Restart-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [<CommonParameters>]
-```
-
-### Resource
-```
-Restart-AvdSessionHost -Id <Object> [<CommonParameters>]
+New-AvdWorkspace [-Name] <String> [-ResourceGroupName] <String> [-Location] <String> [[-FriendlyName] <String>]
+ [[-Description] <String>] [[-ApplicationGroupReference] <Array>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function restarts sessionshosts in a specific Azure Virtual Desktop hostpool.
-If you want to start a specific session host then also provide the name,
+The function will create a new Azure Virtual Desktop workspace.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
+New-AvdWorkspace -workspacename avd-workspace -resourceGroupName rg-avd-01 -location WestEurope -description "Work in space"
 ```
 
 ### EXAMPLE 2
 ```
-Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
+New-AvdWorkspace -workspacename avd-workspace -resourceGroupName rg-avd-01 -location WestEurope -ApplicationGroupReference @("id_1","id_2")
 ```
 
 ## PARAMETERS
 
-### -HostpoolName
-Enter the AVD Hostpool name
+### -Name
+{{ Fill Name Description }}
 
 ```yaml
 Type: String
-Parameter Sets: All, Hostname
+Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -66,57 +54,72 @@ Enter the AVD Hostpool resourcegroup name
 
 ```yaml
 Type: String
-Parameter Sets: All, Hostname
+Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Name
-{{ Fill Name Description }}
+### -Location
+Enter the Azure location
 
 ```yaml
 Type: String
-Parameter Sets: All, Hostname
+Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
+Position: 3
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Id
-{{ Fill Id Description }}
+### -FriendlyName
+Change the workspace friendly name
 
 ```yaml
-Type: Object
-Parameter Sets: Resource
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: False
-```
-
-### -Force
-{{ Fill Force Description }}
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: All
+Type: String
+Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: Named
-Default value: False
+Position: 4
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Description
+Enter a description
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 5
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ApplicationGroupReference
+Provide the application group resource IDs where the workspace assign to.
+
+```yaml
+Type: Array
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 6
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

@@ -5,53 +5,48 @@ online version:
 schema: 2.0.0
 ---
 
-# Restart-AvdSessionHost
+# Update-AvdDesktopApplication
 
 ## SYNOPSIS
-Restarts AVD Session hosts in a specific hostpool.
+Updates the Virtual Desktop ApplicationGroup desktop application
 
 ## SYNTAX
 
-### All (Default)
+### Name (Default)
 ```
-Restart-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [-Force]
+Update-AvdDesktopApplication -ApplicationGroupName <String> -ResourceGroupName <String> [-Description <String>]
+ [-FriendlyName <String>] [<CommonParameters>]
+```
+
+### ResourceId
+```
+Update-AvdDesktopApplication -ResourceId <String> [-Description <String>] [-FriendlyName <String>]
  [<CommonParameters>]
 ```
 
-### Hostname
-```
-Restart-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [<CommonParameters>]
-```
-
-### Resource
-```
-Restart-AvdSessionHost -Id <Object> [<CommonParameters>]
-```
-
 ## DESCRIPTION
-This function restarts sessionshosts in a specific Azure Virtual Desktop hostpool.
-If you want to start a specific session host then also provide the name,
+The function will update the desktop application SessionDesktop with a FriendlyName and/or displayname.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
+Update-AvdDesktopApplication -ApplicationGroupName avd-applicationgroup -ResourceGroupName rg-avd-01 -DisplayName "Update Desktop"
 ```
 
 ### EXAMPLE 2
 ```
-Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
+Update-AvdDesktopApplication -ResourceId "/subscriptions/../applicationName" -DisplayName "Update Desktop"
 ```
 
 ## PARAMETERS
 
-### -HostpoolName
-Enter the AVD Hostpool name
+### -ApplicationGroupName
+Enter the AVD application group name
 
 ```yaml
 Type: String
-Parameter Sets: All, Hostname
+Parameter Sets: Name
 Aliases:
 
 Required: True
@@ -62,11 +57,11 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the AVD Hostpool resourcegroup name
+Enter the AVD application group resourcegroup name
 
 ```yaml
 Type: String
-Parameter Sets: All, Hostname
+Parameter Sets: Name
 Aliases:
 
 Required: True
@@ -76,12 +71,12 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Name
-{{ Fill Name Description }}
+### -ResourceId
+Enter the AVD application group resourceId
 
 ```yaml
 Type: String
-Parameter Sets: All, Hostname
+Parameter Sets: ResourceId
 Aliases:
 
 Required: True
@@ -91,32 +86,32 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Id
-{{ Fill Id Description }}
+### -Description
+Enter a description
 
 ```yaml
-Type: Object
-Parameter Sets: Resource
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: False
-```
-
-### -Force
-{{ Fill Force Description }}
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: All
+Type: String
+Parameter Sets: (All)
 Aliases:
 
 Required: False
 Position: Named
-Default value: False
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -FriendlyName
+Provide a displayname, this is the name you see in the webclient and Remote Desktop Client.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

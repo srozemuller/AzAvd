@@ -5,53 +5,47 @@ online version:
 schema: 2.0.0
 ---
 
-# Restart-AvdSessionHost
+# Export-AvdConfig
 
 ## SYNOPSIS
-Restarts AVD Session hosts in a specific hostpool.
+Exports the AVD environment, based on the hostpool name.
 
 ## SYNTAX
 
-### All (Default)
+### FileExport (Default)
 ```
-Restart-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [-Force]
+Export-AvdConfig -HostpoolName <String> -ResourceGroupName <String> -FileName <String> -Format <Array>
  [<CommonParameters>]
 ```
 
-### Hostname
+### Console
 ```
-Restart-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [<CommonParameters>]
-```
-
-### Resource
-```
-Restart-AvdSessionHost -Id <Object> [<CommonParameters>]
+Export-AvdConfig -HostpoolName <String> -ResourceGroupName <String> [-Console] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function restarts sessionshosts in a specific Azure Virtual Desktop hostpool.
-If you want to start a specific session host then also provide the name,
+The function will help you exporting the complete AVD environment to common output types as HTML and CSV.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
+Export-AvdConfig -Hostpoolname avd-hostpool-001 -ResourceGroupName rg-avd-001 -Format HTML -Verbose -Filename AVDExport
 ```
 
 ### EXAMPLE 2
 ```
-Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
+Export-AvdConfig -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -Format HTML,JSON -Verbose -Filename AVDExport
 ```
 
 ## PARAMETERS
 
 ### -HostpoolName
-Enter the AVD Hostpool name
+Enter the AVD hostpoolname name.
 
 ```yaml
 Type: String
-Parameter Sets: All, Hostname
+Parameter Sets: (All)
 Aliases:
 
 Required: True
@@ -62,11 +56,11 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the AVD Hostpool resourcegroup name
+Enter the AVD hostpool resource group name.
 
 ```yaml
 Type: String
-Parameter Sets: All, Hostname
+Parameter Sets: (All)
 Aliases:
 
 Required: True
@@ -76,12 +70,14 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Name
-{{ Fill Name Description }}
+### -FileName
+Enter the filename.
+Based on the format parameter the function will create a correct file.
+Default filepath is in the execution directory.
 
 ```yaml
 Type: String
-Parameter Sets: All, Hostname
+Parameter Sets: FileExport
 Aliases:
 
 Required: True
@@ -91,30 +87,31 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Id
-{{ Fill Id Description }}
+### -Format
+Enter the format you like.
+For creating more formats use a comma.
 
 ```yaml
-Type: Object
-Parameter Sets: Resource
+Type: Array
+Parameter Sets: FileExport
 Aliases:
 
 Required: True
 Position: Named
 Default value: None
-Accept pipeline input: True (ByPropertyName)
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Force
-{{ Fill Force Description }}
+### -Console
+{{ Fill Console Description }}
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: All
+Parameter Sets: Console
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: False
 Accept pipeline input: False

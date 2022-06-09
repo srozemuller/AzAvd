@@ -5,56 +5,58 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdSessionHost
+# Update-AvdSessionhostDrainMode
 
 ## SYNOPSIS
-Gets the current AVD Session hosts from a specific hostpool.
+Updates sessionhosts for accepting or denying connections.
 
 ## SYNTAX
 
-### Resource (Default)
+### InputObject
 ```
-Get-AvdSessionHost -Id <String> [<CommonParameters>]
-```
-
-### Hostname
-```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [<CommonParameters>]
+Update-AvdSessionhostDrainMode -InputObject <PSObject> -AllowNewSession <Boolean> [<CommonParameters>]
 ```
 
-### All
+### Parameters
 ```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+Update-AvdSessionhostDrainMode -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
+ -AllowNewSession <Boolean> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function will grab all the sessionhost from a specific Azure Virtual Desktop hostpool.
+The function will update sessionhosts drainmode to true or false.
+This can be one sessionhost or all of them.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -Name avd-host-1.avd.domain
-```
-
-### EXAMPLE 2
-```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
-```
-
-### EXAMPLE 3
-```
-Get-AvdSessionHost -Id sessionhostId
+Update-AvdSessionhostDrainMode -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -AllowNewSession $true
 ```
 
 ## PARAMETERS
+
+### -InputObject
+An sessionhost object or array of sessionhosts.
+
+```yaml
+Type: PSObject
+Parameter Sets: InputObject
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
 
 ### -HostpoolName
 Enter the AVD Hostpool name
 
 ```yaml
 Type: String
-Parameter Sets: Hostname, All
+Parameter Sets: Parameters
 Aliases:
 
 Required: True
@@ -69,7 +71,7 @@ Enter the AVD Hostpool resourcegroup name
 
 ```yaml
 Type: String
-Parameter Sets: Hostname, All
+Parameter Sets: Parameters
 Aliases:
 
 Required: True
@@ -79,12 +81,12 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Name
-Enter the session hosts name
+### -SessionHostName
+Enter the sessionhosts name
 
 ```yaml
 Type: String
-Parameter Sets: Hostname
+Parameter Sets: Parameters
 Aliases:
 
 Required: True
@@ -94,18 +96,18 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Id
-Enter the sessionhost's resource ID
+### -AllowNewSession
+Enter $true or $false.
 
 ```yaml
-Type: String
-Parameter Sets: Resource
+Type: Boolean
+Parameter Sets: (All)
 Aliases:
 
 Required: True
 Position: Named
-Default value: None
-Accept pipeline input: True (ByPropertyName)
+Default value: False
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

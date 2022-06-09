@@ -5,56 +5,36 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdSessionHost
+# Move-AvdSessionHost
 
 ## SYNOPSIS
-Gets the current AVD Session hosts from a specific hostpool.
+Moving sessionhosts from an Azure Virtual Desktop hostpool to a new one.
 
 ## SYNTAX
 
-### Resource (Default)
 ```
-Get-AvdSessionHost -Id <String> [<CommonParameters>]
-```
-
-### Hostname
-```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [<CommonParameters>]
-```
-
-### All
-```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+Move-AvdSessionHost -FromHostpoolName <String> -FromResourceGroupName <String> -ToHostpoolName <String>
+ -ToResourceGroupName <String> [-SessionHostName <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function will grab all the sessionhost from a specific Azure Virtual Desktop hostpool.
+The function will move sessionhosts to a new Azure Virtual Desktop hostpool.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -Name avd-host-1.avd.domain
-```
-
-### EXAMPLE 2
-```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
-```
-
-### EXAMPLE 3
-```
-Get-AvdSessionHost -Id sessionhostId
+Move-AvdSessionHost -FromHostpoolName avd-hostpool -FromResourceGroupName rg-avd-01 -ToHostpoolName avd-hostpool-02 -ToResourceGroupName rg-avd-02 -SessionHostName avd-host-1.avd.domain
 ```
 
 ## PARAMETERS
 
-### -HostpoolName
-Enter the AVD Hostpool name
+### -FromHostpoolName
+Enter the source AVD Hostpool name
 
 ```yaml
 Type: String
-Parameter Sets: Hostname, All
+Parameter Sets: (All)
 Aliases:
 
 Required: True
@@ -64,12 +44,12 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ResourceGroupName
-Enter the AVD Hostpool resourcegroup name
+### -FromResourceGroupName
+Enter the source Hostpool resourcegroup name
 
 ```yaml
 Type: String
-Parameter Sets: Hostname, All
+Parameter Sets: (All)
 Aliases:
 
 Required: True
@@ -79,12 +59,12 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Name
-Enter the session hosts name
+### -ToHostpoolName
+Enter the destination AVD Hostpool name
 
 ```yaml
 Type: String
-Parameter Sets: Hostname
+Parameter Sets: (All)
 Aliases:
 
 Required: True
@@ -94,18 +74,33 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Id
-Enter the sessionhost's resource ID
+### -ToResourceGroupName
+Enter the destination Hostpool resourcegroup name
 
 ```yaml
 Type: String
-Parameter Sets: Resource
+Parameter Sets: (All)
 Aliases:
 
 Required: True
 Position: Named
 Default value: None
-Accept pipeline input: True (ByPropertyName)
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -SessionHostName
+Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
