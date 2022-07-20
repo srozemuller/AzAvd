@@ -45,3 +45,12 @@ function Create-CategoryArray ($Categories) {
     }
     return  $categoryArray    
 }
+
+function TestAzResource($resourceId) {
+    $testParameters = @{
+        method = "GET"
+        headers = GetAuthToken -resource $script:AzureApiUrl
+        uri = "{0}{1}?api-version=2021-04-01" -f $script:AzureApiUrl, $resourceId
+    }
+    Invoke-RestMethod @testParameters
+}
