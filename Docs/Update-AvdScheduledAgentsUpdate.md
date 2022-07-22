@@ -15,13 +15,13 @@ Updates the scheduled agents update settings.
 ### UserLocalTimeZone (Default)
 ```
 Update-AvdScheduledAgentsUpdate -HostpoolName <String> -ResourceGroupName <String> [-TimeZone <String>]
- -DayOfWeek <String> -Hour <Int32> [<CommonParameters>]
+ -DayOfWeek <String> -Hour <Int32> [-Disable] [<CommonParameters>]
 ```
 
 ### AdditionalSchedule
 ```
 Update-AvdScheduledAgentsUpdate -HostpoolName <String> -ResourceGroupName <String> [-TimeZone <String>]
- -DayOfWeek <String> -Hour <Int32> -ExtraDayOfWeek <String> -ExtraHour <Int32> [<CommonParameters>]
+ -DayOfWeek <String> -Hour <Int32> -ExtraDayOfWeek <String> -ExtraHour <Int32> [-Disable] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -147,6 +147,21 @@ Aliases:
 Required: True
 Position: Named
 Default value: 0
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Disable
+Enter this switch parameter to disable the agent update
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
