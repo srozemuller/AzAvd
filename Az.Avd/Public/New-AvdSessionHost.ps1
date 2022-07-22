@@ -1,4 +1,4 @@
-function New-AvdAadSessionHost {
+function New-AvdSessionHost {
     <#
     .SYNOPSIS
     Deploys session hosts into a hostpool
@@ -36,16 +36,29 @@ function New-AvdAadSessionHost {
     Enter the session host prefix
     .PARAMETER SubnetId
     Enter the subnet resource ID where the session host is in
+    .PARAMETER Domain
+    Provide the native domain name. domain.local
+    .PARAMETER Domain
+    Provide the native domain name. domain.local
+    .PARAMETER OU
+    Enter the OU to store the hosts at
+    .PARAMETER DomainJoinAccount
+    Provide an account with domain join permissions, mostly domain admin
+    .PARAMETER DomainJoinPassword
+    The domain admin password, must be a secure string
+    .PARAMETER AzureAd
+    Provide this switch parameter if the session host is Azure AD joined, otherwise it is native AD joined
     .PARAMETER Intune
-    Switch parameter if you want to add the session host into Intune
+    Switch parameter if you want to add the session host into Intune. Only supported with AzureAD enrollment.
     .EXAMPLE
-    New-AvdAadSessionHost -HostpoolName avd-hostpool -HostpoolResourceGroup rg-avd-01 -sessionHostCount 1 -ResourceGroupName rg-sessionhosts-01 -Publisher "MicrosoftWindowsDesktop" -Offer "windows-10" -Sku "21h1-ent-g2" -VmSize "Standard_D2s_v3"
-    -Location "westeurope" -diskType "Standard_LRS" -LocalAdmin "ladmin" -LocalPass "lpass" -Prefix "AVD" -SubnetId "/subscriptions/../resourceGroups/../providers/Microsoft.Network/virtualNetworks/../subnets/../" -Intune
+    New-AvdSessionHost -HostpoolName avd-hostpool -HostpoolResourceGroup rg-avd-01 -sessionHostCount 1 -ResourceGroupName rg-sessionhosts-01 -Publisher "MicrosoftWindowsDesktop" -Offer "windows-10" -Sku "21h1-ent-g2" -VmSize "Standard_D2s_v3"
+    -Location "westeurope" -diskType "Standard_LRS" -LocalAdmin "ladmin" -LocalPass "lpass" -Prefix "AVD" -SubnetId "/subscriptions/../resourceGroups/../providers/Microsoft.Network/virtualNetworks/../subnets/../" -Intune -AzureAd
     .EXAMPLE
-    New-AvdAadSessionHost -HostpoolName avd-hostpool -HostpoolResourceGroup rg-avd-01 -sessionHostCount 1 -ResourceGroupName rg-sessionhosts-01 -imageVersionId "/subscriptions/..galleries/../images/../version/21.0.0" -VmSize "Standard_D2s_v3"
-    -Location "westeurope" -diskType "Standard_LRS" -LocalAdmin "ladmin" -LocalPass "lpass" -Prefix "AVD" -SubnetId "/subscriptions/../resourceGroups/../providers/Microsoft.Network/virtualNetworks/../subnets/../"
+    New-AvdSessionHost -HostpoolName avd-hostpool -HostpoolResourceGroup rg-avd-01 -sessionHostCount 1 -ResourceGroupName rg-sessionhosts-01 -imageVersionId "/subscriptions/..galleries/../images/../version/21.0.0" -VmSize "Standard_D2s_v3"
+    -Location "westeurope" -diskType "Standard_LRS" -LocalAdmin "ladmin" -LocalPass "lpass" -Prefix "AVD" -SubnetId "/subscriptions/../resourceGroups/../providers/Microsoft.Network/virtualNetworks/../subnets/../" -Domain domain.local -OU "OU=AVD,DC=domain,DC=local"
+    -DomainAdmin vmjoiner@domain.local -DomainPassword "P@sswrd123"
     #>
-    [CmdletBinding(DefaultParameterSetName = 'MarketPlace')]
+    [CmdletBinding(DefaultParameterSetName = 'AADWithSig')]
     param
     (
         [parameter(Mandatory)]
@@ -54,7 +67,8 @@ function New-AvdAadSessionHost {
         [parameter(Mandatory)]
         [string]$ResourceGroupName,
 
-        [parameter(Mandatory, ParameterSetName = 'Sig')]
+        [parameter(Mandatory, ParameterSetName = 'AADWithSig')]
+        [parameter(Mandatory, ParameterSetName = 'NativeADWithSig')]
         [string]$ImageVersionId,
         
         [parameter(Mandatory)]
@@ -66,16 +80,20 @@ function New-AvdAadSessionHost {
         [parameter(Mandatory)]
         [string]$Prefix,
 
-        [parameter(Mandatory, ParameterSetName = 'MarketPlace')]
+        [parameter(Mandatory, ParameterSetName = 'AADWithMarketPlace')]
+        [parameter(Mandatory, ParameterSetName = 'NativeADWithMarketPlace')]
         [string]$Publisher,
-    
-        [parameter(Mandatory, ParameterSetName = 'MarketPlace')]
+
+        [parameter(Mandatory, ParameterSetName = 'AADWithMarketPlace')]
+        [parameter(Mandatory, ParameterSetName = 'NativeADWithMarketPlace')]
         [string]$Offer,
 
-        [parameter(Mandatory, ParameterSetName = 'MarketPlace')]
+        [parameter(Mandatory, ParameterSetName = 'AADWithMarketPlace')]
+        [parameter(Mandatory, ParameterSetName = 'NativeADWithMarketPlace')]
         [string]$Sku,
 
-        [parameter(ParameterSetName = 'MarketPlace')]
+        [parameter(Mandatory, ParameterSetName = 'AADWithSig')]
+        [parameter(Mandatory, ParameterSetName = 'NativeADWithSig')]
         [string]$Version = "latest",
 
         [parameter(Mandatory)]
@@ -97,6 +115,27 @@ function New-AvdAadSessionHost {
         [parameter(Mandatory)]
         [string]$SubnetId,
 
+        # [parameter(Mandatory, ParameterSetName = 'AzureADJoin')]
+        [parameter(Mandatory, ParameterSetName = 'AADWithSig')]
+        [parameter(Mandatory, ParameterSetName = 'AADWithMarketPlace')]
+        [switch]$AzureAd,
+
+        [parameter(Mandatory, ParameterSetName = 'NativeADWithSig')]
+        [parameter(Mandatory, ParameterSetName = 'NativeADWithMarketPlace')]
+        [string]$Domain,
+
+        [parameter(Mandatory, ParameterSetName = 'NativeADWithSig')]
+        [parameter(Mandatory, ParameterSetName = 'NativeADWithMarketPlace')]
+        [string]$OU,
+
+        [parameter(Mandatory, ParameterSetName = 'NativeADWithSig')]
+        [parameter(Mandatory, ParameterSetName = 'NativeADWithMarketPlace')]
+        [string]$DomainJoinAccount,
+
+        [parameter(Mandatory, ParameterSetName = 'NativeADWithSig')]
+        [parameter(Mandatory, ParameterSetName = 'NativeADWithMarketPlace')]
+        [System.Security.SecureString]$DomainJoinPassword,
+
         [parameter()]
         [switch]$Intune,
 
@@ -110,13 +149,13 @@ function New-AvdAadSessionHost {
         $registrationToken = Update-AvdRegistrationToken -HostpoolName $Hostpoolname $resourceGroupName -HoursActive 4 | Select-Object -ExpandProperty properties
     }
     Process {
-        switch ($PsCmdlet.ParameterSetName) {
-            Sig {
+        switch -Wildcard ($PsCmdlet.ParameterSetName) {
+            *Sig {
                 $imageReference = @{
                     id = $ImageVersionId
                 }
             }
-            MarketPlace {
+            *MarketPlace {
                 $imageReference = @{
                     "sku"       = $Sku
                     "publisher" = $Publisher
@@ -126,6 +165,55 @@ function New-AvdAadSessionHost {
             }
             Default {
                 Throw "No source for image provided. Please provide a compute imageId or marketplace sources (publisher, offer, sku, version)"
+            }
+        }
+        switch -Wildcard ($PsCmdlet.ParameterSetName) {
+            NativeAD* {
+                Write-Verbose "Provided parameters to join native AD"
+                $extensionName = "AADLoginForWindows"
+                $domainJoinExtension = @{
+                    properties = @{
+                        publisher               = "Microsoft.Compute"
+                        type                    = "JsonADDomainExtension"
+                        typeHandlerVersion      = "1.3"
+                        autoUpgradeMinorVersion = $true
+                        settings                = @{
+                            name    = $Domain
+                            user    = $DomainJoinAccount
+                            restart = $true
+                            options = "3"
+                        }
+                        protectedSettings       = @{
+                            password = $DomainJoinPassword | ConvertFrom-SecureString -AsPlainText
+                        }
+                    }
+                    location   = $Location
+                }
+                if ($OU) {
+                    $domainJoinExtension.properties.settings.Add("ouPath", $OU)
+                }
+            }
+            AAD* {
+                Write-Verbose "Provided -AzureAD switch, joining AzureAD"
+                $extensionName = "AADLoginForWindows"
+                $domainJoinUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $vmName, $extensionName , '2021-11-01'
+                $domainJoinExtension = @{
+                    properties = @{
+                        Type               = "AADLoginForWindows"
+                        Publisher          = "Microsoft.Azure.ActiveDirectory"
+                        typeHandlerVersion = "1.0"
+                    }
+                    location   = $Location
+                }
+                if ($Intune.isPresent) {
+                    $settings = @{
+                        mdmId = "0000000a-0000-0000-c000-000000000000"
+                    }
+                    $domainJoinExtension.properties.Add("Settings", $settings)
+                }    
+            }
+            Default {
+                Throw "No AD environment provided, please provide -AzureAD switch parameter or provide native domain OU and credentials"
             }
         }
         Do {
@@ -219,22 +307,6 @@ function New-AvdAadSessionHost {
                 Write-Verbose "Host $vmName is ready"
             }          
             try {
-                $extensionName = "AADLoginForWindows"
-                $domainJoinUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $vmName, $extensionName , '2021-11-01'
-                $domainJoinExtension = @{
-                    properties = @{
-                        Type               = "AADLoginForWindows"
-                        Publisher          = "Microsoft.Azure.ActiveDirectory"
-                        typeHandlerVersion = "1.0"
-                    }
-                    location   = $Location
-                }
-                if ($Intune.isPresent) {
-                    $settings = @{
-                        mdmId = "0000000a-0000-0000-c000-000000000000"
-                    }
-                    $domainJoinExtension.properties.Add("Settings", $settings)
-                }
                 $domainJoinBody = $domainJoinExtension | ConvertTo-Json -Depth 99
                 Invoke-RestMethod -Method PUT -Uri $domainJoinUrl -Headers $script:token -Body $domainJoinBody
                 Do {

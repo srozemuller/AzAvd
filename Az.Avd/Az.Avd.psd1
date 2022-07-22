@@ -97,6 +97,7 @@
         'New-AvdApplicationGroup',
         'New-AvdHostpool',
         'New-AvdScalingPlan',
+        'New-AvdSessionHost',
         'New-AvdVmTemplate',
         'New-AvdWorkspace',
         'Remove-AvdSessionHost',
