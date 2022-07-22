@@ -14,10 +14,10 @@ Creates a new Azure Virtual Desktop hostpool.
 
 ```
 New-AvdHostpool -HostpoolName <String> -ResourceGroupName <String> -Location <String> -HostPoolType <String>
- [-CustomRdpProperty <String>] [-FriendlyName <String>] [-Description <String>] [-LoadBalancerType <String>]
- [-ValidationEnvironment <Boolean>] [-StartVMOnConnect <Boolean>] [-PreferredAppGroupType <String>]
- [-PersonalDesktopAssignmentType <String>] [-VmTemplate <String>] [-MaxSessionLimit <Int32>] [-Force]
- [<CommonParameters>]
+ [-CustomRdpProperty <String>] [-AgentUpdate <Object>] [-FriendlyName <String>] [-Description <String>]
+ [-LoadBalancerType <String>] [-ValidationEnvironment <Boolean>] [-StartVMOnConnect <Boolean>]
+ [-PreferredAppGroupType <String>] [-PersonalDesktopAssignmentType <String>] [-VmTemplate <String>]
+ [-MaxSessionLimit <Int32>] [-Force] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -38,6 +38,11 @@ New-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -locatio
 ### EXAMPLE 3
 ```
 New-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -location WestEurope -vmTemplate "{"domain":"","osDiskType":"Premium_LRS","namePrefix":"avd","vmSize":{"cores":"2","ram":"8","id":"Standard_B2MS"},"galleryImageOffer":"","galleryImagePublisher":"","galleryImageSKU":"","imageType":"","imageUri":"","customImageId":"","useManagedDisks":"True","galleryItemId":null}"
+```
+
+### EXAMPLE 4
+```
+New-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -location WestEurope -AgentUpdate @(@{dayOfWeek="Sunday";Hour=3},@{dayOfWeek="Monday";Hour=3})
 ```
 
 ## PARAMETERS
@@ -107,6 +112,22 @@ If needed fill in the custom rdp properties (for example: targetisaadjoined:i:1 
 
 ```yaml
 Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -AgentUpdate
+Provide the agent update object, max 2 schedules supported.
+If provided more than 2, the first 2 are selected.
+
+```yaml
+Type: Object
 Parameter Sets: (All)
 Aliases:
 
