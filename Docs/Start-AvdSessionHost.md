@@ -5,46 +5,43 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdSessionHost
+# Start-AvdSessionHost
 
 ## SYNOPSIS
-Gets the current AVD Session hosts from a specific hostpool.
+Starts AVD Session hosts in a specific hostpool.
 
 ## SYNTAX
 
-### Resource (Default)
+### All (Default)
 ```
-Get-AvdSessionHost -Id <String> [<CommonParameters>]
+Start-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [-Force]
+ [<CommonParameters>]
 ```
 
 ### Hostname
 ```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [<CommonParameters>]
+Start-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [<CommonParameters>]
 ```
 
-### All
+### Resource
 ```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+Start-AvdSessionHost -Id <Object> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function will grab all the sessionhost from a specific Azure Virtual Desktop hostpool.
+This function starts sessionshosts in a specific Azure Virtual Desktop hostpool.
+If you want to start a specific session host then also provide the name,
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -Name avd-host-1.avd.domain
+Start-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
 ```
 
 ### EXAMPLE 2
 ```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
-```
-
-### EXAMPLE 3
-```
-Get-AvdSessionHost -Id sessionhostId
+Start-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
 ```
 
 ## PARAMETERS
@@ -54,7 +51,7 @@ Enter the AVD Hostpool name
 
 ```yaml
 Type: String
-Parameter Sets: Hostname, All
+Parameter Sets: All, Hostname
 Aliases:
 
 Required: True
@@ -69,7 +66,7 @@ Enter the AVD Hostpool resourcegroup name
 
 ```yaml
 Type: String
-Parameter Sets: Hostname, All
+Parameter Sets: All, Hostname
 Aliases:
 
 Required: True
@@ -80,11 +77,11 @@ Accept wildcard characters: False
 ```
 
 ### -Name
-Enter the session hosts name
+{{ Fill Name Description }}
 
 ```yaml
 Type: String
-Parameter Sets: Hostname
+Parameter Sets: All, Hostname
 Aliases:
 
 Required: True
@@ -95,10 +92,11 @@ Accept wildcard characters: False
 ```
 
 ### -Id
-Enter the sessionhost's resource ID
+\[ValidatePattern('^(?:(?!\/).)*$', ErrorMessage = "It looks like you also provided a hostpool, a sessionhost name is enough.
+Provided value {0}")\]
 
 ```yaml
-Type: String
+Type: Object
 Parameter Sets: Resource
 Aliases:
 
@@ -106,6 +104,21 @@ Required: True
 Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -Force
+{{ Fill Force Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: All
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

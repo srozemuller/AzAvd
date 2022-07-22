@@ -5,52 +5,47 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdSessionHost
+# Disable-AvdSessionHost
 
 ## SYNOPSIS
-Gets the current AVD Session hosts from a specific hostpool.
+Disable login for sessionhosts.
 
 ## SYNTAX
 
-### Resource (Default)
+### Hostname (Default)
 ```
-Get-AvdSessionHost -Id <String> [<CommonParameters>]
-```
-
-### Hostname
-```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [<CommonParameters>]
+Disable-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [<CommonParameters>]
 ```
 
 ### All
 ```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+Disable-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [-Force] [<CommonParameters>]
+```
+
+### Resource
+```
+Disable-AvdSessionHost -Id <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function will grab all the sessionhost from a specific Azure Virtual Desktop hostpool.
+The function sets a session host into drainmode, which means that users are not able to login to that host.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -Name avd-host-1.avd.domain
+Disable-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -Name avd-host-1.avd.domain
 ```
 
 ### EXAMPLE 2
 ```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
-```
-
-### EXAMPLE 3
-```
-Get-AvdSessionHost -Id sessionhostId
+Disable-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -Force
 ```
 
 ## PARAMETERS
 
 ### -HostpoolName
-Enter the AVD Hostpool name
+Enter the source AVD Hostpool name
 
 ```yaml
 Type: String
@@ -65,7 +60,7 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the AVD Hostpool resourcegroup name
+Enter the source Hostpool resourcegroup name
 
 ```yaml
 Type: String
@@ -80,7 +75,7 @@ Accept wildcard characters: False
 ```
 
 ### -Name
-Enter the session hosts name
+Enter the sessionhosts name avd-host-1.avd.domain
 
 ```yaml
 Type: String
@@ -95,7 +90,7 @@ Accept wildcard characters: False
 ```
 
 ### -Id
-Enter the sessionhost's resource ID
+Enter the session host's resource ID
 
 ```yaml
 Type: String
@@ -106,6 +101,21 @@ Required: True
 Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -Force
+Use the -Force switch to disable session hosts without interaction
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: All
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

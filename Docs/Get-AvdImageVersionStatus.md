@@ -5,46 +5,42 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdSessionHost
+# Get-AvdImageVersionStatus
 
 ## SYNOPSIS
-Gets the current AVD Session hosts from a specific hostpool.
+Gets the image version from where the session host is started from.
 
 ## SYNTAX
 
-### Resource (Default)
+### Hostpool (Default)
 ```
-Get-AvdSessionHost -Id <String> [<CommonParameters>]
-```
-
-### Hostname
-```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [<CommonParameters>]
+Get-AvdImageVersionStatus -HostpoolName <String> -ResourceGroupName <String> [-NotLatest] [<CommonParameters>]
 ```
 
-### All
+### Sessionhost
 ```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+Get-AvdImageVersionStatus -HostpoolName <String> -ResourceGroupName <String> [-SessionHostName <String>]
+ [-NotLatest] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function will grab all the sessionhost from a specific Azure Virtual Desktop hostpool.
+The function will help you getting insights if there are session hosts started from an old version in relation to the Shared Image Gallery
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -Name avd-host-1.avd.domain
+Get-AvdImageVersionStatus -HostpoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
 ```
 
 ### EXAMPLE 2
 ```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
+Get-AvdImageVersionStatus -HostpoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -NotLatest
 ```
 
 ### EXAMPLE 3
 ```
-Get-AvdSessionHost -Id sessionhostId
+Get-AvdImageVersionStatus -HostpoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -SessionHostName avd.host -NotLatest
 ```
 
 ## PARAMETERS
@@ -54,7 +50,7 @@ Enter the AVD Hostpool name
 
 ```yaml
 Type: String
-Parameter Sets: Hostname, All
+Parameter Sets: (All)
 Aliases:
 
 Required: True
@@ -69,7 +65,7 @@ Enter the AVD Hostpool resourcegroup name
 
 ```yaml
 Type: String
-Parameter Sets: Hostname, All
+Parameter Sets: (All)
 Aliases:
 
 Required: True
@@ -79,33 +75,33 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Name
-Enter the session hosts name
+### -SessionHostName
+Enter the session host name.
 
 ```yaml
 Type: String
-Parameter Sets: Hostname
+Parameter Sets: Sessionhost
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Id
-Enter the sessionhost's resource ID
+### -NotLatest
+This is a switch parameter which let you control the output to show only the sessionhosts which are not started from the latest version.
 
 ```yaml
-Type: String
-Parameter Sets: Resource
+Type: SwitchParameter
+Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
-Default value: None
-Accept pipeline input: True (ByPropertyName)
+Default value: False
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

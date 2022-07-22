@@ -5,46 +5,37 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdSessionHost
+# Get-AvdNetworkInfo
 
 ## SYNOPSIS
-Gets the current AVD Session hosts from a specific hostpool.
+Gets the sessionhost network information
 
 ## SYNTAX
 
-### Resource (Default)
+### Hostpool (Default)
 ```
-Get-AvdSessionHost -Id <String> [<CommonParameters>]
-```
-
-### Hostname
-```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [<CommonParameters>]
+Get-AvdNetworkInfo -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
 ```
 
-### All
+### Sessionhost
 ```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+Get-AvdNetworkInfo -HostpoolName <String> -ResourceGroupName <String> [-SessionHostName <String>]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function will grab all the sessionhost from a specific Azure Virtual Desktop hostpool.
+The function will help you getting insights about the AVD network configuration.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -Name avd-host-1.avd.domain
+Get-AvdNetworkInfo -HostpoolName avd-hostpool -ResourceGroupName hostpool-resourcegroup
 ```
 
 ### EXAMPLE 2
 ```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
-```
-
-### EXAMPLE 3
-```
-Get-AvdSessionHost -Id sessionhostId
+Get-AvdNetworkInfo -HostpoolName avd-hostpool -ResourceGroupName hostpool-resourcegroup -SessionHostName avd-0.domain.local
 ```
 
 ## PARAMETERS
@@ -54,7 +45,7 @@ Enter the AVD Hostpool name
 
 ```yaml
 Type: String
-Parameter Sets: Hostname, All
+Parameter Sets: (All)
 Aliases:
 
 Required: True
@@ -69,7 +60,7 @@ Enter the AVD Hostpool resourcegroup name
 
 ```yaml
 Type: String
-Parameter Sets: Hostname, All
+Parameter Sets: (All)
 Aliases:
 
 Required: True
@@ -79,33 +70,18 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Name
-Enter the session hosts name
+### -SessionHostName
+This parameter accepts a single sessionhost name
 
 ```yaml
 Type: String
-Parameter Sets: Hostname
+Parameter Sets: Sessionhost
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Id
-Enter the sessionhost's resource ID
-
-```yaml
-Type: String
-Parameter Sets: Resource
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 

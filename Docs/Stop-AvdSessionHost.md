@@ -5,43 +5,44 @@ online version:
 schema: 2.0.0
 ---
 
-# Restart-AvdSessionHost
+# Stop-AvdSessionHost
 
 ## SYNOPSIS
-Restarts AVD Session hosts in a specific hostpool.
+Stops AVD Session hosts in a specific hostpool.
 
 ## SYNTAX
 
 ### All (Default)
 ```
-Restart-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [-Force]
+Stop-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [-Deallocate] [-Force]
  [<CommonParameters>]
 ```
 
 ### Hostname
 ```
-Restart-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [<CommonParameters>]
+Stop-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [-Deallocate]
+ [<CommonParameters>]
 ```
 
 ### Resource
 ```
-Restart-AvdSessionHost -Id <Object> [<CommonParameters>]
+Stop-AvdSessionHost -Id <Object> [-Deallocate] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function restarts sessionshosts in a specific Azure Virtual Desktop hostpool.
+This function stops sessionshosts in a specific Azure Virtual Desktop hostpool.
 If you want to start a specific session host then also provide the name,
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
+Stop-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
 ```
 
 ### EXAMPLE 2
 ```
-Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
+Stop-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
 ```
 
 ## PARAMETERS
@@ -92,7 +93,8 @@ Accept wildcard characters: False
 ```
 
 ### -Id
-{{ Fill Id Description }}
+\[ValidatePattern('^(?:(?!\/).)*$', ErrorMessage = "It looks like you also provided a hostpool, a sessionhost name is enough.
+Provided value {0}")\]
 
 ```yaml
 Type: Object
@@ -103,6 +105,21 @@ Required: True
 Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -Deallocate
+{{ Fill Deallocate Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

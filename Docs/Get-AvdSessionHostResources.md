@@ -5,56 +5,57 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdSessionHost
+# Get-AvdSessionHostResources
 
 ## SYNOPSIS
-Gets the current AVD Session hosts from a specific hostpool.
+Gets the Azure resources from a AVD Session Host
 
 ## SYNTAX
 
-### Resource (Default)
+### All (Default)
 ```
-Get-AvdSessionHost -Id <String> [<CommonParameters>]
+Get-AvdSessionHostResources -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
 ```
 
 ### Hostname
 ```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [<CommonParameters>]
+Get-AvdSessionHostResources -HostpoolName <String> -ResourceGroupName <String> -Name <String>
+ [<CommonParameters>]
 ```
 
-### All
+### Resource
 ```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+Get-AvdSessionHostResources -Id <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function will grab all the sessionhost from a specific Azure Virtual Desktop hostpool.
+The function will help you getting the associated Azure resource information which is behind the AVD Session Host
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -Name avd-host-1.avd.domain
+Get-AvdSessionHostResources -Hostpoolname avd-hostpool -ResourceGroup rg-avd-01
 ```
 
 ### EXAMPLE 2
 ```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
+Get-AvdSessionHostResources -Hostpoolname avd-hostpool -ResourceGroup rg-avd-01 -Name avd-0
 ```
 
 ### EXAMPLE 3
 ```
-Get-AvdSessionHost -Id sessionhostId
+Get-AvdSessionHostResources -Id sessionhostId
 ```
 
 ## PARAMETERS
 
 ### -HostpoolName
-Enter the AVD Hostpool name
+Enter the AVD hostpool name
 
 ```yaml
 Type: String
-Parameter Sets: Hostname, All
+Parameter Sets: All, Hostname
 Aliases:
 
 Required: True
@@ -65,11 +66,11 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the AVD Hostpool resourcegroup name
+Enter the AVD hostpool resourcegroup
 
 ```yaml
 Type: String
-Parameter Sets: Hostname, All
+Parameter Sets: All, Hostname
 Aliases:
 
 Required: True
@@ -80,7 +81,7 @@ Accept wildcard characters: False
 ```
 
 ### -Name
-Enter the session hosts name
+{{ Fill Name Description }}
 
 ```yaml
 Type: String
@@ -95,7 +96,7 @@ Accept wildcard characters: False
 ```
 
 ### -Id
-Enter the sessionhost's resource ID
+{{ Fill Id Description }}
 
 ```yaml
 Type: String

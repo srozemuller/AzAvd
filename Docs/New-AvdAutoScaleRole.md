@@ -5,56 +5,56 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdSessionHost
+# New-AvdAutoScaleRole
 
 ## SYNOPSIS
-Gets the current AVD Session hosts from a specific hostpool.
+Creates a new RBAC role for AVD autoscaling
 
 ## SYNTAX
 
-### Resource (Default)
 ```
-Get-AvdSessionHost -Id <String> [<CommonParameters>]
-```
-
-### Hostname
-```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [<CommonParameters>]
-```
-
-### All
-```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+New-AvdAutoScaleRole -RoleName <String> -RoleDescription <String> -ResourceGroupName <String> [-Assign]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function will grab all the sessionhost from a specific Azure Virtual Desktop hostpool.
+The function will create a new RBAC role and assign it at subscription or resourcegroup level.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -Name avd-host-1.avd.domain
+New-AvdAutoScaleRole RoleName avd-autoscale RoleDescription "Plan for autoscale session hosts"
 ```
 
 ### EXAMPLE 2
 ```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
-```
-
-### EXAMPLE 3
-```
-Get-AvdSessionHost -Id sessionhostId
+New-AvdAutoScaleRole RoleName avd-autoscale RoleDescription "Plan for autoscale session hosts" -resourcegroup rg-avd-001 -Assign
 ```
 
 ## PARAMETERS
 
-### -HostpoolName
-Enter the AVD Hostpool name
+### -RoleName
+Enter the role name
 
 ```yaml
 Type: String
-Parameter Sets: Hostname, All
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -RoleDescription
+Enter the role description
+
+```yaml
+Type: String
+Parameter Sets: (All)
 Aliases:
 
 Required: True
@@ -65,11 +65,12 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the AVD Hostpool resourcegroup name
+If you like to scope at resourcegroup level, provide the resourcegroup name.
+(Default subscription scope)
 
 ```yaml
 Type: String
-Parameter Sets: Hostname, All
+Parameter Sets: (All)
 Aliases:
 
 Required: True
@@ -79,33 +80,18 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Name
-Enter the session hosts name
+### -Assign
+If you like to assign directly, use this switch parameter
 
 ```yaml
-Type: String
-Parameter Sets: Hostname
+Type: SwitchParameter
+Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
-Default value: None
+Default value: False
 Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Id
-Enter the sessionhost's resource ID
-
-```yaml
-Type: String
-Parameter Sets: Resource
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 

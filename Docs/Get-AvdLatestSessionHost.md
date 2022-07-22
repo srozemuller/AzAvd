@@ -5,46 +5,32 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdSessionHost
+# Get-AvdLatestSessionHost
 
 ## SYNOPSIS
-Gets the current AVD Session hosts from a specific hostpool.
+Gets the latest session host from the AVD Hostpool
 
 ## SYNTAX
 
-### Resource (Default)
+### Parameters (Default)
 ```
-Get-AvdSessionHost -Id <String> [<CommonParameters>]
-```
-
-### Hostname
-```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [<CommonParameters>]
+Get-AvdLatestSessionHost -HostpoolName <String> -ResourceGroupName <String> [-NumOnly] [<CommonParameters>]
 ```
 
-### All
+### InputObject
 ```
-Get-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+Get-AvdLatestSessionHost -InputObject <PSObject> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function will grab all the sessionhost from a specific Azure Virtual Desktop hostpool.
+The function will help you getting the latests session host from a AVD Hostpool. 
+By running this function you will able to define the next number for deploying new session hosts.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -Name avd-host-1.avd.domain
-```
-
-### EXAMPLE 2
-```
-Get-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
-```
-
-### EXAMPLE 3
-```
-Get-AvdSessionHost -Id sessionhostId
+Get-AvdLatestSessionHost -HostpoolName avd-hostpool -ResourceGroupName avd-resourcegroup
 ```
 
 ## PARAMETERS
@@ -54,7 +40,7 @@ Enter the AVD Hostpool name
 
 ```yaml
 Type: String
-Parameter Sets: Hostname, All
+Parameter Sets: Parameters
 Aliases:
 
 Required: True
@@ -69,7 +55,7 @@ Enter the AVD Hostpool resourcegroup name
 
 ```yaml
 Type: String
-Parameter Sets: Hostname, All
+Parameter Sets: Parameters
 Aliases:
 
 Required: True
@@ -79,33 +65,33 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Name
-Enter the session hosts name
+### -NumOnly
+With this switch parameter you will set, you will get the next sessionhost number returned.
 
 ```yaml
-Type: String
-Parameter Sets: Hostname
+Type: SwitchParameter
+Parameter Sets: Parameters
 Aliases:
 
-Required: True
+Required: False
 Position: Named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Id
-Enter the sessionhost's resource ID
+### -InputObject
+You can put the hostpool object in here.
 
 ```yaml
-Type: String
-Parameter Sets: Resource
+Type: PSObject
+Parameter Sets: InputObject
 Aliases:
 
 Required: True
 Position: Named
 Default value: None
-Accept pipeline input: True (ByPropertyName)
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
