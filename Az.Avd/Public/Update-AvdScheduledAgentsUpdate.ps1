@@ -10,6 +10,8 @@ function Update-AvdScheduledAgentsUpdate {
     Enter the AVD Hostpool resourcegroup name
     .PARAMETER TimeZone
     Fill in a custom timezone, otherwise the session host's timezone is used
+    .PARAMETER Disable
+    Enter this switch parameter to disable the agent update 
     .PARAMETER DayOfWeek
     Monday, Tuesday, etc.
     .PARAMETER Hour
@@ -50,7 +52,6 @@ function Update-AvdScheduledAgentsUpdate {
         [ValidatePattern('2[0-4]|1[0-9]|[1-9]')]
         [int]$Hour,
 
-
         [parameter(Mandatory, ParameterSetName = "AdditionalSchedule")]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")]
@@ -59,7 +60,11 @@ function Update-AvdScheduledAgentsUpdate {
         [parameter(Mandatory, ParameterSetName = "AdditionalSchedule")]
         [ValidateNotNullOrEmpty()]
         [ValidatePattern('2[0-4]|1[0-9]|[1-9]')]
-        [int]$ExtraHour
+        [int]$ExtraHour,
+
+        [parameter()]
+        [ValidateNotNullOrEmpty()]
+        [switch]$Disable
     )
     Begin {
         Write-Verbose "Start searching"
@@ -70,6 +75,7 @@ function Update-AvdScheduledAgentsUpdate {
             uri     = $url
             Headers = $token
         }
+        $scheduleType = "Scheduled"
     }
     Process {
         if ($TimeZone) {
@@ -81,10 +87,13 @@ function Update-AvdScheduledAgentsUpdate {
             $maintenanceWindowTimeZone = $null
             $useSessionHostLocalTime = $true
         }
+        if ($Disable.IsPresent){
+            $scheduleType = "Default"
+        }
         $body = @{
             properties = @{
                 agentUpdate = @{
-                    type        = "Scheduled"
+                    type        = $scheduleType 
                     maintenanceWindowTimeZone = $maintenanceWindowTimeZone
                     useSessionHostLocalTime   = $useSessionHostLocalTime
                     maintenanceWindows        = @(
@@ -97,16 +106,16 @@ function Update-AvdScheduledAgentsUpdate {
             }
         }    
         if ($PSCmdlet.ParameterSetName -eq "AdditionalSchedule") {
+            Write-Verbose "Adding extra schedule"
             $additionalSchedule = @(
                 @{
                     dayOfWeek = $ExtraDayOfWeek
                     hour      = $ExtraHour
                 }
             )
-            $body.properties.maintenanceWindows += $additionalSchedule
+            $body.properties.agentUpdate.maintenanceWindows += $additionalSchedule
         }    
         $jsonBody = $body | ConvertTo-Json -Depth 5
-        $jsonBody
         $parameters = @{
             uri     = $url
             Method  = "PATCH"
