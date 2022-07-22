@@ -108,6 +108,7 @@
         'Update-AvdDiagnostics',
         'Update-AvdHostpool',
         'Update-AvdRegistrationToken',
+        'Update-AvdScheduledAgentsUpdate',
         'Update-AvdSessionHost',
         'Update-AvdSessionhostDrainMode',
         'Update-AvdWorkspace'

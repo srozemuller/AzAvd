@@ -67,8 +67,7 @@ function Update-AvdHostpool {
         Write-Verbose "Start searching"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
-        $apiVersion = "?api-version=2019-12-10-preview"
-        $url = $Script:AzureApiUrl+"/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + $apiVersion
+        $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}?api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName, $script:hostpoolApiVersion 
         $parameters = @{
             uri     = $url
             Headers = $token

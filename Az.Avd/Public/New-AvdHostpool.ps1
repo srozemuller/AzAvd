@@ -10,6 +10,8 @@ function New-AvdHostpool {
     Enter the AVD Hostpool resourcegroup name
     .PARAMETER CustomRdpProperty
     If needed fill in the custom rdp properties (for example: targetisaadjoined:i:1 )
+    .PARAMETER AgentUpdate
+    Provide the agent update object, max 2 schedules supported. If provided more than 2, the first 2 are selected.
     .PARAMETER FriendlyName
     Change the host pool friendly name
     .PARAMETER LoadBalancerType
@@ -26,6 +28,9 @@ function New-AvdHostpool {
     New-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -location WestEurope -customRdpProperty "targetisaadjoined:i:1"
     .EXAMPLE
     New-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -location WestEurope -vmTemplate "{"domain":"","osDiskType":"Premium_LRS","namePrefix":"avd","vmSize":{"cores":"2","ram":"8","id":"Standard_B2MS"},"galleryImageOffer":"","galleryImagePublisher":"","galleryImageSKU":"","imageType":"","imageUri":"","customImageId":"","useManagedDisks":"True","galleryItemId":null}"
+    .EXAMPLE
+    New-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -location WestEurope -AgentUpdate @(@{dayOfWeek="Sunday";Hour=3},@{dayOfWeek="Monday";Hour=3})
+    
     #>
     [CmdletBinding()]
     param
@@ -50,6 +55,10 @@ function New-AvdHostpool {
         [parameter()]
         [ValidateNotNullOrEmpty()]
         [string]$CustomRdpProperty,
+
+        [parameter()]
+        [ValidateNotNullOrEmpty()]
+        [object]$AgentUpdate,
 
         [parameter()]
         [ValidateNotNullOrEmpty()]
@@ -97,8 +106,7 @@ function New-AvdHostpool {
         Write-Verbose "Start searching"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
-        $apiVersion = "?api-version=2019-12-10-preview"
-        $url = $Script:AzureApiUrl+"/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + $apiVersion
+        $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}?api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName, $script:hostpoolApiVersion
         $parameters = @{
             uri     = $url
             Headers = $token
@@ -119,6 +127,8 @@ function New-AvdHostpool {
         if ($PersonalDesktopAssignmentType){$body.properties.Add("PersonalDesktopAssignmentType", $PersonalDesktopAssignmentType)}
         if ($MaxSessionLimit){$body.properties.Add("maxSessionLimit", $MaxSessionLimit)}
         if ($VmTemplate){$body.properties.Add("vmTemplate", $VmTemplate)}
+        # Suporting max 2 schedule, selecting first 2 
+        if ($AgentUpdate){$body.properties.Add("agentUpdate", $AgentUpdate[0..1])}
     }
     Process {
         $jsonBody = $body | ConvertTo-Json
