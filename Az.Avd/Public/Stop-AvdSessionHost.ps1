@@ -52,7 +52,6 @@ function Stop-AvdSessionHost {
         Write-Verbose "Stopping session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
-        $apiVersion = "?api-version=2021-11-01"
         $sessionHostParameters = @{
             hostpoolName      = $HostpoolName
             resourceGroupName = $ResourceGroupName
@@ -92,7 +91,7 @@ function Stop-AvdSessionHost {
                 Write-Verbose "Found $($sessionHosts.Count) host(s)"
                 Write-Verbose "Starting $($_.name)"
                 $powerOffParameters = @{
-                    uri     = "{0}{1}/{2}{3}" -f $Script:AzureApiUrl, $_.properties.resourceId, $task, $apiVersion
+                    uri     = "{0}{1}/{2}{3}" -f $Script:AzureApiUrl, $_.properties.resourceId, $task, $script:sessionhostApiVersion
                     Method  = "POST"
                     Headers = $token
                 }

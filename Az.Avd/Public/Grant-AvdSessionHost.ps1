@@ -47,7 +47,6 @@ function Grant-AvdSessionHost {
         Write-Verbose "Start moving session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
-        $apiVersion = "2021-09-03-preview"
         if ($Force.IsPresent) {
             $forceString = "true"
         }
@@ -87,7 +86,7 @@ function Grant-AvdSessionHost {
                 }
             }
             $assignParameters = @{
-                uri     = "{0}{1}/{2}&force={3}" -f $Script:AzureApiUrl, $sessionHost.properties.resourceId, $apiVersion, $forceString
+                uri     = "{0}{1}/{2}&force={3}" -f $Script:AzureApiUrl, $sessionHost.properties.resourceId, $script:sessionhostApiVersion, $forceString
                 Method  = "PATCH"
                 Headers = $token
                 Body    = $body | ConvertTo-Json

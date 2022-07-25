@@ -79,9 +79,8 @@ function Start-AvdSessionHost {
             try {
                 Write-Verbose "Found $($sessionHosts.Count) host(s)"
                 Write-Verbose "Starting $($_.name)"
-                $apiVersion = "?api-version=2021-11-01"
                 $powerOffParameters = @{
-                    uri     = "{0}{1}/start{2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
+                    uri     = "{0}{1}/start{2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $script:sessionhostApiVersion
                     Method  = "POST"
                     Headers = $token
                 }

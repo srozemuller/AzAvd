@@ -47,7 +47,6 @@ function Get-AvdSessionHost {
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
         $baseUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/sessionHosts/" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName
-        $apiVersion = "?api-version=2021-07-12"
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -64,7 +63,7 @@ function Get-AvdSessionHost {
             }
         }
         $parameters = @{
-            uri     = "{0}{1}" -f $baseUrl, $apiVersion
+            uri     = "{0}{1}" -f $baseUrl, $script:sessionhostApiVersion
             Method  = "GET"
             Headers = $token
         }

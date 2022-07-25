@@ -43,8 +43,7 @@ function Get-AvdUserSessions {
         Write-Verbose "Start searching session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
-        $baseUrl = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + "/sessionHosts/"
-        $apiVersion = "?api-version=2021-07-12"
+        $baseUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/sessionHosts/" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -66,7 +65,7 @@ function Get-AvdUserSessions {
             $sessionHostUrl | ForEach-Object {
                 Write-Verbose "Looking for sessions at $($_.Split("/")[-2])"
                 $parameters = @{
-                    uri     = "{0}{1}" -f $_, $apiVersion
+                    uri     = "{0}{1}" -f $_, $script:sessionhostApiVersion
                     Method  = "GET"
                     Headers = $token
                 }

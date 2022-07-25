@@ -82,7 +82,7 @@ function Remove-AvdSessionHost {
             try {
                 Write-Verbose "Found $($sessionHosts.Count) host(s)"
                 Write-Verbose "Starting $($sh.name), with id $($sh.id)"
-                Remove-Resource -resourceId $sh.id -apiVersion "2022-02-10-preview"
+                Remove-Resource -resourceId $sh.id -apiVersion $script:sessionhostApiVersion
                 Write-Information -MessageData "$($sh.name) deleted" -InformationAction Continue
                 Remove-Resource -resourceId $sh.vmresources.id -apiVersion "2022-03-01"
                 Write-Information -MessageData "$($sh.name) deleted" -InformationAction Continue
