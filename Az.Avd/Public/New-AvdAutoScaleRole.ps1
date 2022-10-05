@@ -92,7 +92,7 @@ function New-AvdAutoScaleRole {
             $GraphHeader = GetAuthToken -resource $Script:GraphApiUrl
             $servicePrincipalURL = $Script:GraphApiUrl + "/" +$script:GraphApiVersion + "/servicePrincipals?`$filter=displayName eq 'Windows Virtual Desktop'"
             $servicePrincipals = Invoke-RestMethod -Method GET -Uri $servicePrincipalURL -Headers $GraphHeader
-            $ServicePrincipals.value.id | ForEach-Object {
+            $servicePrincipals.value.id | ForEach-Object {
                 $assignGuid = (New-Guid).Guid
                 $assignURL = $Script:AzureApiUrl + $Scope + "/providers/Microsoft.Authorization/roleAssignments/" + $AssignGuid + "?api-version=2021-04-01-preview"
                 $assignBody = @{
