@@ -89,8 +89,10 @@ function Update-AvdSessionHost {
                 $body = @{
                     properties = @{
                         AllowNewSession = $AllowNewSession
-                        AssignedUser    = $AssignedUser
                     }
+                }
+                if ($AssignedUser){
+                    $body.properties.add('AssignedUser',$AssignedUser)
                 }
                 $parameters = @{
                     URI     = $url 
