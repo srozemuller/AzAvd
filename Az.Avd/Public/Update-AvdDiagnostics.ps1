@@ -44,7 +44,7 @@ function Update-AvdDiagnostics {
 
         [parameter(ParameterSetName = 'LAWS')]
         [parameter(Mandatory, ParameterSetName = 'Category')]
-        [ValidateSet("Checkpoint", "Error", "Management", "Connection", "HostRegistration")]
+        [ValidateSet("Checkpoint", "Error", "Management", "Connection", "HostRegistration","AgentHealthStatus","NetworkData","SessionHostManagement","ConnectionGraphicsData")]
         [array]$Categories
         
     )
