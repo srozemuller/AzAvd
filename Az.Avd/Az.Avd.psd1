@@ -82,6 +82,7 @@
         'Enable-AvdStartVmOnConnect',    
         'Export-AvdConfig',
         'Get-AvdApplicationGroup',  
+        'Get-AvdDiagnosticSettings',
         'Get-AvdHostPool',
         'Get-AvdImageVersionStatus',
         'Get-AvdLatestSessionHost',
