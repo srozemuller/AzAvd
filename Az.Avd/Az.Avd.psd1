@@ -107,6 +107,7 @@
         'Restart-AvdSessionHost',
         'Start-AvdSessionHost',
         'Stop-AvdSessionHost',
+        'Update-AvdConnectionInfo',
         'Update-AvdDesktopApplication',
         'Update-AvdDiagnostics',
         'Update-AvdHostpool',
