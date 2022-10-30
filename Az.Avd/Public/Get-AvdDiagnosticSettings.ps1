@@ -14,8 +14,6 @@ function Get-AvdDiagnosticSettings {
     Get-AvdDiagnosticSettings -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
     .EXAMPLE
     Get-AvdDiagnosticSettings -HostPoolId "/subscriptions/...."
-    .EXAMPLE
-    Get-AvdHostpool -HostpoolName avd-hostpool -ResourceGroupName rg1 | Get-AvdDiagnosticSettings"
     #>
     [CmdletBinding(DefaultParameterSetName = 'Name')]
     param (
