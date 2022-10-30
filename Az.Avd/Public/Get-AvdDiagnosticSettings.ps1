@@ -11,24 +11,27 @@ function Get-AvdDiagnosticSettings {
     .PARAMETER HostpoolId
     Enter the hostpool's resource ID
     .EXAMPLE
-    Get-AvdDiagnostics -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
+    Get-AvdDiagnosticSettings -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
     .EXAMPLE
-    Get-AvdDiagnostics -HostPoolId "/subscriptions/...."
+    Get-AvdDiagnosticSettings -HostPoolId "/subscriptions/...."
+    .EXAMPLE
+    Get-AvdHostpool -HostpoolName avd-hostpool -ResourceGroupName rg1 | Get-AvdDiagnosticSettings"
     #>
     [CmdletBinding(DefaultParameterSetName = 'Name')]
     param (
-        [parameter(ParameterSetName = 'Name')]
+        [parameter(Mandatory, ParameterSetName = 'Name')]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
 
-        [parameter(ParameterSetName = 'Name')]
+        [parameter(Mandatory, ParameterSetName = 'Name')]
         [string]$ResourceGroupName,
 
-        [parameter(ParameterSetName = 'Id')]
-        [string]$HostpoolId
+        [parameter(Mandatory, ParameterSetName = 'Id', ValueFromPipelineByPropertyName)]
+        [string]$Id
         
     )
     Begin {
+        Write-Verbose "Start searching for host pool"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
         $parameters = @{
@@ -39,14 +42,16 @@ function Get-AvdDiagnosticSettings {
     Process {
         switch ($PsCmdlet.ParameterSetName) {
             Name {
-                $HostpoolId = (Get-AvdHostPool @parameters).id
-                $uri =  "{0}/{1}/providers/microsoft.insights/diagnosticSettings/?api-version=2017-05-01-preview" -f $Script:AzureApiUrl, $HostpoolId
+                Write-Verbose "Got a hostpool's name, searching for the resource ID"
+                $Id = (Get-AvdHostPool @parameters).id
+                $uri =  "{0}/{1}/providers/microsoft.insights/diagnosticSettings/?api-version=2021-05-01-preview" -f $Script:AzureApiUrl, $Id
             }
             Id {
-                $uri =  "{0}/{1}/providers/microsoft.insights/diagnosticSettings/?api-version=2017-05-01-preview" -f $Script:AzureApiUrl, $HostpoolId
+                Write-Verbose "Thank you for making me ease and providing the ID"
+                $uri =  "{0}/{1}/providers/microsoft.insights/diagnosticSettings/?api-version=2017-05-01-preview" -f $Script:AzureApiUrl, $Id
             }
             Default {
-                Write-Error "No Log Analytics Workspace provided"
+                Write-Error "No hostpool name and resource group or id provided"
             }
         }
         $parameters = @{
