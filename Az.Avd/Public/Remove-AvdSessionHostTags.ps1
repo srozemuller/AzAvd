@@ -5,19 +5,19 @@ function Remove-AvdSessionHostTags {
     .DESCRIPTION
     Based on the session host name, remove tags to the VM resource.
     .PARAMETER HostpoolName
-    Enter the source AVD Hostpool name
+    Enter the AVD hostpool name
     .PARAMETER ResourceGroupName
-    Enter the source Hostpool resourcegroup name
+    Enter the AVD hostpool resourcegroup name
     .PARAMETER Tags
     Enter the tags to add. Provide an object.
     .PARAMETER SessionHostName
-    Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
+    Enter the sessionhost's name like avd-hostpool/avd-host-1.avd.domain
     .PARAMETER Id
-    Enter the sessionhost resource ID
+    Enter the sessionhost's resource ID
     .EXAMPLE
-    Remove-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -AllowNewSession $true
+    Remove-AvdSessionHostTags -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -Tags @{Tag="Value"}
     .EXAMPLE
-    Remove-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -AssignedUser "" -Force
+    Remove-AvdSessionHostTags -Id /subscriptions/...
     #>
     [CmdletBinding(DefaultParameterSetName = 'Id')]
     param
