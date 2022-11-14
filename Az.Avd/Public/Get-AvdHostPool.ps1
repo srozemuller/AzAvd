@@ -42,6 +42,7 @@ Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
             ResourceId {
                 Write-Verbose "ResourceId provided"
                 $url = $script:AzureApiUrl + $resourceId + $apiVersion
+                $ResourceGroupName = ($ResourceId | Select-String -Pattern '(?<=resourcegroups\/).*?(?=\/providers)').Matches.Value
             }
         }
         $parameters = @{
@@ -56,6 +57,7 @@ Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
             Headers = $token
         }
         $results = Invoke-RestMethod @parameters
+        $results | Add-Member -MemberType NoteProperty -Name resourceGroupName -Value $ResourceGroupName
         $results
     }
 }

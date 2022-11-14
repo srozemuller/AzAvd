@@ -17,7 +17,7 @@ function Get-AvdSessionHostResources {
     .EXAMPLE
     Get-AvdSessionHostResources -Id sessionhostId
     #>
-    [CmdletBinding(DefaultParameterSetName = 'All')]
+    [CmdletBinding(DefaultParameterSetName = 'HostpoolId')]
     param (
         [parameter(Mandatory, ParameterSetName = 'All')]
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
@@ -32,6 +32,10 @@ function Get-AvdSessionHostResources {
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$Name,
+
+        [parameter(Mandatory, ParameterSetName = 'HostpoolId')]
+        [ValidateNotNullOrEmpty()]
+        [string]$HostpoolId,
 
         [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
@@ -48,21 +52,33 @@ function Get-AvdSessionHostResources {
         switch ($PsCmdlet.ParameterSetName) {
             All {
                 $parameters = @{
-                    HostPoolName      = $HostpoolName
-                    ResourceGroupName = $ResourceGroupName
+                    hostPoolName      = $HostpoolName
+                    resourceGroupName = $ResourceGroupName
                 }
             }
             Hostname {
                 $parameters = @{
                     hostPoolName      = $HostpoolName
                     resourceGroupName = $ResourceGroupName
-                    name   = $Name
+                    name              = $Name
                 }
             }
             Resource {
                 Write-Verbose "Got a resource object, looking for $Id"
+                if (($id | Select-String -Pattern '^.*\/sessionhosts\/.*$').Matches.Value) {
+                    $parameters = @{
+                        id = $Id
+                    }
+                }
+                else {
+                    Throw "It looks like you are providing not a session host resource id."
+                }
+            }
+            default {
+                $hostpool = Get-AvdHostPool -ResourceId $HostpoolId
                 $parameters = @{
-                    Id =  $Id
+                    hostPoolName      = $hostpool.Name
+                    resourceGroupName = $hostpool.resourceGroupName
                 }
             }
         }
@@ -72,21 +88,25 @@ function Get-AvdSessionHostResources {
         catch {
             Throw "No sessionhosts ($name) found in $HostpoolName ($ResourceGroupName), $_"
         }        
-
-        $sessionHosts | Foreach-Object {
-            Write-Verbose "Searching for $($_.Name)"
-            try {
-                $requestParameters = @{
-                    uri    = "{0}{1}{2}&`$expand=instanceView" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
-                    header = $token
-                    method = "GET"
+        if ($sessionHosts) {
+            $sessionHosts | Foreach-Object {
+                Write-Verbose "Searching for $($_)"
+                try {
+                    $requestParameters = @{
+                        uri    = "{0}{1}{2}&`$expand=instanceView" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
+                        header = $token
+                        method = "GET"
+                    }
+                    $resource = Invoke-RestMethod @requestParameters 
                 }
-                $resource = Invoke-RestMethod @requestParameters 
+                catch {
+                    Write-Warning "Sessionhost $($_.name) has no resources, consider deleting it. Use the Remove-AvdSessionHost command, $_. URI is $($requestparameters.uri)"
+                }
+                $_ | Add-Member -NotePropertyName vmResources -NotePropertyValue $resource -Force
             }
-            catch {
-                Write-Warning "Sessionhost $($_.name) has no resources, consider deleting it. Use the Remove-AvdSessionHost command, $_. URI is $($requestparameters.uri)"
-            }
-            $_ | Add-Member -NotePropertyName vmResources -NotePropertyValue $resource -Force
+        }
+        else {
+            Write-Warning "No sessionhosts ($name) found in $HostpoolName ($ResourceGroupName), $_"
         }
     }
     End {

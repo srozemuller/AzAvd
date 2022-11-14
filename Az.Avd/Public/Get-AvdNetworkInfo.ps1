@@ -27,34 +27,43 @@ Function Get-AvdNetworkInfo {
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
 
-        [parameter(ParameterSetName = 'Sessionhost')]
+        [Parameter(Mandatory, ParameterSetName = "ResourceId")]
         [ValidateNotNullOrEmpty()]
-        [string]$SessionHostName
+        [string]$HostpoolId
     )
     Begin {
         Write-Verbose "Start searching for networkinfo."
         AuthenticationCheck
         $token = GetAuthToken -resource $script:AzureApiUrl
         $apiVersion = "?api-version=2021-03-01"
+        $totalResults = [System.Collections.ArrayList]@()
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
             Sessionhost {
-                $Parameters = @{
+                $parameters = @{
                     HostPoolName      = $HostpoolName
                     ResourceGroupName = $ResourceGroupName
                     Name   = $SessionHostName
                 }
             }
-            Default {
-                $Parameters = @{
+            Hostpool {
+                $parameters = @{
                     HostPoolName      = $HostpoolName
                     ResourceGroupName = $ResourceGroupName
                 }
             }
+            ResourceId {
+                $parameters = @{
+                    HostpoolId  = $HostpoolId
+                }
+            }
+            default {
+                Write-Error "Please provide a hostpool and hostpool resourcegroup or, hostpool resourceId"
+            }
         }
         try {
-            $SessionHosts = Get-AvdSessionHostResources @Parameters
+            $SessionHosts = Get-AvdSessionHostResources @parameters
         }
         catch {
             Throw "No sessionhosts found, $_"
@@ -95,7 +104,10 @@ Function Get-AvdNetworkInfo {
                 NetworkCardInfo = $networkInfo
                 SubnetInfo = $nsgSubnetInfo
             }
-            $result
+            $totalResults.Add($result) | Out-Null
         }
+    }
+    End {
+        $totalResults
     }
 }
