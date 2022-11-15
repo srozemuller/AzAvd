@@ -101,9 +101,8 @@ function Add-AvdBastionHost {
             Write-Verbose "No location provided, picking current virtual network location"
             $BastionHostLocation = $vnetInfo.location
         }
-        $ipconfig = @(
-            @{
-                name       = "AvdBastionIpConfig"
+        $ipconfig = @{
+                name       = "IpConf"
                 properties = @{
                     subnet          = @{
                         id = $SubnetId
@@ -113,15 +112,17 @@ function Add-AvdBastionHost {
                     }
                 }
             }
-        )
         $bastionBody = @{
             location   = $BastionHostLocation
             sku        = @{
                 name = $Sku
             }
-            properties = @{}
+            properties = @{
+                ipConfigurations = @(
+                    $ipconfig
+                )
+            }
         }
-        $bastionBody.properties.Add("ipConfigurations", $ipconfig)
         if ($DisableCopyPaste.IsPresent) { $bastionBody.properties.Add("disableCopyPaste", $true) }
         if ($null -ne $DnsName) { $bastionBody.properties.Add("dnsName", $DnsName) }
         if ($EnableFileCopy.IsPresent) { $bastionBody.properties.Add("EnableFileCopy", $true) }
@@ -137,13 +138,12 @@ function Add-AvdBastionHost {
             }
             $deployment = Invoke-RestMethod @requestParameters -Method PUT -Body ($bastionBody | ConvertTo-Json -Depth 10)
             do {
-                Write-Information "Deploying Bastion host, status is: $($deployment.properties.provisioningState)"  
+                Write-Information "Deploying Bastion host, status is: $($deployment.properties.provisioningState)" -InformationAction Continue
                 $deployment = Invoke-RestMethod @requestParameters
+                Start-Sleep 5
             }
-      
             while ($deployment.properties.provisioningState -eq 'Updating')
-
-            
+            Write-Information "Bastion host deployed, status is: $($deployment.properties.provisioningState)" -InformationAction Continue   
         }
         catch {
             Write-Warning "Bastion host not created, $_"
