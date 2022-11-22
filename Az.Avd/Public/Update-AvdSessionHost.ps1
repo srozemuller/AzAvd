@@ -12,6 +12,8 @@ function Update-AvdSessionHost {
     Allowing new sessions or not. (Default: true). 
     .PARAMETER AssignedUser
     Enter the new username for the current sessionhost. Only available if providing one sessionhost at a time. 
+    .PARAMETER Friendlyname
+    Enter a friendly name for the current sessionhost. 
     .PARAMETER SessionHostName
     Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
     .EXAMPLE
@@ -19,69 +21,76 @@ function Update-AvdSessionHost {
     .EXAMPLE
     Update-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -AssignedUser "" -Force
     #>
-    [CmdletBinding(DefaultParameterSetName = 'SingleObject')]
+    [CmdletBinding(DefaultParameterSetName = 'Id')]
     param
     (
-        [parameter(Mandatory)]
+        [parameter(Mandatory, ParameterSetName = 'All')]
+        [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
     
-        [parameter(Mandatory)]
+        [parameter(Mandatory, ParameterSetName = 'All')]
+        [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
 
-        [parameter(ParameterSetName = 'SingleObject')]
-        [parameter(ParameterSetName = 'InputObject')]
+        [parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$AllowNewSession = $true,
+        [boolean]$AllowNewSession = $true,
 
-        [parameter(ParameterSetName = 'SingleObject')]
-        [parameter(Mandatory, ParameterSetName = 'UserMutation')]
-        [AllowEmptyString()]
+        [parameter(ParameterSetName = 'Hostname')]
+        [parameter(ParameterSetName = 'Id')]
+        [ValidateNotNullOrEmpty()]
         [string]$AssignedUser,
 
-        [parameter(ParameterSetName = 'SingleObject')]
-        [parameter(Mandatory)]
+        [parameter(ParameterSetName = 'Hostname')]
+        [parameter(ParameterSetName = 'Id')]
+        [ValidateNotNullOrEmpty()]
+        [string]$FriendlyName,
+
+        [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [string]$SessionHostName,
 
-        [parameter(Mandatory,ParameterSetName = 'InputObject')]
-        [object]$SessionHosts,
+        [parameter(Mandatory, ParameterSetName = 'Id')]
+        [object]$Id,
 
-        [parameter(Mandatory, ParameterSetName = 'UserMutation')]
+        [parameter()]
         [switch]$Force
-        
     )
     Begin {
-        Write-Verbose "Start moving session hosts"
+        Write-Verbose "Start updating session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
-        $apiVersion = "2021-09-03-preview"
-        if ($Force.IsPresent){
+        $apiVersion = "2022-02-10-preview"
+        if ($Force.IsPresent) {
             $forceString = "true"
         }
         else {
             $forceString = "false"
         }
+        $baseParameters = @{
+            hostpoolName      = $HostpoolName
+            resourceGroupName = $ResourceGroupName
+        }
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
-            InputObject {
-                try {
-                    $SessionHostName = $SessionHosts.value.name
-                }
-                catch {
-                    Write-Error "Please provide the Get-AvdSessionHost output"
-                }
+            All {
+                $sessionHosts = Get-AvdSessionHost @baseParameters
             }
-            SingleObject {
-                
+            Hostname {
+                $sessionHosts = Get-AvdSessionHost @baseParameters -Name $SessionHostName
+            }
+            default {
+                $sessionHosts = Get-AvdSessionHost -Id $Id
             }
         }
-        $SessionHostName | ForEach-Object {
+        $sessionHosts | ForEach-Object {
             try {
-                $vmName = $_.Split("/")[-1]
                 Write-Verbose "Updating sessionhost $vmName"
-                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/sessionHosts/{4}?api-version={5}&force={6}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName, $vmName, $apiVersion, $forceString
+                
+                $url = "{0}{1}?api-version={2}&force={3}" -f $Script:AzureApiUrl, $_.id , $apiVersion, $forceString
+                Write-Verbose $url
                 $parameters = @{
                     uri     = $url
                     Headers = $token
@@ -89,6 +98,7 @@ function Update-AvdSessionHost {
                 $body = @{
                     properties = @{
                         AllowNewSession = $AllowNewSession
+                        FriendlyName    = $FriendlyName
                         AssignedUser    = $AssignedUser
                     }
                 }
