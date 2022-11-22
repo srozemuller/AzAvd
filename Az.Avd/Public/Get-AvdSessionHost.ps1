@@ -55,6 +55,9 @@ function Get-AvdSessionHost {
                 Write-Verbose 'Using base url for getting all session hosts in $hostpoolName'
             }
             Hostname {
+                if ($Name -match "/"){
+                    $Name = $Name.Split("/")[-1]
+                }
                 Write-Verbose "Looking for sessionhost $Name"
                 $baseUrl = "{0}{1}" -f $baseUrl, $Name 
             }

@@ -118,7 +118,7 @@ function Enable-AvdDiagnostics {
         $diagnosticsBody = @{
             Properties = @{
                 workspaceId = $Laws.id
-                logs        = $categoryArray
+                logs        = @($categoryArray)
             }
         }    
         $parameters = @{

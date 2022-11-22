@@ -17,19 +17,15 @@ function Update-AvdDiagnostics {
     #>
     [CmdletBinding(DefaultParameterSetName = 'Category')]
     param (
-        [parameter(Mandatory)]
-        [parameter(ParameterSetName = 'Category')]
-        [parameter(ParameterSetName = 'LAWS')]
+
+        [parameter(Mandatory, ParameterSetName = 'Category')]
+        [parameter(Mandatory, ParameterSetName = 'LAWS')]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
 
-        [parameter(Mandatory)]
-        [parameter(ParameterSetName = 'Category')]
-        [parameter(ParameterSetName = 'LAWS')]
+        [parameter(Mandatory, ParameterSetName = 'Category')]
+        [parameter(Mandatory, ParameterSetName = 'LAWS')]
         [string]$ResourceGroupName,
-
-        [parameter(ParameterSetName = 'Category')]
-        [string]$AvdWorkspace,
 
         [parameter(Mandatory, ParameterSetName = 'LAWS')]
         [string]$LAWorkspace,
@@ -44,7 +40,7 @@ function Update-AvdDiagnostics {
 
         [parameter(ParameterSetName = 'LAWS')]
         [parameter(Mandatory, ParameterSetName = 'Category')]
-        [ValidateSet("Checkpoint", "Error", "Management", "Connection", "HostRegistration")]
+        [ValidateSet("Checkpoint", "Error", "Management", "Connection", "HostRegistration","AgentHealthStatus","NetworkData","SessionHostManagement","ConnectionGraphicsData")]
         [array]$Categories
         
     )
@@ -55,14 +51,14 @@ function Update-AvdDiagnostics {
             HostPoolName      = $HostpoolName 
             ResourceGroupName = $ResourceGroupName
         }
-        $Hostpool = Get-AvdHostPool @parameters
+        $hostpool = Get-AvdHostPool @parameters
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
             LAWS {
                 Write-Verbose "LAWS"
                 try { 
-                    $url = $Script:AzureApiUrl + "subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $LaResourceGroupName + "/providers/Microsoft.OperationalInsights/workspaces/" + $LAWorkspace + "?api-version=2020-08-01"
+                    $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.OperationalInsights/workspaces/{3}?api-version=2020-08-01" -f $Script:AzureApiUrl, $script:subscriptionId, $LaResourceGroupName, $LAWorkspace
                     $loganalyticsParameters = @{
                         URI     = $url 
                         Method  = "GET"
@@ -70,7 +66,7 @@ function Update-AvdDiagnostics {
                     }
                     $laws = Invoke-RestMethod @loganalyticsParameters
                     $categoryParameters = @{
-                        uri     = $Script:AzureApiUrl + "$($Hostpool.Id)/providers/microsoft.insights/diagnosticSettings/$($diagnosticsName)?api-version=2017-05-01-preview"
+                        uri     = "{0}{1}/providers/microsoft.insights/diagnosticSettings/{2}?api-version=2021-05-01-preview" -f $Script:AzureApiUrl , $hostpool.Id, $diagnosticsName
                         Method  = "GET"
                         Headers = $token
                     }
@@ -96,11 +92,11 @@ function Update-AvdDiagnostics {
         $diagnosticsBody = @{
             Properties = @{
                 workspaceId = $Laws.id
-                logs        = $CategoryBody
+                logs        = @($CategoryBody)
             }
         }    
         $parameters = @{
-            uri     = $Script:AzureApiUrl + "/$($Hostpool.Id)/providers/microsoft.insights/diagnosticSettings/$($diagnosticsName)?api-version=2017-05-01-preview"
+            uri     = "{0}/{1}/providers/microsoft.insights/diagnosticSettings/{2}?api-version=2021-05-01-preview" -f $Script:AzureApiUrl, $hostpool.Id, $diagnosticsName
             Method  = "PUT"
             Headers = $token
             Body    = $diagnosticsBody | ConvertTo-Json -Depth 4

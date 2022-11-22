@@ -43,7 +43,7 @@ Function Get-AvdNetworkInfo {
                 $Parameters = @{
                     HostPoolName      = $HostpoolName
                     ResourceGroupName = $ResourceGroupName
-                    SessionHostName   = $SessionHostName
+                    Name   = $SessionHostName
                 }
             }
             Default {
