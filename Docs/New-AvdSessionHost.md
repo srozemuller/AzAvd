@@ -5,27 +5,45 @@ online version:
 schema: 2.0.0
 ---
 
-# New-AvdAadSessionHost
+# New-AvdSessionHost
 
 ## SYNOPSIS
 Deploys session hosts into a hostpool
 
 ## SYNTAX
 
-### MarketPlace (Default)
+### AADWithSig (Default)
 ```
-New-AvdAadSessionHost -HostpoolName <String> -ResourceGroupName <String> -SessionHostCount <Int32>
- [-InitialNumber <Int32>] -Prefix <String> -Publisher <String> -Offer <String> -Sku <String>
- [-Version <String>] -VmSize <String> -Location <String> -DiskType <String> -LocalAdmin <String>
- -LocalPass <String> -SubnetId <String> [-Intune] [-TrustedLaunch] [<CommonParameters>]
+New-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -ImageVersionId <String>
+ -SessionHostCount <Int32> [-InitialNumber <Int32>] -Prefix <String> -Version <String> -VmSize <String>
+ -Location <String> -DiskType <String> -LocalAdmin <String> -LocalPass <String> -SubnetId <String> [-AzureAd]
+ [-Intune] [-TrustedLaunch] [<CommonParameters>]
 ```
 
-### Sig
+### NativeADWithSig
 ```
-New-AvdAadSessionHost -HostpoolName <String> -ResourceGroupName <String> -ImageVersionId <String>
- -SessionHostCount <Int32> [-InitialNumber <Int32>] -Prefix <String> -VmSize <String> -Location <String>
- -DiskType <String> -LocalAdmin <String> -LocalPass <String> -SubnetId <String> [-Intune] [-TrustedLaunch]
- [<CommonParameters>]
+New-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -ImageVersionId <String>
+ -SessionHostCount <Int32> [-InitialNumber <Int32>] -Prefix <String> -Version <String> -VmSize <String>
+ -Location <String> -DiskType <String> -LocalAdmin <String> -LocalPass <String> -SubnetId <String>
+ -Domain <String> -OU <String> -DomainJoinAccount <String> -DomainJoinPassword <SecureString> [-Intune]
+ [-TrustedLaunch] [<CommonParameters>]
+```
+
+### NativeADWithMarketPlace
+```
+New-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -SessionHostCount <Int32>
+ [-InitialNumber <Int32>] -Prefix <String> -Publisher <String> -Offer <String> -Sku <String> -VmSize <String>
+ -Location <String> -DiskType <String> -LocalAdmin <String> -LocalPass <String> -SubnetId <String>
+ -Domain <String> -OU <String> -DomainJoinAccount <String> -DomainJoinPassword <SecureString> [-Intune]
+ [-TrustedLaunch] [<CommonParameters>]
+```
+
+### AADWithMarketPlace
+```
+New-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -SessionHostCount <Int32>
+ [-InitialNumber <Int32>] -Prefix <String> -Publisher <String> -Offer <String> -Sku <String> -VmSize <String>
+ -Location <String> -DiskType <String> -LocalAdmin <String> -LocalPass <String> -SubnetId <String> [-AzureAd]
+ [-Intune] [-TrustedLaunch] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -35,14 +53,15 @@ Deploys new session hosts into the provided hostpool
 
 ### EXAMPLE 1
 ```
-New-AvdAadSessionHost -HostpoolName avd-hostpool -HostpoolResourceGroup rg-avd-01 -sessionHostCount 1 -ResourceGroupName rg-sessionhosts-01 -Publisher "MicrosoftWindowsDesktop" -Offer "windows-10" -Sku "21h1-ent-g2" -VmSize "Standard_D2s_v3"
--Location "westeurope" -diskType "Standard_LRS" -LocalAdmin "ladmin" -LocalPass "lpass" -Prefix "AVD" -SubnetId "/subscriptions/../resourceGroups/../providers/Microsoft.Network/virtualNetworks/../subnets/../" -Intune
+New-AvdSessionHost -HostpoolName avd-hostpool -HostpoolResourceGroup rg-avd-01 -sessionHostCount 1 -ResourceGroupName rg-sessionhosts-01 -Publisher "MicrosoftWindowsDesktop" -Offer "windows-10" -Sku "21h1-ent-g2" -VmSize "Standard_D2s_v3"
+-Location "westeurope" -diskType "Standard_LRS" -LocalAdmin "ladmin" -LocalPass "lpass" -Prefix "AVD" -SubnetId "/subscriptions/../resourceGroups/../providers/Microsoft.Network/virtualNetworks/../subnets/../" -Intune -AzureAd
 ```
 
 ### EXAMPLE 2
 ```
-New-AvdAadSessionHost -HostpoolName avd-hostpool -HostpoolResourceGroup rg-avd-01 -sessionHostCount 1 -ResourceGroupName rg-sessionhosts-01 -imageVersionId "/subscriptions/..galleries/../images/../version/21.0.0" -VmSize "Standard_D2s_v3"
--Location "westeurope" -diskType "Standard_LRS" -LocalAdmin "ladmin" -LocalPass "lpass" -Prefix "AVD" -SubnetId "/subscriptions/../resourceGroups/../providers/Microsoft.Network/virtualNetworks/../subnets/../"
+New-AvdSessionHost -HostpoolName avd-hostpool -HostpoolResourceGroup rg-avd-01 -sessionHostCount 1 -ResourceGroupName rg-sessionhosts-01 -imageVersionId "/subscriptions/..galleries/../images/../version/21.0.0" -VmSize "Standard_D2s_v3"
+-Location "westeurope" -diskType "Standard_LRS" -LocalAdmin "ladmin" -LocalPass "lpass" -Prefix "AVD" -SubnetId "/subscriptions/../resourceGroups/../providers/Microsoft.Network/virtualNetworks/../subnets/../" -Domain domain.local -OU "OU=AVD,DC=domain,DC=local"
+-DomainAdmin vmjoiner@domain.local -DomainPassword "P@sswrd123"
 ```
 
 ## PARAMETERS
@@ -82,7 +101,7 @@ The image resourceId, from existing image or image version
 
 ```yaml
 Type: String
-Parameter Sets: Sig
+Parameter Sets: AADWithSig, NativeADWithSig
 Aliases:
 
 Required: True
@@ -142,7 +161,7 @@ In case of an Azure Markeplace image, provide the publisher
 
 ```yaml
 Type: String
-Parameter Sets: MarketPlace
+Parameter Sets: NativeADWithMarketPlace, AADWithMarketPlace
 Aliases:
 
 Required: True
@@ -157,7 +176,7 @@ In case of an Azure Markeplace image, provide the offer
 
 ```yaml
 Type: String
-Parameter Sets: MarketPlace
+Parameter Sets: NativeADWithMarketPlace, AADWithMarketPlace
 Aliases:
 
 Required: True
@@ -172,7 +191,7 @@ In case of an Azure Markeplace image, provide the sku
 
 ```yaml
 Type: String
-Parameter Sets: MarketPlace
+Parameter Sets: NativeADWithMarketPlace, AADWithMarketPlace
 Aliases:
 
 Required: True
@@ -187,10 +206,10 @@ In case of an Azure Markeplace image, provide the version (default latest)
 
 ```yaml
 Type: String
-Parameter Sets: MarketPlace
+Parameter Sets: AADWithSig, NativeADWithSig
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: Latest
 Accept pipeline input: False
@@ -287,8 +306,85 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -AzureAd
+Provide this switch parameter if the session host is Azure AD joined, otherwise it is native AD joined
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: AADWithSig, AADWithMarketPlace
+Aliases:
+
+Required: True
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Domain
+Provide the native domain name.
+domain.local
+
+```yaml
+Type: String
+Parameter Sets: NativeADWithSig, NativeADWithMarketPlace
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -OU
+Enter the OU to store the hosts at
+
+```yaml
+Type: String
+Parameter Sets: NativeADWithSig, NativeADWithMarketPlace
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DomainJoinAccount
+Provide an account with domain join permissions, mostly domain admin
+
+```yaml
+Type: String
+Parameter Sets: NativeADWithSig, NativeADWithMarketPlace
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DomainJoinPassword
+The domain admin password, must be a secure string
+
+```yaml
+Type: SecureString
+Parameter Sets: NativeADWithSig, NativeADWithMarketPlace
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Intune
-Switch parameter if you want to add the session host into Intune
+Switch parameter if you want to add the session host into Intune.
+Only supported with AzureAD enrollment.
 
 ```yaml
 Type: SwitchParameter

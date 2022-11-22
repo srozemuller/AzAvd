@@ -102,6 +102,9 @@ function Update-AvdSessionHost {
                         AssignedUser    = $AssignedUser
                     }
                 }
+                if ($AssignedUser){
+                    $body.properties.add('AssignedUser',$AssignedUser)
+                }
                 $parameters = @{
                     URI     = $url 
                     Method  = "PATCH"
