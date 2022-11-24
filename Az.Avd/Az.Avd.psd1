@@ -73,6 +73,7 @@
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport      = @(
         'Add-AvdApplicationGroupPermissions',
+        'Add-AvdBastionHost',
         'Add-AvdSessionHostTags',
         'Copy-AvdApplicationGroupPermissions',
         'Disable-AvdSessionHost',
@@ -102,6 +103,7 @@
         'New-AvdSessionHost',
         'New-AvdVmTemplate',
         'New-AvdWorkspace',
+        'Remove-AvdBastionHost',
         'Remove-AvdSessionHost',
         'Remove-AvdSessionHostTags',
         'Restart-AvdSessionHost',

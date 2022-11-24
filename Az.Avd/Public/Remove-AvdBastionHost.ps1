@@ -13,7 +13,7 @@ function Remove-AvdBastionHost {
     .EXAMPLE
     Add-AvdSessionHostTags -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -Tags @{Tag="Value"}
     .EXAMPLE
-    Get-AvdHostPool @avdParams | Remove-AvdBastionHost -DeletePublicIp -Verbose
+    Get-AvdHostPool @avdParams | Remove-AvdBastionHost -Verbose
     #>
     [CmdletBinding(DefaultParameterSetName = 'ResourceId')]
     param

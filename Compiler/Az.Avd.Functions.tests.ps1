@@ -48,7 +48,7 @@ Describe "Analyze code" -ForEach @(
             }
         }
     ) {
-        $code.StartsWith($function) | Should -Be $true -Because "Provide good examples" 
+        (($code.StartsWith($function)) -or ($code -match (" | " + $function)) ) | Should -Be $true -Because "Provide good examples" 
     }
     It "Uses PascalCase for function <function>" {
         $function | Should -MatchExactly '^[A-Z].*' -Because "PascalCasing" 
