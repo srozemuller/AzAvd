@@ -12,7 +12,7 @@
     RootModule             = 'Az.Avd.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '2.4.3'
+    ModuleVersion          = '2.4.4'
 
     # Supported PSEditions
     CompatiblePSEditions   = 'Core', 'Desktop'
