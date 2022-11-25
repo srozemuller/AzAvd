@@ -14,13 +14,13 @@ Updates the AVD Diagnostics settings to an another LogAnalytics workspace or cat
 
 ### Category (Default)
 ```
-Update-AvdDiagnostics [-HostpoolName <String>] [-ResourceGroupName <String>] [-AvdWorkspace <String>]
- [-DiagnosticsName <String>] -Categories <Array> [<CommonParameters>]
+Update-AvdDiagnostics -HostpoolName <String> -ResourceGroupName <String> [-DiagnosticsName <String>]
+ -Categories <Array> [<CommonParameters>]
 ```
 
 ### LAWS
 ```
-Update-AvdDiagnostics [-HostpoolName <String>] [-ResourceGroupName <String>] -LAWorkspace <String>
+Update-AvdDiagnostics -HostpoolName <String> -ResourceGroupName <String> -LAWorkspace <String>
  -LaResourceGroupName <String> [-DiagnosticsName <String>] [-Categories <Array>] [<CommonParameters>]
 ```
 
@@ -44,7 +44,7 @@ Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False
@@ -59,22 +59,7 @@ Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -AvdWorkspace
-{{ Fill AvdWorkspace Description }}
-
-```yaml
-Type: String
-Parameter Sets: Category
-Aliases:
-
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False
