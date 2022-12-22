@@ -69,6 +69,33 @@ function Remove-Resource () {
     }
 }
 
+
+function Get-Resource () {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory)]
+        [string]$ResourceId,
+        [Parameter(Mandatory)]
+        [string]$SubscriptionId
+    )
+    try {
+        Write-Information "Searching resource with ID $resourceId" -InformationAction Continue
+        $resourceParameters = @{
+            uri     = "{0}/subscriptions/{1}/resources?api-version=2014-04-01-preview&`$filter=resourceId eq {2}" -f $Script:AzureApiUrl, $SubscriptionId, $ResourceId
+            Method  = "GET"
+            Headers = (GetAuthToken -resource $Script:AzureApiUrl)
+        }
+        $resource = Invoke-RestMethod @resourceParameters
+    }
+    catch {
+        Write-Verbose "$resourceId not found, $_"
+        Throw $_ 
+    }
+    finally {
+        $resource
+    }
+}
+
 function CheckForce {
     [CmdletBinding()]
     param (
