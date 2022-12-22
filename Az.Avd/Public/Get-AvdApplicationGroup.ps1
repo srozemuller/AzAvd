@@ -1,5 +1,5 @@
 function Get-AvdApplicationGroup {
-<#
+    <#
 .SYNOPSIS
 Get AVD applicationgroup information with the assigned permissions.
 .DESCRIPTION
@@ -15,12 +15,13 @@ Get-AvdApplicationGroup -ApplicationGroupName applicationGroup -ResourceGroupNam
 .EXAMPLE
 Get-AvdApplicationGroup -ResourceId "/subscriptions/../applicationGroupname"
 #>
-    [CmdletBinding(DefaultParameterSetName = "Name")]
+    [CmdletBinding(DefaultParameterSetName = "All")]
     param (
         [Parameter(Mandatory, ParameterSetName = "Name")]
         [ValidateNotNullOrEmpty()]
         [string]$ApplicationGroupName,
 
+        [Parameter(Mandatory, ParameterSetName = "All")]
         [Parameter(Mandatory, ParameterSetName = "Name")]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
@@ -38,29 +39,38 @@ Get-AvdApplicationGroup -ResourceId "/subscriptions/../applicationGroupname"
         switch ($PsCmdlet.ParameterSetName) {
             Name {
                 Write-Verbose "Name and ResourceGroup provided"
-                $url = $script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/applicationGroups/" + $Name + $apiVersion
+                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/applicationGroups/{3}{4}" -f $script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $ApplicationGroupName, $apiVersion
             }
             ResourceId {
                 Write-Verbose "ResourceId provided"
                 $url = $script:AzureApiUrl + $ResourceId + $apiVersion
             }
-        }
-        $parameters = @{
-            uri     = $url
-            Headers = $token
-            Method  = "GET"
+            default {
+                Write-Verbose "Getting all application groups in $ResourceGroupName"
+                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/applicationGroups{3}" -f $script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $apiVersion
+            }
         }
     }
     Process {
-        $applicationResults = Invoke-RestMethod @parameters
-        $url = $script:AzureApiUrl + "/" + $applicationResults.id + "/providers/Microsoft.Authorization/roleAssignments?api-version=2021-04-01-preview"
+        $allResults = [System.Collections.ArrayList]@()
         $parameters = @{
             uri     = $url
-            Method  = "GET"
             Headers = $token
+            Method  = "GET"
         }
-        $applicationPermissions = Invoke-RestMethod @parameters
-        $applicationResults | Add-Member -NotePropertyName assignments -NotePropertyValue $applicationPermissions.value
-        return $applicationResults
+        $applicationResults = Invoke-RestMethod @parameters
+        $applicationResults.value | ForEach-Object {
+          
+            $url = "{0}/{1}/providers/Microsoft.Authorization/roleAssignments?api-version=2021-04-01-preview" -f $script:AzureApiUrl, $_.id 
+            $parameters = @{
+                uri     = $url
+                Method  = "GET"
+                Headers = $token
+            }
+            $applicationPermissions = Invoke-RestMethod @parameters
+            $_ | Add-Member -NotePropertyName assignments -NotePropertyValue $applicationPermissions.value
+            $allResults.Add($_) | Out-Null
+        }
+        $allResults
     }
 }
