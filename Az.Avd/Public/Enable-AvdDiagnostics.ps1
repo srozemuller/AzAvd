@@ -108,7 +108,7 @@ function Enable-AvdDiagnostics {
             }
         }
         Write-Verbose "Looking for workspace"
-        $workspaceUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.OperationalInsights/workspaces/{3}?api-version=2020-08-01" -f $Script:AzureApiUrl, $script:subscriptionId, $LaResourceGroupName, $LAWorkspace
+        $workspaceUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.OperationalInsights/workspaces/{3}?api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $LaResourceGroupName, $LAWorkspace, $script:diagnosticsApiVersion
         Write-Verbose $workspaceUrl
         $loganalyticsParameters = @{
             URI     = $workspaceUrl 
@@ -134,7 +134,7 @@ function Enable-AvdDiagnostics {
                         }
                     }
                 }
-                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.OperationalInsights/workspaces/{3}?api-version=2020-08-01" -f $Script:AzureApiUrl, $script:subscriptionId, $LaResourceGroupName, $LAWorkspace
+                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.OperationalInsights/workspaces/{3}?api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $LaResourceGroupName, $LAWorkspace, $script:diagnosticsApiVersion
                 $loganalyticsParameters = @{
                     URI     = $url 
                     Method  = "PUT"
@@ -165,7 +165,7 @@ function Enable-AvdDiagnostics {
             }
         }    
         $parameters = @{
-            uri     = "{0}{1}/providers/microsoft.insights/diagnosticSettings/{2}?api-version=2017-05-01-preview" -f $Script:AzureApiUrl, $Id, $DiagnosticsName
+            uri     = "{0}{1}/providers/microsoft.insights/diagnosticSettings/{2}?api-version={3}" -f $Script:AzureApiUrl, $Id, $DiagnosticsName, $Script:AvdDiagnosticsApiVersion
             Method  = "PUT"
             Headers = $token
             Body    = $diagnosticsBody | ConvertTo-Json -Depth 4
