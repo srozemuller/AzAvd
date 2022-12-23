@@ -39,8 +39,6 @@ function Get-AvdSessionHost {
         [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [string]$Id
-
-
     )
     Begin {
         Write-Verbose "Start searching session hosts"
