@@ -3,7 +3,7 @@ function Enable-AvdInsightsWorkspace {
     .SYNOPSIS
     Enables the AVD Diagnostics and will send it to a new LogAnalytics workspace
     .DESCRIPTION
-    The function will enable AVD diagnostics for a hostpool. It will create a new Log Analytics workspace if no existing workspace is provided.
+    The function will enable AVD diagnostics for a workspace. It will create a new Log Analytics workspace if no existing workspace is provided.
     .PARAMETER WorkspaceName
     Enter the name of the hostpool you want to enable start vm on connnect.
     .PARAMETER ResourceGroupName
@@ -23,9 +23,11 @@ function Enable-AvdInsightsWorkspace {
     .PARAMETER AutoCreate
     Use this switch to auto create a Log Analtyics Workspace
     .EXAMPLE
-    Enable-AvdHostpoolInsights -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -LAWorkspace 'la-avd-workspace' -Categories ("Checkpoint","Error")
+    Enable-AvdInsightsWorkspace -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -LAWorkspace 'la-avd-workspace' -AdditionalCategories ("ConnectionGraphicsData","NetworkData") -DiagnosticsName "AvdInsights"
     .EXAMPLE
-    Enable-AvdHostpoolInsights -Id /subscription/.../ -LAWorkspace 'la-avd-workspace' -Categories ("Checkpoint","Error") -LaResourceGroupName 'la-rg' -LaLocation 'westeurope' -RetentionInDays 30 -AutoCreate
+    Enable-AvdInsightsWorkspace -WorkspaceName avd-workspace-001 -WorkspaceResourceGroup rg-avd-001 -LAWorkspace 'la-avd-workspace' -AdditionalCategories ("ConnectionGraphicsData","NetworkData") -DiagnosticsName "AvdInsights"
+    .EXAMPLE
+    Enable-AvdInsightsWorkspace -Id /subscription/../workspace/avd-workspace -LAWorkspace 'la-avd-workspace' -AdditionalCategories ("ConnectionGraphicsData","NetworkData") -LaResourceGroupName 'la-rg' -LaLocation 'westeurope' -RetentionInDays 30 -AutoCreate -DiagnosticsName "AvdInsights"
     #>
     [CmdletBinding(DefaultParameterSetName = 'Id')]
     param (
@@ -45,10 +47,12 @@ function Enable-AvdInsightsWorkspace {
         [string]$Id,
 
         [parameter(Mandatory, ParameterSetName = 'SingleLevel')]
+        [parameter(Mandatory, ParameterSetName = 'Create-SingleLevel')]
         [ValidateNotNullOrEmpty()]
         [string]$WorkspaceName,
 
         [parameter(Mandatory, ParameterSetName = 'SingleLevel')]
+        [parameter(Mandatory, ParameterSetName = 'Create-SingleLevel')]
         [ValidateNotNullOrEmpty()]
         [string]$WorkspaceResourceGroup,
 
@@ -56,10 +60,12 @@ function Enable-AvdInsightsWorkspace {
         [parameter(Mandatory, ParameterSetName = 'Id')]
         [parameter(Mandatory, ParameterSetName = 'Create-Id')]
         [parameter(Mandatory, ParameterSetName = 'Create-Friendly')]
+        [parameter(Mandatory, ParameterSetName = 'Create-SingleLevel')]
         [string]$LAWorkspace,
 
         [parameter(ParameterSetName = 'Create-Id')]
         [parameter(ParameterSetName = 'Create-Friendly')]
+        [parameter(Mandatory, ParameterSetName = 'Create-SingleLevel')]
         [ValidateSet("CapacityReservation", "Free", "LACluster", "PerGB2018", "PerNode", "Premium", "Standalone", "Standard")]
         [string]$LASku = "Standard",
 
@@ -67,35 +73,42 @@ function Enable-AvdInsightsWorkspace {
         [parameter(Mandatory, ParameterSetName = 'Id')]
         [parameter(Mandatory, ParameterSetName = 'Create-Id')]
         [parameter(Mandatory, ParameterSetName = 'Create-Friendly')]
+        [parameter(Mandatory, ParameterSetName = 'Create-SingleLevel')]
         [string]$LaResourceGroupName,
         
         [parameter(Mandatory, ParameterSetName = 'Create-Id')]
         [parameter(Mandatory, ParameterSetName = 'Create-Friendly')]
+        [parameter(Mandatory, ParameterSetName = 'Create-SingleLevel')]
         [string]$LaLocation,
 
         [parameter(ParameterSetName = 'HostpoolLevel')]
         [parameter(ParameterSetName = 'Id')]
         [parameter(ParameterSetName = 'Create-Id')]
         [parameter(ParameterSetName = 'Create-Friendly')]
+        [parameter(Mandatory, ParameterSetName = 'Create-SingleLevel')]
         [ValidateSet("NetworkData", "SessionHostManagement", "ConnectionGraphicsData")]
         [array]$AdditionalCategories,
 
         [parameter(Mandatory, ParameterSetName = 'Create-Id')]
         [parameter(Mandatory, ParameterSetName = 'Create-Friendly')]
+        [parameter(Mandatory, ParameterSetName = 'Create-SingleLevel')]
         [int]$RetentionInDays,
 
         [parameter(Mandatory, ParameterSetName = 'HostpoolLevel')]
+        [parameter(Mandatory, ParameterSetName = 'SingleLevel')]
         [parameter(Mandatory, ParameterSetName = 'Id')]
         [parameter(Mandatory, ParameterSetName = 'Create-Id')]
         [parameter(Mandatory, ParameterSetName = 'Create-Friendly')]
+        [parameter(Mandatory, ParameterSetName = 'Create-SingleLevel')]
         [string]$DiagnosticsName,
 
         [parameter(Mandatory, ParameterSetName = 'Create-Id')]
         [parameter(Mandatory, ParameterSetName = 'Create-Friendly')]
+        [parameter(Mandatory, ParameterSetName = 'Create-SingleLevel')]
         [switch]$AutoCreate
-        
     )
     Begin {
+        Write-Verbose "[Enable-AvdInsightsWorkspace] - Enabling AVD Insights for workspace."
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
     }
@@ -118,10 +131,10 @@ function Enable-AvdInsightsWorkspace {
                 $applicationGroup = Get-AvdApplicationGroup @appGroupParameters
             }
             default {
-                Write-Verbose "Got the applicationgroup's resource ID. Thank you for that!"
+                Write-Verbose "[Enable-AvdInsightsWorkspace] - Got the applicationgroup's resource ID. Thank you for that!"
             }
         }
-        Write-Verbose "Looking for workspace"
+        Write-Verbose "[Enable-AvdInsightsWorkspace] - Looking for workspace"
         $laWorkspaceId = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.OperationalInsights/workspaces/{2}" -f $script:subscriptionId, $LaResourceGroupName, $LAWorkspace
         Write-Verbose $laWorkspaceId
         $laws = Get-Resource -ResourceId $workspaceId -Verbose
@@ -129,11 +142,11 @@ function Enable-AvdInsightsWorkspace {
         if ($null -eq $laws) {
             try {
                 if ($AutoCreate.IsPresent) {
-                    Write-Warning "No Log Analytics Workspace found! Creating a new workspace"
+                    Write-Warning "[Enable-AvdInsightsWorkspace] - No Log Analytics Workspace found! Creating a new workspace"
                     $laws = New-Workspace -Workspace $LAWorkspace -Sku $LASku -ResourceGroupName $LaResourceGroupName -Location $LaLocation
                 }
                 else {
-                    Throw "No workspace found! If it is a new workspace, add -AutoCreate in your command, $_"
+                    Throw "[Enable-AvdInsightsWorkspace] - No workspace found! If it is a new workspace, add -AutoCreate in your command, $_"
                 }
             }
             catch {
@@ -142,7 +155,7 @@ function Enable-AvdInsightsWorkspace {
         }
         else {
             try {
-                Write-Information "Workspace found, configuring diagnostics" -InformationAction Continue
+                Write-Information "[Enable-AvdInsightsWorkspace] - Workspace found, configuring diagnostics" -InformationAction Continue
                 $categoryArray = @()
                 $mandatoryCategories = @("Checkpoint", "Error", "Management", "Feed")
                 $mandatoryCategories | ForEach-Object {
@@ -159,7 +172,7 @@ function Enable-AvdInsightsWorkspace {
                     }
                 }    
                 if ($applicationGroup) {
-                    Write-Verbose "Grabbing ID's form application groups"
+                    Write-Verbose "[Enable-AvdInsightsWorkspace] - Grabbing ID's form application groups"
                     $Id = $applicationGroup.properties.workspaceArmPath
                 }
                 $Id | ForEach-Object {  
@@ -170,11 +183,11 @@ function Enable-AvdInsightsWorkspace {
                         Body    = $diagnosticsBody | ConvertTo-Json -Depth 4
                     }
                     Invoke-RestMethod @parameters
-                    Write-Verbose "Diagnostics enabled for $_, sending info to $LAWorkspace"
+                    Write-Verbose "[Enable-AvdInsightsWorkspace] - Diagnostics enabled for $_, sending info to $LAWorkspace"
                 }
             }
             catch {
-                Throw $_
+                Throw "[Enable-AvdInsightsWorkspace] -  $_"
             }
         }
     }
