@@ -65,7 +65,7 @@ function Enable-AvdInsightsWorkspace {
 
         [parameter(ParameterSetName = 'Create-Id')]
         [parameter(ParameterSetName = 'Create-Friendly')]
-        [parameter(Mandatory, ParameterSetName = 'Create-SingleLevel')]
+        [parameter(ParameterSetName = 'Create-SingleLevel')]
         [ValidateSet("CapacityReservation", "Free", "LACluster", "PerGB2018", "PerNode", "Premium", "Standalone", "Standard")]
         [string]$LASku = "Standard",
 
