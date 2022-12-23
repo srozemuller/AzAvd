@@ -1,15 +1,11 @@
 function Enable-AvdInsightsCounters {
     <#
     .SYNOPSIS
-    Enables the AVD Diagnostics and will send it to a new LogAnalytics workspace
+    Create sources in a (new) LogAnalytics workspace
     .DESCRIPTION
-    The function will enable AVD diagnostics for a hostpool. It will create a new Log Analytics workspace if no existing workspace is provided.
-    .PARAMETER WorkspaceName
-    Enter the name of the hostpool you want to enable start vm on connnect.
-    .PARAMETER ResourceGroupName
-    Enter the name of the resourcegroup where the hostpool resides in.
+    The function creates the needed sources in a Log Analytics workspace for AVD Insights.
     .PARAMETER Id
-    Enter the host pool's resource ID.
+    Enter the Log Analytics Workspace's resource ID.
     .PARAMETER LASku
     Enter the name of the Log Analytics SKU
     .PARAMETER LAWorkspace
@@ -23,9 +19,11 @@ function Enable-AvdInsightsCounters {
     .PARAMETER AutoCreate
     Use this switch to auto create a Log Analtyics Workspace
     .EXAMPLE
-    Enable-AvdHostpoolInsights -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -LAWorkspace 'la-avd-workspace' -Categories ("Checkpoint","Error")
+    Enable-AvdInsightsCounters -Id /subscription/../workspaces/la-workspace 
     .EXAMPLE
-    Enable-AvdHostpoolInsights -Id /subscription/.../ -LAWorkspace 'la-avd-workspace' -Categories ("Checkpoint","Error") -LaResourceGroupName 'la-rg' -LaLocation 'westeurope' -RetentionInDays 30 -AutoCreate
+    Enable-AvdInsightsCounters -LAWorkspace 'la-avd-workspace' -LaResourceGroupName 'rg-la-01'
+    .EXAMPLE
+    Enable-AvdInsightsCounters -LAWorkspace 'la-avd-workspace' -LaResourceGroupName 'rg-la-01' -LaSku 'standard' -LaLocation 'WestEurope' -RetentionInDays 30 -Autocreate
     #>
     [CmdletBinding(DefaultParameterSetName = 'Id')]
     param (
@@ -53,9 +51,9 @@ function Enable-AvdInsightsCounters {
 
         [parameter(Mandatory, ParameterSetName = 'Create-Friendly')]
         [switch]$AutoCreate
-        
     )
     Begin {
+        Write-Verbose "[Enable-AvdInsightsCounters] - Start enabling counters for AVD Insights "
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
     }
@@ -65,10 +63,10 @@ function Enable-AvdInsightsCounters {
                 $Id = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.OperationalInsights/workspaces/{2}" -f $script:subscriptionId, $LaResourceGroupName, $LAWorkspace
             }
             default {
-                Write-Verbose "Got a Log Analytics workspace's resource ID. Thank you for that!"
+                Write-Verbose "[Enable-AvdInsightsCounters] - Got a Log Analytics workspace's resource ID. Thank you for that!"
             }
         }
-        Write-Verbose "Looking for workspace"
+        Write-Verbose "[Enable-AvdInsightsCounters] - Looking for workspace"
         Write-Verbose $laWorkspaceId
         $laws = Get-Resource -ResourceId $Id -Verbose
 
@@ -79,7 +77,7 @@ function Enable-AvdInsightsCounters {
                     $laws = New-Workspace -Workspace $LAWorkspace -Sku $LASku -ResourceGroupName $LaResourceGroupName -Location $LaLocation
                 }
                 else {
-                    Throw "No workspace found! If it is a new workspace, add -AutoCreate in your command, $_"
+                    Throw "[Enable-AvdInsightsCounters] - No workspace found! If it is a new workspace, add -AutoCreate in your command, $_"
                 }
             }
             catch {
@@ -88,13 +86,13 @@ function Enable-AvdInsightsCounters {
         }
         else {
             try {
-                Write-Information "Workspace found, configuring diagnostics" -InformationAction Continue
+                Write-Information "[Enable-AvdInsightsCounters] - Workspace found, configuring diagnostics" -InformationAction Continue
                 $sources = Get-Content $script:AvdInsightsCountersLocation | ConvertFrom-Json
                 $sources.sources.GetEnumerator().ForEach({
                         Write-Verbose "Found $($_.kind) to configure"
                         $sourceKind = $_
                         $sourceKind.sources.ForEach({
-                            Write-Verbose "Adding $($_.name) as a source to $($laws.name)"
+                            Write-Verbose "[Enable-AvdInsightsCounters] - Adding $($_.name) as a source to $($laws.name)"
                             $properties = $_
                                 if ($_.properties) {
                                     $properties = $_.properties
@@ -111,12 +109,12 @@ function Enable-AvdInsightsCounters {
                                     Body    = $source | ConvertTo-Json -Depth 99 
                                 }
                                 Invoke-RestMethod @parameters
-                                Write-Verbose "Diagnostics enabled for $_, sending info to $LAWorkspace"
+                                Write-Verbose "[Enable-AvdInsightsCounters] - Diagnostics enabled for $_, sending info to $LAWorkspace"
                             })
                     }) 
             }
             catch {
-                Throw $_
+                Throw "[Enable-AvdInsightsCounters] - $_"
             }
         }
     }
