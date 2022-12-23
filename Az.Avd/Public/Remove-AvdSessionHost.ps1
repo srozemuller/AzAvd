@@ -43,7 +43,6 @@ function Remove-AvdSessionHost {
         [parameter(ParameterSetName = 'All')]
         [ValidateNotNullOrEmpty()]
         [switch]$Force
-
     )
     Begin {
         Write-Verbose "Start removing sessionhosts"

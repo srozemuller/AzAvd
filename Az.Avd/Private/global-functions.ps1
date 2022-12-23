@@ -69,6 +69,58 @@ function Remove-Resource () {
     }
 }
 
+
+function Get-Resource () {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory)]
+        [string]$ResourceId,
+
+        [Parameter()]
+        [ValidateSet("GET", "POST")]
+        [string]$Method = "GET",
+
+        [Parameter(Mandatory, ParameterSetName = 'api')]
+        [string]$ApiVersion,
+
+        [Parameter(ParameterSetName = 'api')]
+        [string]$UrlAddition
+
+    )
+    try {
+        $token = (GetAuthToken -resource $Script:AzureApiUrl)
+        switch ($PsCmdlet.ParameterSetName) {
+            api {
+                Write-Verbose 'API version provided, searching in specific API'
+                $resourceParameters = @{
+                    uri     = "{0}/{1}{2}?api-version={3}" -f $Script:AzureApiUrl, $ResourceId, $UrlAddition, $ApiVersion
+                    Method  = $Method
+                    Headers = $token
+                }
+                Write-Verbose "Request URI is $($resourceParameters.uri)"
+            }
+            default {
+                Write-Information "Searching resource with ID $resourceId" -InformationAction Continue
+                $subscriptionId = ($ResourceId | Select-String -Pattern '(?<=\/subscriptions\/)(.*?)(?=\/resourcegroups)').Matches.Groups[-1].Value
+                $resourceParameters = @{
+                    uri     = "{0}/subscriptions/{1}/resources?api-version=2014-04-01-preview&`$filter=resourceId eq '{2}'" -f $Script:AzureApiUrl, $subscriptionId, $ResourceId
+                    Method  = $Method
+                    Headers = $token
+                }
+            }
+        }
+        $resource = Invoke-RestMethod @resourceParameters
+    }
+    catch {
+        Write-Verbose "$resourceId not found, $_"
+        Throw $_ 
+    }
+    finally {
+        $resource
+    }
+}
+
+
 function CheckForce {
     [CmdletBinding()]
     param (
