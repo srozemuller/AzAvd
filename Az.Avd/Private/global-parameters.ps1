@@ -12,4 +12,4 @@ $script:DiagnosticsApiVersion = "2020-08-01"
 $Script:AvdDiagnosticsApiVersion = "2021-05-01-preview"
 
 
-$script:AvdInsightsCountersLocation = Get-ChildItem -Path '$PSScriptRoot\..\Private\avdinsights-sources.json'
+$script:AvdInsightsCountersLocation = '$PSScriptRoot\..\Private\avdinsights-sources.json'
