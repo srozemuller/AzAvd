@@ -70,26 +70,32 @@ function Start-AvdSessionHost {
             }
         }
         try {
-            $sessionHosts = Get-AvdSessionHost @sessionHostParameters
+            $sessionHosts = Get-AvdSessionHostResources @sessionHostParameters
         }
         catch {
             Throw "No sessionhosts ($name) found in $HostpoolName ($ResourceGroupName), $_"
         }
         $sessionHosts | ForEach-Object {
             try {
-                Write-Verbose "Found $($sessionHosts.Count) host(s)"
-                Write-Verbose "Starting $($_.name)"
+                Write-Verbose "[Start-AvdSessionHost] - Found $($sessionHosts.Count) host(s)"
+                Write-Verbose "[Start-AvdSessionHost] - Starting $($_.name)"
                 $apiVersion = "?api-version=2021-11-01"
-                $powerOffParameters = @{
-                    uri     = "{0}{1}/start{2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
+                $powerOnParameters = @{
+                    uri     = "{0}{1}/start{2}" -f $Script:AzureApiUrl, $_.vmResources.id, $apiVersion
                     Method  = "POST"
                     Headers = $token
                 }
-                Invoke-RestMethod @powerOffParameters
-                Write-Information -MessageData "$($_.name) started" -InformationAction Continue
+                Invoke-RestMethod @powerOnParameters
+                do {
+                    $state = Get-AvdSessionHostPowerState -Id $_.id
+                    Write-Information "[Start-AvdSessionHost] - Checking $($_.name) powerstate. ($state)"
+                    Start-Sleep 3
+                }
+                while ($state.powerstate -ne 'running')
+                Write-Information -MessageData "[Start-AvdSessionHost] - $($_.name) started" -InformationAction Continue
             }
             catch {
-                Throw "Not able to start $($_.name), $_"
+                Throw "[Start-AvdSessionHost] - Not able to start $($_.name), $_"
             }
         }
     }       
