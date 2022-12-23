@@ -71,9 +71,10 @@ function Remove-Resource () {
 
 
 function Get-Resource () {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName='default')]
     param (
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory, ParameterSetName = 'default')]
+        [Parameter(Mandatory, ParameterSetName = 'api')]
         [string]$ResourceId,
 
         [Parameter()]
