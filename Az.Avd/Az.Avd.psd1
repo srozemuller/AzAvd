@@ -12,7 +12,7 @@
     RootModule             = 'Az.Avd.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '2.4.4'
+    ModuleVersion          = '2.5.0'
 
     # Supported PSEditions
     CompatiblePSEditions   = 'Core', 'Desktop'
@@ -73,11 +73,16 @@
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport      = @(
         'Add-AvdApplicationGroupPermissions',
+        'Add-AvdInsightsSessionHost',
         'Add-AvdSessionHostTags',
         'Copy-AvdApplicationGroupPermissions',
         'Disable-AvdSessionHost',
         'Disconnect-AvdUserSessions',
         'Enable-AvdDiagnostics',
+        'Enable-AvdInsightsApplicationGroup',
+        'Enable-AvdInsightsCounters',
+        'Enable-AvdInsightsHostpool',
+        'Enable-AvdInsightsWorkspace',
         'Enable-AvdSessionHost',
         'Enable-AvdStartVmOnConnect',    
         'Export-AvdConfig',
@@ -88,6 +93,7 @@
         'Get-AvdLatestSessionHost',
         'Get-AvdNetworkInfo',
         'Get-AvdSessionHost'
+        'Get-AvdSessionHostPowerState',
         'Get-AvdSessionHostResources',
         'Get-AvdUserSessions',
         'Get-AvdVmTemplate',
@@ -102,6 +108,7 @@
         'New-AvdSessionHost',
         'New-AvdVmTemplate',
         'New-AvdWorkspace',
+        'Remove-AvdInsightsSessionHost',
         'Remove-AvdSessionHost',
         'Remove-AvdSessionHostTags',
         'Restart-AvdSessionHost',
