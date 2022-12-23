@@ -3,7 +3,7 @@ function Enable-AvdInsightsApplicationGroup {
     .SYNOPSIS
     Enables the AVD Diagnostics and will send it to a new LogAnalytics workspace
     .DESCRIPTION
-    The function will enable AVD diagnostics for a hostpool. It will create a new Log Analytics workspace if no existing workspace is provided.
+    The function will enable AVD diagnostics for a application group. It will create a new Log Analytics workspace if no existing workspace is provided.
     .PARAMETER HostPoolName
     Enter the name of the hostpool you want to enable start vm on connnect.
     .PARAMETER ResourceGroupName
