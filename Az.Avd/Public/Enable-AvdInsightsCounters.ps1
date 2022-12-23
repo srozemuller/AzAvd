@@ -67,10 +67,10 @@ function Enable-AvdInsightsCounters {
             }
         }
         Write-Verbose "[Enable-AvdInsightsCounters] - Looking for workspace"
-        Write-Verbose $laWorkspaceId
+        Write-Verbose $Id
         $laws = Get-Resource -ResourceId $Id -Verbose
 
-        if ($null -eq $laws) {
+        if ($null -eq $laws.value) {
             try {
                 if ($AutoCreate.IsPresent) {
                     Write-Warning "No Log Analytics Workspace found! Creating a new workspace"

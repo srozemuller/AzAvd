@@ -140,7 +140,7 @@ function Enable-AvdInsightsApplicationGroup {
         Write-Verbose $workspaceId
         $laws = Get-Resource -ResourceId $workspaceId -Verbose
 
-        if ($null -eq $laws) {
+        if ($null -eq $laws.value) {
             try {
                 if ($AutoCreate.IsPresent) {
                     Write-Warning "[Enable-AvdInsightsApplicationGroup] - No Log Analytics Workspace found! Creating a new workspace"
