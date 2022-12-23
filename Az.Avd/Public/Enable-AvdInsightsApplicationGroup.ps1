@@ -29,13 +29,13 @@ function Enable-AvdInsightsApplicationGroup {
     .PARAMETER AutoCreate
     Use this switch to auto create a Log Analtyics Workspace
     .EXAMPLE
-    Enable-AvdInsightsApplicationGroup -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -LAWorkspace 'la-avd-workspace' -LaResourceGroupName 'rg-la-01'
+    Enable-AvdInsightsApplicationGroup -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -LAWorkspace 'la-avd-workspace' -LaResourceGroupName 'rg-la-01' -DiagnosticsName "AvdInsights"
     .EXAMPLE
-    Enable-AvdInsightsApplicationGroup -ApplicationGroupName avd-appgroup-01 -ApplicationResourceGroup rg-avd-001 -LAWorkspace 'la-avd-workspace' -LaResourceGroupName 'rg-la-01'
+    Enable-AvdInsightsApplicationGroup -ApplicationGroupName avd-appgroup-01 -ApplicationResourceGroup rg-avd-001 -LAWorkspace 'la-avd-workspace' -LaResourceGroupName 'rg-la-01' -DiagnosticsName "AvdInsights"
     .EXAMPLE
-    Enable-AvdInsightsApplicationGroup -ApplicationGroupName avd-appgroup-01 -ApplicationResourceGroup rg-avd-001 -LAWorkspace 'la-avd-workspace' -LaResourceGroupName 'rg-la-01' -LAWorkspace 'la-avd-workspace' -LaResourceGroupName 'la-rg' -LaLocation 'westeurope' -RetentionInDays 30 -AutoCreate
+    Enable-AvdInsightsApplicationGroup -ApplicationGroupName avd-appgroup-01 -ApplicationResourceGroup rg-avd-001 -LAWorkspace 'la-avd-workspace' -LaResourceGroupName 'rg-la-01' -LAWorkspace 'la-avd-workspace' -LaResourceGroupName 'la-rg' -LaLocation 'westeurope' -RetentionInDays 30 -AutoCreate -DiagnosticsName "AvdInsights"
     .EXAMPLE
-    Enable-AvdInsightsApplicationGroup -Id /subscription/../applicationgroup/groupname -LAWorkspace 'la-avd-workspace' -LaResourceGroupName 'la-rg' -LaLocation 'westeurope' -RetentionInDays 30 -AutoCreate
+    Enable-AvdInsightsApplicationGroup -Id /subscription/../applicationgroup/groupname -LAWorkspace 'la-avd-workspace' -LaResourceGroupName 'la-rg' -LaLocation 'westeurope' -RetentionInDays 30 -AutoCreate -DiagnosticsName "AvdInsights"
     #>
     [CmdletBinding(DefaultParameterSetName = 'Id')]
     param (

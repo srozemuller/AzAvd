@@ -23,9 +23,13 @@ function Enable-AvdInsightsHostpool {
     .PARAMETER AutoCreate
     Use this switch to auto create a Log Analtyics Workspace
     .EXAMPLE
-    Enable-AvdHostpoolInsights -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -LAWorkspace 'la-avd-workspace' -Categories ("Checkpoint","Error")
+    Enable-AvdInsightsHostpool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -LAWorkspace 'la-avd-workspace' -DiagnosticsName "AvdInsights"
     .EXAMPLE
-    Enable-AvdHostpoolInsights -Id /subscription/.../ -LAWorkspace 'la-avd-workspace' -Categories ("Checkpoint","Error") -LaResourceGroupName 'la-rg' -LaLocation 'westeurope' -RetentionInDays 30 -AutoCreate
+    Enable-AvdInsightsHostpool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -LAWorkspace 'la-avd-workspace' -AdditionalCategories @("NetworkData","SessionHostManagement") -DiagnosticsName "AvdInsights"
+    .EXAMPLE
+    Enable-AvdInsightsHostpool -Id /subscription/../hostpool/hostpoolname -LAWorkspace 'la-avd-workspace' -LaResourceGroupName 'la-rg' -LaLocation 'WestEurope' -RetentionInDays 30 -AutoCreate -DiagnosticsName "AvdInsights"
+    .EXAMPLE
+    Enable-AvdInsightsHostpool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -LAWorkspace 'la-avd-workspace' -LAWorkspace 'la-avd-workspace' -LaResourceGroupName 'la-rg' -LaLocation 'WestEurope' -RetentionInDays 30 -AutoCreate -DiagnosticsName "AvdInsights"
     #>
     [CmdletBinding(DefaultParameterSetName = 'Friendly')]
     param (
@@ -88,6 +92,7 @@ function Enable-AvdInsightsHostpool {
         
     )
     Begin {
+        Write-Verbose "[Enable-AvdInsightsHostpool] - Start enabling AVD Insights for hostpool"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
     }
@@ -104,7 +109,7 @@ function Enable-AvdInsightsHostpool {
                 Write-Verbose "Got the hostpool's resource ID. Thank you for that!"
             }
         }
-        Write-Verbose "Looking for workspace"
+        Write-Verbose "[Enable-AvdInsightsHostpool] - Looking for workspace"
         $workspaceId = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.OperationalInsights/workspaces/{2}" -f $script:subscriptionId, $LaResourceGroupName, $LAWorkspace
         Write-Verbose $workspaceId
         $laws = Get-Resource -ResourceId $workspaceId -Verbose
@@ -112,11 +117,11 @@ function Enable-AvdInsightsHostpool {
         if ($null -eq $laws) {
             try {
                 if ($AutoCreate.IsPresent) {
-                    Write-Warning "No Log Analytics Workspace found! Creating a new workspace"
+                    Write-Warning "[Enable-AvdInsightsHostpool] - No Log Analytics Workspace found! Creating a new workspace"
                     $laws = New-Workspace -Workspace $LAWorkspace -Sku $LASku -ResourceGroupName $LaResourceGroupName -Location $LaLocation
                 }
                 else {
-                    Throw "No workspace found! If it is a new workspace, add -AutoCreate in your command, $_"
+                    Throw "[Enable-AvdInsightsHostpool] - No workspace found! If it is a new workspace, add -AutoCreate in your command, $_"
                 }
             }
             catch {
@@ -125,7 +130,7 @@ function Enable-AvdInsightsHostpool {
         }
         else {
             try {
-                Write-Information "Workspace found, configuring diagnostics" -InformationAction Continue
+                Write-Information "[Enable-AvdInsightsHostpool] - Workspace found, configuring diagnostics" -InformationAction Continue
                 $categoryArray = @()
                 $mandatoryCategories = @("Checkpoint", "Error", "Management", "Connection", "HostRegistration", "AgentHealthStatus")
                 $mandatoryCategories | ForEach-Object {
@@ -157,10 +162,10 @@ function Enable-AvdInsightsHostpool {
                     Body    = $diagnosticsBody | ConvertTo-Json -Depth 4
                 }
                 Invoke-RestMethod @parameters
-                Write-Verbose "Diagnostics enabled for $HostpoolName, sending info to $LAWorkspace"
+                Write-Verbose "[Enable-AvdInsightsHostpool] - Diagnostics enabled for $HostpoolName, sending info to $LAWorkspace"
             }
             catch {
-                Throw $_
+                Throw "[Enable-AvdInsightsHostpool] - $_"
             }
         }
     }
