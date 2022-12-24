@@ -103,10 +103,15 @@ function Enable-AvdInsightsHostpool {
                     HostPoolName      = $HostpoolName 
                     ResourceGroupName = $ResourceGroupName
                 }
-                $Id = Get-AvdHostPool @parameters | Select-Object Id
+                $hostpool = Get-AvdHostPool @parameters
+                write-verbose "$($hostpool.id)"
             }
             default {
                 Write-Verbose "Got the hostpool's resource ID. Thank you for that!"
+                $parameters = @{
+                    Id = $Id
+                }
+                $hostpool = Get-AvdHostPool @parameters
             }
         }
         Write-Verbose "[Enable-AvdInsightsHostpool] - Looking for workspace"
@@ -156,11 +161,12 @@ function Enable-AvdInsightsHostpool {
                     }
                 }    
                 $parameters = @{
-                    uri     = "{0}{1}/providers/microsoft.insights/diagnosticSettings/{2}?api-version={3}" -f $Script:AzureApiUrl, $Id.id, $DiagnosticsName, $Script:AvdDiagnosticsApiVersion
+                    uri     = "{0}{1}/providers/microsoft.insights/diagnosticSettings/{2}?api-version={3}" -f $Script:AzureApiUrl, $hostpool.id, $DiagnosticsName, $Script:AvdDiagnosticsApiVersion
                     Method  = "PUT"
                     Headers = $token
                     Body    = $diagnosticsBody | ConvertTo-Json -Depth 4
                 }
+                Write-Warning $parameters.uri 
                 Invoke-RestMethod @parameters
                 Write-Verbose "[Enable-AvdInsightsHostpool] - Diagnostics enabled for $HostpoolName, sending info to $LAWorkspace"
             }
