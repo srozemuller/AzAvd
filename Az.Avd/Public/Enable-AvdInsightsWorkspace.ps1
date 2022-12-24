@@ -137,7 +137,7 @@ function Enable-AvdInsightsWorkspace {
         Write-Verbose "[Enable-AvdInsightsWorkspace] - Looking for workspace"
         $laWorkspaceId = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.OperationalInsights/workspaces/{2}" -f $script:subscriptionId, $LaResourceGroupName, $LAWorkspace
         Write-Verbose $laWorkspaceId
-        $laws = (Get-Resource -ResourceId $workspaceId -Verbose).value
+        $laws = (Get-Resource -ResourceId $laWorkspaceId -Verbose).value
 
         if ($null -eq $laws) {
             try {
