@@ -1,0 +1,278 @@
+{
+    "sources": [
+        {
+            "kind" : "WindowsPerformanceCounter",
+            "sources": [
+                {
+                    "name": "LogicalDisk_pct_free",
+                    "properties": {
+                        "objectName": "LogicalDisk",
+                        "instanceName": "C:",
+                        "intervalSeconds": 60,
+                        "counterName": "% Free Space"
+                    }
+                },
+                {
+                    "name": "LogicalDisk_avg_disk_queue",
+                    "properties": {
+                        "objectName": "LogicalDisk",
+                        "instanceName": "C:",
+                        "intervalSeconds": 30,
+                        "counterName": "Avg. Disk Queue Length"
+                    }
+                },
+                {
+                    "name": "LogicalDisk_disk_transfer",
+                    "properties": {
+                        "objectName": "LogicalDisk",
+                        "instanceName": "C:",
+                        "intervalSeconds": 60,
+                        "counterName": "Avg. Disk sec/Transfer"
+                    }
+                },
+                {
+                    "name": "LogicalDisk_current_disk_queue",
+                    "properties": {
+                        "objectName": "LogicalDisk",
+                        "instanceName": "C:",
+                        "intervalSeconds": 30,
+                        "counterName": "Current Disk Queue Length"
+                    }
+                },
+                {
+                    "name": "Memory_avail_mbytes",
+                    "properties": {
+                        "objectName": "Memory",
+                        "instanceName": "*",
+                        "intervalSeconds": 30,
+                        "counterName": "Available Mbytes"
+                    }
+                },
+                {
+                    "name": "Memory_page_faults",
+                    "properties": {
+                        "objectName": "Memory",
+                        "instanceName": "*",
+                        "intervalSeconds": 30,
+                        "counterName": "Page Faults/sec"
+                    }
+                },
+                {
+                    "name": "Memory_pages",
+                    "properties": {
+                        "objectName": "Memory",
+                        "instanceName": "*",
+                        "intervalSeconds": 30,
+                        "counterName": "Pages/sec"
+                    }
+                },
+                {
+                    "name": "Memory_bytes_in_use",
+                    "properties": {
+                        "objectName": "Memory",
+                        "instanceName": "*",
+                        "intervalSeconds": 30,
+                        "counterName": "% Committed Bytes In Use"
+                    }
+                },
+                {
+                    "name": "PhysicalDisk_avg_disk_queue",
+                    "properties": {
+                        "objectName": "PhysicalDisk",
+                        "instanceName": "*",
+                        "intervalSeconds": 30,
+                        "counterName": "Avg. Disk Queue Length"
+                    }
+                },
+                {
+                    "name": "PhysicalDisk_avg_disk_read",
+                    "properties": {
+                        "objectName": "PhysicalDisk",
+                        "instanceName": "*",
+                        "intervalSeconds": 30,
+                        "counterName": "Avg. Disk sec/Read"
+                    }
+                },
+                {
+                    "name": "PhysicalDisk_avg_disk_transfer",
+                    "properties": {
+                        "objectName": "PhysicalDisk",
+                        "instanceName": "*",
+                        "intervalSeconds": 30,
+                        "counterName": "Avg. Disk sec/Transfer"
+                    }
+                },
+                {
+                    "name": "PhysicalDisk_avg_disk_write",
+                    "properties": {
+                        "objectName": "PhysicalDisk",
+                        "instanceName": "*",
+                        "intervalSeconds": 30,
+                        "counterName": "Avg. Disk sec/Write"
+                    }
+                },
+                {
+                    "name": "Processor_time",
+                    "properties": {
+                        "objectName": "Processor Information",
+                        "instanceName": "_Total",
+                        "intervalSeconds": 30,
+                        "counterName": "% Processor Time"
+                    }
+                },
+                {
+                    "name": "TS_active_sessions",
+                    "properties": {
+                        "objectName": "Terminal Services",
+                        "instanceName": "*",
+                        "intervalSeconds": 60,
+                        "counterName": "Active Sessions"
+                    }
+                },
+                {
+                    "name": "TS_inactive_sessions",
+                    "properties": {
+                        "objectName": "Terminal Services",
+                        "instanceName": "*",
+                        "intervalSeconds": 60,
+                        "counterName": "Inactive Sessions"
+                    }
+                },
+                {
+                    "name": "TS_total_sessions",
+                    "properties": {
+                        "objectName": "Terminal Services",
+                        "instanceName": "*",
+                        "intervalSeconds": 60,
+                        "counterName": "Total Sessions"
+                    }
+                },
+                {
+                    "name": "User_max_input_delay_process",
+                    "properties": {
+                        "objectName": "User Input Delay per Process",
+                        "instanceName": "*",
+                        "intervalSeconds": 30,
+                        "counterName": "Max Input Delay"
+                    }
+                },
+                {
+                    "name": "User_max_input_delay_session",
+                    "properties": {
+                        "objectName": "User Input Delay per Session",
+                        "instanceName": "*",
+                        "intervalSeconds": 30,
+                        "counterName": "Max Input Delay"
+                    }
+                },
+                {
+                    "name": "Network_current_tcp_rtt",
+                    "properties": {
+                        "objectName": "RemoteFX Network",
+                        "instanceName": "*",
+                        "intervalSeconds": 30,
+                        "counterName": "Current TCP RTT"
+                    }
+                },
+                {
+                    "name": "Network_current_udp_bandwith",
+                    "properties": {
+                        "objectName": "RemoteFX Network",
+                        "instanceName": "*",
+                        "intervalSeconds": 30,
+                        "counterName": "Current UDP Bandwidth"
+                    }
+                }
+            ]
+        },
+        {
+            "kind" : "WindowsEvent",
+            "sources": [
+                {
+                    "name": "fslogix_apps_operational",
+                    "eventLogName": "Microsoft-FSLogix-Apps/Operational",
+                    "eventTypes": [
+                        {
+                            "eventtype": "Error"
+                        },
+                        {
+                            "eventtype": "Information"
+                        },
+                        {
+                            "eventtype": "Warning"
+                        }
+                    ]
+                },
+                {
+                    "name": "fslogix_apps_admin",
+                    "eventLogName": "Microsoft-FSLogix-Apps/Admin",
+                    "eventTypes": [
+                        {
+                            "eventtype": "Error"
+                        },
+                        {
+                            "eventtype": "Information"
+                        },
+                        {
+                            "eventtype": "Warning"
+                        }
+                    ]
+                },
+                {
+                    "name": "ts_localsession_operational",
+                    "eventLogName": "Microsoft-Windows-TerminalServices-LocalSessionManager/Operational",
+                    "eventTypes": [
+                        {
+                            "eventtype": "Error"
+                        },
+                        {
+                            "eventtype": "Information"
+                        },
+                        {
+                            "eventtype": "Warning"
+                        }
+                    ]
+                },
+                {
+                    "name": "application",
+                    "eventLogName": "Application",
+                    "eventTypes": [
+                        {
+                            "eventtype": "Error"
+                        },
+                        {
+                            "eventtype": "Warning"
+                        }
+                    ]
+                },
+                {
+                    "name": "events",
+                    "eventLogName": "System",
+                    "eventTypes": [
+                        {
+                            "eventtype": "Error"
+                        },
+                        {
+                            "eventtype": "Warning"
+                        }
+                    ]
+                },
+                {
+                    "name": "ts_remoteconnection_admin",
+                    "eventLogName": "Microsoft-Windows-TerminalServices-RemoteConnectionManager/Admin",
+                    "eventTypes": [
+                        {
+                            "eventtype": "Error"
+                        },
+                        {
+                            "eventtype": "Warning"
+                        },
+                        {
+                            "eventtype": "Information"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
