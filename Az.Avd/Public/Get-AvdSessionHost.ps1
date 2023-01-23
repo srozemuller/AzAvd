@@ -86,7 +86,7 @@ function Get-AvdSessionHost {
             }   
         }
         catch {
-            Write-Error "No sessionhost results in $HostpoolName, $_"
+            Write-Error "Sessionhost not found in $HostpoolName, $($_.Exception.Message)"
         }
     }
 }
