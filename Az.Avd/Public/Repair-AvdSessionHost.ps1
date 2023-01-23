@@ -10,10 +10,12 @@ function Repair-AvdSessionHost {
     Enter the  Hostpool resourcegroup name
     .PARAMETER SessionHostName
     Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
-    .PARAMETER SessionHostName
-    Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
+    .PARAMETER Id
+    Enter the sessionhosts resource id
     .EXAMPLE
-    Move-AvdSessionHost -FromHostpoolName avd-hostpool -FromResourceGroupName rg-avd-01 -ToHostpoolName avd-hostpool-02 -ToResourceGroupName rg-avd-02 -SessionHostName avd-host-1.avd.domain
+    Repair-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
+    .EXAMPLE
+    Repair-AvdSessionHost -Id /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-avd-01/providers/Microsoft.DesktopVirtualization/hostpools/avd-hostpool-personal/sessionhosts/avd-host-1.avd.domain
     #>
     [CmdletBinding(DefaultParameterSetName = 'All')]
     param
