@@ -8,4 +8,5 @@ $script:AvdModuleLocation = "https://wvdportalstorageblob.blob.core.windows.net/
 
 # Resource provider API versions
 $script:hostpoolApiVersion = "2022-02-10-preview"
-
+$script:sessionHostApiVersion = "2022-02-10-preview"
+$script:vmApiVersion = "2022-11-01"

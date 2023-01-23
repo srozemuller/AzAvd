@@ -39,8 +39,6 @@ function Get-AvdSessionHost {
         [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [string]$Id
-
-
     )
     Begin {
         Write-Verbose "Start searching session hosts"
@@ -85,7 +83,7 @@ function Get-AvdSessionHost {
             }   
         }
         catch {
-            Write-Error "No sessionhost results in $HostpoolName, $_"
+            Write-Error "Sessionhost not found in $HostpoolName, $($_.Exception.Message)"
         }
     }
 }
