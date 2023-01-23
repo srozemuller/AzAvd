@@ -60,7 +60,10 @@ function Get-AvdSessionHost {
                 $baseUrl = "{0}{1}" -f $baseUrl, $Name 
             }
             Resource {
-                Write-Verbose "Looking for sessionhost base on resourceId $ResourceId"
+                Write-Verbose "Looking for sessionhost base on resourceId $Id"
+                if ($Id.Contains('Microsoft.Compute/virtualMachines')){
+                    Throw "Please use the session host's resource ID, not the virtual machine"
+                }
                 $baseUrl = "{0}{1}" -f $Script:AzureApiUrl, $Id 
             }
         }
