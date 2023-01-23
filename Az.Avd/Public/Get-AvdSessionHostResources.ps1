@@ -29,7 +29,11 @@ function Get-AvdSessionHostResources {
 
         [parameter(Mandatory, ParameterSetName = 'Sessionhost')]
         [ValidateNotNullOrEmpty()]
-        [string]$SessionHostName
+        [string]$SessionHostName,
+
+        [parameter(Mandatory, ParameterSetName = 'SessionhostID')]
+        [ValidateNotNullOrEmpty()]
+        [string]$Id
     )
     
     Begin {
@@ -51,6 +55,11 @@ function Get-AvdSessionHostResources {
                     HostPoolName      = $HostpoolName
                     ResourceGroupName = $ResourceGroupName
                     SessionHostName   = $SessionHostName
+                }
+            }
+            SessionhostID {
+                $Parameters = @{
+                    Id = $Id
                 }
             }
         }

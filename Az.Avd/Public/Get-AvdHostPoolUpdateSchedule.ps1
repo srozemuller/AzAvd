@@ -1,4 +1,4 @@
-function Get-AvdHostPoolUpdate {
+function Get-AvdHostPoolUpdateSchedule {
     <#
 .SYNOPSIS
 Get AVD Hostpool information.
@@ -10,14 +10,6 @@ Enter the name of the hostpool you want information from.
 Enter the name of the resourcegroup where the hostpool resides in.
 .PARAMETER ResourceId
 Enter the hostpool ResourceId
-.PARAMETER MaxVMsRemovedDuringUpdate
-Enter the number of sessionhosts that can be removed during the update.
-.PARAMETER SaveOriginalDisk
-Enter if you want to save the original disk.
-.PARAMETER logOffMessage
-Enter the message that will be shown to the user when the sessionhost is removed.
-.PARAMETER LogoutDelayMinutes
-Enter the number of minutes the user has to log off.
 .EXAMPLE
 Start-AvdHostPoolUpdate -Resourceid /subscriptions/xxx/resourceGroups/rg-avd/providers/Microsoft.DesktopVirtualization/hostpools/AVD-Hostpool/ -MaxVMsRemovedDuringUpdate 2
 .EXAMPLE
@@ -60,7 +52,12 @@ Start-AvdHostPoolUpdate -Hostpoolname AVD-Hostpool -ResourceGroupName rg-avd -Ma
                 Headers = $token
             }
             $response = Invoke-WebRequest @parameters -SkipHttpErrorCheck
-            ($response.Content | ConvertFrom-Json).value.properties
+            if (($response.Content | ConvertFrom-Json).value.properties.hostPoolUpdateConfiguration.scheduledTime) {
+                ($response.Content | ConvertFrom-Json).value.properties.hostPoolUpdateConfiguration.scheduledTime
+            }
+            else {
+                Write-Warning "No schedule found"
+            }
         }
         catch {
             Write-Error $_.Exception.Response

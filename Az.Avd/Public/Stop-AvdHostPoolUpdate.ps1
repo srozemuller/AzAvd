@@ -35,32 +35,51 @@ Stop-AvdHostPoolUpdate -ResourceId "/subscription/../HostPoolName"
         [string]$Message = "Host pool update has been cancelled. You are no longer required to sign out."
     )
     Begin {
-        Write-Verbose "Start searching for hostpool $hostpoolName"
+        Write-Verbose "Canceling hostpool image update for $hostpoolName"
         AuthenticationCheck
         $token = GetAuthToken -resource $script:AzureApiUrl
         switch ($PsCmdlet.ParameterSetName) {
             Name {
                 Write-Verbose "Name and ResourceGroup provided"
                 $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/controlUpdate?api-version={4}" -f $script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName, $script:hostpoolUpdateApiVersion
+                $ResourceId = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DesktopVirtualization/hostpools/{2}" -f $script:subscriptionId, $ResourceGroupName, $HostpoolName
             }
             ResourceId {
-                Write-Verbose "ResourceId provided"
+                Write-Verbose "ResourceId provided, thank you for using the ResourceId parameter"
                 $url = "{0}{1}/controlUpdate?api-version={2}" -f $script:AzureApiUrl, $resourceId, $script:hostpoolUpdateApiVersion
             }
         }
     }
     Process {
-        $body = @{
-                action  = "Cancel"
-                message = $Message
-        } | ConvertTo-Json
-        $parameters = @{
-            uri     = $url
-            Method  = "POST"
-            Headers = $token
-            Body    = $body
+        try {
+            $currentState = Get-AvdHostPoolUpdateState -ResourceId $ResourceId
+            if (($currentState.UpdateStatus -ne "Scheduled") -and ($currentState.UpdateStatus -ne "InProgress")) {
+                Write-Information "Hostpool has no update planned state. Current state is $($currentState.updateStatus)." -InformationAction Continue
+                return
+            }
+            else {
+                $body = @{
+                    action  = "Cancel"
+                    message = $Message
+                } | ConvertTo-Json
+                $parameters = @{
+                    uri     = $url
+                    Method  = "POST"
+                    Headers = $token
+                    Body    = $body
+                }
+                $response = Invoke-WebRequest @parameters -SkipHttpErrorCheck
+                if ($response.StatusCode -eq 204) {
+                    Write-Information "Hostpool update has been cancelled" -InformationAction Continue
+                }
+                else {
+                    Write-Error "Something went wrong, please check the error below"
+                    Throw $response
+                }
+            }
         }
-        $results = Invoke-RestMethod @parameters
-        $results
+        catch {
+            Write-Error $_.Exception.Response
+        }
     }
 }

@@ -1,4 +1,4 @@
-function Update-AvdHostPoolUpdateConfiguration {
+function Get-AvdHostPoolUpdateResults{
 <#
 .SYNOPSIS
 Get AVD Hostpool information.
@@ -37,18 +37,12 @@ Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
         switch ($PsCmdlet.ParameterSetName) {
             Name {
                 Write-Verbose "Name and ResourceGroup provided"
-                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/sessionHostConfigurations/default{4}" -f $script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName, $apiVersion
+                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/updateOperationResults/default{4}" -f $script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName, $apiVersion
             }
             ResourceId {
                 Write-Verbose "ResourceId provided"
                 $url = $script:AzureApiUrl + $resourceId + $apiVersion
             }
-        }
-        try {
-            TestAzResource -resourceId "/subscriptions/6d3c408e-b617-44ed-bc24-280249636525/resourceGroups/rg-roz-avd-01/providers/Microsoft.Compute/galleries/AVDGallery/images/Rozemuller/versions/2022.0602.29"
-        }
-        catch {
-            "Resource does not exist"
         }
         $parameters = @{
             uri     = $url

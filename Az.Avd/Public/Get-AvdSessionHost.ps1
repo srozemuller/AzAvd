@@ -28,10 +28,18 @@ function Get-AvdSessionHost {
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
+
+        [parameter(Mandatory, ParameterSetName = 'AllID')]
+        [ValidateNotNullOrEmpty()]
+        [string]$HostPoolResourceId,
     
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
-        [string]$SessionHostName
+        [string]$SessionHostName,
+
+        [parameter(Mandatory, ParameterSetName = 'HostId')]
+        [ValidateNotNullOrEmpty()]
+        [string]$Id
     )
     Begin {
         Write-Verbose "Start searching session hosts"
@@ -49,14 +57,23 @@ function Get-AvdSessionHost {
                 Write-Verbose "Looking for sessionhost $SessionHostName"
                 $baseUrl = $baseUrl + $SessionHostName 
             }
+            AllID {
+                Write-Verbose 'Using base url for getting all session hosts in $hostpoolName'
+                $baseUrl = $Script:AzureApiUrl + $HostPoolResourceId + "/sessionHosts/"
+            }
+            HostId {
+                Write-Verbose "Looking for sessionhost $Id"
+                $baseUrl = "{0}/{1}" -f $Script:AzureApiUrl, $Id
+            }
         }
+        write-verbose $baseUrl
         $parameters = @{
             uri     = $baseUrl + $apiVersion
             Method  = "GET"
             Headers = $token
         }
         $results = Invoke-RestMethod @parameters
-        if ($SessionHostName){
+        if ($SessionHostName -or $Id){
             $results
         }
         else {
