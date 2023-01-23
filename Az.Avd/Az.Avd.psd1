@@ -111,6 +111,7 @@
         'Remove-AvdInsightsSessionHost',
         'Remove-AvdSessionHost',
         'Remove-AvdSessionHostTags',
+        'Repair-AvdSessionHost',
         'Restart-AvdSessionHost',
         'Start-AvdSessionHost',
         'Stop-AvdSessionHost',
