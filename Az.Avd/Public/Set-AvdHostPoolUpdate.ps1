@@ -1,4 +1,4 @@
-function Start-AvdHostPoolUpdate {
+function Set-AvdHostPoolUpdate {
     <#
 .SYNOPSIS
 Get AVD Hostpool information.
@@ -19,9 +19,13 @@ Enter the message that will be shown to the user when the sessionhost is removed
 .PARAMETER LogoutDelayMinutes
 Enter the number of minutes the user has to log off.
 .EXAMPLE
-Start-AvdHostPoolUpdate -Resourceid /subscriptions/xxx/resourceGroups/rg-avd/providers/Microsoft.DesktopVirtualization/hostpools/AVD-Hostpool/ -MaxVMsRemovedDuringUpdate 2
+Set-AvdHostPoolUpdate -Resourceid /subscriptions/xxx/resourceGroups/rg-avd/providers/Microsoft.DesktopVirtualization/hostpools/AVD-Hostpool/ -MaxVMsRemovedDuringUpdate 2
 .EXAMPLE
-Start-AvdHostPoolUpdate -Hostpoolname AVD-Hostpool -ResourceGroupName rg-avd -MaxVMsRemovedDuringUpdate 2
+Set-AvdHostPoolUpdate -Hostpoolname AVD-Hostpool -ResourceGroupName rg-avd -MaxVMsRemovedDuringUpdate 2
+.EXAMPLE
+Set-AvdHostPoolUpdate -Hostpoolname AVD-Hostpool -ResourceGroupName rg-avd -MaxVMsRemovedDuringUpdate 2 -DateTime "2021-01-01 12:00:00" -Timezone "Central European Standard Time"
+.EXAMPLE
+Set-AvdHostPoolUpdate -Hostpoolname AVD-Hostpool -ResourceGroupName rg-avd -MaxVMsRemovedDuringUpdate 2 -DateTime "2021-01-01 12:00:00" -Timezone "Central European Standard Time" -SaveOriginalDisk $false
 #>
     [CmdletBinding(DefaultParameterSetName = "ResourceID")]
     param (
@@ -47,7 +51,14 @@ Start-AvdHostPoolUpdate -Hostpoolname AVD-Hostpool -ResourceGroupName rg-avd -Ma
         [string]$logOffMessage = "Please save your work and sign out for this session host will be shut down for image update. Please log back in when you are ready",
 
         [Parameter()]
-        [int]$LogoutDelayMinutes = 5
+        [int]$LogoutDelayMinutes = 5,
+
+        [Parameter()]
+        [datetime]$DateTime,
+
+        [Parameter()]
+        [string]$Timezone = [System.TimeZoneInfo]::Local.StandardName
+
     )
     Begin {
         Write-Verbose "Start searching for hostpool $hostpoolName"
@@ -71,6 +82,16 @@ Start-AvdHostPoolUpdate -Hostpoolname AVD-Hostpool -ResourceGroupName rg-avd -Ma
                 Write-Warning "MaxVMsRemovedDuringUpdate ($MaxVMsRemovedDuringUpdate) is higher than the amount of sessionhosts ($($sessionHosts.Count)) in the hostpool. Setting MaxVMsRemovedDuringUpdate to $($sessionHosts.Count - 1)"
                 $MaxVMsRemovedDuringUpdate = $sessionHosts.Count - 1
             }
+        }
+        catch {
+            Write-Error "Could not get sessionhosts from hostpool $HostPoolName. Please check if the hostpool exists and if you have access to it."
+            return
+        }
+        try {
+            $scheduledTime = @{
+                "dateTime" = $DateTime.ToString("yyyy-MM-ddTHH:mm:ssZ")
+                "timeZone" = $Timezone      
+            }
             $body = @{
                 parameters   = @{
                     saveOriginalDisk          = $SaveOriginalDisk
@@ -78,7 +99,7 @@ Start-AvdHostPoolUpdate -Hostpoolname AVD-Hostpool -ResourceGroupName rg-avd -Ma
                     maintenanceAlerts         = @()
                     logOffDelayMinutes        = $LogoutDelayMinutes
                     logOffMessage             = $LogOffMessage
-                    scheduledTime             = $null 
+                    scheduledTime             = $scheduledTime 
                 }
                 validateOnly = $false
             } | ConvertTo-Json
@@ -88,7 +109,7 @@ Start-AvdHostPoolUpdate -Hostpoolname AVD-Hostpool -ResourceGroupName rg-avd -Ma
                 Headers = $token
                 Body    = $body
             }
-            Invoke-WebRequest @parameters -SkipHttpErrorCheck
+            Invoke-WebRequest @parameters -SkipCertificateCheck
         }
         catch {
             Write-Error $_.Exception.Response

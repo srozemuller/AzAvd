@@ -1,4 +1,4 @@
-function Initialize-AvdHostPoolUpdate {
+function Get-AvdHostPoolUpdateConfiguration {
 <#
 .SYNOPSIS
 Get AVD Hostpool information.
@@ -30,18 +30,17 @@ Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
         [string]$ResourceId
     )
     Begin {
-        Write-Verbose "Start searching for hostpool $hostpoolName"
+        Write-Verbose "Start searching for hostpool update configuration in $hostpoolName"
         AuthenticationCheck
         $token = GetAuthToken -resource $script:AzureApiUrl
-        $apiVersion = "?api-version=2021-05-13-preview"
         switch ($PsCmdlet.ParameterSetName) {
             Name {
                 Write-Verbose "Name and ResourceGroup provided"
-                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/update{4}" -f $script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName, $apiVersion
+                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/updateDetails?api-version={4}" -f $script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName, $script:hostpoolUpdateApiVersion
             }
             ResourceId {
                 Write-Verbose "ResourceId provided"
-                $url = $script:AzureApiUrl + $resourceId + $apiVersion
+                $url = "{0}{1}/updateDetails?api-version={2}" -f $script:AzureApiUrl, $ResourceId, $script:hostpoolUpdateApiVersion
             }
         }
         $parameters = @{
@@ -50,12 +49,17 @@ Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
         }
     }
     Process {
-        $parameters = @{
-            uri     = $url
-            Method  = "GET"
-            Headers = $token
+        try {
+            $parameters = @{
+                uri     = $url
+                Method  = "GET"
+                Headers = $token
+            }
+            $response = Invoke-WebRequest @parameters -SkipHttpErrorCheck
+            ($response.Content | ConvertFrom-Json).value.properties
         }
-        $results = Invoke-RestMethod @parameters
-        $results
+        catch {
+            Write-Error $_.Exception.Response
+        }
     }
 }
