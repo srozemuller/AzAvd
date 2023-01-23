@@ -5,53 +5,53 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdUserSessions
+# Repair-AvdSessionHost
 
 ## SYNOPSIS
-Gets the current AVD Session hosts from a specific hostpool.
+Repairing sessionhosts in an Azure Virtual Desktop hostpool.
 
 ## SYNTAX
 
 ### All (Default)
 ```
-Get-AvdUserSessions -HostpoolName <String> -ResourceGroupName <String> [-LoginName <String>]
- [<CommonParameters>]
+Repair-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
 ```
 
-### Hostname
+### SingleObject
 ```
-Get-AvdUserSessions -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
- [-LoginName <String>] [<CommonParameters>]
+Repair-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
+ [<CommonParameters>]
 ```
 
 ### Id
 ```
-Get-AvdUserSessions [-SessionHostId <String>] [<CommonParameters>]
+Repair-AvdSessionHost -Id <Object> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function will grab all the sessionhost from a specific Azure Virtual Desktop hostpool.
+The function will search for sessionhosts and will repair them in the Azure Virtual Desktop hostpool.
+Usefull when a sessionhost is in a bad state.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdUserSessions -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
+Repair-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
 ```
 
 ### EXAMPLE 2
 ```
-Get-AvdUserSessions -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -LoginName user@domain.com
+Repair-AvdSessionHost -Id /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-avd-01/providers/Microsoft.DesktopVirtualization/hostpools/avd-hostpool-personal/sessionhosts/avd-host-1.avd.domain
 ```
 
 ## PARAMETERS
 
 ### -HostpoolName
-Enter the AVD Hostpool name
+Enter the  AVD Hostpool name
 
 ```yaml
 Type: String
-Parameter Sets: All, Hostname
+Parameter Sets: All, SingleObject
 Aliases:
 
 Required: True
@@ -62,11 +62,11 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the AVD Hostpool resourcegroup name
+Enter the  Hostpool resourcegroup name
 
 ```yaml
 Type: String
-Parameter Sets: All, Hostname
+Parameter Sets: All, SingleObject
 Aliases:
 
 Required: True
@@ -77,11 +77,11 @@ Accept wildcard characters: False
 ```
 
 ### -SessionHostName
-Enter the sessionhosts name
+Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
 
 ```yaml
 Type: String
-Parameter Sets: Hostname
+Parameter Sets: SingleObject
 Aliases:
 
 Required: True
@@ -91,30 +91,15 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -LoginName
-Enter the user principal name
+### -Id
+Enter the sessionhosts resource id
 
 ```yaml
-Type: String
-Parameter Sets: All, Hostname
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -SessionHostId
-{{ Fill SessionHostId Description }}
-
-```yaml
-Type: String
+Type: Object
 Parameter Sets: Id
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False

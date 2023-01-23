@@ -5,43 +5,47 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdUserSessions
+# Get-AvdSessionHostPowerState
 
 ## SYNOPSIS
-Gets the current AVD Session hosts from a specific hostpool.
+Get AVD Session host's powerstate.
 
 ## SYNTAX
 
 ### All (Default)
 ```
-Get-AvdUserSessions -HostpoolName <String> -ResourceGroupName <String> [-LoginName <String>]
- [<CommonParameters>]
+Get-AvdSessionHostPowerState -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
 ```
 
 ### Hostname
 ```
-Get-AvdUserSessions -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
- [-LoginName <String>] [<CommonParameters>]
+Get-AvdSessionHostPowerState -HostpoolName <String> -ResourceGroupName <String> -Name <String>
+ [<CommonParameters>]
 ```
 
-### Id
+### Resource
 ```
-Get-AvdUserSessions [-SessionHostId <String>] [<CommonParameters>]
+Get-AvdSessionHostPowerState -Id <Object> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function will grab all the sessionhost from a specific Azure Virtual Desktop hostpool.
+Searches for a specific session host or all sessions hosts in a AVD hostpool and returns the current power state.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdUserSessions -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
+Get-AvdSessionHostPowerState -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
 ```
 
 ### EXAMPLE 2
 ```
-Get-AvdUserSessions -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -LoginName user@domain.com
+Get-AvdSessionHostPowerState -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -Name avd-host-1.avd.domain
+```
+
+### EXAMPLE 3
+```
+Get-AvdSessionHostPowerState -Id /subscriptions/../sessionhosts/avd-0
 ```
 
 ## PARAMETERS
@@ -76,8 +80,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -SessionHostName
-Enter the sessionhosts name
+### -Name
+{{ Fill Name Description }}
 
 ```yaml
 Type: String
@@ -91,33 +95,18 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -LoginName
-Enter the user principal name
+### -Id
+Enter the session host's resource ID
 
 ```yaml
-Type: String
-Parameter Sets: All, Hostname
+Type: Object
+Parameter Sets: Resource
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -SessionHostId
-{{ Fill SessionHostId Description }}
-
-```yaml
-Type: String
-Parameter Sets: Id
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 

@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Enable-AvdDiagnostics
+# Enable-AvdInsightsHostpool
 
 ## SYNOPSIS
 Enables the AVD Diagnostics and will send it to a new LogAnalytics workspace
@@ -14,28 +14,28 @@ Enables the AVD Diagnostics and will send it to a new LogAnalytics workspace
 
 ### Friendly (Default)
 ```
-Enable-AvdDiagnostics -HostpoolName <String> -ResourceGroupName <String> -LAWorkspace <String>
- -LaResourceGroupName <String> [-DiagnosticsName <String>] -Categories <Array> [<CommonParameters>]
+Enable-AvdInsightsHostpool -HostpoolName <String> -ResourceGroupName <String> -LAWorkspace <String>
+ -LaResourceGroupName <String> [-AdditionalCategories <Array>] -DiagnosticsName <String> [<CommonParameters>]
 ```
 
 ### Create-Friendly
 ```
-Enable-AvdDiagnostics -HostpoolName <String> -ResourceGroupName <String> -LAWorkspace <String>
- [-LASku <String>] -LaResourceGroupName <String> [-DiagnosticsName <String>] -LaLocation <String>
- -Categories <Array> -RetentionInDays <Int32> [-AutoCreate] [<CommonParameters>]
+Enable-AvdInsightsHostpool -HostpoolName <String> -ResourceGroupName <String> -LAWorkspace <String>
+ [-LASku <String>] -LaResourceGroupName <String> -LaLocation <String> [-AdditionalCategories <Array>]
+ -RetentionInDays <Int32> -DiagnosticsName <String> [-AutoCreate] [<CommonParameters>]
 ```
 
 ### Create-Id
 ```
-Enable-AvdDiagnostics -Id <String> -LAWorkspace <String> [-LASku <String>] -LaResourceGroupName <String>
- [-DiagnosticsName <String>] -LaLocation <String> -Categories <Array> -RetentionInDays <Int32> [-AutoCreate]
- [<CommonParameters>]
+Enable-AvdInsightsHostpool -Id <String> -LAWorkspace <String> [-LASku <String>] -LaResourceGroupName <String>
+ -LaLocation <String> [-AdditionalCategories <Array>] -RetentionInDays <Int32> -DiagnosticsName <String>
+ [-AutoCreate] [<CommonParameters>]
 ```
 
 ### Id
 ```
-Enable-AvdDiagnostics -Id <String> -LAWorkspace <String> -LaResourceGroupName <String>
- [-DiagnosticsName <String>] -Categories <Array> [<CommonParameters>]
+Enable-AvdInsightsHostpool -Id <String> -LAWorkspace <String> -LaResourceGroupName <String>
+ [-AdditionalCategories <Array>] -DiagnosticsName <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -46,12 +46,22 @@ It will create a new Log Analytics workspace if no existing workspace is provide
 
 ### EXAMPLE 1
 ```
-Enable-AvdDiagnostics -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -LAWorkspace 'la-avd-workspace' -Categories ("Checkpoint","Error")
+Enable-AvdInsightsHostpool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -LAWorkspace 'la-avd-workspace' -DiagnosticsName "AvdInsights"
 ```
 
 ### EXAMPLE 2
 ```
-Enable-AvdDiagnostics -Id /subscription/.../ -LAWorkspace 'la-avd-workspace' -Categories ("Checkpoint","Error") -LaResourceGroupName 'la-rg' -LaLocation 'westeurope' -RetentionInDays 30 -AutoCreate
+Enable-AvdInsightsHostpool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -LAWorkspace 'la-avd-workspace' -AdditionalCategories @("NetworkData","SessionHostManagement") -DiagnosticsName "AvdInsights"
+```
+
+### EXAMPLE 3
+```
+Enable-AvdInsightsHostpool -Id /subscription/../hostpool/hostpoolname -LAWorkspace 'la-avd-workspace' -LaResourceGroupName 'la-rg' -LaLocation 'WestEurope' -RetentionInDays 30 -AutoCreate -DiagnosticsName "AvdInsights"
+```
+
+### EXAMPLE 4
+```
+Enable-AvdInsightsHostpool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -LAWorkspace 'la-avd-workspace' -LAWorkspace 'la-avd-workspace' -LaResourceGroupName 'la-rg' -LaLocation 'WestEurope' -RetentionInDays 30 -AutoCreate -DiagnosticsName "AvdInsights"
 ```
 
 ## PARAMETERS
@@ -158,21 +168,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -DiagnosticsName
-The diagnostics name shown in the hostpool diagnostics overview
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: AVD-Diagnostics
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -LaLocation
 {{ Fill LaLocation Description }}
 
@@ -188,15 +183,15 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Categories
-The categories you like to save in Log Analytics
+### -AdditionalCategories
+The categories you like extra to save in Log Analytics, beside the mandatory categories for AVD Insights.
 
 ```yaml
 Type: Array
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False
@@ -214,6 +209,21 @@ Aliases:
 Required: True
 Position: Named
 Default value: 0
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DiagnosticsName
+{{ Fill DiagnosticsName Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
