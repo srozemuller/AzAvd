@@ -39,8 +39,6 @@ function Get-AvdSessionHost {
         [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [string]$Id
-
-
     )
     Begin {
         Write-Verbose "Start searching session hosts"
@@ -62,7 +60,10 @@ function Get-AvdSessionHost {
                 $baseUrl = "{0}{1}" -f $baseUrl, $Name 
             }
             Resource {
-                Write-Verbose "Looking for sessionhost base on resourceId $ResourceId"
+                Write-Verbose "Looking for sessionhost base on resourceId $Id"
+                if ($Id.Contains('Microsoft.Compute/virtualMachines')){
+                    Throw "Please use the session host's resource ID, not the virtual machine"
+                }
                 $baseUrl = "{0}{1}" -f $Script:AzureApiUrl, $Id 
             }
         }
@@ -85,7 +86,7 @@ function Get-AvdSessionHost {
             }   
         }
         catch {
-            Write-Error "No sessionhost results in $HostpoolName, $_"
+            Write-Error "Sessionhost not found in $HostpoolName, $($_.Exception.Message)"
         }
     }
 }
