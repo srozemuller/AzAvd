@@ -53,7 +53,7 @@ function Get-AvdSessionHost {
                 Write-Verbose 'Using base url for getting all session hosts in $hostpoolName'
             }
             Hostname {
-                if ($Name -match "/"){
+                if ($Name -match "/") {
                     $Name = $Name.Split("/")[-1]
                 }
                 Write-Verbose "Looking for sessionhost $Name"
@@ -61,7 +61,7 @@ function Get-AvdSessionHost {
             }
             Resource {
                 Write-Verbose "Looking for sessionhost base on resourceId $Id"
-                if ($Id.Contains('Microsoft.Compute/virtualMachines')){
+                if ($Id.Contains('Microsoft.Compute/virtualMachines')) {
                     Throw "Please use the session host's resource ID, not the virtual machine"
                 }
                 $baseUrl = "{0}{1}" -f $Script:AzureApiUrl, $Id 
@@ -73,17 +73,27 @@ function Get-AvdSessionHost {
             Headers = $token
         }
         try {
+            $allHosts = [System.Collections.ArrayList]@()
             $results = Invoke-RestMethod @parameters
             if ($Name -or $Id) {
                 $results | ForEach-Object {
                     $_ | Add-Member -MemberType NoteProperty -Name HostpoolName -Value $HostpoolName
                     $_ | Add-Member -MemberType NoteProperty -Name ResourceGroupName -Value $ResourceGroupName
                 }
-                $results
-            }
+                $results.ForEach({ $allHosts.Add($_) | Out-Null })
+            } 
             else {
-                $results.value
-            }   
+                $results.value.ForEach({ $allHosts.Add($_) | Out-Null })   
+                # Check if there is a next page with session hosts
+                $pagingURL = $results."nextLink"
+                while ($null -ne $pagingURL) {
+                    Write-Verbose "Got a next page url"
+                    $results = Invoke-RestMethod -Uri $pagingURL -Headers $token -Method Get
+                    $pagingURL = $results."nextLink"
+                    $results.value.ForEach({ $allHosts.Add($_) | Out-Null }) 
+                }
+            }
+            $allHosts        
         }
         catch {
             Write-Error "Sessionhost not found in $HostpoolName, $($_.Exception.Message)"

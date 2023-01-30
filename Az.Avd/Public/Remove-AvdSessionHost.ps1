@@ -85,28 +85,33 @@ function Remove-AvdSessionHost {
                 Write-Information -MessageData "$($sh.name) deleted" -InformationAction Continue
                 Remove-Resource -resourceId $sh.vmresources.id -apiVersion "2022-03-01"
                 Write-Information -MessageData "$($sh.name) deleted" -InformationAction Continue
-                try {
-                    if ($DeleteAssociated.IsPresent) {
-                        Write-Warning "Delete associated resources provided."
-                        Write-Verbose "Associated resources (disk & NIC) also will be removed"
-                        Write-Information "Looking for network resources" -InformationAction Continue
-                        $sh.vmResources.properties.networkprofile.networkInterfaces.id | ForEach-Object {
-                            Remove-Resource -resourceId $_ -apiVersion "2022-01-01"
-                        }
-                        Write-Information "Looking for OS disk" -InformationAction Continue
-                        Remove-Resource -resourceId $sh.vmResources.properties.storageProfile.osDisk
-                        Write-Information "Looking for data disks" -InformationAction Continue
-                        $sh.vmResources.properties.storageProfile.dataDisks.ManagedDisk | ForEach-Object {
-                            Remove-Resource -resourceId $_.id -apiVersion "2022-03-02"
+            }
+            catch {
+                "Not able to delete session host $($sh.name) from hostpool, $_"
+                Continue
+            }
+            try {
+                if ($DeleteAssociated.IsPresent) {
+                    Write-Warning "Delete associated resources provided."
+                    Write-Verbose "Associated resources (disk & NIC) also will be removed"
+                    Write-Information "Looking for network resources" -InformationAction Continue
+                    $sh.vmResources.properties.networkprofile.networkInterfaces.id | ForEach-Object {
+                        Remove-Resource -resourceId $_ -apiVersion "2022-01-01"
+                    }
+                    Write-Information "Looking for OS disk" -InformationAction Continue
+                    Remove-Resource -resourceId $sh.vmResources.properties.storageProfile.osDisk.managedDisk.id -apiVersion "2022-03-02"
+                    Write-Information "Looking for data disks" -InformationAction Continue
+                    if ($sh.vmResources.properties.storageProfile.dataDisks.ManagedDisk) {
+                        Write-Verbose "Data disks found, removing them also"
+                        $sh.vmResources.properties.storageProfile.dataDisks.ManagedDisk.id | ForEach-Object {
+                            Remove-Resource -resourceId $_ -apiVersion "2022-03-02"
                         }
                     }
                 }
-                catch {
-                    Write-Error "Not able to remove associated resources, $_"
-                }
             }
             catch {
-                Throw "Not able to delete $($sh.name), $_"
+                Write-Error "Not able to remove associated resources, properly allready removed, $_"
+                Continue
             }
         }
     }
