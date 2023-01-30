@@ -100,7 +100,8 @@ function Stop-AvdSessionHost {
                 Write-Information -MessageData "$($_.name) stopped" -InformationAction Continue
             }
             catch {
-                Throw "Not able to stop $($_.name), $_"
+                Continue 
+                "Not able to stop $($_.name), $_"
             }
         }
     }       
