@@ -5,53 +5,62 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdUserSessions
+# Remove-AvdInsightsSessionHost
 
 ## SYNOPSIS
-Gets the current AVD Session hosts from a specific hostpool.
+Removes the AVD session host from AVD Insights.
 
 ## SYNTAX
 
-### All (Default)
+### HostName (Default)
 ```
-Get-AvdUserSessions -HostpoolName <String> -ResourceGroupName <String> [-LoginName <String>]
- [<CommonParameters>]
+Remove-AvdInsightsSessionHost [<CommonParameters>]
 ```
 
 ### Hostname
 ```
-Get-AvdUserSessions -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
- [-LoginName <String>] [<CommonParameters>]
+Remove-AvdInsightsSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String>
+ [<CommonParameters>]
 ```
 
-### Id
+### All
 ```
-Get-AvdUserSessions [-SessionHostId <String>] [<CommonParameters>]
+Remove-AvdInsightsSessionHost -HostpoolName <String> -ResourceGroupName <String> [-Force] [<CommonParameters>]
+```
+
+### Resource
+```
+Remove-AvdInsightsSessionHost -Id <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function will grab all the sessionhost from a specific Azure Virtual Desktop hostpool.
+The function will removed the monitoring extension from the session host.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdUserSessions -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
+Remove-AvdInsightsSessionHost -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -Force
 ```
 
 ### EXAMPLE 2
 ```
-Get-AvdUserSessions -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain -LoginName user@domain.com
+Remove-AvdInsightsSessionHost -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -Name avd-0
+```
+
+### EXAMPLE 3
+```
+Remove-AvdInsightsSessionHost -Id /subscriptions/../sessionhosts/avd-0
 ```
 
 ## PARAMETERS
 
 ### -HostpoolName
-Enter the AVD Hostpool name
+Enter the name of the AVD hostpool's name.
 
 ```yaml
 Type: String
-Parameter Sets: All, Hostname
+Parameter Sets: Hostname, All
 Aliases:
 
 Required: True
@@ -62,11 +71,11 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the AVD Hostpool resourcegroup name
+Enter the name of the resourcegroup where the hostpool resides in.
 
 ```yaml
 Type: String
-Parameter Sets: All, Hostname
+Parameter Sets: Hostname, All
 Aliases:
 
 Required: True
@@ -76,8 +85,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -SessionHostName
-Enter the sessionhosts name
+### -Name
+Enter the name of the session host.
 
 ```yaml
 Type: String
@@ -91,32 +100,32 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -LoginName
-Enter the user principal name
+### -Id
+Enter the session host's resource ID (NOT VM).
 
 ```yaml
 Type: String
-Parameter Sets: All, Hostname
+Parameter Sets: Resource
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
-### -SessionHostId
-{{ Fill SessionHostId Description }}
+### -Force
+Use this switch to force delete ALL session hosts from AVD Insights
 
 ```yaml
-Type: String
-Parameter Sets: Id
+Type: SwitchParameter
+Parameter Sets: All
 Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

@@ -12,7 +12,12 @@ Get AVD applicationgroup information with the assigned permissions.
 
 ## SYNTAX
 
-### Name (Default)
+### All (Default)
+```
+Get-AvdApplicationGroup -ResourceGroupName <String> [<CommonParameters>]
+```
+
+### Name
 ```
 Get-AvdApplicationGroup -ApplicationGroupName <String> -ResourceGroupName <String> [<CommonParameters>]
 ```
@@ -59,7 +64,7 @@ Enter the name of the resourcegroup where the hostpool resides in.
 
 ```yaml
 Type: String
-Parameter Sets: Name
+Parameter Sets: All, Name
 Aliases:
 
 Required: True
