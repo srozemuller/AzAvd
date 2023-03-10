@@ -22,6 +22,8 @@ function Update-AvdSessionHost {
     Update-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -AllowNewSession $true
     .EXAMPLE
     Update-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -AssignedUser "user@domain.com" -Force
+    .EXAMPLE
+    Update-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -UnAssignAll -Force
     #>
     [CmdletBinding(DefaultParameterSetName = 'Id')]
     param
