@@ -112,10 +112,11 @@ function Get-AvdSessionHost {
             }
             $allHosts        
 
-        $results = Invoke-RestMethod @parameters
-        if ($SessionHostName -or $Id){
-            $results
+            $results = Invoke-RestMethod @parameters
+            if ($SessionHostName -or $Id) {
+                $results
 
+            }
         }
         catch {
             Write-Error "Sessionhost not found in $HostpoolName, $($_.Exception.Message)"

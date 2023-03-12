@@ -196,7 +196,6 @@ function New-AvdSessionHost {
             AAD* {
                 Write-Verbose "Provided -AzureAD switch, joining AzureAD"
                 $extensionName = "AADLoginForWindows"
-                $domainJoinUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $vmName, $extensionName , '2021-11-01'
                 $domainJoinExtension = @{
                     properties = @{
                         Type               = "AADLoginForWindows"
@@ -308,6 +307,7 @@ function New-AvdSessionHost {
             }          
             try {
                 $domainJoinBody = $domainJoinExtension | ConvertTo-Json -Depth 99
+                $domainJoinUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $vmName, $extensionName , '2021-11-01'
                 Invoke-RestMethod -Method PUT -Uri $domainJoinUrl -Headers $script:token -Body $domainJoinBody
                 Do {
                     $status = Invoke-RestMethod -Method GET -Uri $domainJoinUrl -Headers $script:token
