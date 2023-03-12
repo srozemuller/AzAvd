@@ -14,13 +14,13 @@ Updates a new Azure Virtual Desktop workspace.
 
 ### Name (Default)
 ```
-Update-AvdWorkspace -Name <String> -ResourceGroupName <String> -location <String> [-friendlyName <String>]
- [-description <String>] [-ApplicationGroupReference <Array>] [<CommonParameters>]
+Update-AvdWorkspace -Name <String> -ResourceGroupName <String> -Location <String> [-FriendlyName <String>]
+ [-Description <String>] [-ApplicationGroupReference <Array>] [<CommonParameters>]
 ```
 
 ### ResourceId
 ```
-Update-AvdWorkspace -ResourceId <String> -location <String> [-friendlyName <String>] [-description <String>]
+Update-AvdWorkspace -ResourceId <String> -Location <String> [-FriendlyName <String>] [-Description <String>]
  [-ApplicationGroupReference <Array>] [<CommonParameters>]
 ```
 
@@ -31,17 +31,17 @@ The function will update an existing Azure Virtual Desktop workspace.
 
 ### EXAMPLE 1
 ```
-Update-AvdWorkspace -name avd-workspace -resourceGroupName rg-avd-01 -location WestEurope -description "Work in space"
+Update-AvdWorkspace -name avd-workspace -resourceGroupName rg-avd-01 -Location WestEurope -description "Work in space"
 ```
 
 ### EXAMPLE 2
 ```
-Update-AvdWorkspace -name avd-workspace -resourceGroupName rg-avd-01 -location WestEurope -ApplicationGroupReference @("id_1","id_2")
+Update-AvdWorkspace -name avd-workspace -resourceGroupName rg-avd-01 -Location WestEurope -ApplicationGroupReference @("id_1","id_2")
 ```
 
 ### EXAMPLE 3
 ```
-Update-AvdWorkspace -resourceId "/subscriptions/../workspacename" -location WestEurope -ApplicationGroupReference @("id_1","id_2")
+Update-AvdWorkspace -resourceId "/subscriptions/../workspacename" -Location WestEurope -ApplicationGroupReference @("id_1","id_2")
 ```
 
 ## PARAMETERS
@@ -91,7 +91,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -location
+### -Location
 Enter the Azure location
 
 ```yaml
@@ -106,7 +106,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -friendlyName
+### -FriendlyName
 Change the workspace friendly name
 
 ```yaml
@@ -121,7 +121,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -description
+### -Description
 Enter a description
 
 ```yaml

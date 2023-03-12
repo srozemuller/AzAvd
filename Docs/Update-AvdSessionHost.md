@@ -13,22 +13,22 @@ Assign new users or put them in drainmode or not.
 
 ## SYNTAX
 
-### SingleObject (Default)
+### Id (Default)
 ```
-Update-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [-AllowNewSession <String>]
- [-AssignedUser <String>] [-SessionHostName <String>] [<CommonParameters>]
-```
-
-### InputObject
-```
-Update-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [-AllowNewSession <String>]
- -SessionHostName <String> -SessionHosts <Object> [<CommonParameters>]
+Update-AvdSessionHost [-AllowNewSession <Boolean>] [-AssignedUser <String>] [-FriendlyName <String>]
+ -Id <Object> [-Force] [<CommonParameters>]
 ```
 
-### UserMutation
+### Hostname
 ```
-Update-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -AssignedUser <String>
- -SessionHostName <String> [-Force] [<CommonParameters>]
+Update-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [-AllowNewSession <Boolean>]
+ [-AssignedUser <String>] [-FriendlyName <String>] -SessionHostName <String> [-Force] [<CommonParameters>]
+```
+
+### All
+```
+Update-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [-AllowNewSession <Boolean>] [-Force]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -53,7 +53,7 @@ Enter the source AVD Hostpool name
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Hostname, All
 Aliases:
 
 Required: True
@@ -68,7 +68,7 @@ Enter the source Hostpool resourcegroup name
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Hostname, All
 Aliases:
 
 Required: True
@@ -83,8 +83,8 @@ Allowing new sessions or not.
 (Default: true).
 
 ```yaml
-Type: String
-Parameter Sets: SingleObject, InputObject
+Type: Boolean
+Parameter Sets: (All)
 Aliases:
 
 Required: False
@@ -100,7 +100,7 @@ Only available if providing one sessionhost at a time.
 
 ```yaml
 Type: String
-Parameter Sets: SingleObject
+Parameter Sets: Id, Hostname
 Aliases:
 
 Required: False
@@ -110,12 +110,15 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -FriendlyName
+Enter a friendly name for the current sessionhost.
+
 ```yaml
 Type: String
-Parameter Sets: UserMutation
+Parameter Sets: Id, Hostname
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False
@@ -127,19 +130,7 @@ Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
 
 ```yaml
 Type: String
-Parameter Sets: SingleObject
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-```yaml
-Type: String
-Parameter Sets: InputObject, UserMutation
+Parameter Sets: Hostname
 Aliases:
 
 Required: True
@@ -149,12 +140,12 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -SessionHosts
-{{ Fill SessionHosts Description }}
+### -Id
+{{ Fill Id Description }}
 
 ```yaml
 Type: Object
-Parameter Sets: InputObject
+Parameter Sets: Id
 Aliases:
 
 Required: True
@@ -169,10 +160,10 @@ Accept wildcard characters: False
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: UserMutation
+Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: False
 Accept pipeline input: False

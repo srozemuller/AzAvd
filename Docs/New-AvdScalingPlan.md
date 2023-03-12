@@ -235,7 +235,7 @@ Accept wildcard characters: False
 ```
 
 ### -RampUpCapacityThresholdPct
-{{ Fill rampUpCapacityThresholdPct Description }}
+{{ Fill RampUpCapacityThresholdPct Description }}
 
 ```yaml
 Type: Int32

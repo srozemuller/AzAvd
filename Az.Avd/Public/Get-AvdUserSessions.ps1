@@ -37,7 +37,10 @@ function Get-AvdUserSessions {
         [parameter(ParameterSetName = 'All')]
         [parameter(ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
-        [string]$LoginName
+        [string]$LoginName,
+
+        [parameter(ParameterSetName = 'Id')]
+        [string]$SessionHostId
     )
     Begin {
         Write-Verbose "Start searching session hosts"
@@ -61,6 +64,11 @@ function Get-AvdUserSessions {
                 Write-Verbose "Looking for sessionhost $SessionHostName"
                 $sessionHostUrl = "{0}{1}/UserSessions" -f $baseUrl, $SessionHostName 
             }
+            Id {
+                Write-Verbose "Looking for sessionhost on ID $SessionHostId"
+                $sessionHostUrl = "{0}{1}/UserSessions" -f $Script:AzureApiUrl, $SessionHostId
+            }
+
         }
         try {
             $sessionHostUrl | ForEach-Object {

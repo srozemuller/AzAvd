@@ -14,18 +14,18 @@ Updates the Virtual Desktop ApplicationGroup desktop application
 
 ### Name (Default)
 ```
-Update-AvdDesktopApplication -ApplicationGroupName <String> -ResourceGroupName <String> [-description <String>]
- [-friendlyName <String>] [<CommonParameters>]
+Update-AvdDesktopApplication -ApplicationGroupName <String> -ResourceGroupName <String> [-Description <String>]
+ [-FriendlyName <String>] [<CommonParameters>]
 ```
 
 ### ResourceId
 ```
-Update-AvdDesktopApplication -ResourceId <String> [-description <String>] [-friendlyName <String>]
+Update-AvdDesktopApplication -ResourceId <String> [-Description <String>] [-FriendlyName <String>]
  [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The function will update the desktop application SessionDesktop with a friendlyname and/or displayname.
+The function will update the desktop application SessionDesktop with a FriendlyName and/or displayname.
 
 ## EXAMPLES
 
@@ -86,7 +86,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -description
+### -Description
 Enter a description
 
 ```yaml
@@ -101,7 +101,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -friendlyName
+### -FriendlyName
 Provide a displayname, this is the name you see in the webclient and Remote Desktop Client.
 
 ```yaml

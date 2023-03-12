@@ -46,6 +46,120 @@ function Create-CategoryArray ($Categories) {
     return  $categoryArray    
 }
 
+function Remove-Resource () {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory)]
+        [string]$ResourceId,
+        [Parameter(Mandatory)]
+        [string]$apiVersion
+    )
+    try {
+        Write-Information "Removing resource with ID $resourceId" -InformationAction Continue
+        $apiVersion = "?api-version={0}" -f $apiVersion
+        $deleteResourceParameters = @{
+            uri     = "{0}{1}{2}" -f $Script:AzureApiUrl, $resourceId, $apiVersion
+            Method  = "DELETE"
+            Headers = (GetAuthToken -resource $Script:AzureApiUrl)
+        }
+        Invoke-RestMethod @deleteResourceParameters
+    }
+    catch {
+        Write-Error "Removing $resourceId not succesful, $_"
+    }
+}
+
+
+function Get-Resource () {
+    [CmdletBinding(DefaultParameterSetName='default')]
+    param (
+        [Parameter(Mandatory, ParameterSetName = 'default')]
+        [Parameter(Mandatory, ParameterSetName = 'api')]
+        [string]$ResourceId,
+
+        [Parameter()]
+        [ValidateSet("GET", "POST")]
+        [string]$Method = "GET",
+
+        [Parameter(Mandatory, ParameterSetName = 'api')]
+        [string]$ApiVersion,
+
+        [Parameter(ParameterSetName = 'api')]
+        [string]$UrlAddition
+
+    )
+    try {
+        $token = (GetAuthToken -resource $Script:AzureApiUrl)
+        switch ($PsCmdlet.ParameterSetName) {
+            api {
+                Write-Verbose 'API version provided, searching in specific API'
+                $resourceParameters = @{
+                    uri     = "{0}/{1}{2}?api-version={3}" -f $Script:AzureApiUrl, $ResourceId, $UrlAddition, $ApiVersion
+                    Method  = $Method
+                    Headers = $token
+                }
+                Write-Verbose "Request URI is $($resourceParameters.uri)"
+            }
+            default {
+                Write-Information "Searching resource with ID $resourceId" -InformationAction Continue
+                $subscriptionId = ($ResourceId | Select-String -Pattern '(?<=\/subscriptions\/)(.*?)(?=\/resourcegroups)').Matches.Groups[-1].Value
+                $resourceParameters = @{
+                    uri     = "{0}/subscriptions/{1}/resources?api-version=2014-04-01-preview&`$filter=resourceId eq '{2}'" -f $Script:AzureApiUrl, $subscriptionId, $ResourceId
+                    Method  = $Method
+                    Headers = $token
+                }
+            }
+        }
+        $resource = Invoke-RestMethod @resourceParameters
+    }
+    catch {
+        Write-Verbose "$resourceId not found, $_"
+        Throw $_ 
+    }
+    finally {
+        $resource
+    }
+}
+
+
+function CheckForce {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory)]
+        [string]$Task,
+        [Parameter(Mandatory)]
+        [boolean]$Force
+    )
+    if (!$Force) {
+        Write-Verbose "No specific host provided, starting all hosts in $hostpoolName"
+        Write-Information -MessageData "HINT: use -Force to skip this message." -InformationAction Continue
+        $confirmation = Read-Host "Are you sure you want to run $Task to all session hosts? [y/n]"
+        while ($confirmation -ne "y") {
+            if ($confirmation -eq 'n') { 
+                exit 
+            }
+            $confirmation = Read-Host "Yes/No? [y/n]"
+        }
+    }
+}
+
+function ConcatSessionHostName {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory)]
+        [string]$Name
+    )
+    if ($Name -match '^(?:(?!\/).)*$') {
+        $Name = $Name.Split('/')[-1]
+        Write-Verbose "It looks like you also provided a hostpool, a sessionhost name is enough. Provided value {0}"
+        Write-Verbose "Picking only the hostname which is $Name"
+    }
+    else {
+        Write-Verbose "Session hostname provided, looking for sessionhost $Name"
+    }
+    $name
+}
+
 function TestAzResource($resourceId,$apiVersion) {
     $testParameters = @{
         method = "GET"
@@ -54,3 +168,4 @@ function TestAzResource($resourceId,$apiVersion) {
     }
     Invoke-RestMethod @testParameters
 }
+

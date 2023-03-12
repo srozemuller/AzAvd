@@ -12,9 +12,26 @@ Removing sessionhosts from an Azure Virtual Desktop hostpool.
 
 ## SYNTAX
 
+### HostName (Default)
 ```
-Remove-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
+Remove-AvdSessionHost [<CommonParameters>]
+```
+
+### Hostname
+```
+Remove-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [-DeleteAssociated]
  [<CommonParameters>]
+```
+
+### All
+```
+Remove-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [-DeleteAssociated] [-Force]
+ [<CommonParameters>]
+```
+
+### Resource
+```
+Remove-AvdSessionHost -Id <String> [-DeleteAssociated] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -24,17 +41,17 @@ The function will search for sessionhosts and will remove them from the Azure Vi
 
 ### EXAMPLE 1
 ```
-Remove-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.wvd.domain
+Remove-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
 ```
 
 ## PARAMETERS
 
 ### -HostpoolName
-Enter the WVD Hostpool name
+Enter the AVD Hostpool name
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Hostname, All
 Aliases:
 
 Required: True
@@ -45,11 +62,11 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the WVD Hostpool resourcegroup name
+Enter the AVD Hostpool resourcegroup name
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Hostname, All
 Aliases:
 
 Required: True
@@ -59,17 +76,62 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -SessionHostName
-Enter the sessionhosts name
+### -Name
+{{ Fill Name Description }}
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Hostname
 Aliases:
 
 Required: True
 Position: Named
 Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Id
+{{ Fill Id Description }}
+
+```yaml
+Type: String
+Parameter Sets: Resource
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -DeleteAssociated
+{{ Fill DeleteAssociated Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Hostname, All, Resource
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Force
+{{ Fill Force Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: All
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

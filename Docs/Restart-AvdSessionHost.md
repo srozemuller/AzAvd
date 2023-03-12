@@ -8,27 +8,38 @@ schema: 2.0.0
 # Restart-AvdSessionHost
 
 ## SYNOPSIS
-Gets the current AVD Session hosts from a specific hostpool.
+Restarts AVD Session hosts in a specific hostpool.
 
 ## SYNTAX
 
 ### All (Default)
 ```
-Restart-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+Restart-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [-Force]
+ [<CommonParameters>]
 ```
 
 ### Hostname
 ```
-Restart-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -SessionHostName <String>
- [<CommonParameters>]
+Restart-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [<CommonParameters>]
+```
+
+### Resource
+```
+Restart-AvdSessionHost -Id <Object> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function will grab all the sessionhost from a specific Azure Virtual Desktop hostpool.
+This function restarts sessionshosts in a specific Azure Virtual Desktop hostpool.
+If you want to start a specific session host then also provide the name,
 
 ## EXAMPLES
 
 ### EXAMPLE 1
+```
+Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
+```
+
+### EXAMPLE 2
 ```
 Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
 ```
@@ -40,7 +51,7 @@ Enter the AVD Hostpool name
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: All, Hostname
 Aliases:
 
 Required: True
@@ -55,7 +66,7 @@ Enter the AVD Hostpool resourcegroup name
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: All, Hostname
 Aliases:
 
 Required: True
@@ -65,17 +76,47 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -SessionHostName
-Enter the sessionhosts name
+### -Name
+{{ Fill Name Description }}
 
 ```yaml
 Type: String
-Parameter Sets: Hostname
+Parameter Sets: All, Hostname
 Aliases:
 
 Required: True
 Position: Named
 Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Id
+{{ Fill Id Description }}
+
+```yaml
+Type: Object
+Parameter Sets: Resource
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -Force
+{{ Fill Force Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: All
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

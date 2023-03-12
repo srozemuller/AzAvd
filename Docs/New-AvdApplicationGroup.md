@@ -13,9 +13,9 @@ Creates a new AVD applicationgroup.
 ## SYNTAX
 
 ```
-New-AvdApplicationGroup [-Name] <String> [[-description] <String>] [[-friendlyName] <String>]
- [-ResourceGroupName] <String> [-location] <String> [[-tags] <Object>] [-HostPoolArmPath] <String>
- [[-workspaceResourceId] <String>] [-ApplicationGroupType] <String> [<CommonParameters>]
+New-AvdApplicationGroup [-Name] <String> [[-Description] <String>] [[-FriendlyName] <String>]
+ [-ResourceGroupName] <String> [-Location] <String> [[-Tags] <Object>] [-HostPoolArmPath] <String>
+ [[-WorkspaceResourceId] <String>] [-ApplicationGroupType] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -50,7 +50,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -description
+### -Description
 Enter the description of the application group.
 
 ```yaml
@@ -65,7 +65,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -friendlyName
+### -FriendlyName
 Enter the friendlyName of the application group.
 
 ```yaml
@@ -95,7 +95,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -location
+### -Location
 Enter the location where to deploy application group.
 
 ```yaml
@@ -110,7 +110,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -tags
+### -Tags
 If the resource needs tags, enter them in here.
 
 ```yaml
@@ -140,7 +140,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -workspaceResourceId
+### -WorkspaceResourceId
 If there is a workspace allready, fill in the workspace resource ID where to assign the application group to.
 
 ```yaml

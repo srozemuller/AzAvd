@@ -24,6 +24,11 @@ Get-AvdUserSessions -HostpoolName <String> -ResourceGroupName <String> -SessionH
  [-LoginName <String>] [<CommonParameters>]
 ```
 
+### Id
+```
+Get-AvdUserSessions [-SessionHostId <String>] [<CommonParameters>]
+```
+
 ## DESCRIPTION
 This function will grab all the sessionhost from a specific Azure Virtual Desktop hostpool.
 
@@ -46,7 +51,7 @@ Enter the AVD Hostpool name
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: All, Hostname
 Aliases:
 
 Required: True
@@ -61,7 +66,7 @@ Enter the AVD Hostpool resourcegroup name
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: All, Hostname
 Aliases:
 
 Required: True
@@ -91,7 +96,22 @@ Enter the user principal name
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: All, Hostname
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -SessionHostId
+{{ Fill SessionHostId Description }}
+
+```yaml
+Type: String
+Parameter Sets: Id
 Aliases:
 
 Required: False

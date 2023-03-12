@@ -12,7 +12,7 @@
     RootModule             = 'Az.Avd.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '2.1.5'
+    ModuleVersion          = '2.5.1'
 
     # Supported PSEditions
     CompatiblePSEditions   = 'Core', 'Desktop'
@@ -33,7 +33,7 @@
     Description            = 'For managing and automate Azure Virtual Desktop environments. This module can also be used for housekeeping and manageing all the AVD related Azure resources.'
 
     # Minimum version of the PowerShell engine required by this module
-    PowerShellVersion      = '5.1'
+    PowerShellVersion      = '7.2'
 
     # Name of the PowerShell host required by this module
     # PowerShellHostName = ''
@@ -73,12 +73,21 @@
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport      = @(
         'Add-AvdApplicationGroupPermissions',
+        'Add-AvdInsightsSessionHost',
+        'Add-AvdSessionHostTags',
         'Copy-AvdApplicationGroupPermissions',
+        'Disable-AvdSessionHost',
         'Disconnect-AvdUserSessions',
         'Enable-AvdDiagnostics',
+        'Enable-AvdInsightsApplicationGroup',
+        'Enable-AvdInsightsCounters',
+        'Enable-AvdInsightsHostpool',
+        'Enable-AvdInsightsWorkspace',
+        'Enable-AvdSessionHost',
         'Enable-AvdStartVmOnConnect',    
         'Export-AvdConfig',
         'Get-AvdApplicationGroup',  
+        'Get-AvdDiagnosticSettings',
         'Get-AvdHostPool',
         'Get-AvdHostPoolUpdate',
         'Get-AvdHostPoolUpdateConfiguration',
@@ -89,20 +98,28 @@
         'Get-AvdLatestSessionHost',
         'Get-AvdNetworkInfo',
         'Get-AvdSessionHost'
+        'Get-AvdSessionHostPowerState',
         'Get-AvdSessionHostResources',
         'Get-AvdUserSessions',
         'Get-AvdVmTemplate',
         'Get-AvdWorkspace',
+        'Grant-AvdSessionHost',
         'Move-AvdSessionHost',
         'New-AvdAadSessionHost',
         'New-AvdAutoScaleRole',
         'New-AvdApplicationGroup',
         'New-AvdHostpool',
         'New-AvdScalingPlan',
+        'New-AvdSessionHost',
         'New-AvdVmTemplate',
         'New-AvdWorkspace',
+        'Remove-AvdInsightsSessionHost',
         'Remove-AvdSessionHost',
+        'Remove-AvdSessionHostTags',
+        'Repair-AvdSessionHost',
         'Restart-AvdSessionHost',
+        'Start-AvdSessionHost',
+        'Stop-AvdSessionHost',
         'Set-AvdHostPoolUpdate',
         'Start-AvdHostPoolUpdate',
         'Stop-AvdHostPoolUpdate',
@@ -112,6 +129,7 @@
         'Update-AvdHostPoolUpdate',
         'Update-AvdHostpoolImageLocation',
         'Update-AvdRegistrationToken',
+        'Update-AvdScheduledAgentsUpdate',
         'Update-AvdSessionHost',
         'Update-AvdSessionhostDrainMode',
         'Update-AvdWorkspace'
@@ -141,18 +159,17 @@
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData            = @{
         PSData = @{
-
             # Tags applied to this module. These help with module discovery in online galleries.
             Tags       = 'Azure', 'ResourceManager', 'ARM', 'PSModule', 'AzureVirtualDesktop', 'WindowsVirtualDesktop', 'DesktopVirtualization'
 
             # A URL to the license for this module.
-            LicenseUri = 'https://github.com/srozemuller/AzWvd/blob/main/LICENSE'
+            LicenseUri = 'https://github.com/srozemuller/AzAvd/blob/main/LICENSE'
 
             # A URL to the main website for this project.
             ProjectUri = 'https://github.com/srozemuller/AzAvd'
 
             # A URL to an icon representing this module.
-            IconUri    = 'https://github.com/srozemuller/AzWvd/blob/main/Private/avd-logo.png'
+            IconUri    = 'https://github.com/srozemuller/AzAvd/blob/main/Private/avd-logo.png'
 
             # ReleaseNotes of this module
             ReleaseNotes = ''

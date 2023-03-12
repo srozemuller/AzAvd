@@ -49,7 +49,7 @@ function Update-AvdSessionhostDrainMode {
                 $parameters = @{
                     HostpoolName      = $InputObject.HostpoolName
                     ResourceGroupName = $InputObject.ResourceGroupName
-                    Name              = $InputObject.SessionHostName
+                    SessionHostName   = $InputObject.SessionHostName
                     AllowNewSession   = $AllowNewSession
                 }
             }
@@ -57,13 +57,13 @@ function Update-AvdSessionhostDrainMode {
                 $parameters = @{
                     Hostpoolname      = $HostpoolName 
                     ResourceGroupName = $ResourceGroupName 
-                    Name              = $SessionHostName 
+                    SessionHostName   = $SessionHostName 
                     AllowNewSession   = $AllowNewSession
                 }
             }
         }
         if ($InputObject) {
-            $InputObject | ForEach-Object { Update-AvdSessionhost @Parameters }
+            $InputObject | ForEach-Object { Update-AvdSessionhost @parameters }
         }
         else {    
             Update-AvdSessionhost @Parameters

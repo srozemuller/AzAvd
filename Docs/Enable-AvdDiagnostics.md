@@ -12,17 +12,30 @@ Enables the AVD Diagnostics and will send it to a new LogAnalytics workspace
 
 ## SYNTAX
 
-### Existing (Default)
+### Friendly (Default)
 ```
-Enable-AvdDiagnostics [-HostpoolName <String>] [-ResourceGroupName <String>] [-LAWorkspace <String>]
- [-LaResourceGroupName <String>] [-Categories <Array>] [<CommonParameters>]
+Enable-AvdDiagnostics -HostpoolName <String> -ResourceGroupName <String> -LAWorkspace <String>
+ -LaResourceGroupName <String> [-DiagnosticsName <String>] -Categories <Array> [<CommonParameters>]
 ```
 
-### Initial
+### Create-Friendly
 ```
-Enable-AvdDiagnostics [-HostpoolName <String>] [-ResourceGroupName <String>] [-LAWorkspace <String>]
- [-LASku <String>] [-LaResourceGroupName <String>] [-diagnosticsName <String>] [-Categories <Array>]
- [-RetentionInDays <Int32>] [<CommonParameters>]
+Enable-AvdDiagnostics -HostpoolName <String> -ResourceGroupName <String> -LAWorkspace <String>
+ [-LASku <String>] -LaResourceGroupName <String> [-DiagnosticsName <String>] -LaLocation <String>
+ -Categories <Array> -RetentionInDays <Int32> [-AutoCreate] [<CommonParameters>]
+```
+
+### Create-Id
+```
+Enable-AvdDiagnostics -Id <String> -LAWorkspace <String> [-LASku <String>] -LaResourceGroupName <String>
+ [-DiagnosticsName <String>] -LaLocation <String> -Categories <Array> -RetentionInDays <Int32> [-AutoCreate]
+ [<CommonParameters>]
+```
+
+### Id
+```
+Enable-AvdDiagnostics -Id <String> -LAWorkspace <String> -LaResourceGroupName <String>
+ [-DiagnosticsName <String>] -Categories <Array> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -36,6 +49,11 @@ It will create a new Log Analytics workspace if no existing workspace is provide
 Enable-AvdDiagnostics -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -LAWorkspace 'la-avd-workspace' -Categories ("Checkpoint","Error")
 ```
 
+### EXAMPLE 2
+```
+Enable-AvdDiagnostics -Id /subscription/.../ -LAWorkspace 'la-avd-workspace' -Categories ("Checkpoint","Error") -LaResourceGroupName 'la-rg' -LaLocation 'westeurope' -RetentionInDays 30 -AutoCreate
+```
+
 ## PARAMETERS
 
 ### -HostpoolName
@@ -43,10 +61,10 @@ Enter the name of the hostpool you want to enable start vm on connnect.
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Friendly, Create-Friendly
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False
@@ -58,10 +76,37 @@ Enter the name of the resourcegroup where the hostpool resides in.
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Friendly, Create-Friendly
 Aliases:
 
-Required: False
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Id
+Enter the host pool's resource ID.
+
+```yaml
+Type: String
+Parameter Sets: Create-Id
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+```yaml
+Type: String
+Parameter Sets: Id
+Aliases:
+
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False
@@ -76,7 +121,7 @@ Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False
@@ -88,7 +133,7 @@ Enter the name of the Log Analytics SKU
 
 ```yaml
 Type: String
-Parameter Sets: Initial
+Parameter Sets: Create-Friendly, Create-Id
 Aliases:
 
 Required: False
@@ -106,24 +151,39 @@ Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -diagnosticsName
+### -DiagnosticsName
 The diagnostics name shown in the hostpool diagnostics overview
 
 ```yaml
 Type: String
-Parameter Sets: Initial
+Parameter Sets: (All)
 Aliases:
 
 Required: False
 Position: Named
 Default value: AVD-Diagnostics
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -LaLocation
+{{ Fill LaLocation Description }}
+
+```yaml
+Type: String
+Parameter Sets: Create-Friendly, Create-Id
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -136,7 +196,7 @@ Type: Array
 Parameter Sets: (All)
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False
@@ -148,12 +208,27 @@ How long should the data be saved
 
 ```yaml
 Type: Int32
-Parameter Sets: Initial
+Parameter Sets: Create-Friendly, Create-Id
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: 0
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -AutoCreate
+Use this switch to auto create a Log Analtyics Workspace
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Create-Friendly, Create-Id
+Aliases:
+
+Required: True
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

@@ -112,6 +112,7 @@ Function Get-AvdImageVersionStatus {
                             imageVersionId      = $imageVersionId
                             galleryName         = $galleryName
                             hostpoolName        = $HostpoolName
+                            resourceGroupName   = $ResourceGroupName
                             sessionHostName     = $_.Name
                             sessionHostId       = $_.Id
                             vmId                = $_.vmResources.id

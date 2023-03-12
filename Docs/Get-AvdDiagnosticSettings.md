@@ -5,39 +5,50 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdHostPoolInfo
+# Get-AvdDiagnosticSettings
 
 ## SYNOPSIS
-Get AVD Hostpool information, including the underlaying session hosts
+Gets the AVD Diagnostics settings to an another LogAnalytics workspace or categories.
 
 ## SYNTAX
 
+### Name (Default)
 ```
-Get-AvdHostPoolInfo [-HostPoolName] <String> [-ResourceGroupName] <String> [<CommonParameters>]
+Get-AvdDiagnosticSettings -HostpoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+```
+
+### Id
+```
+Get-AvdDiagnosticSettings -Id <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-With this function you can get information about a AVD hostpool that includes the information about the underlaying session hosts.
+This command will help you updating the Log Analytics workspace or adding/removing log catagories.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdHostPoolInfo -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
+Get-AvdDiagnosticSettings -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
+```
+
+### EXAMPLE 2
+```
+Get-AvdDiagnosticSettings -HostPoolId "/subscriptions/...."
 ```
 
 ## PARAMETERS
 
-### -HostPoolName
-Enter the name of the hostpool you want information from.
+### -HostpoolName
+Enter the name of the hostpool you want to enable start vm on connnect.
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Name
 Aliases:
 
 Required: True
-Position: 1
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -48,13 +59,28 @@ Enter the name of the resourcegroup where the hostpool resides in.
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Name
 Aliases:
 
 Required: True
-Position: 2
+Position: Named
 Default value: None
 Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Id
+{{ Fill Id Description }}
+
+```yaml
+Type: String
+Parameter Sets: Id
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 

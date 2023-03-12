@@ -13,11 +13,11 @@ Creates a new Azure Virtual Desktop hostpool.
 ## SYNTAX
 
 ```
-New-AvdHostpool -HostpoolName <String> -ResourceGroupName <String> -location <String> -hostPoolType <String>
- [-customRdpProperty <String>] [-friendlyName <String>] [-description <String>] [-loadBalancerType <String>]
- [-validationEnvironment <Boolean>] [-startVMOnConnect <Boolean>] [-preferredAppGroupType <String>]
- [-PersonalDesktopAssignmentType <String>] [-vmTemplate <String>] [-maxSessionLimit <Int32>] [-Force]
- [<CommonParameters>]
+New-AvdHostpool -HostpoolName <String> -ResourceGroupName <String> -Location <String> -HostPoolType <String>
+ [-CustomRdpProperty <String>] [-AgentUpdate <Object>] [-FriendlyName <String>] [-Description <String>]
+ [-LoadBalancerType <String>] [-ValidationEnvironment <Boolean>] [-StartVMOnConnect <Boolean>]
+ [-PreferredAppGroupType <String>] [-PersonalDesktopAssignmentType <String>] [-VmTemplate <String>]
+ [-MaxSessionLimit <Int32>] [-Force] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -38,6 +38,11 @@ New-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -locatio
 ### EXAMPLE 3
 ```
 New-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -location WestEurope -vmTemplate "{"domain":"","osDiskType":"Premium_LRS","namePrefix":"avd","vmSize":{"cores":"2","ram":"8","id":"Standard_B2MS"},"galleryImageOffer":"","galleryImagePublisher":"","galleryImageSKU":"","imageType":"","imageUri":"","customImageId":"","useManagedDisks":"True","galleryItemId":null}"
+```
+
+### EXAMPLE 4
+```
+New-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -location WestEurope -AgentUpdate @(@{dayOfWeek="Sunday";Hour=3},@{dayOfWeek="Monday";Hour=3})
 ```
 
 ## PARAMETERS
@@ -72,8 +77,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -location
-{{ Fill location Description }}
+### -Location
+{{ Fill Location Description }}
 
 ```yaml
 Type: String
@@ -87,8 +92,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -hostPoolType
-{{ Fill hostPoolType Description }}
+### -HostPoolType
+{{ Fill HostPoolType Description }}
 
 ```yaml
 Type: String
@@ -102,7 +107,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -customRdpProperty
+### -CustomRdpProperty
 If needed fill in the custom rdp properties (for example: targetisaadjoined:i:1 )
 
 ```yaml
@@ -117,7 +122,23 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -friendlyName
+### -AgentUpdate
+Provide the agent update object, max 2 schedules supported.
+If provided more than 2, the first 2 are selected.
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -FriendlyName
 Change the host pool friendly name
 
 ```yaml
@@ -132,8 +153,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -description
-{{ Fill description Description }}
+### -Description
+{{ Fill Description Description }}
 
 ```yaml
 Type: String
@@ -147,7 +168,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -loadBalancerType
+### -LoadBalancerType
 Change the host pool loadBalancerType
 
 ```yaml
@@ -162,7 +183,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -validationEnvironment
+### -ValidationEnvironment
 Change the host pool validation environment
 
 ```yaml
@@ -177,8 +198,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -startVMOnConnect
-{{ Fill startVMOnConnect Description }}
+### -StartVMOnConnect
+{{ Fill StartVMOnConnect Description }}
 
 ```yaml
 Type: Boolean
@@ -192,8 +213,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -preferredAppGroupType
-{{ Fill preferredAppGroupType Description }}
+### -PreferredAppGroupType
+{{ Fill PreferredAppGroupType Description }}
 
 ```yaml
 Type: String
@@ -222,8 +243,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -vmTemplate
-{{ Fill vmTemplate Description }}
+### -VmTemplate
+{{ Fill VmTemplate Description }}
 
 ```yaml
 Type: String
@@ -237,7 +258,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -maxSessionLimit
+### -MaxSessionLimit
 Change the host pool max session limit (max 999999)
 
 ```yaml

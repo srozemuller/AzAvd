@@ -1,15 +1,17 @@
 function Restart-AvdSessionHost {
     <#
     .SYNOPSIS
-    Gets the current AVD Session hosts from a specific hostpool.
+    Restarts AVD Session hosts in a specific hostpool.
     .DESCRIPTION
-    This function will grab all the sessionhost from a specific Azure Virtual Desktop hostpool.
+    This function restarts sessionshosts in a specific Azure Virtual Desktop hostpool. If you want to start a specific session host then also provide the name, 
     .PARAMETER HostpoolName
     Enter the AVD Hostpool name
     .PARAMETER ResourceGroupName
     Enter the AVD Hostpool resourcegroup name
     .PARAMETER SessionHostName
-    Enter the sessionhosts name
+    Enter the session hosts name
+    .EXAMPLE
+    Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
     .EXAMPLE
     Restart-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
     #>
@@ -26,51 +28,68 @@ function Restart-AvdSessionHost {
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
     
+        [parameter(Mandatory, ParameterSetName = 'All')]
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
-        [string]$SessionHostName
+        [string]$Name,
+
+        [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [object]$Id,
+
+        [parameter(ParameterSetName = 'All')]
+        [ValidateNotNullOrEmpty()]
+        [switch]$Force
     )
     Begin {
-        Write-Verbose "Start searching session hosts"
+        Write-Verbose "Starting session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
-        $baseUrl = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + "/sessionHosts/"
-        $apiVersion = "?api-version=2021-07-12"
+        $sessionHostParameters = @{
+            hostpoolName      = $HostpoolName
+            resourceGroupName = $ResourceGroupName
+        }
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
             All {
-                Write-Verbose 'Using base url for getting all session hosts in $hostpoolName'
-                
+                CheckForce -Force:$force -Task $MyInvocation.MyCommand
             }
             Hostname {
-                Write-Verbose "Looking for sessionhost $SessionHostName"
-                $sessionHostUrl = "{0}{1}" -f $baseUrl, $SessionHostName 
+                $Name = ConcatSessionHostName -name $Name
+                $sessionHostParameters.Add("Name", $Name)
+            }
+            Resource {
+                Write-Verbose "Got a resource object, looking for $Id"
+                $sessionHostParameters = @{
+                    Id = $Id
+                }
+            }
+            default {
             }
         }
-        $parameters = @{
-            uri     = $sessionHostUrl + $apiVersion
-            Method  = "GET"
-            Headers = $token
-        }
         try {
-            $sessionHost = Invoke-RestMethod @parameters
-            if ($sessionHost) {
+            $sessionHosts = Get-AvdSessionHost @sessionHostParameters
+        }
+        catch {
+            Throw "No sessionhosts ($name) found in $HostpoolName ($ResourceGroupName), $_"
+        }
+        $sessionHosts | ForEach-Object {
+            try {
+                Write-Verbose "Found $($sessionHosts.Count) host(s)"
+                Write-Verbose "Restarting $($_.name)"
                 $apiVersion = "?api-version=2021-11-01"
                 $restartParameters = @{
-                    uri     = "{0}{1}/restart{2}" -f $Script:AzureApiUrl, $sessionHost.properties.resourceId, $apiVersion
+                    uri     = "{0}{1}/restart{2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
                     Method  = "POST"
                     Headers = $token
                 }
                 Invoke-RestMethod @restartParameters
+                Write-Information -MessageData "$($_.name) restarted" -InformationAction Continue
             }
-            else {
-                Write-Error "Sessionhost $sessionHostName not found, $_"
+            catch {
+                Throw "Not able to restart $($_.name), $_"
             }
         }
-        catch {
-            Throw "Not able to execute request, $_"
-        }
-        
-    }
+    }       
 }

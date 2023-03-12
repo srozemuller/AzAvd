@@ -50,10 +50,10 @@ function New-AvdAadSessionHost {
     (
         [parameter(Mandatory)]
         [string]$HostpoolName,
-        
+         
         [parameter(Mandatory)]
-        [string]$HostpoolResourceGroup,
-    
+        [string]$ResourceGroupName,
+
         [parameter(Mandatory, ParameterSetName = 'Sig')]
         [string]$ImageVersionId,
         
@@ -61,13 +61,10 @@ function New-AvdAadSessionHost {
         [int]$SessionHostCount,
 
         [parameter()]
-        [int]$InitialNumber = 0,
+        [int]$InitialNumber,
 
         [parameter(Mandatory)]
         [string]$Prefix,
-
-        [parameter(Mandatory)]
-        [string]$ResourceGroupName,
 
         [parameter(Mandatory, ParameterSetName = 'MarketPlace')]
         [string]$Publisher,
@@ -88,7 +85,7 @@ function New-AvdAadSessionHost {
         [string]$Location,
 
         [parameter(Mandatory)]
-        [ValidateSet("Premium_LRS", "Premium_ZRS","StandardSSD_LRS","StandardSSD_ZRS","Standard_LRS","UltraSSD_LRS")]
+        [ValidateSet("Premium_LRS", "Premium_ZRS", "StandardSSD_LRS", "StandardSSD_ZRS", "Standard_LRS", "UltraSSD_LRS")]
         [string]$DiskType,
 
         [parameter(Mandatory)]
@@ -101,7 +98,10 @@ function New-AvdAadSessionHost {
         [string]$SubnetId,
 
         [parameter()]
-        [switch]$Intune
+        [switch]$Intune,
+
+        [parameter()]
+        [switch]$TrustedLaunch
     )
     Begin {
         Write-Verbose "Start creating session hosts"
@@ -113,7 +113,7 @@ function New-AvdAadSessionHost {
         switch ($PsCmdlet.ParameterSetName) {
             Sig {
                 $imageReference = @{
-                    sharedGalleryImageId = $ImageVersionId
+                    id = $ImageVersionId
                 }
             }
             MarketPlace {
@@ -129,6 +129,9 @@ function New-AvdAadSessionHost {
             }
         }
         Do {
+            if ($null -eq $InitialNumber) {
+                $InitialNumber = Get-AvdLatestSessionHost -HostpoolName $HostpoolName -ResourceGroupName $ResourceGroupName -NumOnly
+            }
             $vmName = "{0}-{1}" -f $Prefix, $InitialNumber
             $nicName = "{0}-nic" -f $vmName
             $nicBody = @{
@@ -190,6 +193,16 @@ function New-AvdAadSessionHost {
                         }
                     }
                 }
+                if ($TrustedLaunch.IsPresent) {
+                    $securityProfile = @{
+                        securityType = "TrustedLaunch"
+                        uefiSettings = @{
+                            secureBootEnabled = $true
+                            vTpmEnabled       = $true  
+                        }
+                    }
+                    $vmBody.properties.Add("securityProfile", $securityProfile)
+                }
                 $vmUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}?api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $vmName, '2021-11-01'
                 $vmJsonBody = $vmBody | ConvertTo-Json -Depth 99
                 Invoke-RestMethod -Method PUT -Uri $vmUrl -Headers $script:token -Body $vmJsonBody
@@ -216,11 +229,11 @@ function New-AvdAadSessionHost {
                     }
                     location   = $Location
                 }
-                if ($mem.isPresent){
+                if ($Intune.isPresent) {
                     $settings = @{
                         mdmId = "0000000a-0000-0000-c000-000000000000"
-                }
-                $domainJoinExtension.properties.Add("Settings",$settings)
+                    }
+                    $domainJoinExtension.properties.Add("Settings", $settings)
                 }
                 $domainJoinBody = $domainJoinExtension | ConvertTo-Json -Depth 99
                 Invoke-RestMethod -Method PUT -Uri $domainJoinUrl -Headers $script:token -Body $domainJoinBody
@@ -235,7 +248,7 @@ function New-AvdAadSessionHost {
                 $extensionName = "Microsoft.PowerShell.DSC"
                 $avdUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $vmName, $extensionName , '2021-11-01'
                 $avdDscExtension = @{
-                    properties         = @{
+                    properties = @{
                         Type               = "DSC"
                         Publisher          = "Microsoft.Powershell"
                         typeHandlerVersion = "2.73"
@@ -249,7 +262,7 @@ function New-AvdAadSessionHost {
                             }
                         }
                     }
-                    location           = $Location
+                    location   = $Location
                 }
                 $avdExtensionBody = $avdDscExtension | ConvertTo-Json -Depth 99
                 Invoke-RestMethod -Method PUT -Uri $avdUrl -Headers $script:token -Body $avdExtensionBody

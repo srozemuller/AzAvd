@@ -14,18 +14,18 @@ Deploys session hosts into a hostpool
 
 ### MarketPlace (Default)
 ```
-New-AvdAadSessionHost -HostpoolName <String> -HostpoolResourceGroup <String> -SessionHostCount <Int32>
- [-InitialNumber <Int32>] -Prefix <String> -ResourceGroupName <String> -Publisher <String> -Offer <String>
- -Sku <String> [-Version <String>] -VmSize <String> -Location <String> -DiskType <String> -LocalAdmin <String>
- -LocalPass <String> -SubnetId <String> [-Intune] [<CommonParameters>]
+New-AvdAadSessionHost -HostpoolName <String> -ResourceGroupName <String> -SessionHostCount <Int32>
+ [-InitialNumber <Int32>] -Prefix <String> -Publisher <String> -Offer <String> -Sku <String>
+ [-Version <String>] -VmSize <String> -Location <String> -DiskType <String> -LocalAdmin <String>
+ -LocalPass <String> -SubnetId <String> [-Intune] [-TrustedLaunch] [<CommonParameters>]
 ```
 
 ### Sig
 ```
-New-AvdAadSessionHost -HostpoolName <String> -HostpoolResourceGroup <String> -ImageVersionId <String>
- -SessionHostCount <Int32> [-InitialNumber <Int32>] -Prefix <String> -ResourceGroupName <String>
- -VmSize <String> -Location <String> -DiskType <String> -LocalAdmin <String> -LocalPass <String>
- -SubnetId <String> [-Intune] [<CommonParameters>]
+New-AvdAadSessionHost -HostpoolName <String> -ResourceGroupName <String> -ImageVersionId <String>
+ -SessionHostCount <Int32> [-InitialNumber <Int32>] -Prefix <String> -VmSize <String> -Location <String>
+ -DiskType <String> -LocalAdmin <String> -LocalPass <String> -SubnetId <String> [-Intune] [-TrustedLaunch]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -62,8 +62,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -HostpoolResourceGroup
-Enter the AVD Hostpool resourcegroup name
+### -ResourceGroupName
+The session hosts resource group
 
 ```yaml
 Type: String
@@ -124,21 +124,6 @@ Accept wildcard characters: False
 
 ### -Prefix
 Enter the session host prefix
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ResourceGroupName
-The session hosts resource group
 
 ```yaml
 Type: String
@@ -304,6 +289,21 @@ Accept wildcard characters: False
 
 ### -Intune
 Switch parameter if you want to add the session host into Intune
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TrustedLaunch
+{{ Fill TrustedLaunch Description }}
 
 ```yaml
 Type: SwitchParameter

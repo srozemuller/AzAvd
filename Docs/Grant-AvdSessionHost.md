@@ -5,36 +5,47 @@ online version:
 schema: 2.0.0
 ---
 
-# Move-AvdSessionHost
+# Grant-AvdSessionHost
 
 ## SYNOPSIS
-Moving sessionhosts from an Azure Virtual Desktop hostpool to a new one.
+Assigns a user to a session host
 
 ## SYNTAX
 
+### Hostname (Default)
 ```
-Move-AvdSessionHost -FromHostpoolName <String> -FromResourceGroupName <String> -ToHostpoolName <String>
- -ToResourceGroupName <String> [-SessionHostName <String>] [<CommonParameters>]
+Grant-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> -AssignedUser <String>
+ [<CommonParameters>]
+```
+
+### Resource
+```
+Grant-AvdSessionHost -AssignedUser <String> -Id <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The function will move sessionhosts to a new Azure Virtual Desktop hostpool.
+The function assigns an user to an AVD session host
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Move-AvdSessionHost -FromHostpoolName avd-hostpool -FromResourceGroupName rg-avd-01 -ToHostpoolName avd-hostpool-02 -ToResourceGroupName rg-avd-02 -SessionHostName avd-host-1.avd.domain
+Grant-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -Name avd-hostpool/avd-host-1.avd.domain -AllowNewSession $true
+```
+
+### EXAMPLE 2
+```
+Grant-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -AssignedUser "" -Force
 ```
 
 ## PARAMETERS
 
-### -FromHostpoolName
+### -HostpoolName
 Enter the source AVD Hostpool name
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Hostname
 Aliases:
 
 Required: True
@@ -44,12 +55,12 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -FromResourceGroupName
+### -ResourceGroupName
 Enter the source Hostpool resourcegroup name
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Hostname
 Aliases:
 
 Required: True
@@ -59,8 +70,24 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ToHostpoolName
-Enter the destination AVD Hostpool name
+### -Name
+Enter the sessionhosts name avd-host-1.avd.domain
+
+```yaml
+Type: String
+Parameter Sets: Hostname
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -AssignedUser
+Enter the new username for the current sessionhost.
+Only available if providing one sessionhost at a time.
 
 ```yaml
 Type: String
@@ -74,33 +101,18 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ToResourceGroupName
-Enter the destination Hostpool resourcegroup name
+### -Id
+Enter
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Resource
 Aliases:
 
 Required: True
 Position: Named
 Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -SessionHostName
-Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 

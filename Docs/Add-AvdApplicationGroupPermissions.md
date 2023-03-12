@@ -37,17 +37,17 @@ Add-AvdApplicationGroupPermissions -ApplicationGroupName <String> -ResourceGroup
 
 ### ResourceId-PrincipalId
 ```
-Add-AvdApplicationGroupPermissions -resourceId <String> -PrincipalId <String> [<CommonParameters>]
+Add-AvdApplicationGroupPermissions -ResourceId <String> -PrincipalId <String> [<CommonParameters>]
 ```
 
 ### ResourceId-Group
 ```
-Add-AvdApplicationGroupPermissions -resourceId <String> -groupName <String> [<CommonParameters>]
+Add-AvdApplicationGroupPermissions -ResourceId <String> -GroupName <String> [<CommonParameters>]
 ```
 
 ### ResourceId-User
 ```
-Add-AvdApplicationGroupPermissions -resourceId <String> -UserPrincipalName <String> [<CommonParameters>]
+Add-AvdApplicationGroupPermissions -ResourceId <String> -UserPrincipalName <String> [<CommonParameters>]
 ```
 
 ### Name-User
@@ -57,7 +57,7 @@ Add-AvdApplicationGroupPermissions -UserPrincipalName <String> [<CommonParameter
 
 ### Name-Group
 ```
-Add-AvdApplicationGroupPermissions -groupName <String> [<CommonParameters>]
+Add-AvdApplicationGroupPermissions -GroupName <String> [<CommonParameters>]
 ```
 
 ### Name-PrincipalId
@@ -113,8 +113,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -resourceId
-{{ Fill resourceId Description }}
+### -ResourceId
+{{ Fill ResourceId Description }}
 
 ```yaml
 Type: String
@@ -144,7 +144,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -groupName
+### -GroupName
 Provide the group name (eg.
 All Users)
 

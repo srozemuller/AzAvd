@@ -52,8 +52,7 @@ function New-AvdVmTemplate {
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
     
-        [ValidatePattern("(?:[a-zA-Z0-9_\-]{1,63})+\.+(?:[a-zA-Z]{2,})$")]
-        [Parameter(HelpMessage = 'Please fill in a complete domain name (eg. domain.local)')]
+        [ValidatePattern("(?:[a-zA-Z0-9_\-]{1,63})+\.+(?:[a-zA-Z]{2,})$", ErrorMessage = "Please fill in a complete domain name (eg. domain.local)")]
         [string]$Domain,
 
         [Parameter()]

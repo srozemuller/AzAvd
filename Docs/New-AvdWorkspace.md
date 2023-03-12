@@ -13,8 +13,8 @@ Creates a new Azure Virtual Desktop workspace.
 ## SYNTAX
 
 ```
-New-AvdWorkspace [-Name] <String> [-ResourceGroupName] <String> [-location] <String> [[-friendlyName] <String>]
- [[-description] <String>] [[-ApplicationGroupReference] <Array>] [<CommonParameters>]
+New-AvdWorkspace [-Name] <String> [-ResourceGroupName] <String> [-Location] <String> [[-FriendlyName] <String>]
+ [[-Description] <String>] [[-ApplicationGroupReference] <Array>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -64,7 +64,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -location
+### -Location
 Enter the Azure location
 
 ```yaml
@@ -79,7 +79,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -friendlyName
+### -FriendlyName
 Change the workspace friendly name
 
 ```yaml
@@ -94,7 +94,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -description
+### -Description
 Enter a description
 
 ```yaml
