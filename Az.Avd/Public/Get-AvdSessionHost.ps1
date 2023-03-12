@@ -31,12 +31,19 @@ function Get-AvdSessionHost {
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
+
+        [parameter(Mandatory, ParameterSetName = 'AllID')]
+        [ValidateNotNullOrEmpty()]
+        [string]$HostPoolResourceId,
     
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$Name,
 
         [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
+        [string]$SessionHostName,
+
+        [parameter(Mandatory, ParameterSetName = 'HostId')]
         [ValidateNotNullOrEmpty()]
         [string]$Id
     )
@@ -66,12 +73,22 @@ function Get-AvdSessionHost {
                 }
                 $baseUrl = "{0}{1}" -f $Script:AzureApiUrl, $Id 
             }
+            AllID {
+                Write-Verbose 'Using base url for getting all session hosts in $hostpoolName'
+                $baseUrl = $Script:AzureApiUrl + $HostPoolResourceId + "/sessionHosts/"
+            }
+            HostId {
+                Write-Verbose "Looking for sessionhost $Id"
+                $baseUrl = "{0}/{1}" -f $Script:AzureApiUrl, $Id
+            }
         }
+        write-verbose $baseUrl
         $parameters = @{
             uri     = "{0}{1}" -f $baseUrl, $apiVersion
             Method  = "GET"
             Headers = $token
         }
+
         try {
             $allHosts = [System.Collections.ArrayList]@()
             $results = Invoke-RestMethod @parameters
@@ -94,6 +111,11 @@ function Get-AvdSessionHost {
                 }
             }
             $allHosts        
+
+        $results = Invoke-RestMethod @parameters
+        if ($SessionHostName -or $Id){
+            $results
+
         }
         catch {
             Write-Error "Sessionhost not found in $HostpoolName, $($_.Exception.Message)"

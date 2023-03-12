@@ -14,4 +14,7 @@ $script:DiagnosticsApiVersion = "2020-08-01"
 $Script:AvdDiagnosticsApiVersion = "2021-05-01-preview"
 
 $script:AvdInsightsCountersLocation = '$PSScriptRoot\..\Private\avdinsights-sources.json'
-
+$script:hostpoolApiVersion = "2022-02-10-preview"
+$script:sessionhostApiVersion = "2022-02-10-preview"
+$script:diskApiVersion = "2021-12-01"
+$script:hostpoolUpdateApiVersion = "2021-05-13-preview"

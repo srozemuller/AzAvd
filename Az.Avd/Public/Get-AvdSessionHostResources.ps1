@@ -35,6 +35,12 @@ function Get-AvdSessionHostResources {
 
         [parameter(Mandatory, ParameterSetName = 'Resource', ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
+
+        [string]$SessionHostName,
+
+        [parameter(Mandatory, ParameterSetName = 'SessionhostID')]
+        [ValidateNotNullOrEmpty()]
+
         [string]$Id
     )
     
@@ -59,10 +65,30 @@ function Get-AvdSessionHostResources {
                     name   = $Name
                 }
             }
+
             Resource {
                 Write-Verbose "Got a resource object, looking for $Id"
                 $parameters = @{
                     Id =  $Id
+
+            SessionhostID {
+                $Parameters = @{
+                    Id = $Id
+                }
+            }
+        }
+        $SessionHosts = Get-AvdSessionhost @Parameters
+        if ($sessionHosts) {
+            $sessionHosts | Foreach-Object {
+                Write-Verbose "Searching for $($_.Name)"
+                try {
+                    $requestParameters = @{
+                        uri = $Script:AzureApiUrl + $_.properties.resourceId + $apiVersion
+                        header = $token
+                        method = "GET"
+                    }
+                    $resource = Invoke-RestMethod @requestParameters 
+
                 }
             }
         }
