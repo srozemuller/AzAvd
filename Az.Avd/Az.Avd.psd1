@@ -12,7 +12,7 @@
     RootModule             = 'Az.Avd.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '3.0.0-beta'
+    ModuleVersion          = '3.0.0'
 
     # Supported PSEditions
     CompatiblePSEditions   = 'Core', 'Desktop'
@@ -166,7 +166,8 @@
             # ReleaseNotes of this module
             ReleaseNotes = ''
             # Prerelease string of this module
-            # Prerelease = ''
+
+            Prerelease = 'beta'
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update/save
             # RequireLicenseAcceptance = $false
