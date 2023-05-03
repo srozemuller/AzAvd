@@ -7,15 +7,16 @@ function Set-AvdContext {
     .PARAMETER SubscriptionId
        Enter the subscription ID as <GUID>.
     .EXAMPLE
-        Set-AvdContext -SubscriptionId <guid>
+       Set-AvdContext -SubscriptionId <guid>
     #>
     [CmdletBinding()]
     param(
-        [parameter(HelpMessage = "Specify the subscription ID")]
+        [parameter(Mandatory, HelpMessage = "Specify the subscription ID")]
         [ValidateNotNullOrEmpty()]
         [Guid]$SubscriptionId
     )
     Begin {
+        AuthenticationCheck
         if ($SubscriptionId){
             Write-Verbose "Subscription ID provided, setting contect to $SubcriptionId"
             $script:subscriptionId = $SubscriptionId

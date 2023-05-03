@@ -18,6 +18,10 @@ function Connect-Avd {
         Specify a subscription ID to set the Azure context. Can be changed later using Set-AvdContext.
     .PARAMETER Refresh
         Specify to refresh an existing access token.
+    .EXAMPLE
+        Connect-Avd -TenantID $Tenantid -SubscriptionId $SubscriptionId -DeviceCode
+    .EXAMPLE
+        Connect-Avd -ClientID xxxx -ClientSecret "xxxxx" -TenantID $Tenantid -SubscriptionId $SubscriptionId
     #>
     [CmdletBinding(DefaultParameterSetName = "ClientSecret")]
     param(
@@ -56,6 +60,7 @@ function Connect-Avd {
         [switch]$RefreshToken
     )
     Begin {
+        AuthenticationCheck
         if ($SubscriptionId) {
             Write-Verbose "Subscription ID provided, setting context to $SubscriptionId"
             $script:subscriptionId = $SubscriptionId
@@ -121,7 +126,8 @@ function Connect-Avd {
                     }
                 }
                 "ClientSecret" {
-                    $Scope = 'https://management.core.windows.net/' # Must be this URL. https://management.azure.com is not working while using the resource object. The scope object is ignored when providing management.azure.com
+                    # Must be this URL. https://management.azure.com is not working while using the resource object. The scope object is ignored when providing management.azure.com
+                    $Scope = 'https://management.core.windows.net/'
                     $tokenBody = @{
                         grant_type    = "client_credentials"
                         client_id     = $ClientID
