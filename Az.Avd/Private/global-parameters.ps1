@@ -1,6 +1,6 @@
 # In this file all global parameters are set. 
 
-$script:AzureApiUrl = "https://management.azure.com"
+$script:AzureApiUrl = "https://management.azure.com/"
 $script:GraphApiUrl = "https://graph.microsoft.com"
 $script:GraphApiVersion = "beta"
 
