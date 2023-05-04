@@ -7,7 +7,7 @@ function Set-AvdContext {
     .PARAMETER SubscriptionId
        Enter the subscription ID as <GUID>.
     .EXAMPLE
-       Set-AvdContext -SubscriptionId <guid>
+        Set-AvdContext -SubscriptionId $SubscriptionId
     #>
     [CmdletBinding()]
     param(
