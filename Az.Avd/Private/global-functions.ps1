@@ -1,4 +1,4 @@
-# In this file all global functions are configured. 
+# In this file all global functions are configured.
 function AuthenticationCheck {
     <#
     .SYNOPSIS
@@ -11,25 +11,22 @@ function AuthenticationCheck {
     .NOTES
     NAME: precheck
     #>
-  
-    $azProfile = [Microsoft.Azure.Commands.Common.Authentication.Abstractions.AzureRmProfileProvider]::Instance.Profile
-  
-    if ($azProfile.Contexts.Count -ne 0) {
-        # Set the subscription from AzContext
-        $script:subscriptionId = [Microsoft.Azure.Commands.Common.Authentication.Abstractions.AzureRmProfileProvider]::Instance.Profile.DefaultContext.Subscription.Id
+    if ($null -eq $script:tokenRequest) {
+        Throw "Please connect to AVD first using the Connect-Avd command"
     }
-    else {
-        Write-Error 'No subscription available, Please use Connect-AzAccount to login and select the right subscription'
-        break
+    if ($null -eq $script:subscriptionId){
+        Write-Warning "No subscription ID provided yet"
+        $script:subscriptionId = Read-Host -Prompt "Please fill in the subscription Id"
+        Write-Information "Subscription ID is set, if you want to changed the context, use Set-AvdContext -SubscriptionID <GUID>" -InformationAction Continue
     }
 }
 
 function GetAuthToken($resource) {
-    $context = [Microsoft.Azure.Commands.Common.Authentication.Abstractions.AzureRmProfileProvider]::Instance.Profile.DefaultContext
-    $Token = [Microsoft.Azure.Commands.Common.Authentication.AzureSession]::Instance.AuthenticationFactory.Authenticate($context.Account, $context.Environment, $context.Tenant.Id.ToString(), $null, [Microsoft.Azure.Commands.Common.Authentication.ShowDialog]::Never, $null, $resource).AccessToken
-    $authHeader = @{
-        'Content-Type' = 'application/json'
-        Authorization  = 'Bearer ' + $Token
+    $expireTime = Get-Date -UnixTimeSeconds $script:tokenRequest.expires_on
+    if ((Get-Date) -gt $expireTime)
+    {
+        Write-Verbose "Current token has expired. Requesting a new token based on the refresh token."
+        $authHeader = Connect-Avd -RefreshToken
     }
     return $authHeader
 }
@@ -43,7 +40,7 @@ function Create-CategoryArray ($Categories) {
         }
         $categoryArray += ($category)
     }
-    return  $categoryArray    
+    return  $categoryArray
 }
 
 function Remove-Resource () {
@@ -114,7 +111,7 @@ function Get-Resource () {
     }
     catch {
         Write-Verbose "$resourceId not found, $_"
-        Throw $_ 
+        Throw $_
     }
     finally {
         $resource
@@ -135,8 +132,8 @@ function CheckForce {
         Write-Information -MessageData "HINT: use -Force to skip this message." -InformationAction Continue
         $confirmation = Read-Host "Are you sure you want to run $Task to all session hosts? [y/n]"
         while ($confirmation -ne "y") {
-            if ($confirmation -eq 'n') { 
-                exit 
+            if ($confirmation -eq 'n') {
+                exit
             }
             $confirmation = Read-Host "Yes/No? [y/n]"
         }
