@@ -60,7 +60,6 @@ function Connect-Avd {
         [switch]$RefreshToken
     )
     Begin {
-        AuthenticationCheck
         if ($SubscriptionId) {
             Write-Verbose "Subscription ID provided, setting context to $SubscriptionId"
             $script:subscriptionId = $SubscriptionId
