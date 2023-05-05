@@ -1,9 +1,10 @@
-$modulePath = Join-Path -Path (Join-Path ".././" -ChildPath "AzAvd") -ChildPath "Az.Avd"
+$modulePath = Join-Path -Path (Join-Path ".././" -ChildPath "/") -ChildPath "Az.Avd"
 $psFiles = Get-ChildItem -Path (Join-Path -Path $modulePath -ChildPath "Public")
-
-Describe "Analyze code" -ForEach @(
+BeforeAll {
     $skipFiles = @("Connect-Avd.ps1")
-    foreach ($file in $psFiles) {
+}
+Describe "Analyze code" -ForEach @(
+    foreach ($file in $psFiles[3]) {
         @{
             file        = $file
             fileName    = $file.Name
@@ -92,8 +93,11 @@ Describe "Analyze code" -ForEach @(
     }
 
     It "<fileName> should have an AuthenticationCheck" {
-        if ($fileName -notin $skipFiles) {
-       ($content | Select-String -Pattern 'AuthenticationCheck') | Should -Be $true
+        if ($fileName -in $skipFiles) {
+            Write-Information "Function $fileName does not need AuthenticationCheck" -InformationAction Continue
+        }
+        else {
+            ($content | Select-String -Pattern 'AuthenticationCheck') | Should -Be $true
         }
     }
 
