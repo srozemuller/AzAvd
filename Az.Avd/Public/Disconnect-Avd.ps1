@@ -7,6 +7,9 @@ function Disconnect-Avd {
     .EXAMPLE
         Disconnect-Avd
     #>
+    [CmdletBinding()]
+    param
+    ()
     Begin {
         AuthenticationCheck
     }

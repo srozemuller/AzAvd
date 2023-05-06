@@ -7,6 +7,9 @@ function Get-AvdContext {
     .EXAMPLE
         Get-AvdContext
     #>
+    [CmdletBinding()]
+    param
+    ()
     Begin {
         AuthenticationCheck
         $token = GetAuthToken -Resource $script:AzureApiUrl
