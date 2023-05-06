@@ -88,6 +88,7 @@
         'Enable-AvdSessionHost',
         'Enable-AvdStartVmOnConnect',
         'Export-AvdConfig',
+        'Export-AvdWorkbook',
         'Get-AvdApplicationGroup',
         'Get-AvdDiagnosticSettings',
         'Get-AvdHostPool',
