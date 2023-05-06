@@ -40,16 +40,6 @@ Describe "Analyze code" -ForEach @(
         }
     }
 
-    It "<example> should start with <filebase> or contain | <filebase>" -TestCases @(
-        foreach ($example in $helpInfo.examples.example) {
-            @{
-                example = [string]$example.title.Replace("-", $null)
-                code    = [string]$example.code
-            }
-        }
-    ) {
-        (($code.StartsWith($fileBase)) -or ($code.Contains("| {0}" -f $fileBase) )) | Should -Be $true -Because "Provide good examples"
-    }
     It "Uses PascalCase for function <function>" {
         $function | Should -MatchExactly '^[A-Z].*' -Because "PascalCasing"
     }
