@@ -90,6 +90,7 @@
         'Export-AvdConfig',
         'Export-AvdWorkbook',
         'Get-AvdApplicationGroup',
+        'Get-AvdContext',
         'Get-AvdDiagnosticSettings',
         'Get-AvdHostPool',
         'Get-AvdImageVersionStatus',
