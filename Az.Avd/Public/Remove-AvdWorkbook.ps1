@@ -7,7 +7,7 @@ Removes the workbook that is provided
 .PARAMETER WorkbookName
 Enter the workbook name(s) to remove
 .EXAMPLE
-Get-AvdWorkbook | Remove-AvdWorkbook -Id $_
+Get-AvdWorkbook | Remove-AvdWorkbook
 .EXAMPLE
 Remove-AvdWorkbook -WorkbookName "Workbook 1"
 .EXAMPLE
