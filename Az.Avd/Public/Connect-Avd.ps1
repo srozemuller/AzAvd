@@ -27,6 +27,7 @@ function Connect-Avd {
     param(
         [parameter(Mandatory, ParameterSetName = "DeviceCode")]
         [parameter(ParameterSetName = "ClientSecret")]
+        [parameter(ParameterSetName = "Refresh")]
         [ValidateNotNullOrEmpty()]
         [string]$TenantID,
 
@@ -57,9 +58,10 @@ function Connect-Avd {
         [switch]$DeviceCode,
 
         [parameter(ParameterSetName = "Refresh", HelpMessage = "Specify to refresh an existing access token.")]
-        [switch]$RefreshToken
+        [string]$RefreshToken
     )
     Begin {
+        $script:TenantId = $TenantID
         if ($SubscriptionId) {
             Write-Verbose "Subscription ID provided, setting context to $SubscriptionId"
             $script:subscriptionId = $SubscriptionId
@@ -95,6 +97,9 @@ function Connect-Avd {
         try {
             switch ($PSCmdlet.ParameterSetName) {
                 "DeviceCode" {
+                    if ($null -ne $script:tokenRequest -and ($script:tokenRequest.scope -eq 'user_impersonation')){
+                        throw "You allready are logged in with user_impersonation, disconnect first if you want to reauthenticate. Use Disconnect-Avd"
+                    }
                     $clientBody = @{
                         client_id = $ClientId
                         tenant    = $TenantID
@@ -125,6 +130,9 @@ function Connect-Avd {
                     }
                 }
                 "ClientSecret" {
+                    if ($null -ne $script:tokenRequest -and (!($script:tokenRequest.scope))){
+                        throw "You allready are logged in with a service principal, disconnect first if you want to reauthenticate. Use Disconnect-Avd"
+                    }
                     # Must be this URL. https://management.azure.com is not working while using the resource object. The scope object is ignored when providing management.azure.com
                     $Scope = 'https://management.core.windows.net/'
                     $tokenBody = @{
@@ -144,14 +152,14 @@ function Connect-Avd {
                             throw "Authorization is pending."
                         }
                     }
-
                 }
                 "Refresh" {
+                    Write-Verbose "Refreshing token"
                     $tokenBody = @{
                         grant_type    = "refresh_token"
                         client_id     = $ClientId
-                        refresh_token = $script:token.refresh_token
-                        scope         = $script:token.scope
+                        refresh_token = $RefreshToken
+                        scope         = $script:tokenRequest.scope
                     }
                     $script:tokenRequest = try {
                         Invoke-RestMethod -Method POST -Uri "https://login.microsoftonline.com/$TenantID/oauth2/token" -Body $tokenBody
@@ -159,13 +167,10 @@ function Connect-Avd {
                     catch {
                         $errorMessage = $_.ErrorDetails.Message | ConvertFrom-Json
                         # If not waiting for auth, throw error
-                        if ($errorMessage.error -ne "authorization_pending") {
-                            throw "Authorization is pending."
-                        }
                     }
                 }
             }
-            Write-Verbose "token is $($tokenRequest)"
+            Write-Verbose "Token is $($script:tokenRequest)"
             $script:authHeader = @{
                 'Content-Type' = 'application/json'
                 Authorization  = "Bearer {0}" -f $script:tokenRequest.access_token
@@ -174,7 +179,7 @@ function Connect-Avd {
             return $script:authHeader
         }
         catch [System.Exception] {
-            Write-Warning -Message "An error occurred while constructing parameter input for access token retrieval. Error message: $($PSItem.Exception.Message)"
+            Write-Error -Message "An error occurred while constructing parameter input for access token retrieval. Error message: $($PSItem.Exception.Message)"
         }
     }
 }
