@@ -93,12 +93,8 @@
         'Get-AvdContext',
         'Get-AvdDiagnosticSettings',
         'Get-AvdHostPool',
-        'Get-AvdHostPoolUpdate',
-        'Get-AvdHostPoolUpdateConfiguration',
-        'Get-AvdHostPoolUpldateResults'
-        'Get-AvdHostPoolUpdateSchedule',
-        'Get-AvdHostPoolUpdateState',
         'Get-AvdImageVersionStatus',
+        'Get-AvdInsightsSessionHost',
         'Get-AvdLatestSessionHost',
         'Get-AvdNetworkInfo',
         'Get-AvdSessionHost'
@@ -131,7 +127,6 @@
         'Update-AvdDesktopApplication',
         'Update-AvdDiagnostics',
         'Update-AvdHostpool',
-        'Update-AvdHostPoolUpdate',
         'Update-AvdHostpoolImageLocation',
         'Update-AvdRegistrationToken',
         'Update-AvdScheduledAgentsUpdate',
