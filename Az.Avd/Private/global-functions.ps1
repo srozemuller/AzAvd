@@ -161,3 +161,13 @@ function ConcatSessionHostName {
     }
     $name
 }
+
+function TestAzResource($resourceId,$apiVersion) {
+    $testParameters = @{
+        method = "GET"
+        headers = GetAuthToken -resource $script:AzureApiUrl
+        uri = "{0}{1}?api-version={2}" -f $script:AzureApiUrl, $resourceId, $apiVersion
+    }
+    Invoke-RestMethod @testParameters
+}
+
