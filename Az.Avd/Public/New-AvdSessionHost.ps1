@@ -63,14 +63,14 @@ function New-AvdSessionHost {
     (
         [parameter(Mandatory)]
         [string]$HostpoolName,
-         
+
         [parameter(Mandatory)]
         [string]$ResourceGroupName,
 
         [parameter(Mandatory, ParameterSetName = 'AADWithSig')]
         [parameter(Mandatory, ParameterSetName = 'NativeADWithSig')]
         [string]$ImageVersionId,
-        
+
         [parameter(Mandatory)]
         [int]$SessionHostCount,
 
@@ -140,13 +140,18 @@ function New-AvdSessionHost {
         [switch]$Intune,
 
         [parameter()]
-        [switch]$TrustedLaunch
+        [switch]$TrustedLaunch,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [int]$MaxParallel = 5
     )
     Begin {
         Write-Verbose "Start creating session hosts"
         AuthenticationCheck
         $script:token = GetAuthToken -resource $Script:AzureApiUrl
         $registrationToken = Update-AvdRegistrationToken -HostpoolName $Hostpoolname $resourceGroupName -HoursActive 4 | Select-Object -ExpandProperty properties
+        $vmNames = [System.Collections.ArrayList]::new()
     }
     Process {
         switch -Wildcard ($PsCmdlet.ParameterSetName) {
@@ -161,7 +166,7 @@ function New-AvdSessionHost {
                     "publisher" = $Publisher
                     "version"   = $Version
                     "offer"     = $Offer
-                }           
+                }
             }
             Default {
                 Throw "No source for image provided. Please provide a compute imageId or marketplace sources (publisher, offer, sku, version)"
@@ -209,39 +214,55 @@ function New-AvdSessionHost {
                         mdmId = "0000000a-0000-0000-c000-000000000000"
                     }
                     $domainJoinExtension.properties.Add("Settings", $settings)
-                }    
+                }
             }
             Default {
                 Throw "No AD environment provided, please provide -AzureAD switch parameter or provide native domain OU and credentials"
             }
         }
         Do {
-            if ($null -eq $InitialNumber) {
-                $InitialNumber = Get-AvdLatestSessionHost -HostpoolName $HostpoolName -ResourceGroupName $ResourceGroupName -NumOnly
+            try {
+                if ($null -eq $InitialNumber) {
+                    $InitialNumber = Get-AvdLatestSessionHost -HostpoolName $HostpoolName -ResourceGroupName $ResourceGroupName -NumOnly
+                }
+                $vmNames.Add("{0}-{1}" -f $Prefix, $InitialNumber) > $null
+                $InitialNumber++
+                $sessionHostCount--
+
+                Write-Output "vmNames created"
             }
-            $vmName = "{0}-{1}" -f $Prefix, $InitialNumber
-            $nicName = "{0}-nic" -f $vmName
-            $nicBody = @{
-                "properties" = @{
-                    "enableAcceleratedNetworking" = $true
-                    "ipConfigurations"            = @(
-                        @{
-                            "name"       = "ipconfig1"
-                            "properties" = @{
-                                "subnet" = @{
-                                    id = $SubnetId
+            catch {
+
+            }
+        }
+        while ($sessionHostCount -ne 0) {
+            Write-Verbose "Session hosts are created"
+        }
+        $vmNames | Foreach-Object -ThrottleLimit $MaxParallel -Parallel {
+            try {
+                $vmName = $_
+                $nicName = "{0}-nic" -f $vmName
+                $nicBody = @{
+                    "properties" = @{
+                        "enableAcceleratedNetworking" = $true
+                        "ipConfigurations"            = @(
+                            @{
+                                "name"       = "ipconfig1"
+                                "properties" = @{
+                                    "subnet" = @{
+                                        id = $SubnetId
+                                    }
                                 }
                             }
-                        }
-                    )
+                        )
+                    }
+                    "location"   = $Location
                 }
-                "location"   = $Location
-            }
-            $nicJson = $nicBody | ConvertTo-Json -Depth 15
-            $nicUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Network/networkInterfaces/{3}?api-version=2021-03-01" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $nicName
-            $NIC = Invoke-RestMethod -Method PUT -Uri $nicUrl -Headers $script:token -Body $nicJson
-            
-            try {
+                $nicJson = $nicBody | ConvertTo-Json -Depth 15
+                $nicUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Network/networkInterfaces/{3}?api-version=2021-03-01" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $nicName
+                $NIC = Invoke-RestMethod -Method PUT -Uri $nicUrl -Headers $script:token -Body $nicJson
+
+
                 $vmBody = @{
                     location     = $Location
                     identity     = @{
@@ -285,7 +306,7 @@ function New-AvdSessionHost {
                         securityType = "TrustedLaunch"
                         uefiSettings = @{
                             secureBootEnabled = $true
-                            vTpmEnabled       = $true  
+                            vTpmEnabled       = $true
                         }
                     }
                     $vmBody.properties.Add("securityProfile", $securityProfile)
@@ -304,7 +325,7 @@ function New-AvdSessionHost {
             }
             While ($status.properties.provisioningState -ne "Succeeded") {
                 Write-Verbose "Host $vmName is ready"
-            }          
+            }
             try {
                 $domainJoinBody = $domainJoinExtension | ConvertTo-Json -Depth 99
                 $domainJoinUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $vmName, $extensionName , '2021-11-01'
@@ -349,15 +370,6 @@ function New-AvdSessionHost {
             catch {
                 Throw $_
             }
-            
-            $InitialNumber++
-            $sessionHostCount--
-
-            Write-Output "$($vmName) deployed"
         }
-        while ($sessionHostCount -ne 0) {
-            Write-Verbose "Session hosts are created"
-        }
-        
     }
 }

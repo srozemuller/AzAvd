@@ -26,16 +26,12 @@ function Get-AvdSessionHost {
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
-    
+
         [parameter(Mandatory, ParameterSetName = 'All')]
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
 
-        [parameter(Mandatory, ParameterSetName = 'AllID')]
-        [ValidateNotNullOrEmpty()]
-        [string]$HostPoolResourceId,
-    
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$Name,
@@ -64,14 +60,22 @@ function Get-AvdSessionHost {
                     $Name = $Name.Split("/")[-1]
                 }
                 Write-Verbose "Looking for sessionhost $Name"
-                $baseUrl = "{0}{1}" -f $baseUrl, $Name 
+                $baseUrl = "{0}{1}" -f $baseUrl, $Name
             }
             Resource {
                 Write-Verbose "Looking for sessionhost base on resourceId $Id"
                 if ($Id.Contains('Microsoft.Compute/virtualMachines')) {
                     Throw "Please use the session host's resource ID, not the virtual machine"
                 }
-                $baseUrl = "{0}{1}" -f $Script:AzureApiUrl, $Id 
+                $baseUrl = "{0}{1}" -f $Script:AzureApiUrl, $Id
+            }
+            AllID {
+                Write-Verbose 'Using base url for getting all session hosts in $hostpoolName'
+                $baseUrl = $Script:AzureApiUrl + $HostPoolResourceId + "/sessionHosts/"
+            }
+            HostId {
+                Write-Verbose "Looking for sessionhost $Id"
+                $baseUrl = "{0}/{1}" -f $Script:AzureApiUrl, $Id
             }
             AllID {
                 Write-Verbose 'Using base url for getting all session hosts in $hostpoolName'
@@ -98,25 +102,19 @@ function Get-AvdSessionHost {
                     $_ | Add-Member -MemberType NoteProperty -Name ResourceGroupName -Value $ResourceGroupName
                 }
                 $results.ForEach({ $allHosts.Add($_) | Out-Null })
-            } 
+            }
             else {
-                $results.value.ForEach({ $allHosts.Add($_) | Out-Null })   
+                $results.value.ForEach({ $allHosts.Add($_) | Out-Null })
                 # Check if there is a next page with session hosts
                 $pagingURL = $results."nextLink"
                 while ($null -ne $pagingURL) {
                     Write-Verbose "Got a next page url"
                     $results = Invoke-RestMethod -Uri $pagingURL -Headers $token -Method Get
                     $pagingURL = $results."nextLink"
-                    $results.value.ForEach({ $allHosts.Add($_) | Out-Null }) 
+                    $results.value.ForEach({ $allHosts.Add($_) | Out-Null })
                 }
             }
-            $allHosts        
-
-            $results = Invoke-RestMethod @parameters
-            if ($SessionHostName -or $Id) {
-                $results
-
-            }
+            $allHosts
         }
         catch {
             Write-Error "Sessionhost not found in $HostpoolName, $($_.Exception.Message)"

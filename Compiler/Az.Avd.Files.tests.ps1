@@ -1,6 +1,8 @@
 $modulePath = Join-Path -Path (Join-Path ".././" -ChildPath "AzAvd") -ChildPath "Az.Avd"
 $psFiles = Get-ChildItem -Path (Join-Path -Path $modulePath -ChildPath "Public")
-
+BeforeAll {
+    $skipFiles = @("Connect-Avd.ps1")
+}
 Describe "Analyze code" -ForEach @(
     foreach ($file in $psFiles) {
         @{
@@ -30,19 +32,19 @@ Describe "Analyze code" -ForEach @(
     It "<fileName> should have a SYNOPSIS section in the help block" {
         $file | Should -FileContentMatch '.SYNOPSIS'
     }
-     
+
     It "<fileName> should have a DESCRIPTION section in the help block" {
         $file | Should -FileContentMatch '.DESCRIPTION'
     }
-      
+
     It "<fileName> should have a EXAMPLE section in the help block" {
         $file | Should -FileContentMatch '.EXAMPLE'
     }
     It "<example> should start with <filebase> or contain | <filebase>" -TestCases @(
         foreach ($example in $helpInfo.examples.example) {
             @{
-                example = [string]$example.title.Replace("-",$null)
-                code =  [string]$example.code
+                example = [string]$example.title.Replace("-", $null)
+                code    = [string]$example.code
             }
         }
     ) {
@@ -57,7 +59,7 @@ Describe "Analyze code" -ForEach @(
             }
             if ($correct -notcontains $true) {
                 $correctComment = $false
-            } 
+            }
             else {
                 $correctComment = $true
             }
@@ -71,33 +73,38 @@ Describe "Analyze code" -ForEach @(
     ) {
         $correctComment | should -be $true -because "comment $line should match $($correctUse -join ',' | Out-String)"
     }
-    
+
     It "<fileName> should be an advanced function" {
         $file | Should -FileContentMatch 'function'
         $file | Should -FileContentMatch 'cmdletbinding'
         $file | Should -FileContentMatch 'param'
     }
-    
+
     It "<fileName> should contain Write-Verbose blocks" {
         $file | Should -FileContentMatch 'Write-Verbose'
     }
-    
+
     It "<fileName> should not contain Write-Host" {
         $file | Should -Not -FileContentMatch 'Write-Host'
     }
-    
+
     It "<fileName> should not contain return in functions" {
         $file | Should -Not -FileContentMatch 'return `$'
     }
-    
+
     It "<fileName> should have an AuthenticationCheck" {
-       ($content | Select-String -Pattern 'AuthenticationCheck') | Should -Be $true
+        if ($fileName -in $skipFiles) {
+            Write-Information "Function $fileName does not need AuthenticationCheck" -InformationAction Continue
+        }
+        else {
+            ($content | Select-String -Pattern 'AuthenticationCheck') | Should -Be $true
+        }
     }
-    
+
     It "<fileName> function start with function name and should be $($file.BaseName) " {
         $content[0] -match "function $($file.BaseName) {" | Should -Be $true
     }
-    
+
     It "<fileBase> function should be available in module" {
         try {
             Get-Command $fileBase -Module "Az.Avd"

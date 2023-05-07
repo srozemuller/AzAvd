@@ -71,10 +71,6 @@ Start-AvdHostPoolUpdate -Hostpoolname AVD-Hostpool -ResourceGroupName rg-avd -Ma
                 Write-Warning "MaxVMsRemovedDuringUpdate ($MaxVMsRemovedDuringUpdate) is higher than the amount of sessionhosts ($($sessionHosts.Count)) in the hostpool. Setting MaxVMsRemovedDuringUpdate to $($sessionHosts.Count - 1)"
                 $MaxVMsRemovedDuringUpdate = $sessionHosts.Count - 1
             }
-            if ($sessionHosts.Count -le 1) {
-                Write-Warning "MaxVMsRemovedDuringUpdate ($MaxVMsRemovedDuringUpdate) is lower than 1. Setting MaxVMsRemovedDuringUpdate to 1"
-                $MaxVMsRemovedDuringUpdate = 1
-            }
             $body = @{
                 parameters   = @{
                     saveOriginalDisk          = $SaveOriginalDisk
@@ -92,13 +88,10 @@ Start-AvdHostPoolUpdate -Hostpoolname AVD-Hostpool -ResourceGroupName rg-avd -Ma
                 Headers = $token
                 Body    = $body
             }
-            $request = Invoke-WebRequest @parameters -SkipHttpErrorCheck
-            $request
+            Invoke-WebRequest @parameters -SkipHttpErrorCheck
         }
         catch {
-            $request = $request | ConvertFrom-Json
-            Write-Error "[$($MyInvocation.MyCommand.Name)] - An error occured $($request.content.message): $($request.StatusCode)"
-   
+            Write-Error $_.Exception.Response
         }
     }
 }

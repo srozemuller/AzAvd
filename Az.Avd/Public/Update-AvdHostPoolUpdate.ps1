@@ -45,7 +45,7 @@ Update-AvdHostPoolUpdate -Hostpoolname AVD-Hostpool -ResourceGroupName rg-avd -M
 .EXAMPLE
 Update-AvdHostPoolUpdate -ResourceId /../ -MaxVMsRemovedDuringUpdate 2 -GalleryImageResourceId /xxxx/versions/1.0.0 -vmUsername admin -keyVaultResourceId /xxxx -keyVaultSecretName secret -DomainUsername admin -DomainKeyVaultResourceId /xxxx -DomainKeyVaultSecretName secret -DomainName contoso.com
 #>
-    [CmdletBinding(DefaultParameterSetName = "Name-AAD")]
+    [CmdletBinding(DefaultParameterSetName = "ResourceID-AAD")]
     param (
         [Parameter(Mandatory, ParameterSetName = "Name-AAD")]
         [Parameter(Mandatory, ParameterSetName = "Name-Hybrid")]
@@ -62,8 +62,8 @@ Update-AvdHostPoolUpdate -ResourceId /../ -MaxVMsRemovedDuringUpdate 2 -GalleryI
         [ValidateNotNullOrEmpty()]
         [string]$ResourceId,
 
-        [Parameter()]
-        [int]$MaxVMsRemovedDuringUpdate = 1,
+        [Parameter(Mandatory)]
+        [int]$MaxVMsRemovedDuringUpdate,
 
         [Parameter()]
         [bool]$SaveOriginalDisk = $true,
@@ -74,24 +74,22 @@ Update-AvdHostPoolUpdate -ResourceId /../ -MaxVMsRemovedDuringUpdate 2 -GalleryI
         [Parameter()]
         [int]$LogoutDelayMinutes = 5,
 
-        [Parameter()]
-        [ValidateNotNullOrEmpty()]
+        [Parameter(Mandatory)]
         [string]$VmSizeId,
 
-        [Parameter()]
+        [Parameter(Mandatory)]
         [string]$DiskType,
 
-        [Parameter()]
+        [Parameter(Mandatory)]
         [string]$ImageResourceId,
 
-        [Parameter(ParameterSetName = "ResourceID-AAD")]
-        [Parameter(ParameterSetName = "Name-AAD")]
+        [Parameter(Mandatory)]
         [string]$VmUsername,
 
-        [Parameter()]
+        [Parameter(Mandatory)]
         [string]$KeyVaultResourceId,
 
-        [Parameter()]
+        [Parameter(Mandatory)]
         [string]$KeyVaultSecretName,
 
         [Parameter(Mandatory, ParameterSetName = "Name-Hybrid")]
@@ -99,14 +97,20 @@ Update-AvdHostPoolUpdate -ResourceId /../ -MaxVMsRemovedDuringUpdate 2 -GalleryI
         [ValidateNotNullOrEmpty()]
         [string]$DomainUsername,
 
-        [Parameter(ParameterSetName = "Name-Hybrid")]
-        [Parameter(ParameterSetName = "ResourceID-Hybrid")]
+        [Parameter(Mandatory, ParameterSetName = "Name-Hybrid")]
+        [Parameter(Mandatory, ParameterSetName = "ResourceID-Hybrid")]
         [ValidateNotNullOrEmpty()]
-        [string]$DomainName,
+        [string]$DomainKeyVaultResourceId,
 
-        [Parameter(Mandatory, ParameterSetName = "ResourceID-AAD")]
-        [Parameter(Mandatory, ParameterSetName = "Name-AAD")]
-        [switch]$AadJoin
+        [Parameter(Mandatory, ParameterSetName = "Name-Hybrid")]
+        [Parameter(Mandatory, ParameterSetName = "ResourceID-Hybrid")]
+        [ValidateNotNullOrEmpty()]
+        [string]$DomainKeyVaultSecretName,
+
+        [Parameter(Mandatory, ParameterSetName = "Name-Hybrid")]
+        [Parameter(Mandatory, ParameterSetName = "ResourceID-Hybrid")]
+        [ValidateNotNullOrEmpty()]
+        [string]$DomainName
     )
     Begin {
         Write-Verbose "Start searching for update conifguration in $hostpoolName"
@@ -115,9 +119,9 @@ Update-AvdHostPoolUpdate -ResourceId /../ -MaxVMsRemovedDuringUpdate 2 -GalleryI
         switch ($PsCmdlet.ParameterSetName) {
             Name-AAD {
                 Write-Verbose "Name and ResourceGroup provided"
-                $ResourceId = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DesktopVirtualization/hostpools/{2}" -f $script:subscriptionId, $ResourceGroupName, $HostpoolName
-                $shConfigUpdateUrl = "{0}{1}/sessionHostConfigurations/default?api-version={2}" -f $script:AzureApiUrl, $ResourceId, $script:hostpoolUpdateApiVersion
-                $hpConfigUpdateUrl = "{0}{1}/update?api-version={2}" -f $script:AzureApiUrl, $ResourceId, $script:hostpoolUpdateApiVersion
+                $ResourceId = "/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}" -f $script:subscriptionId, $ResourceGroupName, $HostpoolName
+                $shConfigUpdateUrl = "{0}{1}/sessionHostConfigurations/default?api-version={4}" -f $script:AzureApiUrl, $ResourceId, $script:hostpoolUpdateApiVersion
+                $hpConfigUpdateUrl = "{0}{1}/update?api-version={4}" -f $script:AzureApiUrl, $ResourceId, $script:hostpoolUpdateApiVersion
                 id = "{0}/sessionHostConfigurations/default" -f $ResourceId 
             }
             ResourceId-AAD {
@@ -132,29 +136,26 @@ Update-AvdHostPoolUpdate -ResourceId /../ -MaxVMsRemovedDuringUpdate 2 -GalleryI
     }
     Process {
         try {
-            Write-Verbose "Getting configuration"
-            $currentConfig = Get-AvdHostPoolUpdateConfiguration -ResourceId $ResourceId
-            $currentConfig.sessionHostConfiguration
             Write-Verbose "Writing sessionhost configuration"
             $sessionHostConfig = @{
                 id         = $id
                 name       = "{0}/default" -f $ResourceId
                 type       = "Microsoft.DesktopVirtualization/hostpools/sessionHostConfigurations"
                 properties = @{
-                    vmSizeId           = if(($PSBoundParameters.ContainsKey("vmSizeId"))){$vmSizeId}else{$currentConfig.sessionHostConfiguration.vmSizeId}
+                    vmSizeId           = $VmSizeId
                     diskInfo           = @{
-                        type = if(($PSBoundParameters.ContainsKey("DiskType"))){$DiskType}else{$currentConfig.sessionHostConfiguration.diskInfo.type}
+                        type = $DiskType
                     }
                     imageInfo          = @{
                         type       = "Custom"
                         customInfo = @{
-                            resourceId = if(($PSBoundParameters.ContainsKey("ImageResourceId"))){$ImageResourceId}else{$currentConfig.sessionHostConfiguration.customInfo.resourceId}
+                            resourceId = $ImageResourceId
                         }
                     }
                     vmAdminCredentials = @{
-                        username                   = if(($PSBoundParameters.ContainsKey("DomainUsername"))){$VmUseDomainUsernamername}else{$currentConfig.sessionHostConfiguration.vmAdminCredentials.username}
-                        passwordKeyVaultResourceId = if(($PSBoundParameters.ContainsKey("KeyVaultResourceId"))){$KeyVaultResourceId}else{$currentConfig.sessionHostConfiguration.vmAdminCredentials.passwordKeyVaultResourceId}
-                        passwordKeyVaultSecretName = if(($PSBoundParameters.ContainsKey("KeyVaultSecretName"))){$KeyVaultSecretName}else{$currentConfig.sessionHostConfiguration.vmAdminCredentials.passwordKeyVaultSecretName}
+                        username                   = $VmUsername
+                        passwordKeyVaultResourceId = $KeyVaultResourceId
+                        passwordKeyVaultSecretName = $KeyVaultSecretName
                     }
                 }
             }
@@ -175,19 +176,18 @@ Update-AvdHostPoolUpdate -ResourceId /../ -MaxVMsRemovedDuringUpdate 2 -GalleryI
                         joinType            = "ActiveDirectory"
                         activeDirectoryInfo = @{
                             credentials = @{
-                                username                   = if(($PSBoundParameters.ContainsKey("DomainUsername"))){$DomainUsername}else{$currentConfig.sessionHostConfiguration.domainInfo.activeDirectoryInfo.credentials.username}
-                                passwordKeyVaultResourceId = if(($PSBoundParameters.ContainsKey("DomainKeyVaultResourceId"))){$KeyVaultResourceId}else{$currentConfig.sessionHostConfiguration.domainInfo.activeDirectoryInfo.credentials.passwordKeyVaultResourceId}
-                                passwordKeyVaultSecretName = if(($PSBoundParameters.ContainsKey("KeyVaultSecretName"))){$KeyVaultSecretName}else{$currentConfig.sessionHostConfiguration.domainInfo.activeDirectoryInfo.credentials.passwordKeyVaultSecretName}
+                                username                   = $DomainUsername
+                                passwordKeyVaultResourceId = $DomainKeyVaultResourceId
+                                passwordKeyVaultSecretName = $DomainKeyVaultSecretName
                             }
                         }
-                        domainName          = if(($PSBoundParameters.ContainsKey("DomainName"))){$DomainName}else{$currentConfig.sessionHostConfiguration.domainInfo.domainName}
+                        domainName          = $DomainName
                     }
                     $sessionHostConfig.Add("domainInfo", $domainInfo)
                 }
             }
             $sessionHostConfig = $sessionHostConfig | ConvertTo-Json -Depth 10
             $shConfig = Invoke-WebRequest -uri $shConfigUpdateUrl -Headers $token -Method PUT -Body $sessionHostConfig -ContentType 'application/json' -SkipHttpErrorCheck
-    
             Write-Verbose "Writing hostpool configuration"
             $body = @{
                 parameters   = @{

@@ -21,6 +21,28 @@ Install-Module Az.Avd
 Import-Module Az.Avd
 ```
 
+## Connect to AVD
+To connect to AVD use one of the commands below:
+For an interactive login the device_code flow is used.
+
+```
+$TenantId = "000000-00000"
+$SubscriptionId = "000000-00000"
+Connect-Avd -DeviceCode -TenantID $TenantId -SubscriptionId $SubscriptionId
+```
+
+Or using a service principal.
+```
+$TenantId = "000000-00000"
+Connect-Avd -ClientID xxxx -ClientSecret "xxxxx" -TenantID $Tenantid -SubscriptionId $SubscriptionId
+```
+
+To change the subscription context use the command below:
+```
+$SubscriptionId = "000000-00000"
+Set-AvdContext -SubscriptionId $SubscriptionId
+```
+
 The module consists of the following commands:
 
 ## Documentation
