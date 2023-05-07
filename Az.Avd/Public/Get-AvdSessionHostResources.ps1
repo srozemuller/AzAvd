@@ -37,7 +37,7 @@ function Get-AvdSessionHostResources {
         [ValidateNotNullOrEmpty()]
         [string]$Id
     )
-    
+
     Begin {
         Write-Verbose "Start searching for resources"
         AuthenticationCheck
@@ -71,7 +71,7 @@ function Get-AvdSessionHostResources {
         }
         catch {
             Throw "No sessionhosts ($name) found in $HostpoolName ($ResourceGroupName), $_"
-        }        
+        }
 
         $sessionHosts | Foreach-Object {
             Write-Verbose "Searching for $($_.Name)"
@@ -81,7 +81,7 @@ function Get-AvdSessionHostResources {
                     header = $token
                     method = "GET"
                 }
-                $resource = Invoke-RestMethod @requestParameters 
+                $resource = Request-Api @requestParameters
             }
             catch {
                 Write-Warning "Sessionhost $($_.name) has no resources, consider deleting it. Use the Remove-AvdSessionHost command, $_. URI is $($requestparameters.uri)"
@@ -90,6 +90,6 @@ function Get-AvdSessionHostResources {
         }
     }
     End {
-        $sessionHosts
+        return $sessionHosts
     }
 }
