@@ -21,14 +21,19 @@ function AuthenticationCheck {
     }
 }
 
-function GetAuthToken($resource) {
+function GetAuthToken {
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [string]$Resource
+    )
     $expireTime = Get-Date -UnixTimeSeconds $script:tokenRequest.expires_on
     if ((Get-Date) -gt $expireTime)
     {
         Write-Verbose "Current token has expired. Requesting a new token based on the refresh token."
-        $authHeader = Connect-Avd -RefreshToken
+        $script:authHeader = Connect-Avd -RefreshToken $script:tokenRequest.refresh_token -TenantID $TenantId
     }
-    return $authHeader
+    return $script:authHeader
 }
 
 function Create-CategoryArray ($Categories) {
