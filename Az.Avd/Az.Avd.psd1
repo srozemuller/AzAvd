@@ -94,6 +94,7 @@
         'Get-AvdDiagnosticSettings',
         'Get-AvdHostPool',
         'Get-AvdImageVersionStatus',
+        'Get-AvdInsightsSessionHost',
         'Get-AvdLatestSessionHost',
         'Get-AvdNetworkInfo',
         'Get-AvdSessionHost'

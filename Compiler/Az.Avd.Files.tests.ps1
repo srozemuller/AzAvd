@@ -12,7 +12,7 @@ Describe "Analyze code" -ForEach @(
             content     = Get-Content -Path $file
             helpInfo    = Get-Help $file.BaseName
             IgnoreRules = @('PSUseApprovedVerbs')
-            fileobj     = $file 
+            fileobj     = $file
         }
     }
 ) {
