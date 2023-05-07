@@ -11,9 +11,9 @@ function Get-AvdInsightsSessionHost {
     .PARAMETER LaResourceGroupName
     Enter the name of the Log Analyics Workspace resource group
     .EXAMPLE
-    Add-AvdInsightsSessionHost -Id /subscriptions/../sessionhosts/avd-0 -WorkSpaceId /subscriptions/../Microsoft.OperationalInsights/workspaces/laworkspace
+    Get-AvdInsightsSessionHost -Id /subscriptions/../sessionhosts/avd-0 -WorkSpaceId /subscriptions/../Microsoft.OperationalInsights/workspaces/laworkspace
     .EXAMPLE
-    Add-AvdInsightsSessionHost -Id /subscriptions/../sessionhosts/avd-0 -LAWorkspace laworkspace -LaResourceGroupName rg-la-01
+    Get-AvdInsightsSessionHost -Id /subscriptions/../sessionhosts/avd-0 -LAWorkspace laworkspace -LaResourceGroupName rg-la-01
     #>
     [CmdletBinding(DefaultParameterSetName = 'WorkspaceName')]
     param (
