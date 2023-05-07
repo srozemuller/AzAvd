@@ -65,11 +65,6 @@ function Get-AvdSessionHostResources {
                     Id =  $Id
                 }
             }
-            SessionhostID {
-                $Parameters = @{
-                    Id = $Id
-                }
-            }
         }
         try {
             $sessionHosts = Get-AvdSessionHost @parameters
