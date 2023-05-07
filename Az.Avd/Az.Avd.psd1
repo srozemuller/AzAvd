@@ -127,7 +127,6 @@
         'Update-AvdDesktopApplication',
         'Update-AvdDiagnostics',
         'Update-AvdHostpool',
-        'Update-AvdHostpoolImageLocation',
         'Update-AvdRegistrationToken',
         'Update-AvdScheduledAgentsUpdate',
         'Update-AvdSessionHost',
