@@ -12,7 +12,7 @@
     RootModule             = 'Az.Avd.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '2.5.1'
+    ModuleVersion          = '3.0.0'
 
     # Supported PSEditions
     CompatiblePSEditions   = 'Core', 'Desktop'
@@ -75,8 +75,10 @@
         'Add-AvdApplicationGroupPermissions',
         'Add-AvdInsightsSessionHost',
         'Add-AvdSessionHostTags',
+        'Connect-Avd',
         'Copy-AvdApplicationGroupPermissions',
         'Disable-AvdSessionHost',
+        'Disconnect-Avd',
         'Disconnect-AvdUserSessions',
         'Enable-AvdDiagnostics',
         'Enable-AvdInsightsApplicationGroup',
@@ -84,9 +86,11 @@
         'Enable-AvdInsightsHostpool',
         'Enable-AvdInsightsWorkspace',
         'Enable-AvdSessionHost',
-        'Enable-AvdStartVmOnConnect',    
+        'Enable-AvdStartVmOnConnect',
         'Export-AvdConfig',
-        'Get-AvdApplicationGroup',  
+        'Export-AvdWorkbook',
+        'Get-AvdApplicationGroup',
+        'Get-AvdContext',
         'Get-AvdDiagnosticSettings',
         'Get-AvdHostPool',
         'Get-AvdHostPoolUpdate',
@@ -102,6 +106,7 @@
         'Get-AvdSessionHostResources',
         'Get-AvdUserSessions',
         'Get-AvdVmTemplate',
+        'Get-AvdWorkbook',
         'Get-AvdWorkspace',
         'Grant-AvdSessionHost',
         'Move-AvdSessionHost',
@@ -112,12 +117,15 @@
         'New-AvdScalingPlan',
         'New-AvdSessionHost',
         'New-AvdVmTemplate',
+        'New-AvdWorkbook',
         'New-AvdWorkspace',
         'Remove-AvdInsightsSessionHost',
         'Remove-AvdSessionHost',
         'Remove-AvdSessionHostTags',
+        'Remove-AvdWorkbook',
         'Repair-AvdSessionHost',
         'Restart-AvdSessionHost',
+        'Set-AvdContext',
         'Start-AvdSessionHost',
         'Stop-AvdSessionHost',
         'Set-AvdHostPoolUpdate',
@@ -174,7 +182,8 @@
             # ReleaseNotes of this module
             ReleaseNotes = ''
             # Prerelease string of this module
-            # Prerelease = ''
+
+            Prerelease = 'beta'
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update/save
             # RequireLicenseAcceptance = $false
