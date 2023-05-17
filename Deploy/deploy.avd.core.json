@@ -1,0 +1,26 @@
+{
+    "hostpool": {
+        "HostpoolName": "avd-auto-hp",
+        "ResourceGroupName": "rg-avd-auto",
+        "Location": "westeurope",
+        "HostPoolType": "Pooled",
+        "ValidationEnvironment": true,
+        "StartVMOnConnect": true,
+        "CustomRdpProperty": "audiocapturemode:i:1;audiomode:i:0;camerastoredirect:s:*;devicestoredirect:s:*;drivestoredirect:s:*;redirectclipboard:i:1;redirectcomports:i:1;redirectdirectx:i:1;redirectposdevices:i:0;redirectprinters:i:1;redirectsmartcards:i:1;screen mode id:i:2;session bpp:i:32;span monitors:i:1;use multimon:i:1;",
+        "MaxSessionLimit": 10,
+        "LoadBalancerType": "BreadthFirst"
+    },
+    "appgroup": {
+        "name": "avd-auto-ag",
+        "ResourceGroupName": "rg-avd-auto",
+        "Location": "westeurope",
+        "ApplicationGroupType": "Desktop"
+    },
+    "workspace": {
+        "name": "avd-auto-ws",
+        "ResourceGroupName": "rg-avd-auto",
+        "Location": "westeurope",
+        "FriendlyName": "avd-auto-ws",
+        "Description": "avd-auto-ws"
+    }
+}
