@@ -58,12 +58,10 @@ Get-AvdApplicationGroup -ResourceId "/subscriptions/../applicationGroupname"
             Headers = $token
             Method  = "GET"
         }
-        $applicationResults = Invoke-RestMethod @parameters
-        $applicationResults.value | ForEach-Object {
-          
-            $url = "{0}/{1}/providers/Microsoft.Authorization/roleAssignments?api-version=2021-04-01-preview" -f $script:AzureApiUrl, $_.id 
+        $applicationResults = Request-Api @parameters
+        $applicationResults | ForEach-Object {
             $parameters = @{
-                uri     = $url
+                uri     = "{0}/{1}/providers/Microsoft.Authorization/roleAssignments?api-version=2021-04-01-preview" -f $script:AzureApiUrl, $_.id
                 Method  = "GET"
                 Headers = $token
             }
