@@ -115,6 +115,7 @@
         'New-AvdVmTemplate',
         'New-AvdWorkbook',
         'New-AvdWorkspace',
+        'Remove-AvdHostpool',
         'Remove-AvdInsightsSessionHost',
         'Remove-AvdSessionHost',
         'Remove-AvdSessionHostTags',
