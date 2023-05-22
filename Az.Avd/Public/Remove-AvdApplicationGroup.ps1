@@ -19,7 +19,7 @@ Remove-AvdApplicationGroup -ResourceId "/subscriptions/../applicationGroupname"
     param (
         [Parameter(Mandatory, ParameterSetName = "Name")]
         [ValidateNotNullOrEmpty()]
-        [string]$ApplicationGroupName,
+        [string]$Name,
 
         [Parameter(Mandatory, ParameterSetName = "All")]
         [Parameter(Mandatory, ParameterSetName = "Name")]
@@ -38,7 +38,7 @@ Remove-AvdApplicationGroup -ResourceId "/subscriptions/../applicationGroupname"
         switch ($PsCmdlet.ParameterSetName) {
             Name {
                 Write-Verbose "Name and ResourceGroup provided"
-                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/applicationGroups/{3}?api-version={4}" -f $script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $ApplicationGroupName, $script:applicationGroupApiVersion
+                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/applicationGroups/{3}?api-version={4}" -f $script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $Name, $script:applicationGroupApiVersion
             }
             ResourceId {
                 Write-Verbose "ResourceId provided"
