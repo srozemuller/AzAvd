@@ -120,6 +120,7 @@
         'Remove-AvdSessionHost',
         'Remove-AvdSessionHostTags',
         'Remove-AvdWorkbook',
+        'Remove-AvdWorkspace',
         'Repair-AvdSessionHost',
         'Restart-AvdSessionHost',
         'Set-AvdContext',
