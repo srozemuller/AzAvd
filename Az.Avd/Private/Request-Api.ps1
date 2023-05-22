@@ -31,7 +31,7 @@ function Request-Api {
             if ($Body) {
                 $parameters.Add("Body", $Body) > $null
             }
-            $results = (Invoke-WebRequest @parameters) | ConvertFrom-Json
+            $results = Invoke-WebRequest @parameters | ConvertFrom-Json
             $resultObject = $results.value
             if ($null -eq $results.value) {
                 $resultObject = $results
@@ -48,7 +48,7 @@ function Request-Api {
 
         }
         catch [System.Exception] {
-            Write-Error -Message "An error occurred while requesting url $uri. Error message: $($PSItem.Exception.Message)"
+            Write-Error -Message "An error occurred while requesting url $uri. Error message: $($_)"
         }
     }
     End {

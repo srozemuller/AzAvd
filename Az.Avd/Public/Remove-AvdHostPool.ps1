@@ -1,5 +1,5 @@
 function Remove-AvdHostPool {
-<#
+    <#
 .SYNOPSIS
 Removes AVD Hostpool information.
 .DESCRIPTION
@@ -33,29 +33,29 @@ Remove-AvdHostPool -ResourceId "/subscription/../HostPoolName"
         Write-Verbose "Start searching for hostpool $hostpoolName"
         AuthenticationCheck
         $token = GetAuthToken -resource $script:AzureApiUrl
-        $apiVersion = "?api-version=2019-12-10-preview"
         switch ($PsCmdlet.ParameterSetName) {
             Name {
                 Write-Verbose "Name and ResourceGroup provided"
-                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}?api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName, $script:hostpoolApiVersion 
+                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}?api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName, $script:hostpoolApiVersion
             }
             ResourceId {
                 Write-Verbose "ResourceId provided"
-                $url = $script:AzureApiUrl + $resourceId + $apiVersion
+                $url = "{0}{1}?api-version={2}" -f $script:AzureApiUrl, $resourceId, $script:hostpoolApiVersion
             }
-        }
-        $parameters = @{
-            uri     = $url
-            Headers = $token
         }
     }
     Process {
-        $parameters = @{
-            uri     = $url
-            Method  = "DELETE"
-            Headers = $token
+        try {
+            $parameters = @{
+                uri     = $url
+                Method  = "DELETE"
+                Headers = $token
+            }
+            $results = Request-Api @parameters
+            $results
         }
-        $results = Request-Api @parameters
-        $results
+        catch {
+            Write-Error -Message "An error occurred while removing hostpool $hostpoolName. Error message: $($_)"
+        }
     }
 }
