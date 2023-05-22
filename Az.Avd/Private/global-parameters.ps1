@@ -10,6 +10,7 @@ $script:AvdModuleLocation = "https://wvdportalstorageblob.blob.core.windows.net/
 $script:sessionHostApiVersion = "2022-02-10-preview"
 $script:vmApiVersion = "2022-11-01"
 $script:hostpoolApiVersion = "2022-02-10-preview"
+$script:workspaceApiVersion = "2022-02-10-preview"
 $script:diagnosticsApiVersion = "2020-08-01"
 $script:avdDiagnosticsApiVersion = "2021-05-01-preview"
 $script:workbookApiVersion = "2021-08-01"
