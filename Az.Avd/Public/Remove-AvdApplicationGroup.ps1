@@ -42,7 +42,7 @@ Remove-AvdApplicationGroup -ResourceId "/subscriptions/../applicationGroupname"
             }
             ResourceId {
                 Write-Verbose "ResourceId provided"
-                $url = $script:AzureApiUrl + $ResourceId + $apiVersion
+                $url = "{0}{1}?api-version={2}" -f $script:AzureApiUrl, $ResourceId, $script:applicationGroupApiVersion
             }
             default {
                 Write-Verbose "Getting all application groups in $ResourceGroupName"
