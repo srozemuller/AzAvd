@@ -149,8 +149,8 @@ function New-AvdSessionHost {
     Begin {
         Write-Verbose "Start creating session hosts"
         AuthenticationCheck
-        $script:token = GetAuthToken -resource $Script:AzureApiUrl
-        $registrationToken = Update-AvdRegistrationToken -HostpoolName $Hostpoolname $resourceGroupName -HoursActive 4 | Select-Object -ExpandProperty properties
+        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $registrationToken = Update-AvdRegistrationToken -HostpoolName $Hostpoolname $ResourceGroupName -HoursActive 4 | Select-Object -ExpandProperty properties
         $vmNames = [System.Collections.ArrayList]::new()
     }
     Process {
@@ -201,7 +201,6 @@ function New-AvdSessionHost {
             AAD* {
                 Write-Verbose "Provided -AzureAD switch, joining AzureAD"
                 $extensionName = "AADLoginForWindows"
-                $domainJoinUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $vmName, $extensionName , '2021-11-01'
                 $domainJoinExtension = @{
                     properties = @{
                         Type               = "AADLoginForWindows"
@@ -224,24 +223,27 @@ function New-AvdSessionHost {
         Do {
             try {
                 if ($null -eq $InitialNumber) {
-                    $InitialNumber = Get-AvdLatestSessionHost -HostpoolName $HostpoolName -ResourceGroupName $ResourceGroupName -NumOnly
+                    $InitialNumber = Get-AvdLatestSessionHost -HostpoolName $HostpoolName -ResourceGroupName $ResourceGroupName -NumOnly -Verbose
                 }
-                $vmNames.Add("{0}-{1}" -f $Prefix, $InitialNumber) > $null
+                $vmName = "{0}-{1}" -f $Prefix, $InitialNumber
+                $vmNames.Add(($vmName)) > $null
                 $InitialNumber++
                 $sessionHostCount--
-
-                Write-Output "vmNames created"
+                Write-Verbose "Session host $vmName added to the list"
             }
             catch {
-
+                Throw "Not able to create session hosts list, $_"
             }
         }
-        while ($sessionHostCount -ne 0) {
-            Write-Verbose "Session hosts are created"
+        while ($sessionHostCount -gt 0) {
+            Write-Verbose "Session hosts added to the deployment list"
+            Write-Verbose "$($vmNames)"
         }
-        $vmNames | Foreach-Object -ThrottleLimit $MaxParallel -Parallel {
+        $vmNames | Foreach-Object -Verbose -ThrottleLimit $MaxParallel -Parallel {
             try {
                 $vmName = $_
+                Write-Verbose "Creating session host $vmName nic"
+
                 $nicName = "{0}-nic" -f $vmName
                 $nicBody = @{
                     "properties" = @{
@@ -251,49 +253,49 @@ function New-AvdSessionHost {
                                 "name"       = "ipconfig1"
                                 "properties" = @{
                                     "subnet" = @{
-                                        id = $SubnetId
+                                        id = $using:SubnetId
                                     }
                                 }
                             }
                         )
                     }
-                    "location"   = $Location
+                    "location"   = $using:Location
                 }
                 $nicJson = $nicBody | ConvertTo-Json -Depth 15
-                $nicUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Network/networkInterfaces/{3}?api-version=2021-03-01" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $nicName
-                $NIC = Invoke-RestMethod -Method PUT -Uri $nicUrl -Headers $script:token -Body $nicJson
+                $nicUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Network/networkInterfaces/{3}?api-version=2021-03-01" -f $using:AzureApiUrl, $using:subscriptionId, $using:ResourceGroupName, $nicName
+                $nic = Invoke-RestMethod -Method PUT -Uri $nicUrl -Headers $using:token -Body $nicJson
 
-
+                Write-Verbose "Creating session host vm"
                 $vmBody = @{
-                    location     = $Location
+                    location     = $using:Location
                     identity     = @{
                         type = "SystemAssigned"
                     }
                     "properties" = @{
                         licenseType       = "Windows_Client"
                         "hardwareProfile" = @{
-                            "vmSize" = $VmSize
+                            "vmSize" = $using:VmSize
                         }
                         "storageProfile"  = @{
-                            "imageReference" = $imageReference
+                            "imageReference" = $using:imageReference
                             "osDisk"         = @{
                                 "caching"      = "ReadWrite"
                                 "managedDisk"  = @{
-                                    "storageAccountType" = $diskType
+                                    "storageAccountType" = $using:diskType
                                 }
                                 "name"         = "{0}-os" -f $vmName
                                 "createOption" = "FromImage"
                             }
                         }
                         "osProfile"       = @{
-                            "adminUsername" = $LocalAdmin
-                            "computerName"  = $vmName
-                            "adminPassword" = $LocalPass
+                            "adminUsername" = $using:LocalAdmin
+                            "computerName"  = $using:vmName
+                            "adminPassword" = $using:LocalPass
                         }
                         "networkProfile"  = @{
                             "networkInterfaces" = @(
                                 @{
-                                    "id"         = $NIC.Id
+                                    "id"         = $nic.Id
                                     "properties" = @{
                                         "primary" = $true
                                     }
@@ -302,7 +304,8 @@ function New-AvdSessionHost {
                         }
                     }
                 }
-                if ($TrustedLaunch.IsPresent) {
+                if ($using:TrustedLaunch.IsPresent) {
+                    Write-Verbose "Enabling Trusted Launch"
                     $securityProfile = @{
                         securityType = "TrustedLaunch"
                         uefiSettings = @{
@@ -312,55 +315,50 @@ function New-AvdSessionHost {
                     }
                     $vmBody.properties.Add("securityProfile", $securityProfile)
                 }
-                $vmUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}?api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $vmName, '2021-11-01'
+                $vmUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}?api-version=2023-03-01" -f $using:AzureApiUrl, $using:subscriptionId, $using:ResourceGroupName, $vmName
                 $vmJsonBody = $vmBody | ConvertTo-Json -Depth 99
-                Invoke-RestMethod -Method PUT -Uri $vmUrl -Headers $script:token -Body $vmJsonBody
-            }
-            catch {
-                "VM $vmName not created, $_"
-                Throw
-            }
-            Do {
-                $status = Invoke-RestMethod -Method GET -Uri $vmUrl -Headers $script:token
-                Start-Sleep 5
-            }
-            While ($status.properties.provisioningState -ne "Succeeded") {
-                Write-Verbose "Host $vmName is ready"
-            }
-            try {
-                $domainJoinBody = $domainJoinExtension | ConvertTo-Json -Depth 99
-                Invoke-RestMethod -Method PUT -Uri $domainJoinUrl -Headers $script:token -Body $domainJoinBody
+                Invoke-RestMethod -Method PUT -Uri $vmUrl -Headers $using:token -Body $vmJsonBody
                 Do {
-                    $status = Invoke-RestMethod -Method GET -Uri $domainJoinUrl -Headers $script:token
+                    $status = Invoke-RestMethod -Method GET -Uri $vmUrl -Headers $using:token
                     Start-Sleep 5
                 }
                 While ($status.properties.provisioningState -ne "Succeeded") {
-                    Write-Verbose "Extension $domainJoinName is ready"
+                    Write-Verbose "Host $vmName is ready"
+                }
+                $domainJoinUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $using:AzureApiUrl, $using:subscriptionId, $using:ResourceGroupName, $vmName, $using:extensionName , '2021-11-01'
+                $domainJoinBody = $using:domainJoinExtension | ConvertTo-Json -Depth 99
+                Invoke-RestMethod -Method PUT -Uri $domainJoinUrl -Headers $using:token -Body $domainJoinBody
+                Do {
+                    $status = Invoke-RestMethod -Method GET -Uri $domainJoinUrl -Headers $using:token
+                    Start-Sleep 5
+                }
+                While ($status.properties.provisioningState -ne "Succeeded") {
+                    Write-Verbose "Extension $using:extensionName is ready"
                 }
 
-                $extensionName = "Microsoft.PowerShell.DSC"
-                $avdUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $vmName, $extensionName , '2021-11-01'
+                $avdExtensionName = "Microsoft.PowerShell.DSC"
+                $avdUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $using:AzureApiUrl, $using:subscriptionId, $using:ResourceGroupName, $vmName, $avdExtensionName , '2021-11-01'
                 $avdDscExtension = @{
                     properties = @{
                         Type               = "DSC"
                         Publisher          = "Microsoft.Powershell"
                         typeHandlerVersion = "2.73"
                         Settings           = @{
-                            modulesUrl            = $script:AvdModuleLocation
+                            modulesUrl            = $using:AvdModuleLocation
                             ConfigurationFunction = "Configuration.ps1\AddSessionHost"
                             Properties            = @{
-                                hostPoolName          = $HostpoolName
-                                registrationInfoToken = $registrationToken.registrationInfo.token
+                                hostPoolName          = $using:HostpoolName
+                                registrationInfoToken = $using:registrationToken.registrationInfo.token
                                 aadJoin               = 1
                             }
                         }
                     }
-                    location   = $Location
+                    location   = $using:Location
                 }
                 $avdExtensionBody = $avdDscExtension | ConvertTo-Json -Depth 99
-                Invoke-RestMethod -Method PUT -Uri $avdUrl -Headers $script:token -Body $avdExtensionBody
+                Invoke-RestMethod -Method PUT -Uri $avdUrl -Headers $using:token -Body $avdExtensionBody
                 Do {
-                    $status = Invoke-RestMethod -Method GET -Uri $avdUrl -Headers $script:token
+                    $status = Invoke-RestMethod -Method GET -Uri $avdUrl -Headers $using:token
                     Start-Sleep 5
                 }
                 While ($status.properties.provisioningState -ne "Succeeded") {
@@ -368,7 +366,8 @@ function New-AvdSessionHost {
                 }
             }
             catch {
-                Throw $_
+                "VM $vmName not created, $_"
+                Throw
             }
         }
     }
