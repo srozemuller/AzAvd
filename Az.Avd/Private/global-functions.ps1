@@ -170,3 +170,22 @@ function TestAzResource($resourceId,$apiVersion) {
     }
     Invoke-RestMethod @testParameters
 }
+
+function Get-RandomCharacters($length, $characters) {
+    $random = 1..$length | ForEach-Object { Get-Random -Maximum $characters.length }
+    $private:ofs = ""
+    return [String]$characters[$random]
+}
+function Get-RandomString($type) {
+    if ($type -eq 'string') {
+        $username = Get-RandomCharacters -length 8 -characters 'abcdefghiklmnoprstuvwxyz'
+        return $username
+    }
+    if ($type -eq 'password') {
+        $password = Get-RandomCharacters -length 6 -characters 'abcdefghiklmnoprstuvwxyz'
+        $password += Get-RandomCharacters -length 2 -characters 'ABCDEFGHKLMNOPRSTUVWXYZ'
+        $password += Get-RandomCharacters -length 2 -characters '1234567890'
+        $password += Get-RandomCharacters -length 2 -characters '!%&()=#+'
+        return $password
+    }
+}
