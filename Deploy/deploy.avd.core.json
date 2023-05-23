@@ -1,8 +1,6 @@
 {
     "hostpool": {
         "HostpoolName": "avd-auto-hp",
-        "ResourceGroupName": "rg-avd-auto",
-        "Location": "westeurope",
         "HostPoolType": "Pooled",
         "ValidationEnvironment": true,
         "StartVMOnConnect": true,
@@ -12,15 +10,22 @@
     },
     "appgroup": {
         "name": "avd-auto-ag",
-        "ResourceGroupName": "rg-avd-auto",
-        "Location": "westeurope",
         "ApplicationGroupType": "Desktop"
     },
     "workspace": {
         "name": "avd-auto-ws",
-        "ResourceGroupName": "rg-avd-auto",
-        "Location": "westeurope",
         "FriendlyName": "avd-auto-ws",
         "Description": "avd-auto-ws"
+    },
+    "sessionHosts": {
+        "Prefix": "auto",
+        "SessionHostCount": 3,
+        "VmSize": "Standard_D2s_v3",
+        "Offer": "Windows-10",
+        "Publisher": "MicrosoftWindowsDesktop",
+        "Sku": "22h2",
+        "DiskType": "Premium_LRS",
+        "AzureAd": true,
+        "Intune": true
     }
 }
