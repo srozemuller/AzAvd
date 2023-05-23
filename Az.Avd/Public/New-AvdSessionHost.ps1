@@ -106,11 +106,13 @@ function New-AvdSessionHost {
         [ValidateSet("Premium_LRS", "Premium_ZRS", "StandardSSD_LRS", "StandardSSD_ZRS", "Standard_LRS", "UltraSSD_LRS")]
         [string]$DiskType,
 
-        [parameter(Mandatory)]
-        [string]$LocalAdmin,
+        [parameter()]
+        [ValidateNotNullOrEmpty()]
+        [string]$LocalAdmin = (Get-RandomString -type string),
 
-        [parameter(Mandatory)]
-        [string]$LocalPass,
+        [parameter()]
+        [ValidateNotNullOrEmpty()]
+        [string]$LocalPass = (Get-RandomString -type password),
 
         [parameter(Mandatory)]
         [string]$SubnetId,
