@@ -1,4 +1,16 @@
 {
+    "vnet": {
+        "name": "avd-auto-vnet",
+        "addressPrefixes": [
+            "10.0.0.0/16"
+        ],
+        "subnets": [
+            {
+                "name": "avd-auto-subnet",
+                "addressPrefix": "10.0.0.1/24"
+            }
+        ]
+    },
     "hostpool": {
         "HostpoolName": "avd-auto-hp",
         "HostPoolType": "Pooled",
