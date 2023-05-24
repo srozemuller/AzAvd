@@ -152,6 +152,7 @@ function New-AvdSessionHost {
         Write-Verbose "Start creating session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
+        $inlineTokenFunction = ${function:GetAuthToken}.ToString()
         $registrationToken = Update-AvdRegistrationToken -HostpoolName $Hostpoolname $ResourceGroupName -HoursActive 4 | Select-Object -ExpandProperty properties
         $vmNames = [System.Collections.ArrayList]::new()
     }
@@ -243,11 +244,13 @@ function New-AvdSessionHost {
         }
         $vmNames | Foreach-Object -Verbose -ThrottleLimit $MaxParallel -Parallel {
             try {
-                $vmName = $_
+                ${function:GetAuthToken} = $using:inlineTokenFunction
                 $token = GetAuthToken -resource $Script:AzureApiUrl
+
                 # Checking every 15 seconds till the max of 60 (is 15 minutes) if the VM is created successfully
                 $maxRetries = 60
                 $checkCount = 0
+                $vmName = $_
                 Write-Verbose "Creating session host $vmName nic"
 
                 $nicName = "{0}-nic" -f $vmName
