@@ -31,11 +31,11 @@
     },
     "sessionHosts": {
         "Prefix": "auto",
-        "SessionHostCount": 3,
+        "SessionHostCount": 1,
         "VmSize": "Standard_D2s_v3",
         "Offer": "windows-11",
         "Publisher": "MicrosoftWindowsDesktop",
-        "Sku": "win11-22h2-ent",
+        "Sku": "win11-22h2-avd",
         "DiskType": "Premium_LRS",
         "AzureAd": true,
         "Intune": true
