@@ -34,6 +34,11 @@ jobs:
         # Artifact name
         name: azModule
         path: drop
+    - name: Build Changelog
+      id: github_release
+      uses: mikepenz/release-changelog-builder-action@v3
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   test:
     needs: build
     runs-on: ubuntu-latest
@@ -95,4 +100,8 @@ jobs:
       - name: Creating release
         shell: pwsh
         run: |
-          ./Compiler/Az.Avd.generateRelease.ps1 -GitHubKey ${{ secrets.GITHUB_TOKEN }} -PreRelease $false -BranchName 'beta'  
+          ./Compiler/Az.Avd.generateRelease.ps1 -GitHubKey ${{ secrets.GITHUB_TOKEN }} -PreRelease $false -BranchName 'beta'
+      - name: Create Release Changelog
+        uses: mikepenz/action-gh-release@v0.2.0-a03
+        with:
+          body: ${{steps.github_release.outputs.changelog}}
