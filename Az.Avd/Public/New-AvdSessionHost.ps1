@@ -244,6 +244,10 @@ function New-AvdSessionHost {
         $vmNames | Foreach-Object -Verbose -ThrottleLimit $MaxParallel -Parallel {
             try {
                 $vmName = $_
+                $token = GetAuthToken -resource $Script:AzureApiUrl
+                # Checking every 15 seconds till the max of 60 (is 15 minutes) if the VM is created successfully
+                $maxRetries = 60
+                $checkCount = 0
                 Write-Verbose "Creating session host $vmName nic"
 
                 $nicName = "{0}-nic" -f $vmName
@@ -265,7 +269,7 @@ function New-AvdSessionHost {
                 }
                 $nicJson = $nicBody | ConvertTo-Json -Depth 15
                 $nicUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Network/networkInterfaces/{3}?api-version=2021-03-01" -f $using:AzureApiUrl, $using:subscriptionId, $using:ResourceGroupName, $nicName
-                $nic = Invoke-RestMethod -Method PUT -Uri $nicUrl -Headers $using:token -Body $nicJson
+                $nic = Invoke-RestMethod -Method PUT -Uri $nicUrl -Headers $token -Body $nicJson
 
                 Write-Verbose "Creating session host vm"
                 $vmBody = @{
@@ -319,9 +323,9 @@ function New-AvdSessionHost {
                 }
                 $vmUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}?api-version=2023-03-01" -f $using:AzureApiUrl, $using:subscriptionId, $using:ResourceGroupName, $vmName
                 $vmJsonBody = $vmBody | ConvertTo-Json -Depth 99
-                Invoke-RestMethod -Method PUT -Uri $vmUrl -Headers $using:token -Body $vmJsonBody
+                Invoke-RestMethod -Method PUT -Uri $vmUrl -Headers $token-Body $vmJsonBody
                 Do {
-                    $status = Invoke-RestMethod -Method GET -Uri $vmUrl -Headers $using:token
+                    $status = Invoke-RestMethod -Method GET -Uri $vmUrl -Headers $token
                     Start-Sleep 5
                 }
                 While ($status.properties.provisioningState -ne "Succeeded") {
@@ -330,13 +334,6 @@ function New-AvdSessionHost {
                 $domainJoinUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $using:AzureApiUrl, $using:subscriptionId, $using:ResourceGroupName, $vmName, $using:extensionName , '2021-11-01'
                 $domainJoinBody = $using:domainJoinExtension | ConvertTo-Json -Depth 99
                 Invoke-RestMethod -Method PUT -Uri $domainJoinUrl -Headers $using:token -Body $domainJoinBody
-                Do {
-                    $status = Invoke-RestMethod -Method GET -Uri $domainJoinUrl -Headers $using:token
-                    Start-Sleep 5
-                }
-                While ($status.properties.provisioningState -ne "Succeeded") {
-                    Write-Verbose "Extension $using:extensionName is ready"
-                }
 
                 $avdExtensionName = "Microsoft.PowerShell.DSC"
                 $avdUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $using:AzureApiUrl, $using:subscriptionId, $using:ResourceGroupName, $vmName, $avdExtensionName , '2021-11-01'
@@ -358,12 +355,16 @@ function New-AvdSessionHost {
                     location   = $using:Location
                 }
                 $avdExtensionBody = $avdDscExtension | ConvertTo-Json -Depth 99
-                Invoke-RestMethod -Method PUT -Uri $avdUrl -Headers $using:token -Body $avdExtensionBody
+                Invoke-RestMethod -Method PUT -Uri $avdUrl -Headers $token -Body $avdExtensionBody
+
                 Do {
-                    $status = Invoke-RestMethod -Method GET -Uri $avdUrl -Headers $using:token
-                    Start-Sleep 5
+                    # Wait for the extension to be ready, till the max of 15 minutes
+                    $checkCount++
+                    $domainJoinStatus = Invoke-RestMethod -Method GET -Uri $domainJoinUrl -Headers $token
+                    $status = Invoke-RestMethod -Method GET -Uri $avdUrl -Headers $token
+                    Start-Sleep 15
                 }
-                While ($status.properties.provisioningState -ne "Succeeded") {
+                While (($status.properties.provisioningState -ne "Succeeded") -and ($domainJoinStatus.properties.provisioningState -ne "Succeeded") -and ($cycle -lt $maxRetries)) {
                     Write-Verbose "Extension for AVD is ready"
                 }
             }
