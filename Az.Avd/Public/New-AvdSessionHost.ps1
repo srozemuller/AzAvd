@@ -152,8 +152,6 @@ function New-AvdSessionHost {
         Write-Verbose "Start creating session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
-        $inlineTokenFunction = ${function:GetAuthToken}.ToString()
-        $connectAvdFunction = ${function:Connect-Avd}.ToString()
         $registrationToken = Update-AvdRegistrationToken -HostpoolName $Hostpoolname $ResourceGroupName -HoursActive 4 | Select-Object -ExpandProperty properties
         $vmNames = [System.Collections.ArrayList]::new()
     }
@@ -209,7 +207,7 @@ function New-AvdSessionHost {
                     properties = @{
                         Type               = "AADLoginForWindows"
                         Publisher          = "Microsoft.Azure.ActiveDirectory"
-                        typeHandlerVersion = "1.0"
+                        typeHandlerVersion = "2.0"
                     }
                     location   = $Location
                 }
@@ -245,12 +243,6 @@ function New-AvdSessionHost {
         }
         $vmNames | Foreach-Object -Verbose -ThrottleLimit $MaxParallel -Parallel {
             try {
-               <# ${function:GetAuthToken} = $using:inlineTokenFunction
-                ${function:Connect-Avd} = $using:connectAvdFunction
-                $tokenRequest = $using:tokenRequest
-                $tenantId = $using:TenantId
-                $token = GetAuthToken
-                    #>
                 # Checking every 15 seconds till the max of 60 (is 15 minutes) if the VM is created successfully
                 $maxRetries = 60
                 $checkCount = 0
@@ -328,7 +320,7 @@ function New-AvdSessionHost {
                     }
                     $vmBody.properties.Add("securityProfile", $securityProfile)
                 }
-                $vmUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}?api-version=2023-03-01" -f $using:AzureApiUrl, $using:subscriptionId, $using:ResourceGroupName, $vmName
+                $vmUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}?api-version={4}" -f $using:AzureApiUrl, $using:subscriptionId, $using:ResourceGroupName, $vmName, $using:virtualMachineVersion
                 $vmJsonBody = $vmBody | ConvertTo-Json -Depth 99
                 Invoke-RestMethod -Method PUT -Uri $vmUrl -Headers $using:token -Body $vmJsonBody
                 Do {
@@ -338,12 +330,24 @@ function New-AvdSessionHost {
                 While ($status.properties.provisioningState -ne "Succeeded") {
                     Write-Verbose "Host $vmName is ready"
                 }
-                $domainJoinUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $using:AzureApiUrl, $using:subscriptionId, $using:ResourceGroupName, $vmName, $using:extensionName , '2021-11-01'
+                $domainJoinUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $using:AzureApiUrl, $using:subscriptionId, $using:ResourceGroupName, $vmName, $using:extensionName , $using:virtualMachineVersion
                 $domainJoinBody = $using:domainJoinExtension | ConvertTo-Json -Depth 99
                 Invoke-RestMethod -Method PUT -Uri $domainJoinUrl -Headers $using:token -Body $domainJoinBody
 
+                Do {
+                    # Wait for the extension to be ready, till the max of 15 minutes
+                    $checkCount++
+                    $domainJoinStatus = Invoke-RestMethod -Method GET -Uri $domainJoinUrl -Headers $using:token
+                    Start-Sleep 15
+                }
+                While (($domainJoinStatus.properties.provisioningState -ne "Succeeded") -and ($checkCount -lt $maxRetries)) {
+                    Write-Verbose "Extension for AVD is ready"
+                }
+
+                # Reset the counter for next check round
+                $checkCount = 0
                 $avdExtensionName = "Microsoft.PowerShell.DSC"
-                $avdUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $using:AzureApiUrl, $using:subscriptionId, $using:ResourceGroupName, $vmName, $avdExtensionName , '2021-11-01'
+                $avdUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $using:AzureApiUrl, $using:subscriptionId, $using:ResourceGroupName, $vmName, $avdExtensionName , $using:virtualMachineVersion
                 $avdDscExtension = @{
                     properties = @{
                         Type               = "DSC"
@@ -367,11 +371,11 @@ function New-AvdSessionHost {
                 Do {
                     # Wait for the extension to be ready, till the max of 15 minutes
                     $checkCount++
-                    $domainJoinStatus = Invoke-RestMethod -Method GET -Uri $domainJoinUrl -Headers $using:token
+
                     $status = Invoke-RestMethod -Method GET -Uri $avdUrl -Headers $using:token
                     Start-Sleep 15
                 }
-                While (($status.properties.provisioningState -ne "Succeeded") -and ($domainJoinStatus.properties.provisioningState -ne "Succeeded") -and ($cycle -lt $maxRetries)) {
+                While (($status.properties.provisioningState -ne "Succeeded") -and ($checkCount -lt $maxRetries)) {
                     Write-Verbose "Extension for AVD is ready"
                 }
             }
@@ -380,5 +384,8 @@ function New-AvdSessionHost {
                 Throw
             }
         }
+    }
+    End {
+        Write-Verbose "Task completed, created $SessionHostCount session host(s)"
     }
 }
