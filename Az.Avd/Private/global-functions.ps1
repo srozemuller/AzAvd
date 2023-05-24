@@ -26,6 +26,7 @@ function GetAuthToken {
     param (
         [Parameter()]
         [string]$Resource
+
     )
     $expireTime = Get-Date -UnixTimeSeconds $script:tokenRequest.expires_on
     if ((Get-Date) -gt $expireTime)

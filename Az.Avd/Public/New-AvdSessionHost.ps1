@@ -153,6 +153,7 @@ function New-AvdSessionHost {
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
         $inlineTokenFunction = ${function:GetAuthToken}.ToString()
+        $connectAvdFunction = ${function:Connect-Avd}.ToString()
         $registrationToken = Update-AvdRegistrationToken -HostpoolName $Hostpoolname $ResourceGroupName -HoursActive 4 | Select-Object -ExpandProperty properties
         $vmNames = [System.Collections.ArrayList]::new()
     }
@@ -244,9 +245,12 @@ function New-AvdSessionHost {
         }
         $vmNames | Foreach-Object -Verbose -ThrottleLimit $MaxParallel -Parallel {
             try {
-                ${function:GetAuthToken} = $using:inlineTokenFunction
-                $token = GetAuthToken -resource $Script:AzureApiUrl
-
+               <# ${function:GetAuthToken} = $using:inlineTokenFunction
+                ${function:Connect-Avd} = $using:connectAvdFunction
+                $tokenRequest = $using:tokenRequest
+                $tenantId = $using:TenantId
+                $token = GetAuthToken
+                    #>
                 # Checking every 15 seconds till the max of 60 (is 15 minutes) if the VM is created successfully
                 $maxRetries = 60
                 $checkCount = 0
@@ -272,7 +276,7 @@ function New-AvdSessionHost {
                 }
                 $nicJson = $nicBody | ConvertTo-Json -Depth 15
                 $nicUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Network/networkInterfaces/{3}?api-version=2021-03-01" -f $using:AzureApiUrl, $using:subscriptionId, $using:ResourceGroupName, $nicName
-                $nic = Invoke-RestMethod -Method PUT -Uri $nicUrl -Headers $token -Body $nicJson
+                $nic = Invoke-RestMethod -Method PUT -Uri $nicUrl -Headers $using:token -Body $nicJson
 
                 Write-Verbose "Creating session host vm"
                 $vmBody = @{
@@ -326,9 +330,9 @@ function New-AvdSessionHost {
                 }
                 $vmUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}?api-version=2023-03-01" -f $using:AzureApiUrl, $using:subscriptionId, $using:ResourceGroupName, $vmName
                 $vmJsonBody = $vmBody | ConvertTo-Json -Depth 99
-                Invoke-RestMethod -Method PUT -Uri $vmUrl -Headers $token-Body $vmJsonBody
+                Invoke-RestMethod -Method PUT -Uri $vmUrl -Headers $using:token -Body $vmJsonBody
                 Do {
-                    $status = Invoke-RestMethod -Method GET -Uri $vmUrl -Headers $token
+                    $status = Invoke-RestMethod -Method GET -Uri $vmUrl -Headers $using:token
                     Start-Sleep 5
                 }
                 While ($status.properties.provisioningState -ne "Succeeded") {
@@ -358,13 +362,13 @@ function New-AvdSessionHost {
                     location   = $using:Location
                 }
                 $avdExtensionBody = $avdDscExtension | ConvertTo-Json -Depth 99
-                Invoke-RestMethod -Method PUT -Uri $avdUrl -Headers $token -Body $avdExtensionBody
+                Invoke-RestMethod -Method PUT -Uri $avdUrl -Headers $using:token -Body $avdExtensionBody
 
                 Do {
                     # Wait for the extension to be ready, till the max of 15 minutes
                     $checkCount++
-                    $domainJoinStatus = Invoke-RestMethod -Method GET -Uri $domainJoinUrl -Headers $token
-                    $status = Invoke-RestMethod -Method GET -Uri $avdUrl -Headers $token
+                    $domainJoinStatus = Invoke-RestMethod -Method GET -Uri $domainJoinUrl -Headers $using:token
+                    $status = Invoke-RestMethod -Method GET -Uri $avdUrl -Headers $using:token
                     Start-Sleep 15
                 }
                 While (($status.properties.provisioningState -ne "Succeeded") -and ($domainJoinStatus.properties.provisioningState -ne "Succeeded") -and ($cycle -lt $maxRetries)) {
