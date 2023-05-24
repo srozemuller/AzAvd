@@ -17,6 +17,7 @@ $script:workspaceApiVersion = $global:AvdApiVersion
 $script:diagnosticsApiVersion = "2020-08-01"
 $script:avdDiagnosticsApiVersion = "2021-05-01-preview"
 $script:workbookApiVersion = "2021-08-01"
+$script:virtualMachineVersion = "2023-03-01"
 
 
 
