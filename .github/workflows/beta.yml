@@ -99,11 +99,9 @@ jobs:
           ref: ${{ github.head_ref }}
       - name: Build Changelog
         id: github_release
-        uses: mikepenz/release-changelog-builder-action@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: heinrichreimer/github-changelog-generator-action@v2.3
         with:
-          fromTag: "2.5.1"
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Release
         uses: mikepenz/action-gh-release@v0.2.0-a03 #softprops/action-gh-release
         with:
