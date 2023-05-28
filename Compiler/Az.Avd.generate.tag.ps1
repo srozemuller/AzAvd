@@ -9,7 +9,7 @@ try {
     $manifest = Import-PowerShellDataFile -Path $modulePath
     Import-Module $modulePath -Force
 
-    $version = "v{0}" -f $manifest.ModuleVersion
+    $version = "{0}" -f $manifest.ModuleVersion
     if ($manifest.PrivateData.PSData.Prerelease) {
         $version = "{0}-{1}" -f $version, $manifest.PrivateData.PSData.Prerelease
     }
