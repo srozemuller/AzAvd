@@ -101,8 +101,8 @@ function Stop-AvdSessionHost {
                     $status = Invoke-RestMethod -Method GET -Uri $hostUrl -Headers $script:token
                     Start-Sleep 5
                 }
-                While ($status.properties.provisioningState -ne "Succeeded") {
-                    Write-Verbose "Host status is $($_.name) "
+                While ($status.properties.provisioningState -ne "Deallocated") {
+                    Write-Verbose "Host status is $($_.name)"
                 }
                 Write-Information -MessageData "$($_.name) stopped" -InformationAction Continue
             }
