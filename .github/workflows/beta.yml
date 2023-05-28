@@ -145,9 +145,13 @@ jobs:
           CHANGELOG: ${{ steps.without_checkout.outputs.changelog }}
         run: echo "CHANGELOG"
       - name: Create Release
-        uses: softprops/action-gh-release@6034af24fba4e5a8e975aaa6056554efe4c794d0
-        with:
-          body: ${{steps.github_release.outputs.changelog}}
-          prerelease: ${{ contains(github.ref, '-rc') || contains(github.ref, '-b') || contains(github.ref, '-a') }}
+        id: create_release
+        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: v${{ steps.generate_tag.outputs.version }}
+          release_name: Release v${{ steps.generate_tag.outputs.version }}
+          body: ${{ steps.without_checkout.outputs.changelog }}
+          draft: false
+          prerelease: false
