@@ -22,12 +22,12 @@ function Stop-AvdSessionHost {
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
-    
+
         [parameter(Mandatory, ParameterSetName = 'All')]
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
-    
+
         [parameter(Mandatory, ParameterSetName = 'All')]
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
@@ -52,7 +52,6 @@ function Stop-AvdSessionHost {
         Write-Verbose "Stopping session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $Script:AzureApiUrl
-        $apiVersion = "?api-version=2021-11-01"
         $sessionHostParameters = @{
             hostpoolName      = $HostpoolName
             resourceGroupName = $ResourceGroupName
@@ -90,19 +89,27 @@ function Stop-AvdSessionHost {
         $sessionHosts | ForEach-Object {
             try {
                 Write-Verbose "Found $($sessionHosts.Count) host(s)"
-                Write-Verbose "Starting $($_.name)"
+                Write-Verbose "Stopping host $($_.name)"
+                $hostUrl = "{0}{1}?api-version={2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $script:vmApiVersion
                 $powerOffParameters = @{
-                    uri     = "{0}{1}/{2}{3}" -f $Script:AzureApiUrl, $_.properties.resourceId, $task, $apiVersion
+                    uri     = "{0}{1}/{2}?api-version={3}" -f $Script:AzureApiUrl, $_.properties.resourceId, $task, $script:vmApiVersion
                     Method  = "POST"
-                    Headers = $token
+                    Headers = $script:token
                 }
-                Invoke-RestMethod @powerOffParameters
+                Request-Api @powerOffParameters
+                Do {
+                    $status = Invoke-RestMethod -Method GET -Uri $hostUrl -Headers $script:token
+                    Start-Sleep 5
+                }
+                While ($status.properties.provisioningState -ne "Succeeded") {
+                    Write-Verbose "Host status is $($_.name) "
+                }
                 Write-Information -MessageData "$($_.name) stopped" -InformationAction Continue
             }
             catch {
-                Continue 
+                Continue
                 "Not able to stop $($_.name), $_"
             }
         }
-    }       
+    }
 }
