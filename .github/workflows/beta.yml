@@ -121,6 +121,10 @@ jobs:
                     "labels": ["bug"]
                 },
                 {
+                    "title": "## 📝 Refactor",
+                    "labels": ["refactor"]
+                },
+                {
                     "title": "## 🧪 Tests",
                     "labels": ["test"]
                 },
@@ -140,3 +144,10 @@ jobs:
         env:
           CHANGELOG: ${{ steps.without_checkout.outputs.changelog }}
         run: echo "CHANGELOG"
+      - name: Create Release
+        uses: softprops/action-gh-release@6034af24fba4e5a8e975aaa6056554efe4c794d0
+        with:
+          body: ${{steps.github_release.outputs.changelog}}
+          prerelease: ${{ contains(github.ref, '-rc') || contains(github.ref, '-b') || contains(github.ref, '-a') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
