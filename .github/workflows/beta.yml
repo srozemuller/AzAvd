@@ -98,6 +98,7 @@ jobs:
         id: without_checkout
         uses: mikepenz/release-changelog-builder-action@develop
         with:
+          fromTag: "v3.0.1-beta.3"
           configurationJson: |
             {
               "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
@@ -108,7 +109,7 @@ jobs:
                 },
                 {
                     "title": "## 🐛 Fixes",
-                    "labels": ["fix"]
+                    "labels": ["bug"]
                 },
                 {
                     "title": "## 🧪 Tests",
@@ -116,7 +117,7 @@ jobs:
                 },
                 {
                     "title": "## 💬 Other",
-                    "labels": ["bug"]
+                    "labels": ["other"]
                 },
                 {
                     "title": "## 📦 Dependencies",
