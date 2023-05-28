@@ -15,9 +15,9 @@ function New-AvdHostpool {
     .PARAMETER FriendlyName
     Change the host pool friendly name
     .PARAMETER LoadBalancerType
-    Change the host pool loadBalancerType   
+    Change the host pool loadBalancerType
     .PARAMETER ValidationEnvironment
-    Change the host pool validation environment   
+    Change the host pool validation environment
     .PARAMETER MaxSessionLimit
     Change the host pool max session limit (max 999999)
     .PARAMETER Force
@@ -30,7 +30,7 @@ function New-AvdHostpool {
     New-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -location WestEurope -vmTemplate "{"domain":"","osDiskType":"Premium_LRS","namePrefix":"avd","vmSize":{"cores":"2","ram":"8","id":"Standard_B2MS"},"galleryImageOffer":"","galleryImagePublisher":"","galleryImageSKU":"","imageType":"","imageUri":"","customImageId":"","useManagedDisks":"True","galleryItemId":null}"
     .EXAMPLE
     New-AvdHostpool -hostpoolname avd-hostpool -resourceGroupName rg-avd-01 -location WestEurope -AgentUpdate @(@{dayOfWeek="Sunday";Hour=3},@{dayOfWeek="Monday";Hour=3})
-    
+
     #>
     [CmdletBinding()]
     param
@@ -38,11 +38,11 @@ function New-AvdHostpool {
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
-    
+
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
-    
+
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [string]$Location,
@@ -72,7 +72,7 @@ function New-AvdHostpool {
         [ValidateSet("BreadthFirst", "DepthFirst","Persistent")]
         [ValidateNotNullOrEmpty()]
         [string]$LoadBalancerType,
-        
+
         [parameter()]
         [ValidateNotNullOrEmpty()]
         [boolean]$ValidationEnvironment,
@@ -80,7 +80,7 @@ function New-AvdHostpool {
         [parameter()]
         [ValidateNotNullOrEmpty()]
         [boolean]$StartVMOnConnect,
-         
+
         [parameter()]
         [ValidateNotNullOrEmpty()]
         [string]$PreferredAppGroupType,
