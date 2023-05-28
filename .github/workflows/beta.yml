@@ -107,7 +107,7 @@ jobs:
         id: without_checkout
         uses: mikepenz/release-changelog-builder-action@develop
         with:
-          fromTag: v3.0.0-beta.55
+          fromTag: v3.0.0-beta.53
           toTag: ${{ steps.generate_tag.outputs.version }}
           configurationJson: |
             {
