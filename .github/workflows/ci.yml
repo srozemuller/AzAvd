@@ -1,0 +1,153 @@
+name: 'CI'
+on:
+  push:
+    tags:
+      - '*'
+  pull_request:
+
+concurrency:
+  group: ${{ github.event.pull_request.number }}-ci
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: github.event_name  == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Install NPM
+        run: |
+          npm install
+          
+      - name: Run NPM
+        run: |
+          npm run all
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+  test:
+    if: github.event_name  == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      # the below actions use the local state of the action. please replace `./` with `mikepenz/release-changelog-builder-action@{latest-release}`
+      # Showcases how to use the action without a prior checkout
+      # Since 3.2.0 the configuration can be provided within the `yml` file
+      - name: "Configuration without Checkout"
+        id: without_checkout
+        uses: mikepenz/release-changelog-builder-action@develop
+        with:
+          toTag: "v3.1.1"
+          configurationJson: |
+            {
+              "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
+              "categories": [
+                {
+                    "title": "## 🚀 Features",
+                    "labels": ["feat"]
+                },
+                {
+                    "title": "## 🐛 Fixes",
+                    "labels": ["fix"]
+                },
+                {
+                    "title": "## 🧪 Tests",
+                    "labels": ["test"]
+                },
+                {
+                    "title": "## 💬 Other",
+                    "labels": ["other"]
+                },
+                {
+                    "title": "## 📦 Dependencies",
+                    "labels": ["dependencies"]
+                }
+              ]
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Echo Configuration without Checkout Changelog
+        env:
+          CHANGELOG: ${{ steps.without_checkout.outputs.changelog }}
+        run: echo "CHANGELOG"
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+        # Showcase the most minimal configuration possible
+      - name: "Minimal Configuration"
+        id: minimal_release
+        uses: ./
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Echo Minimal Configuration Changelog
+        env:
+          CHANGELOG: ${{ steps.minimal_release.outputs.changelog }}
+        run: echo "$CHANGELOG"
+
+        # Showcases a more complex configuration, providing a configuration, and specifically referencing owner, repo, from and to tag
+      - name: "Complex Configuration"
+        id: complex_release
+        uses: ./
+        with:
+          configuration: "configs/configuration_complex.json"
+          owner: "mikepenz"
+          repo: "release-changelog-builder-action"
+          fromTag: "v0.0.1"
+          toTag: "v0.0.3"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Echo Complex Configuration Changelog
+        env:
+          CHANGELOG: ${{ steps.complex_release.outputs.changelog }}
+        run: echo "CHANGELOG"
+
+        # Showcases the capability to generate the changelog for an external repository provided
+      - name: "External Repo Configuration"
+        id: external_changelog
+        uses: ./
+        with:
+          configuration: "configs/configuration_complex.json"
+          owner: "mikepenz"
+          repo: "MaterialDrawer"
+          fromTag: "v8.1.0"
+          toTag: "v8.1.6"
+          token: ${{ secrets.PERSONAL_TOKEN }}
+
+      - name: Echo External Repo Configuration Changelog
+        env:
+          CHANGELOG: ${{ steps.external_changelog.outputs.changelog }}
+        run: echo "$CHANGELOG"
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: "Build Changelog"
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v3
+        with:
+          configuration: "configs/configuration_repo.json"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        uses: softprops/action-gh-release@6034af24fba4e5a8e975aaa6056554efe4c794d0
+        with:
+          body: ${{steps.github_release.outputs.changelog}}
+          prerelease: ${{ contains(github.ref, '-rc') || contains(github.ref, '-b') || contains(github.ref, '-a') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
