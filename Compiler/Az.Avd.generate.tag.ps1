@@ -9,9 +9,9 @@ try {
     $manifest = Import-PowerShellDataFile -Path $modulePath
     Import-Module $modulePath -Force
 
-    $version = "{0}" -f $manifest.ModuleVersion
+    $version = "v{0}" -f $manifest.ModuleVersion
     if ($manifest.PrivateData.PSData.Prerelease) {
-        $version = "{0}-{1}" -f $manifest.ModuleVersion, $manifest.PrivateData.PSData.Prerelease
+        $version = "{0}-{1}" -f $version, $manifest.PrivateData.PSData.Prerelease
     }
     Write-Information "Version is $version" -InformationAction Continue
     Write-Output "version=$($version)" >> $Env:GITHUB_OUTPUT
