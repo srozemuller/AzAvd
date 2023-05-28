@@ -7,7 +7,7 @@ on:
   # Triggers the workflow on push or pull request events but only for the beta branch
   pull_request:
     types:
-      - closed
+      - opened
     branches:
       - 'beta'
 
@@ -148,7 +148,6 @@ jobs:
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
-        if: github.event.pull_request.merged == true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
