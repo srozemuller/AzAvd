@@ -9,7 +9,7 @@ function Request-Api {
         [ValidateNotNullOrEmpty()]
         [string]$Uri,
 
-        [Parameter(Mandatory)]
+        [Parameter()]
         [ValidateNotNullOrEmpty()]
         [object]$Headers,
 
@@ -20,21 +20,21 @@ function Request-Api {
     Begin {
         Write-Verbose "Requesting url $Uri with method $Method"
         $resultObject = [System.Collections.ArrayList]::new()
+        $token = GetAuthToken
     }
     Process {
         try {
             $parameters = @{
                 Uri     = $Uri
                 Method  = $Method
-                Headers = $Headers
+                Headers = $token
             }
             if ($Body) {
-                $parameters.Add("Body", $Body) > $null
+                $parameters.Add("Body", $($Body | ConvertTo-Json)) > $null
             }
             $results = Invoke-WebRequest @parameters | ConvertFrom-Json
-            $resultObject = $results.value
-            if ($null -eq $results.value) {
-                $resultObject = $results
+            if ($results.value) {
+                $results = $results.value
             }
             while (($null -ne $results."@odata.nextLink")) {
                 $pagingUrl = $results."@odata.nextLink"
@@ -47,11 +47,9 @@ function Request-Api {
             }
 
         }
-        catch [System.Exception] {
+        catch {
             Write-Error -Message "An error occurred while requesting url $uri. Error message: $($_)"
         }
-    }
-    End {
-        return $resultObject
+        $results
     }
 }
