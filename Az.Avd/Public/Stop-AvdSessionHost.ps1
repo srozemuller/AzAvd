@@ -90,20 +90,18 @@ function Stop-AvdSessionHost {
             try {
                 Write-Verbose "Found $($sessionHosts.Count) host(s)"
                 Write-Verbose "Stopping host $($_.name)"
-                $hostUrl = "{0}{1}?api-version={2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $script:vmApiVersion
                 $powerOffParameters = @{
                     uri     = "{0}{1}/{2}?api-version={3}" -f $Script:AzureApiUrl, $_.properties.resourceId, $task, $script:vmApiVersion
                     Method  = "POST"
-                    Headers = $script:token
+                    Headers = $token
                 }
                 Request-Api @powerOffParameters
-                Do {
-                    $status = Invoke-RestMethod -Method GET -Uri $hostUrl -Headers $script:token
-                    Start-Sleep 5
+                do {
+                    $state = Get-AvdSessionHostPowerState -Id $_.id
+                    Write-Information "[Start-AvdSessionHost] - Checking $($_.name) powerstate. ($state)"
+                    Start-Sleep 3
                 }
-                While ($status.properties.provisioningState -ne "Deallocated") {
-                    Write-Verbose "Host status is $($_.name)"
-                }
+                while ($state.powerstate -notlike 'stopped*')
                 Write-Information -MessageData "$($_.name) stopped" -InformationAction Continue
             }
             catch {
