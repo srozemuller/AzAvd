@@ -28,6 +28,14 @@ function GetAuthToken {
         [string]$Resource
 
     )
+    if ($null -eq $script:tokenRequest) {
+        Throw "Please connect to AVD first using the Connect-Avd command"
+    }
+    if ($null -eq $script:subscriptionId){
+        Write-Warning "No subscription ID provided yet"
+        $script:subscriptionId = Read-Host -Prompt "Please fill in the subscription Id"
+        Write-Information "Subscription ID is set, if you want to changed the context, use Set-AvdContext -SubscriptionID <GUID>" -InformationAction Continue
+    }
     $expireTime = Get-Date -UnixTimeSeconds $script:tokenRequest.expires_on
     if ((Get-Date) -gt $expireTime)
     {
