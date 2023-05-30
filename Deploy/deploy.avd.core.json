@@ -30,7 +30,6 @@
         "Description": "avd-auto-ws"
     },
     "sessionHosts": {
-        "Prefix": "auto",
         "SessionHostCount": 1,
         "VmSize": "Standard_D2s_v3",
         "Offer": "windows-11",
