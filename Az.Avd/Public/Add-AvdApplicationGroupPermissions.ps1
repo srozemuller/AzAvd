@@ -58,19 +58,19 @@ function Add-AvdApplicationGroupPermissions {
         Write-Verbose "Start searching"
         AuthenticationCheck
         $apiVersion = "?api-version=2021-04-01-preview"
-        $token = GetAuthToken -resource $script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
     }
     Process {
-        $graphToken = GetAuthToken -resource $Script:GraphApiUrl
+        $graphToken = GetAuthToken -resource $global:GraphApiUrl
         switch -Wildcard ($PsCmdlet.ParameterSetName) {
             *User {
                 Write-Verbose "UPN $UserPrincipalName provided, looking for user in Azure AD"
-                $graphUrl = $Script:GraphApiUrl + "/" + $script:GraphApiVersion + "/users/" + $UserPrincipalName
+                $graphUrl = $global:GraphApiUrl + "/" + $global:GraphApiVersion + "/users/" + $UserPrincipalName
                 $identityInfo = (Invoke-RestMethod -Method GET -Uri $graphUrl -Headers $graphToken).id
             }
             *Group {
                 Write-Verbose "Group name $GroupName provided, looking for group in Azure AD"
-                $graphUrl = $Script:GraphApiUrl + "/" + $script:GraphApiVersion + "/groups?`$filter=displayName eq '$GroupName'"
+                $graphUrl = $global:GraphApiUrl + "/" + $global:GraphApiVersion + "/groups?`$filter=displayName eq '$GroupName'"
                 $identityInfo = (Invoke-RestMethod -Method GET -Uri $graphUrl -Headers $graphToken).value.id
             }
             *PrincipalId {
@@ -88,13 +88,13 @@ function Add-AvdApplicationGroupPermissions {
             $applicationGroup = Get-AvdApplicationGroup -resourceId $ResourceId
         }
         $guid = (New-Guid).Guid
-        $url = $script:AzureApiUrl + "/" + $applicationGroup.id + "/providers/Microsoft.Authorization/roleAssignments/$($guid)" + $apiVersion
+        $url = $global:AzureApiUrl + "/" + $applicationGroup.id + "/providers/Microsoft.Authorization/roleAssignments/$($guid)" + $apiVersion
        
         # Used ID 1d18fff3-a72a-46b5-b4a9-0b38a3cd7e63 is default built-in role Desktop Virtualization User.
         # Source: https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#desktop-virtualization-user
         $body = @{
             properties = @{
-                roleDefinitionId = "/subscriptions/" + $script:subscriptionId + "/providers/Microsoft.Authorization/roleDefinitions/1d18fff3-a72a-46b5-b4a9-0b38a3cd7e63"
+                roleDefinitionId = "/subscriptions/" + $global:subscriptionId + "/providers/Microsoft.Authorization/roleDefinitions/1d18fff3-a72a-46b5-b4a9-0b38a3cd7e63"
                 principalId      = $identityInfo
             }
         }

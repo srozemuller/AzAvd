@@ -12,15 +12,15 @@ function Get-AvdContext {
     ()
     Begin {
         AuthenticationCheck
-        $token = GetAuthToken -Resource $script:AzureApiUrl
+        $token = GetAuthToken -Resource $global:AzureApiUrl
         if ($SubscriptionId) {
             Write-Verbose "Subscription ID provided, setting contect to $SubcriptionId"
-            $script:subscriptionId = $SubscriptionId
+            $global:subscriptionId = $SubscriptionId
         }
     }
     Process {
         $parameters = @{
-            uri     = "{0}/subscriptions/{1}?api-version=2022-01-01" -f $script:AzureApiUrl, $script:subscriptionId
+            uri     = "{0}/subscriptions/{1}?api-version=2022-01-01" -f $global:AzureApiUrl, $global:subscriptionId
             method  = "GET"
             headers = $token
         }

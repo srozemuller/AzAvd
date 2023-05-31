@@ -37,7 +37,7 @@ function Repair-AvdSessionHost {
     Begin {
         Write-Verbose "Start moving session hosts"
         AuthenticationCheck
-        $Token = GetAuthToken -resource $Script:AzureApiUrl
+        $Token = GetAuthToken -resource $global:AzureApiUrl
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -73,7 +73,7 @@ function Repair-AvdSessionHost {
             $sessionHosts | ForEach-Object {
                 Write-Verbose "Repairing sessionhost $($_.name) in $HostPoolName"
                 try {
-                    $sessionhostDeleteUrl = "{0}{1}?api-version={2}&force=true" -f $Script:AzureApiUrl , $_.id, $script:sessionHostApiVersion
+                    $sessionhostDeleteUrl = "{0}{1}?api-version={2}&force=true" -f $global:AzureApiUrl , $_.id, $global:sessionHostApiVersion
                     $deleteParameters = @{
                         uri     = $sessionhostDeleteUrl
                         Headers = $token
@@ -84,15 +84,15 @@ function Repair-AvdSessionHost {
                     Write-Verbose "Requesting new token in hostpool $HostpoolName"
                     $avdHostpoolToken = Update-AvdRegistrationToken -HostpoolName $HostpoolName -ResourceGroupName $ResourceGroupName
                     # Script part
-                    $script = [System.Collections.ArrayList]@()
-                    $script.Add('Set-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\RDInfraAgent -Name RegistrationToken -Value ' + $($avdHostpoolToken.properties.registrationInfo.token) + '') | Out-Null
-                    $script.Add('Set-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\RDInfraAgent -Name IsRegistered -Value 0') | Out-Null
-                    $script.Add('Restart-Service -Name RDAgentBootLoader') | Out-Null
+                    $global = [System.Collections.ArrayList]@()
+                    $global.Add('Set-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\RDInfraAgent -Name RegistrationToken -Value ' + $($avdHostpoolToken.properties.registrationInfo.token) + '') | Out-Null
+                    $global.Add('Set-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\RDInfraAgent -Name IsRegistered -Value 0') | Out-Null
+                    $global.Add('Restart-Service -Name RDAgentBootLoader') | Out-Null
                     $moveBody = @{
                         commandId = "RunPowerShellScript"
-                        script    = $script
+                        script    = $global
                     }   
-                    $runCommandUrl = "{0}{1}/runCommand?api-version={2}" -f $Script:AzureApiUrl, $vmResourceId, $script:vmApiVersion
+                    $runCommandUrl = "{0}{1}/runCommand?api-version={2}" -f $global:AzureApiUrl, $vmResourceId, $global:vmApiVersion
                     $parameters = @{
                         URI     = $runCommandUrl 
                         Method  = "POST"

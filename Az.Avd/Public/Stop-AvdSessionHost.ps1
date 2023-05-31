@@ -90,7 +90,7 @@ function Stop-AvdSessionHost {
                 Write-Verbose "Found $($sessionHosts.Count) host(s)"
                 Write-Verbose "Stopping host $($_.name)"
                 $powerOffParameters = @{
-                    uri     = "{0}{1}/{2}?api-version={3}" -f $Script:AzureApiUrl, $_.properties.resourceId, $task, $script:vmApiVersion
+                    uri     = "{0}{1}/{2}?api-version={3}" -f $global:AzureApiUrl, $_.properties.resourceId, $task, $global:vmApiVersion
                     Method  = "POST"
                     Headers = $token
                 }

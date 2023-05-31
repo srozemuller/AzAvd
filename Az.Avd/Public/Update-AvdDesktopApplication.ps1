@@ -46,14 +46,14 @@ function Update-AvdDesktopApplication {
     Begin {
         Write-Verbose "Updating Session Desktop application in $ApplicationGroupName"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         $apiVersion = "?api-version=2021-01-14-preview"
         switch ($PsCmdlet.ParameterSetName) {
             Name {
-                $url = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/applicationGroups/" + $ApplicationGroupName + "/desktops/SessionDesktop/" + $apiVersion        
+                $url = $global:AzureApiUrl + "/subscriptions/" + $global:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/applicationGroups/" + $ApplicationGroupName + "/desktops/SessionDesktop/" + $apiVersion        
             }
             ResourceId {
-                $url = $Script:AzureApiUrl + $ResourceId + "/desktops/SessionDesktop/" + $apiVersion        
+                $url = $global:AzureApiUrl + $ResourceId + "/desktops/SessionDesktop/" + $apiVersion        
             }
         }
         $parameters = @{

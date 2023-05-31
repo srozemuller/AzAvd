@@ -44,7 +44,7 @@ function Restart-AvdSessionHost {
     Begin {
         Write-Verbose "Starting session hosts"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         $sessionHostParameters = @{
             hostpoolName      = $HostpoolName
             resourceGroupName = $ResourceGroupName
@@ -80,7 +80,7 @@ function Restart-AvdSessionHost {
                 Write-Verbose "Restarting $($_.name)"
                 $apiVersion = "?api-version=2021-11-01"
                 $restartParameters = @{
-                    uri     = "{0}{1}/restart{2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
+                    uri     = "{0}{1}/restart{2}" -f $global:AzureApiUrl, $_.properties.resourceId, $apiVersion
                     Method  = "POST"
                     Headers = $token
                 }

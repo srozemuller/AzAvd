@@ -73,7 +73,7 @@ function Update-AvdSessionHost {
     Begin {
         Write-Verbose "Start updating session hosts"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         $apiVersion = "2022-02-10-preview"
         if ($Force.IsPresent) {
             $forceString = "true"
@@ -97,7 +97,7 @@ function Update-AvdSessionHost {
         $sessionHosts | ForEach-Object {
             try {
                 Write-Verbose "Updating sessionhost $vmName"
-                $url = "{0}{1}?api-version={2}&force={3}" -f $Script:AzureApiUrl, $_.id , $apiVersion, $forceString
+                $url = "{0}{1}?api-version={2}&force={3}" -f $global:AzureApiUrl, $_.id , $apiVersion, $forceString
                 Write-Verbose $url
                 $parameters = @{
                     uri     = $url

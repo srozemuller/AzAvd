@@ -41,7 +41,7 @@ Function Get-AvdImageVersionStatus {
     Begin {
         Write-Verbose "Start searching"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         $apiVersion = "?api-version=2022-01-03"
     }
     Process {
@@ -92,7 +92,7 @@ Function Get-AvdImageVersionStatus {
                     Write-Verbose "Image ID found!, $imageId"
                     try {
                         $requestParameters = @{
-                            uri    = "{0}{1}/versions{2}" -f $Script:AzureApiUrl, $imageId, $apiVersion
+                            uri    = "{0}{1}/versions{2}" -f $global:AzureApiUrl, $imageId, $apiVersion
                             header = $token
                             method = "GET"
                         }

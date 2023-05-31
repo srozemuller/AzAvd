@@ -34,19 +34,19 @@ Remove-AvdApplicationGroup -ResourceId "/subscriptions/../applicationGroupname"
     Begin {
         Write-Verbose "Start searching for application group $Name"
         AuthenticationCheck
-        $token = GetAuthToken -resource $script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         switch ($PsCmdlet.ParameterSetName) {
             Name {
                 Write-Verbose "Name and ResourceGroup provided"
-                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/applicationGroups/{3}?api-version={4}" -f $script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $Name, $script:applicationGroupApiVersion
+                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/applicationGroups/{3}?api-version={4}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $Name, $global:applicationGroupApiVersion
             }
             ResourceId {
                 Write-Verbose "ResourceId provided"
-                $url = "{0}{1}?api-version={2}" -f $script:AzureApiUrl, $ResourceId, $script:applicationGroupApiVersion
+                $url = "{0}{1}?api-version={2}" -f $global:AzureApiUrl, $ResourceId, $global:applicationGroupApiVersion
             }
             default {
                 Write-Verbose "Getting all application groups in $ResourceGroupName"
-                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/applicationGroups?api-version={3}" -f $script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $script:applicationGroupApiVersion
+                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/applicationGroups?api-version={3}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $global:applicationGroupApiVersion
             }
         }
     }

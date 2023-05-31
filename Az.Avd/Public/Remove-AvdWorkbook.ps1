@@ -25,9 +25,9 @@ Remove-AvdWorkbook -WorkbookName @("Workbook 1", "Workbook")
 
     )
     Begin {
-        Write-Verbose "Start requesting workbooks in $script:subscriptionId"
+        Write-Verbose "Start requesting workbooks in $global:subscriptionId"
         AuthenticationCheck
-        $token = GetAuthToken -resource $script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -36,11 +36,11 @@ Remove-AvdWorkbook -WorkbookName @("Workbook 1", "Workbook")
                 $workbooks = Get-AvdWorkbook -WorkbookName $WorkbookName
                 $workbooks | ForEach-Object {
                     Write-Verbose "Adding $_"
-                    $url.Add("{0}{1}?api-version={2}" -f $Script:AzureApiUrl, $_.id, $script:workbookApiVersion)
+                    $url.Add("{0}{1}?api-version={2}" -f $global:AzureApiUrl, $_.id, $global:workbookApiVersion)
                 }
             }
             ResourceId {
-                $url = "{0}{1}?api-version={2}" -f $Script:AzureApiUrl, $Id, $script:workbookApiVersion
+                $url = "{0}{1}?api-version={2}" -f $global:AzureApiUrl, $Id, $global:workbookApiVersion
                 Write-verbose $url
             }
         }

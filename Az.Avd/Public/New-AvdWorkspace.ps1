@@ -52,8 +52,8 @@ function New-AvdWorkspace {
     Begin {
         Write-Verbose "Creating workspace $WorkspaceName"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
-        $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/workspaces/{3}?api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $Name, $script:workspaceApiVersion
+        $token = GetAuthToken -resource $global:AzureApiUrl
+        $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/workspaces/{3}?api-version={4}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $Name, $global:workspaceApiVersion
         $parameters = @{
             uri     = $url
             Headers = $token

@@ -46,7 +46,7 @@ function Update-AvdDiagnostics {
     )
     Begin {
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         $parameters = @{
             HostPoolName      = $HostpoolName 
             ResourceGroupName = $ResourceGroupName
@@ -58,7 +58,7 @@ function Update-AvdDiagnostics {
             LAWS {
                 Write-Verbose "LAWS"
                 try { 
-                    $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.OperationalInsights/workspaces/{3}?api-version=2020-08-01" -f $Script:AzureApiUrl, $script:subscriptionId, $LaResourceGroupName, $LAWorkspace
+                    $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.OperationalInsights/workspaces/{3}?api-version=2020-08-01" -f $global:AzureApiUrl, $global:subscriptionId, $LaResourceGroupName, $LAWorkspace
                     $loganalyticsParameters = @{
                         URI     = $url 
                         Method  = "GET"
@@ -66,7 +66,7 @@ function Update-AvdDiagnostics {
                     }
                     $laws = Invoke-RestMethod @loganalyticsParameters
                     $categoryParameters = @{
-                        uri     = "{0}{1}/providers/microsoft.insights/diagnosticSettings/{2}?api-version=2021-05-01-preview" -f $Script:AzureApiUrl , $hostpool.Id, $diagnosticsName
+                        uri     = "{0}{1}/providers/microsoft.insights/diagnosticSettings/{2}?api-version=2021-05-01-preview" -f $global:AzureApiUrl , $hostpool.Id, $diagnosticsName
                         Method  = "GET"
                         Headers = $token
                     }
@@ -96,7 +96,7 @@ function Update-AvdDiagnostics {
             }
         }    
         $parameters = @{
-            uri     = "{0}/{1}/providers/microsoft.insights/diagnosticSettings/{2}?api-version=2021-05-01-preview" -f $Script:AzureApiUrl, $hostpool.Id, $diagnosticsName
+            uri     = "{0}/{1}/providers/microsoft.insights/diagnosticSettings/{2}?api-version=2021-05-01-preview" -f $global:AzureApiUrl, $hostpool.Id, $diagnosticsName
             Method  = "PUT"
             Headers = $token
             Body    = $diagnosticsBody | ConvertTo-Json -Depth 4

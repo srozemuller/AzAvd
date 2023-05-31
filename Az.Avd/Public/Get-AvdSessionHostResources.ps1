@@ -75,7 +75,7 @@ function Get-AvdSessionHostResources {
             Write-Verbose "Searching for $($_.Name)"
             try {
                 $requestParameters = @{
-                    uri    = "{0}{1}{2}&`$expand=instanceView" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
+                    uri    = "{0}{1}{2}&`$expand=instanceView" -f $global:AzureApiUrl, $_.properties.resourceId, $apiVersion
                     method = "GET"
                 }
                 $resource = Request-Api @requestParameters

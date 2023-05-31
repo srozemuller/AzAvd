@@ -33,13 +33,13 @@ function Remove-AvdWorkspace {
     Begin {
         Write-Verbose "Searching for workspace $WorkspaceName"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         switch ($PsCmdlet.ParameterSetName) {
             Name {
-                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/workspaces/{3}?api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $Name, $script:workspaceApiVersion
+                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/workspaces/{3}?api-version={4}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $Name, $global:workspaceApiVersion
             }
             ResourceId {
-                $url = "{0}{1}?api-version={2}" -f $Script:AzureApiUrl, $ResourceId, $script:workspaceApiVersion
+                $url = "{0}{1}?api-version={2}" -f $global:AzureApiUrl, $ResourceId, $global:workspaceApiVersion
             }
         }
     }

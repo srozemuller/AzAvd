@@ -45,8 +45,8 @@ function Get-AvdUserSessions {
     Begin {
         Write-Verbose "Start searching session hosts"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
-        $baseUrl = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + "/sessionHosts/"
+        $token = GetAuthToken -resource $global:AzureApiUrl
+        $baseUrl = $global:AzureApiUrl + "/subscriptions/" + $global:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + "/sessionHosts/"
         $apiVersion = "?api-version=2021-07-12"
     }
     Process {
@@ -56,7 +56,7 @@ function Get-AvdUserSessions {
                 $SessionHostNames = Get-AvdSessionHost -HostpoolName $hostpoolName -ResourceGroupName $ResourceGroupName
                 $sessionHostUrl = [System.Collections.ArrayList]@()
                 $SessionHostNames | ForEach-Object {
-                    $url = "{0}{1}/UserSessions" -f $Script:AzureApiUrl, $_.id
+                    $url = "{0}{1}/UserSessions" -f $global:AzureApiUrl, $_.id
                     $sessionHostUrl.Add($url) | Out-Null
                 }
             }
@@ -66,7 +66,7 @@ function Get-AvdUserSessions {
             }
             Id {
                 Write-Verbose "Looking for sessionhost on ID $SessionHostId"
-                $sessionHostUrl = "{0}{1}/UserSessions" -f $Script:AzureApiUrl, $SessionHostId
+                $sessionHostUrl = "{0}{1}/UserSessions" -f $global:AzureApiUrl, $SessionHostId
             }
 
         }

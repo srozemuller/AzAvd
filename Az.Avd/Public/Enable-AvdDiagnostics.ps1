@@ -92,7 +92,7 @@ function Enable-AvdDiagnostics {
     )
     Begin {
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -108,7 +108,7 @@ function Enable-AvdDiagnostics {
             }
         }
         Write-Verbose "Looking for workspace"
-        $workspaceUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.OperationalInsights/workspaces/{3}?api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $LaResourceGroupName, $LAWorkspace, $script:diagnosticsApiVersion
+        $workspaceUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.OperationalInsights/workspaces/{3}?api-version={4}" -f $global:AzureApiUrl, $global:subscriptionId, $LaResourceGroupName, $LAWorkspace, $global:diagnosticsApiVersion
         Write-Verbose $workspaceUrl
         $loganalyticsParameters = @{
             URI     = $workspaceUrl 
@@ -134,7 +134,7 @@ function Enable-AvdDiagnostics {
                         }
                     }
                 }
-                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.OperationalInsights/workspaces/{3}?api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $LaResourceGroupName, $LAWorkspace, $script:diagnosticsApiVersion
+                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.OperationalInsights/workspaces/{3}?api-version={4}" -f $global:AzureApiUrl, $global:subscriptionId, $LaResourceGroupName, $LAWorkspace, $global:diagnosticsApiVersion
                 $loganalyticsParameters = @{
                     URI     = $url 
                     Method  = "PUT"
@@ -165,7 +165,7 @@ function Enable-AvdDiagnostics {
             }
         }    
         $parameters = @{
-            uri     = "{0}{1}/providers/microsoft.insights/diagnosticSettings/{2}?api-version={3}" -f $Script:AzureApiUrl, $Id, $DiagnosticsName, $Script:AvdDiagnosticsApiVersion
+            uri     = "{0}{1}/providers/microsoft.insights/diagnosticSettings/{2}?api-version={3}" -f $global:AzureApiUrl, $Id, $DiagnosticsName, $global:AvdDiagnosticsApiVersion
             Method  = "PUT"
             Headers = $token
             Body    = $diagnosticsBody | ConvertTo-Json -Depth 4

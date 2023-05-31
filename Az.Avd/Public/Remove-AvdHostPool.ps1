@@ -38,18 +38,18 @@ Remove-AvdHostPool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 
     Begin {
         Write-Verbose "Start searching for hostpool $hostpoolName"
         AuthenticationCheck
-        $token = GetAuthToken -resource $script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         if ($Force.IsPresent) {
             $Force = $true
         }
         switch ($PsCmdlet.ParameterSetName) {
             Name {
                 Write-Verbose "Name and ResourceGroup provided"
-                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}?api-version={4}&force={5}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName, $script:hostpoolApiVersion, $Force
+                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}?api-version={4}&force={5}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $HostpoolName, $global:hostpoolApiVersion, $Force
             }
             ResourceId {
                 Write-Verbose "ResourceId provided"
-                $url = "{0}{1}?api-version={2}&force={3}" -f $script:AzureApiUrl, $resourceId, $script:hostpoolApiVersion, $Force
+                $url = "{0}{1}?api-version={2}&force={3}" -f $global:AzureApiUrl, $resourceId, $global:hostpoolApiVersion, $Force
             }
         }
     }

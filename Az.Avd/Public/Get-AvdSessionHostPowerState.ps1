@@ -75,7 +75,7 @@ function Get-AvdSessionHostPowerState {
                 Write-Verbose "[Get-AvdSessionHostPowerState] - Found $($sessionHosts.Count) host(s)"
                 $apiVersion = "?api-version=2021-11-01"
                 $powerParameters = @{
-                    uri     = "{0}{1}/instanceView{2}" -f $Script:AzureApiUrl, $_.vmResources.id, $apiVersion
+                    uri     = "{0}{1}/instanceView{2}" -f $global:AzureApiUrl, $_.vmResources.id, $apiVersion
                     Method  = "GET"
                 }
                 $VmObject = Request-Api @powerParameters

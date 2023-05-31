@@ -14,10 +14,10 @@ function Disconnect-Avd {
         AuthenticationCheck
     }
     Process {
-        Write-Verbose -Message "Logging out from AVD on resource $($script:tokenRequest.resource)"
+        Write-Verbose -Message "Logging out from AVD on resource $($global:tokenRequest.resource)"
         Write-Verbose -Message "Clearing tokens."
         try {
-            Clear-Variable -Name tokenRequest -Scope Script
+            Clear-Variable -Name tokenRequest -Scope Global
             Write-Information "Logged out from AVD succesfully!" -InformationAction Continue
         }
         catch [System.Exception] {

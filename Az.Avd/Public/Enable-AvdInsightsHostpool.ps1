@@ -94,7 +94,7 @@ function Enable-AvdInsightsHostpool {
     Begin {
         Write-Verbose "[Enable-AvdInsightsHostpool] - Start enabling AVD Insights for hostpool"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -115,7 +115,7 @@ function Enable-AvdInsightsHostpool {
             }
         }
         Write-Verbose "[Enable-AvdInsightsHostpool] - Looking for workspace"
-        $workspaceId = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.OperationalInsights/workspaces/{2}" -f $script:subscriptionId, $LaResourceGroupName, $LAWorkspace
+        $workspaceId = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.OperationalInsights/workspaces/{2}" -f $global:subscriptionId, $LaResourceGroupName, $LAWorkspace
         Write-Verbose $workspaceId
         $laws = (Get-Resource -ResourceId $workspaceId -Verbose).value
 
@@ -161,7 +161,7 @@ function Enable-AvdInsightsHostpool {
                     }
                 }    
                 $parameters = @{
-                    uri     = "{0}{1}/providers/microsoft.insights/diagnosticSettings/{2}?api-version={3}" -f $Script:AzureApiUrl, $hostpool.id, $DiagnosticsName, $Script:AvdDiagnosticsApiVersion
+                    uri     = "{0}{1}/providers/microsoft.insights/diagnosticSettings/{2}?api-version={3}" -f $global:AzureApiUrl, $hostpool.id, $DiagnosticsName, $global:AvdDiagnosticsApiVersion
                     Method  = "PUT"
                     Headers = $token
                     Body    = $diagnosticsBody | ConvertTo-Json -Depth 4

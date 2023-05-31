@@ -151,7 +151,7 @@ function New-AvdSessionHost {
     Begin {
         Write-Verbose "Start creating session hosts"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         $registrationToken = Update-AvdRegistrationToken -HostpoolName $Hostpoolname $ResourceGroupName -HoursActive 4 | Select-Object -ExpandProperty properties
         $vmNames = [System.Collections.ArrayList]::new()
     }

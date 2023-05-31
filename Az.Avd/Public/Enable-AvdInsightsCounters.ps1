@@ -55,12 +55,12 @@ function Enable-AvdInsightsCounters {
     Begin {
         Write-Verbose "[Enable-AvdInsightsCounters] - Start enabling counters for AVD Insights "
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
             WorkspaceName {
-                $Id = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.OperationalInsights/workspaces/{2}" -f $script:subscriptionId, $LaResourceGroupName, $LAWorkspace
+                $Id = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.OperationalInsights/workspaces/{2}" -f $global:subscriptionId, $LaResourceGroupName, $LAWorkspace
             }
             default {
                 Write-Verbose "[Enable-AvdInsightsCounters] - Got a Log Analytics workspace's resource ID. Thank you for that!"
@@ -87,7 +87,7 @@ function Enable-AvdInsightsCounters {
         else {
             try {
                 Write-Information "[Enable-AvdInsightsCounters] - Workspace found, configuring diagnostics" -InformationAction Continue
-                $sources = Get-Content $script:AvdInsightsCountersLocation | ConvertFrom-Json
+                $sources = Get-Content $global:AvdInsightsCountersLocation | ConvertFrom-Json
                 $sources.sources.GetEnumerator().ForEach({
                         Write-Verbose "Found $($_.kind) to configure"
                         $sourceKind = $_
@@ -103,7 +103,7 @@ function Enable-AvdInsightsCounters {
                                     properties = $properties
                                 }
                                 $parameters = @{
-                                    uri     = "{0}{1}/dataSources/{2}?api-version=2020-08-01" -f $Script:AzureApiUrl, $laws.id, $_.name
+                                    uri     = "{0}{1}/dataSources/{2}?api-version=2020-08-01" -f $global:AzureApiUrl, $laws.id, $_.name
                                     Method  = "PUT"
                                     Headers = $token
                                     Body    = $source | ConvertTo-Json -Depth 99 
