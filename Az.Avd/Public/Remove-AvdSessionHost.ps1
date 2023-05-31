@@ -20,12 +20,12 @@ function Remove-AvdSessionHost {
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
-    
+
         [parameter(Mandatory, ParameterSetName = 'All')]
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
-    
+
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$Name,
@@ -46,7 +46,6 @@ function Remove-AvdSessionHost {
     )
     Begin {
         Write-Verbose "Start removing sessionhosts"
-        AuthenticationCheck
         $sessionHostParameters = @{
             hostpoolName      = $HostpoolName
             resourceGroupName = $ResourceGroupName
@@ -92,6 +91,9 @@ function Remove-AvdSessionHost {
             }
             try {
                 if ($DeleteAssociated.IsPresent) {
+                    # Deallocate first before deleting all resources
+                    Stop-AvdSessionHost -Id $sh.id -Deallocate
+
                     Write-Warning "Delete associated resources provided."
                     Write-Verbose "Associated resources (disk & NIC) also will be removed"
                     Write-Information "Looking for network resources" -InformationAction Continue
