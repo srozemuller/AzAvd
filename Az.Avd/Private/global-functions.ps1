@@ -28,21 +28,21 @@ function GetAuthToken {
         [string]$Resource
 
     )
-    if ($null -eq $script:tokenRequest) {
+    if ($null -eq $global:tokenRequest) {
         Throw "Please connect to AVD first using the Connect-Avd command"
     }
-    if ($null -eq $script:subscriptionId){
+    if ($null -eq $global:subscriptionId){
         Write-Warning "No subscription ID provided yet"
-        $script:subscriptionId = Read-Host -Prompt "Please fill in the subscription Id"
+        $global:subscriptionId = Read-Host -Prompt "Please fill in the subscription Id"
         Write-Information "Subscription ID is set, if you want to changed the context, use Set-AvdContext -SubscriptionID <GUID>" -InformationAction Continue
     }
-    $expireTime = Get-Date -UnixTimeSeconds $script:tokenRequest.expires_on
+    $expireTime = Get-Date -UnixTimeSeconds $global:tokenRequest.expires_on
     if ((Get-Date) -gt $expireTime)
     {
         Write-Verbose "Current token has expired. Requesting a new token based on the refresh token."
-        $script:authHeader = Connect-Avd -RefreshToken $script:tokenRequest.refresh_token -TenantID $TenantId
+        $global:authHeader = Connect-Avd -RefreshToken $global:tokenRequest.refresh_token -TenantID $TenantId
     }
-    return $script:authHeader
+    return $global:authHeader
 }
 
 function Create-CategoryArray ($Categories) {
