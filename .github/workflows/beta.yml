@@ -39,6 +39,10 @@ jobs:
         # Artifact name
         name: azModule
         path: drop
+    - name: github env check
+      shell: pwsh
+      run: |
+          dir env:
   test:
     needs: build
     runs-on: ubuntu-latest
