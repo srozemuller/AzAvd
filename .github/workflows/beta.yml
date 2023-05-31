@@ -8,8 +8,12 @@ on:
   pull_request:
     types:
       - opened
+      - edited
     branches:
       - 'beta'
+  push:
+    branches:
+      - '*'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -35,6 +39,10 @@ jobs:
         # Artifact name
         name: azModule
         path: drop
+    - name: github env check
+      shell: pwsh
+      run: |
+          dir env:
   test:
     needs: build
     runs-on: ubuntu-latest
@@ -84,6 +92,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     needs: test
+    if: ${{ contains(github.event_name, 'pull_request') }}
     steps:
       - name: Download a Build Artifact
         uses: actions/download-artifact@v2.1.0
@@ -151,7 +160,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: v${{ steps.generate_tag.outputs.version }}
+          tag_name: v${{ steps.generate_tag.outputs.version }}-beta.${{ github.run_number }}
           release_name: Release v${{ steps.generate_tag.outputs.version }}
           body: ${{ steps.without_checkout.outputs.changelog }}
           draft: false

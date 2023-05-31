@@ -89,7 +89,7 @@ New-AvdApplicationGroup -Name applicationGroupname -ResourceGroupName rg-avd-001
             Method  = "PUT"
             Body = $body | ConvertTo-Json
         }
-        $results = Invoke-RestMethod @parameters
+        $results = Request-Api @parameters
         $results
     }
 }
