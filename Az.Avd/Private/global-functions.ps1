@@ -26,7 +26,16 @@ function GetAuthToken {
     param (
         [Parameter()]
         [string]$Resource
+
     )
+    if ($null -eq $script:tokenRequest) {
+        Throw "Please connect to AVD first using the Connect-Avd command"
+    }
+    if ($null -eq $script:subscriptionId){
+        Write-Warning "No subscription ID provided yet"
+        $script:subscriptionId = Read-Host -Prompt "Please fill in the subscription Id"
+        Write-Information "Subscription ID is set, if you want to changed the context, use Set-AvdContext -SubscriptionID <GUID>" -InformationAction Continue
+    }
     $expireTime = Get-Date -UnixTimeSeconds $script:tokenRequest.expires_on
     if ((Get-Date) -gt $expireTime)
     {
@@ -169,4 +178,23 @@ function TestAzResource($resourceId,$apiVersion) {
         uri = "{0}{1}?api-version={2}" -f $script:AzureApiUrl, $resourceId, $apiVersion
     }
     Invoke-RestMethod @testParameters
+}
+
+function Get-RandomCharacters($length, $characters) {
+    $random = 1..$length | ForEach-Object { Get-Random -Maximum $characters.length }
+    $private:ofs = ""
+    return [String]$characters[$random]
+}
+function Get-RandomString($type) {
+    if ($type -eq 'string') {
+        $username = Get-RandomCharacters -length 8 -characters 'abcdefghiklmnoprstuvwxyz'
+        return $username
+    }
+    if ($type -eq 'password') {
+        $password = Get-RandomCharacters -length 6 -characters 'abcdefghiklmnoprstuvwxyz'
+        $password += Get-RandomCharacters -length 2 -characters 'ABCDEFGHKLMNOPRSTUVWXYZ'
+        $password += Get-RandomCharacters -length 2 -characters '1234567890'
+        $password += Get-RandomCharacters -length 2 -characters '!%&()=#+'
+        return $password
+    }
 }
