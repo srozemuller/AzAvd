@@ -11,6 +11,9 @@ on:
       - edited
     branches:
       - 'beta'
+  push:
+    branches:
+      - '*'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -148,6 +151,7 @@ jobs:
         run: echo "CHANGELOG"
       - name: Create Release
         id: create_release
+        if: ${{ contains(github.event_name, 'pull_request') }}
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
