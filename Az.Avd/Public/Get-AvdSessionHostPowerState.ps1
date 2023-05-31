@@ -26,12 +26,12 @@ function Get-AvdSessionHostPowerState {
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
-    
+
         [parameter(Mandatory, ParameterSetName = 'All')]
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
-    
+
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$Name,
@@ -43,8 +43,6 @@ function Get-AvdSessionHostPowerState {
     )
     Begin {
         Write-Verbose "[Get-AvdSessionHostPowerState] - Check session host's powerstate"
-        AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
         $sessionHostParameters = @{
             hostpoolName      = $HostpoolName
             resourceGroupName = $ResourceGroupName
@@ -79,9 +77,8 @@ function Get-AvdSessionHostPowerState {
                 $powerParameters = @{
                     uri     = "{0}{1}/instanceView{2}" -f $Script:AzureApiUrl, $_.vmResources.id, $apiVersion
                     Method  = "GET"
-                    Headers = $token
                 }
-                $VmObject = Invoke-RestMethod @powerParameters
+                $VmObject = Request-Api @powerParameters
                 $powerState = $VmObject.statuses.code.Where({ $_ -match 'PowerState' })
                 if ($powerState) {
                     $state = $powerState.Replace('PowerState/', $null)
@@ -96,8 +93,8 @@ function Get-AvdSessionHostPowerState {
                 Throw "[Get-AvdSessionHostPowerState] - Not able to get powerstate from $($_.name), $_"
             }
         }
-    }   
+    }
     End {
         $returnObject
-    }    
+    }
 }
