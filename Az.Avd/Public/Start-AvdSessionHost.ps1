@@ -44,12 +44,11 @@ function Start-AvdSessionHost {
     )
     Begin {
         Write-Verbose "Starting session hosts"
-        AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
         $sessionHostParameters = @{
             hostpoolName      = $HostpoolName
             resourceGroupName = $ResourceGroupName
         }
+        $hostState = 'running'
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -83,16 +82,21 @@ function Start-AvdSessionHost {
                 $powerOnParameters = @{
                     uri     = "{0}{1}/start{2}" -f $Script:AzureApiUrl, $_.vmResources.id, $apiVersion
                     Method  = "POST"
-                    Headers = $token
                 }
-                Invoke-RestMethod @powerOnParameters
-                do {
-                    $state = Get-AvdSessionHostPowerState -Id $_.id
-                    Write-Information "[Start-AvdSessionHost] - Checking $($_.name) powerstate. ($state)"
-                    Start-Sleep 3
+                Request-Api @powerOnParameters
+                $initialState = Get-AvdSessionHostPowerState -Id $_.id
+                if ($initialState.powerstate -eq $hostState) {
+                    Write-Information "$($_.name) is already $hostState" -InformationAction Continue
+                    Continue
                 }
-                while ($state.powerstate -ne 'running')
-                Write-Information -MessageData "[Start-AvdSessionHost] - $($_.name) started" -InformationAction Continue
+                else {    
+                    do {
+                        $state = Get-AvdSessionHostPowerState -Id $_.id
+                        Write-Information "[Start-AvdSessionHost] - Checking $($_.name) powerstate for $hostState, current state $($state.powerstate)" -InformationAction Continue
+                        Start-Sleep 3
+                    }
+                    while ($state.powerstate -ne $hostState)
+                }
             }
             catch {
                 Throw "[Start-AvdSessionHost] - Not able to start $($_.name), $_"

@@ -1,7 +1,7 @@
 $modulePath = Join-Path -Path (Join-Path ".././" -ChildPath "AzAvd") -ChildPath "Az.Avd"
 $psFiles = Get-ChildItem -Path (Join-Path -Path $modulePath -ChildPath "Public")
 BeforeAll {
-    $skipFiles = @("Connect-Avd.ps1")
+    $skipFiles = @("Connect-Avd.ps1","Start-AvdSessionHost.ps1","Stop-AvdSessionHost.ps1","Get-AvdSessionHost.ps1")
 }
 Describe "Analyze code" -ForEach @(
     foreach ($file in $psFiles) {

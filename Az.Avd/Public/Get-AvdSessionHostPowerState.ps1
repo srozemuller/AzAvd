@@ -85,7 +85,6 @@ function Get-AvdSessionHostPowerState {
                 $powerState = $VmObject.statuses.code.Where({ $_ -match 'PowerState' })
                 if ($powerState) {
                     $state = $powerState.Replace('PowerState/', $null)
-                    Write-Information -MessageData "$($_.name) is $state" -InformationAction Continue
                 }
                 $powerObject = @{
                     name       = $_.name

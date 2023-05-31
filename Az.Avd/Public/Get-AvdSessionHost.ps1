@@ -42,8 +42,6 @@ function Get-AvdSessionHost {
     )
     Begin {
         Write-Verbose "Start searching session hosts"
-        AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
         $baseUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/sessionHosts/" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName
         $apiVersion = "?api-version=2021-07-12"
     }
@@ -79,11 +77,10 @@ function Get-AvdSessionHost {
         $parameters = @{
             uri     = "{0}{1}" -f $baseUrl, $apiVersion
             Method  = "GET"
-            Headers = $token
         }
         try {
             $allHosts = [System.Collections.ArrayList]@()
-            $results = Invoke-RestMethod @parameters
+            $results = Request-Api @parameters
             if ($Name -or $Id) {
                 $results | ForEach-Object {
                     $_ | Add-Member -MemberType NoteProperty -Name HostpoolName -Value $HostpoolName
