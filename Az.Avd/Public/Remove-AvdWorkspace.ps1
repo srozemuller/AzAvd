@@ -11,9 +11,9 @@ function Remove-AvdWorkspace {
     .PARAMETER ResourceId
     Enter the Azure location
     .EXAMPLE
-    New-AvdWorkspace -workspacename avd-workspace -resourceGroupName rg-avd-01 -location WestEurope -description "Work in space"
+    Remove-AvdWorkspace -workspacename avd-workspace -resourceGroupName rg-avd-01
     .EXAMPLE
-    New-AvdWorkspace -workspacename avd-workspace -resourceGroupName rg-avd-01 -location WestEurope -ApplicationGroupReference @("id_1","id_2")
+    Remove-AvdWorkspace -Id /../resourcegroups/resourceId
     #>
     [CmdletBinding(DefaultParameterSetName="Name")]
     param
