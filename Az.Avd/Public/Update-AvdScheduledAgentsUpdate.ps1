@@ -69,8 +69,8 @@ function Update-AvdScheduledAgentsUpdate {
     Begin {
         Write-Verbose "Start searching"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
-        $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}?api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName, $script:hostpoolApiVersion 
+        $token = GetAuthToken -resource $global:AzureApiUrl
+        $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}?api-version={4}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $HostpoolName, $global:hostpoolApiVersion 
         $parameters = @{
             uri     = $url
             Headers = $token

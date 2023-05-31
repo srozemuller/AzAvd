@@ -32,7 +32,7 @@ function New-Workspace {
                 }
             }
         }
-        $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.OperationalInsights/workspaces/{3}?api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $Workspace, $script:diagnosticsApiVersion
+        $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.OperationalInsights/workspaces/{3}?api-version={4}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $Workspace, $global:diagnosticsApiVersion
         $loganalyticsParameters = @{
             URI     = $url
             Method  = "PUT"

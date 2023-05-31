@@ -30,7 +30,7 @@ function Request-Api {
                 Headers = $token
             }
             if ($Body) {
-                $parameters.Add("Body", $($Body | ConvertTo-Json)) > $null
+                $parameters.Add("Body", $($Body)) > $null
             }
             $results = Invoke-WebRequest @parameters | ConvertFrom-Json
             if ($results.value) {

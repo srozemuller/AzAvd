@@ -32,16 +32,16 @@ Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
     Begin {
         Write-Verbose "Start searching for hostpool $hostpoolName"
         AuthenticationCheck
-        $token = GetAuthToken -resource $script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         $apiVersion = "?api-version=2019-12-10-preview"
         switch ($PsCmdlet.ParameterSetName) {
             Name {
                 Write-Verbose "Name and ResourceGroup provided"
-                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}?api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName, $script:hostpoolApiVersion 
+                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}?api-version={4}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $HostpoolName, $global:hostpoolApiVersion 
             }
             ResourceId {
                 Write-Verbose "ResourceId provided"
-                $url = $script:AzureApiUrl + $resourceId + $apiVersion
+                $url = $global:AzureApiUrl + $resourceId + $apiVersion
             }
         }
         $parameters = @{

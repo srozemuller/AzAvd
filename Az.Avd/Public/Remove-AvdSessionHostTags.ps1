@@ -42,7 +42,7 @@ function Remove-AvdSessionHostTags {
     Begin {
         Write-Verbose "Start removing tags to session hosts"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         $apiVersion = "2022-08-01"
     }
     Process {
@@ -68,7 +68,7 @@ function Remove-AvdSessionHostTags {
             $updateBody.Add('tags',$allTags)
             try {
                 $requestParameters = @{
-                    uri    = "{0}{1}?api-version={2}" -f $Script:AzureApiUrl, $_.vmResources.id, $apiVersion
+                    uri    = "{0}{1}?api-version={2}" -f $global:AzureApiUrl, $_.vmResources.id, $apiVersion
                     header = $token
                     method = "PUT"
                     body   = $updateBody | ConvertTo-Json -Depth 5

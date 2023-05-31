@@ -56,7 +56,7 @@ New-AvdApplicationGroup -Name applicationGroupname -ResourceGroupName rg-avd-001
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$HostPoolArmPath,
-        
+
         [Parameter()]
         [ValidateNotNullOrEmpty()]
         [string]$WorkspaceResourceId,
@@ -69,10 +69,8 @@ New-AvdApplicationGroup -Name applicationGroupname -ResourceGroupName rg-avd-001
     )
     Begin {
         Write-Verbose "Start searching for hostpool $hostpoolName"
-        AuthenticationCheck
-        $token = GetAuthToken -resource $script:AzureApiUrl
         $apiVersion = "?api-version=2019-12-10-preview"
-        $url = $script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/applicationGroups/" + $Name + $apiVersion
+        $url = $global:AzureApiUrl + "/subscriptions/" + $global:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/applicationGroups/" + $Name + $apiVersion
     }
     Process {
         $body = @{
@@ -90,7 +88,6 @@ New-AvdApplicationGroup -Name applicationGroupname -ResourceGroupName rg-avd-001
             uri     = $url
             Method  = "PUT"
             Body = $body | ConvertTo-Json
-            Headers = $token
         }
         $results = Invoke-RestMethod @parameters
         $results

@@ -104,12 +104,9 @@ function New-AvdHostpool {
     )
     Begin {
         Write-Verbose "Start searching"
-        AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
-        $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}?api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName, $script:hostpoolApiVersion
+        $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}?api-version={4}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $HostpoolName, $global:hostpoolApiVersion
         $parameters = @{
             uri     = $url
-            Headers = $token
         }
         $body = @{
             location = $Location
@@ -135,10 +132,9 @@ function New-AvdHostpool {
         $parameters = @{
             uri     = $url
             Method  = "PUT"
-            Headers = $token
             Body    = $jsonBody
         }
-        $results = Invoke-RestMethod @parameters
+        $results = Request-Api @parameters
         $results
     }
 }

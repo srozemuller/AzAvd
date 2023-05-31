@@ -42,7 +42,7 @@ function Get-AvdSessionHost {
     )
     Begin {
         Write-Verbose "Start searching session hosts"
-        $baseUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/sessionHosts/" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName
+        $baseUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/sessionHosts/" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $HostpoolName
         $apiVersion = "?api-version=2021-07-12"
     }
     Process {
@@ -62,15 +62,15 @@ function Get-AvdSessionHost {
                 if ($Id.Contains('Microsoft.Compute/virtualMachines')) {
                     Throw "Please use the session host's resource ID, not the virtual machine"
                 }
-                $baseUrl = "{0}{1}" -f $Script:AzureApiUrl, $Id
+                $baseUrl = "{0}{1}" -f $global:AzureApiUrl, $Id
             }
             AllID {
                 Write-Verbose 'Using base url for getting all session hosts in $hostpoolName'
-                $baseUrl = $Script:AzureApiUrl + $HostPoolResourceId + "/sessionHosts/"
+                $baseUrl = $global:AzureApiUrl + $HostPoolResourceId + "/sessionHosts/"
             }
             HostId {
                 Write-Verbose "Looking for sessionhost $Id"
-                $baseUrl = "{0}/{1}" -f $Script:AzureApiUrl, $Id
+                $baseUrl = "{0}/{1}" -f $global:AzureApiUrl, $Id
             }
         }
         write-verbose $baseUrl

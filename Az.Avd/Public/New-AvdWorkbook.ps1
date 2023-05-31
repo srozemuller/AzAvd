@@ -40,8 +40,8 @@ New-AvdWorkbook -ResourceGroupName rg01 -Location westeurope -WorkbookName gener
     Begin {
         Write-Verbose "Start creating workbook $WorkbookName"
         AuthenticationCheck
-        $token = GetAuthToken -resource $script:AzureApiUrl
-        $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Insights/workbooks/{3}?sourceId=Microsoft_Azure_WVD&api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $(New-Guid).Guid, $script:workbookApiVersion
+        $token = GetAuthToken -resource $global:AzureApiUrl
+        $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Insights/workbooks/{3}?sourceId=Microsoft_Azure_WVD&api-version={4}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $(New-Guid).Guid, $global:workbookApiVersion
 
     }
     Process {

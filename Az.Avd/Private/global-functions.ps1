@@ -16,7 +16,7 @@ function AuthenticationCheck {
     }
     if ($null -eq $global:subscriptionId){
         Write-Warning "No subscription ID provided yet"
-        $script:subscriptionId = Read-Host -Prompt "Please fill in the subscription Id"
+        $global:subscriptionId = Read-Host -Prompt "Please fill in the subscription Id"
         Write-Information "Subscription ID is set, if you want to changed the context, use Set-AvdContext -SubscriptionID <GUID>" -InformationAction Continue
     }
 }
@@ -69,9 +69,9 @@ function Remove-Resource () {
         Write-Information "Removing resource with ID $resourceId" -InformationAction Continue
         $apiVersion = "?api-version={0}" -f $apiVersion
         $deleteResourceParameters = @{
-            uri     = "{0}{1}{2}" -f $Script:AzureApiUrl, $resourceId, $apiVersion
+            uri     = "{0}{1}{2}" -f $global:AzureApiUrl, $resourceId, $apiVersion
             Method  = "DELETE"
-            Headers = (GetAuthToken -resource $Script:AzureApiUrl)
+            Headers = (GetAuthToken -resource $global:AzureApiUrl)
         }
         Invoke-RestMethod @deleteResourceParameters
     }
@@ -100,12 +100,12 @@ function Get-Resource () {
 
     )
     try {
-        $token = (GetAuthToken -resource $Script:AzureApiUrl)
+        $token = (GetAuthToken -resource $global:AzureApiUrl)
         switch ($PsCmdlet.ParameterSetName) {
             api {
                 Write-Verbose 'API version provided, searching in specific API'
                 $resourceParameters = @{
-                    uri     = "{0}/{1}{2}?api-version={3}" -f $Script:AzureApiUrl, $ResourceId, $UrlAddition, $ApiVersion
+                    uri     = "{0}/{1}{2}?api-version={3}" -f $global:AzureApiUrl, $ResourceId, $UrlAddition, $ApiVersion
                     Method  = $Method
                     Headers = $token
                 }
@@ -115,7 +115,7 @@ function Get-Resource () {
                 Write-Information "Searching resource with ID $resourceId" -InformationAction Continue
                 $subscriptionId = ($ResourceId | Select-String -Pattern '(?<=\/subscriptions\/)(.*?)(?=\/resourcegroups)').Matches.Groups[-1].Value
                 $resourceParameters = @{
-                    uri     = "{0}/subscriptions/{1}/resources?api-version=2014-04-01-preview&`$filter=resourceId eq '{2}'" -f $Script:AzureApiUrl, $subscriptionId, $ResourceId
+                    uri     = "{0}/subscriptions/{1}/resources?api-version=2014-04-01-preview&`$filter=resourceId eq '{2}'" -f $global:AzureApiUrl, $subscriptionId, $ResourceId
                     Method  = $Method
                     Headers = $token
                 }
@@ -174,8 +174,8 @@ function ConcatSessionHostName {
 function TestAzResource($resourceId,$apiVersion) {
     $testParameters = @{
         method = "GET"
-        headers = GetAuthToken -resource $script:AzureApiUrl
-        uri = "{0}{1}?api-version={2}" -f $script:AzureApiUrl, $resourceId, $apiVersion
+        headers = GetAuthToken -resource $global:AzureApiUrl
+        uri = "{0}{1}?api-version={2}" -f $global:AzureApiUrl, $resourceId, $apiVersion
     }
     Invoke-RestMethod @testParameters
 }

@@ -168,9 +168,9 @@ function New-AvdScalingPlan {
     Begin {
         Write-Verbose "Start creating scaling plan $ScalingPlanName"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         $apiVersion = "?api-version=2021-01-14-preview"
-        $url = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/scalingPlans/" + $scalingPlanName + $apiVersion
+        $url = $global:AzureApiUrl + "/subscriptions/" + $global:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/scalingPlans/" + $scalingPlanName + $apiVersion
         $body = @{
             location   = $Location
             properties = @{

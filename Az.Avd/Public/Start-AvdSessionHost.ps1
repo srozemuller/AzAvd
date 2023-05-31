@@ -80,7 +80,7 @@ function Start-AvdSessionHost {
                 Write-Verbose "[Start-AvdSessionHost] - Starting $($_.name)"
                 $apiVersion = "?api-version=2021-11-01"
                 $powerOnParameters = @{
-                    uri     = "{0}{1}/start{2}" -f $Script:AzureApiUrl, $_.vmResources.id, $apiVersion
+                    uri     = "{0}{1}/start{2}" -f $global:AzureApiUrl, $_.vmResources.id, $apiVersion
                     Method  = "POST"
                 }
                 Request-Api @powerOnParameters

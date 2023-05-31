@@ -106,7 +106,7 @@ function New-AvdAadSessionHost {
     Begin {
         Write-Verbose "Start creating session hosts"
         AuthenticationCheck
-        $script:token = GetAuthToken -resource $Script:AzureApiUrl
+        $global:token = GetAuthToken -resource $global:AzureApiUrl
         $registrationToken = Update-AvdRegistrationToken -HostpoolName $Hostpoolname $resourceGroupName -HoursActive 4 | Select-Object -ExpandProperty properties
     }
     Process {
@@ -151,8 +151,8 @@ function New-AvdAadSessionHost {
                 "location"   = $Location
             }
             $nicJson = $nicBody | ConvertTo-Json -Depth 15
-            $nicUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Network/networkInterfaces/{3}?api-version=2021-03-01" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $nicName
-            $NIC = Invoke-RestMethod -Method PUT -Uri $nicUrl -Headers $script:token -Body $nicJson
+            $nicUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Network/networkInterfaces/{3}?api-version=2021-03-01" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $nicName
+            $NIC = Invoke-RestMethod -Method PUT -Uri $nicUrl -Headers $global:token -Body $nicJson
             
             try {
                 $vmBody = @{
@@ -203,16 +203,16 @@ function New-AvdAadSessionHost {
                     }
                     $vmBody.properties.Add("securityProfile", $securityProfile)
                 }
-                $vmUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}?api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $vmName, '2021-11-01'
+                $vmUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}?api-version={4}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $vmName, '2021-11-01'
                 $vmJsonBody = $vmBody | ConvertTo-Json -Depth 99
-                Invoke-RestMethod -Method PUT -Uri $vmUrl -Headers $script:token -Body $vmJsonBody
+                Invoke-RestMethod -Method PUT -Uri $vmUrl -Headers $global:token -Body $vmJsonBody
             }
             catch {
                 "VM $vmName not created, $_"
                 Throw
             }
             Do {
-                $status = Invoke-RestMethod -Method GET -Uri $vmUrl -Headers $script:token
+                $status = Invoke-RestMethod -Method GET -Uri $vmUrl -Headers $global:token
                 Start-Sleep 5
             }
             While ($status.properties.provisioningState -ne "Succeeded") {
@@ -220,7 +220,7 @@ function New-AvdAadSessionHost {
             }          
             try {
                 $extensionName = "AADLoginForWindows"
-                $domainJoinUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $vmName, $extensionName , '2021-11-01'
+                $domainJoinUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $vmName, $extensionName , '2021-11-01'
                 $domainJoinExtension = @{
                     properties = @{
                         Type               = "AADLoginForWindows"
@@ -236,9 +236,9 @@ function New-AvdAadSessionHost {
                     $domainJoinExtension.properties.Add("Settings", $settings)
                 }
                 $domainJoinBody = $domainJoinExtension | ConvertTo-Json -Depth 99
-                Invoke-RestMethod -Method PUT -Uri $domainJoinUrl -Headers $script:token -Body $domainJoinBody
+                Invoke-RestMethod -Method PUT -Uri $domainJoinUrl -Headers $global:token -Body $domainJoinBody
                 Do {
-                    $status = Invoke-RestMethod -Method GET -Uri $domainJoinUrl -Headers $script:token
+                    $status = Invoke-RestMethod -Method GET -Uri $domainJoinUrl -Headers $global:token
                     Start-Sleep 5
                 }
                 While ($status.properties.provisioningState -ne "Succeeded") {
@@ -246,14 +246,14 @@ function New-AvdAadSessionHost {
                 }
 
                 $extensionName = "Microsoft.PowerShell.DSC"
-                $avdUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $vmName, $extensionName , '2021-11-01'
+                $avdUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.Compute/virtualMachines/{3}/extensions/{4}?api-version={5}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $vmName, $extensionName , '2021-11-01'
                 $avdDscExtension = @{
                     properties = @{
                         Type               = "DSC"
                         Publisher          = "Microsoft.Powershell"
                         typeHandlerVersion = "2.73"
                         Settings           = @{
-                            modulesUrl            = $script:AvdModuleLocation
+                            modulesUrl            = $global:AvdModuleLocation
                             ConfigurationFunction = "Configuration.ps1\AddSessionHost"
                             Properties            = @{
                                 hostPoolName          = $HostpoolName
@@ -265,9 +265,9 @@ function New-AvdAadSessionHost {
                     location   = $Location
                 }
                 $avdExtensionBody = $avdDscExtension | ConvertTo-Json -Depth 99
-                Invoke-RestMethod -Method PUT -Uri $avdUrl -Headers $script:token -Body $avdExtensionBody
+                Invoke-RestMethod -Method PUT -Uri $avdUrl -Headers $global:token -Body $avdExtensionBody
                 Do {
-                    $status = Invoke-RestMethod -Method GET -Uri $avdUrl -Headers $script:token
+                    $status = Invoke-RestMethod -Method GET -Uri $avdUrl -Headers $global:token
                     Start-Sleep 5
                 }
                 While ($status.properties.provisioningState -ne "Succeeded") {
