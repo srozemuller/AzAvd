@@ -50,16 +50,15 @@ function Stop-AvdSessionHost {
     )
     Begin {
         Write-Verbose "Stopping session hosts"
-        AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
         $sessionHostParameters = @{
             hostpoolName      = $HostpoolName
             resourceGroupName = $ResourceGroupName
         }
         $task = 'powerOff'
-        if ($Deallocate.IsPresent)
-        {
+        $hostState = 'stopped'
+        if ($Deallocate.IsPresent) {
             $task = 'deallocate'
+            $hostState = 'deallocated'
         }
     }
     Process {
@@ -96,13 +95,19 @@ function Stop-AvdSessionHost {
                     Headers = $token
                 }
                 Request-Api @powerOffParameters
-                do {
-                    $state = Get-AvdSessionHostPowerState -Id $_.id
-                    Write-Information "[Start-AvdSessionHost] - Checking $($_.name) powerstate. ($state)"
-                    Start-Sleep 3
+                $initialState = Get-AvdSessionHostPowerState -Id $_.id
+                if ($initialState.powerstate -eq $hostState) {
+                    Write-Information "$($_.name) is already $hostState" -InformationAction Continue
+                    Continue
                 }
-                while ($state.powerstate -notlike 'stopped*')
-                Write-Information -MessageData "$($_.name) stopped" -InformationAction Continue
+                else {    
+                    do {
+                        $state = Get-AvdSessionHostPowerState -Id $_.id
+                        Write-Information "[Start-AvdSessionHost] - Checking $($_.name) powerstate for $hostState, current state $($state.powerstate)" -InformationAction Continue
+                        Start-Sleep 3
+                    }
+                    while ($state.powerstate -ne $hostState)
+                }
             }
             catch {
                 Continue
