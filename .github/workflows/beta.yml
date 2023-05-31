@@ -92,6 +92,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     needs: test
+    if: ${{ contains(github.event_name, 'pull_request') }}
     steps:
       - name: Download a Build Artifact
         uses: actions/download-artifact@v2.1.0
@@ -155,7 +156,6 @@ jobs:
         run: echo "CHANGELOG"
       - name: Create Release
         id: create_release
-        if: ${{ contains(github.event_name, 'pull_request') }}
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
