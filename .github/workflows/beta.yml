@@ -6,10 +6,7 @@ name: BetaCompiler
 on:
   # Triggers the workflow on push or pull request events but only for the beta branch
   pull_request:
-    types:
-      - opened
-      - edited
-      - closed
+    types: [opened, synchronize, reopened, closed]
     branches:
       - 'beta'
   push:
@@ -93,7 +90,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     needs: test
-    if: ${{ github.event.pull_request.merged == true }}
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
     steps:
       - name: Download a Build Artifact
         uses: actions/download-artifact@v2.1.0
