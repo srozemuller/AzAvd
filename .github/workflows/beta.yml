@@ -84,6 +84,8 @@ jobs:
         run: |
           Import-Module ./Az.Avd/Az.Avd.psd1 -Force -ErrorAction Stop
           Invoke-Pester -Path (Join-Path -Path "./Compiler" -ChildPath "Az.Avd.Functions.tests.ps1") -Output detailed
+  testAvd:
+    uses: ./.github/workflows/deploy.avd.env.yaml
   release:
     runs-on: ubuntu-latest
     needs: test
