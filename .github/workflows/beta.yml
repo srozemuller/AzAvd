@@ -4,8 +4,8 @@ name: BetaCompiler
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the beta branch
-  push:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
     branches:
       - 'beta'
 
