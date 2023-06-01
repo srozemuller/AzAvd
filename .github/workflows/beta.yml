@@ -38,9 +38,9 @@ jobs:
       run: |
           dir env:
   test:
-    uses: ./.github/workflows/code.tester.yaml
+    uses: ./.github/workflows/code.tester.yml
   testAvd:
-    uses: ./.github/workflows/deploy.avd.env.yaml
+    uses: ./.github/workflows/deploy.avd.env.yml
   release:
     runs-on: ubuntu-latest
     needs: test
