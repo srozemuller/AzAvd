@@ -6,7 +6,7 @@ $global:GraphApiVersion = "beta"
 
 $global:AvdModuleLocation = "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_01-19-2023.zip"
 
-$global:AvdApiVersion = "2022-02-10-preview"
+$global:AvdApiVersion = "2022-10-14-preview"
 
 # Resource provider API versions
 $global:sessionHostApiVersion = $global:AvdApiVersion
