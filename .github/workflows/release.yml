@@ -61,6 +61,7 @@ jobs:
         id: without_checkout
         uses: mikepenz/release-changelog-builder-action@develop
         with:
+          fromTag: v3.0.0-beta-beta.258
           toTag: v${{ steps.generate_tag.outputs.version }}.${{ github.run_number }}
           configurationJson: |
             {
