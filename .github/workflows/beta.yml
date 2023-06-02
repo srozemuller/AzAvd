@@ -5,7 +5,7 @@ name: BetaCompiler
 # Controls when the workflow will run
 on:
   pull_request:
-    types: [opened, synchronize, reopened, closed]
+    types: [opened, synchronize, reopened]
     branches:
       - 'beta'
 
@@ -47,79 +47,9 @@ jobs:
       TENANT_ID: ${{ secrets.TENANT_ID }}
       SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
   release:
-    runs-on: ubuntu-latest
     needs:
       - test
       - testAvd
-    steps:
-      - name: Download a Build Artifact
-        uses: actions/download-artifact@v2.1.0
-        with:
-          name: azModule
-      - name: Checkout repo
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.head_ref }}
-      - name: Creating a tag based on module version
-        id: generate_tag
-        shell: pwsh
-        run: |
-          ./Compiler/Az.Avd.generate.tag.ps1
-      - name: Bump version and push tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v6.1
-        with:
-          custom_tag: ${{ steps.generate_tag.outputs.version }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Configuration without Checkout"
-        id: without_checkout
-        uses: mikepenz/release-changelog-builder-action@develop
-        with:
-          toTag: v${{ steps.generate_tag.outputs.version }}
-          configurationJson: |
-            {
-              "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
-              "categories": [
-                {
-                    "title": "## 🚀 Features",
-                    "labels": ["feat"]
-                },
-                {
-                    "title": "## 🐛 Fixes",
-                    "labels": ["bug"]
-                },
-                {
-                    "title": "## 📝 Refactor",
-                    "labels": ["refactor"]
-                },
-                {
-                    "title": "## 🧪 Tests",
-                    "labels": ["test"]
-                },
-                {
-                    "title": "## 💬 Other",
-                    "labels": ["other"]
-                },
-                {
-                    "title": "## 📦 Dependencies",
-                    "labels": ["dependencies"]
-                }
-              ]
-            }
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Echo Configuration without Checkout Changelog
-        env:
-          CHANGELOG: ${{ steps.without_checkout.outputs.changelog }}
-        run: echo "CHANGELOG"
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          tag_name: v${{ steps.generate_tag.outputs.version }}.${{ github.run_number }}
-          release_name: Release v${{ steps.generate_tag.outputs.version }}
-          body: ${{ steps.without_checkout.outputs.changelog }}
-          draft: false
-          prerelease: false
+    uses: ./.github/workflows/release.yml
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
