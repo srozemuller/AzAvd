@@ -28,8 +28,6 @@ function Update-AvdRegistrationToken {
     )
     Begin {
         Write-Verbose "Start updating registration token"
-        $apiVersion = "?api-version=2019-12-10-preview"
-        $hostpoolUrl = $global:AzureApiUrl + "/subscriptions/" + $global:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + $apiVersion
     }
     Process {
         $now = get-date
@@ -40,9 +38,9 @@ function Update-AvdRegistrationToken {
                     registrationTokenOperation = "Update"
                 }
             }
-        }
+        } | ConvertTo-Json
         $parameters = @{
-            uri     = $hostpoolUrl
+            uri     = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}?api-version={4}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $HostpoolName, $global:hostpoolApiVersion
             Method  = "PATCH"
             body    = $body
         }
