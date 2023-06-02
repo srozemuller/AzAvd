@@ -62,7 +62,7 @@ jobs:
         uses: mikepenz/release-changelog-builder-action@develop
         with:
           fromTag: v3.0.0
-          toTag: ${{ steps.generate_tag.outputs.version }}.${{ github.run_number }}
+          toTag: v${{ steps.generate_tag.outputs.version }}.${{ github.run_number }}
           configurationJson: |
             {
               "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
