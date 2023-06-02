@@ -51,6 +51,9 @@ jobs:
         shell: pwsh
         run: |
           ./Compiler/Az.Avd.generate.tag.ps1
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
       - name: Bump version and push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.1
@@ -105,7 +108,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: v${{ steps.generate_tag.outputs.version }}.${{ github.run_number }}
+          tag_name: ${{ steps.previoustag.outputs.tag }}
           release_name: Release v${{ steps.generate_tag.outputs.version }}.${{ github.run_number }}
           body: ${{ steps.without_checkout.outputs.changelog }}
           draft: false
