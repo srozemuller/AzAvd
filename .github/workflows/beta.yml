@@ -51,5 +51,3 @@ jobs:
       - test
       - testAvd
     uses: ./.github/workflows/release.yml
-    secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
