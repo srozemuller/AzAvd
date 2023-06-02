@@ -1,0 +1,41 @@
+{
+    "vnet": {
+        "name": "rz-vnet-01",
+        "addressPrefixes": [
+            "10.0.0.0/16"
+        ],
+        "subnets": [
+            {
+                "name": "default",
+                "addressPrefix": "10.1.1.0/24"
+            }
+        ]
+    },
+    "hostpool": {
+        "HostpoolName": "avd-auto-hp",
+        "HostPoolType": "Personal",
+        "ValidationEnvironment": true,
+        "StartVMOnConnect": true,
+        "CustomRdpProperty": "audiocapturemode:i:1;audiomode:i:0;camerastoredirect:s:*;devicestoredirect:s:*;drivestoredirect:s:*;redirectclipboard:i:1;redirectcomports:i:1;redirectdirectx:i:1;redirectposdevices:i:0;redirectprinters:i:1;redirectsmartcards:i:1;screen mode id:i:2;session bpp:i:32;span monitors:i:1;use multimon:i:1;",
+        "MaxSessionLimit": 10,
+        "LoadBalancerType": "BreadthFirst"
+    },
+    "appgroup": {
+        "name": "avd-auto-ag",
+        "ApplicationGroupType": "Desktop"
+    },
+    "workspace": {
+        "name": "avd-auto-ws",
+        "FriendlyName": "avd-auto-ws",
+        "Description": "avd-auto-ws"
+    },
+    "sessionHosts": {
+        "SessionHostCount": 1,
+        "VmSize": "Standard_D2s_v3",
+        "Offer": "windows-11",
+        "Publisher": "MicrosoftWindowsDesktop",
+        "Sku": "win11-22h2-avd",
+        "DiskType": "Premium_LRS",
+        "Intune": true
+    }
+}

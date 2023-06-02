@@ -244,7 +244,7 @@ function New-AvdSessionHost {
         $vmNames | Foreach-Object -Verbose -ThrottleLimit $MaxParallel -Parallel {
             try {
                 # Checking every 15 seconds till the max of 60 (is 15 minutes) if the VM is created successfully
-                $maxRetries = 60
+                $maxRetries = 30
                 $checkCount = 0
                 $vmName = $_
                 Write-Verbose "Creating session host $vmName nic"
@@ -338,10 +338,16 @@ function New-AvdSessionHost {
                     # Wait for the extension to be ready, till the max of 15 minutes
                     $checkCount++
                     $domainJoinStatus = Invoke-RestMethod -Method GET -Uri $domainJoinUrl -Headers $using:token
-                    Start-Sleep 15
+                    Start-Sleep 5
                 }
-                While (($domainJoinStatus.properties.provisioningState -ne "Succeeded") -and ($checkCount -lt $maxRetries)) {
-                    Write-Verbose "Extension for AVD is ready"
+                # Check state for succesfull installation till the max retries.
+                While ($domainJoinStatus.properties.provisioningState -ne "Succeeded") {
+                    if ($checkCount -gt $maxRetries) {
+                        Throw "Joining domain type $($domainJoinExtension.properties.type) took to long "
+                    }
+                    else {
+                        Write-Verbose "Extension for AVD is ready"
+                    }
                 }
 
                 # Reset the counter for next check round
@@ -373,10 +379,16 @@ function New-AvdSessionHost {
                     $checkCount++
 
                     $status = Invoke-RestMethod -Method GET -Uri $avdUrl -Headers $using:token
-                    Start-Sleep 15
+                    Start-Sleep 10
                 }
-                While (($status.properties.provisioningState -ne "Succeeded") -and ($checkCount -lt $maxRetries)) {
-                    Write-Verbose "Extension for AVD is ready"
+                # Check state for succesfull installation till the max retries.
+                While ($status.properties.provisioningState -ne "Succeeded") {
+                    if ($checkCount -gt $maxRetries) {
+                        Throw "Installing AVD extension took to long "
+                    }
+                    else {
+                        Write-Verbose "Extension for AVD is ready"
+                    }
                 }
             }
             catch {
