@@ -15,7 +15,6 @@ function Update-AvdRegistrationToken {
     #>
     [CmdletBinding()]
     param (
-        
         [parameter(mandatory = $true, ValueFromPipeline)]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
@@ -29,8 +28,6 @@ function Update-AvdRegistrationToken {
     )
     Begin {
         Write-Verbose "Start updating registration token"
-        AuthenticationCheck
-        $token = GetAuthToken -resource $global:AzureApiUrl
         $apiVersion = "?api-version=2019-12-10-preview"
         $hostpoolUrl = $global:AzureApiUrl + "/subscriptions/" + $global:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/hostpools/" + $HostpoolName + $apiVersion
     }
@@ -47,10 +44,9 @@ function Update-AvdRegistrationToken {
         $parameters = @{
             uri     = $hostpoolUrl
             Method  = "PATCH"
-            Headers = $token
-            body    = $body | ConvertTo-Json
+            body    = $body
         }
-        $results = Invoke-RestMethod @parameters
+        $results = Request-Api @parameters
         $results
     }
 }
