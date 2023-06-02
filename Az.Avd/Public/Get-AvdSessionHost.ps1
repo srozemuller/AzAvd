@@ -42,8 +42,7 @@ function Get-AvdSessionHost {
     )
     Begin {
         Write-Verbose "Start searching session hosts"
-        $baseUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/sessionHosts/" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $HostpoolName
-        $apiVersion = "?api-version=2021-07-12"
+        $baseUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/sessionHosts" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $HostpoolName
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -75,7 +74,7 @@ function Get-AvdSessionHost {
         }
         write-verbose $baseUrl
         $parameters = @{
-            uri     = "{0}{1}" -f $baseUrl, $apiVersion
+            uri     = "{0}?api-version={1}" -f $baseUrl, $global:AvdApiVersion
             Method  = "GET"
         }
         try {
@@ -86,17 +85,17 @@ function Get-AvdSessionHost {
                     $_ | Add-Member -MemberType NoteProperty -Name HostpoolName -Value $HostpoolName
                     $_ | Add-Member -MemberType NoteProperty -Name ResourceGroupName -Value $ResourceGroupName
                 }
-                $results.ForEach({ $allHosts.Add($_) | Out-Null })
+                $results.ForEach({ $allHosts.Add($_) >> $null })
             }
             else {
-                $results.value.ForEach({ $allHosts.Add($_) | Out-Null })
+                $results.ForEach({ $allHosts.Add($_) >> $null })
                 # Check if there is a next page with session hosts
                 $pagingURL = $results."nextLink"
                 while ($null -ne $pagingURL) {
                     Write-Verbose "Got a next page url"
                     $results = Invoke-RestMethod -Uri $pagingURL -Headers $token -Method Get
                     $pagingURL = $results."nextLink"
-                    $results.value.ForEach({ $allHosts.Add($_) | Out-Null })
+                    $results.ForEach({ $allHosts.Add($_) >> $null })
                 }
             }
             $allHosts
