@@ -55,7 +55,7 @@ jobs:
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.1
         with:
-          custom_tag: v${{ steps.generate_tag.outputs.version }}.${{ github.run_number }}
+          custom_tag: ${{ steps.generate_tag.outputs.version }}.${{ github.run_number }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Configuration without Checkout"
         id: without_checkout
