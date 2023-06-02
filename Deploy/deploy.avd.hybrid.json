@@ -13,7 +13,7 @@
     },
     "hostpool": {
         "HostpoolName": "avd-auto-hp",
-        "HostPoolType": "Pooled",
+        "HostPoolType": "Personal",
         "ValidationEnvironment": true,
         "StartVMOnConnect": true,
         "CustomRdpProperty": "audiocapturemode:i:1;audiomode:i:0;camerastoredirect:s:*;devicestoredirect:s:*;drivestoredirect:s:*;redirectclipboard:i:1;redirectcomports:i:1;redirectdirectx:i:1;redirectposdevices:i:0;redirectprinters:i:1;redirectsmartcards:i:1;screen mode id:i:2;session bpp:i:32;span monitors:i:1;use multimon:i:1;",
