@@ -17,7 +17,7 @@ Get-AvdHostPool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
 .EXAMPLE
 Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
 #>
-    [CmdletBinding(DefaultParameterSetName = "All")]
+    [CmdletBinding()]
     param (
         [Parameter(Mandatory, ParameterSetName = "Name")]
         [ValidateNotNullOrEmpty()]
