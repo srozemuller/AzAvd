@@ -54,7 +54,7 @@ function Get-AvdSessionHost {
                     $Name = $Name.Split("/")[-1]
                 }
                 Write-Verbose "Looking for sessionhost $Name"
-                $baseUrl = "{0}{1}" -f $baseUrl, $Name
+                $baseUrl = "{0}/{1}" -f $baseUrl, $Name
             }
             Resource {
                 Write-Verbose "Looking for sessionhost base on resourceId $Id"
