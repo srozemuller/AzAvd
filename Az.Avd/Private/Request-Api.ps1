@@ -35,9 +35,11 @@ function Request-Api {
                 $parameters.Add("Body", $($Body)) > $null
             }
             $results = Invoke-WebRequest @parameters | ConvertFrom-Json
-            $resultObject.Add($results) > $null
-            if ($results.value) {
+            if ($results.PsObject.Properties.name -contains 'value') {
                 $resultObject.Add($results.value) > $null
+            }
+            else {
+                $resultObject.Add($results) > $null
             }
             while ($null -ne $results.'@odata.nextLink') {
                 $pagingUrl = $results."@odata.nextLink"
