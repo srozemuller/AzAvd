@@ -36,11 +36,11 @@ Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
         switch ($PsCmdlet.ParameterSetName) {
             Name {
                 Write-Verbose "Name and ResourceGroup provided"
-                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}?api-version={4}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $HostpoolName, $global:hostpoolApiVersion 
+                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}?api-version={4}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $HostpoolName, $global:hostpoolApiVersion
             }
             ResourceId {
                 Write-Verbose "ResourceId provided"
-                $url = $global:AzureApiUrl + $resourceId + $apiVersion
+                $url = "{0}{1}?api-version={2}" -f $global:AzureApiUrl, $resourceId, $global:hostpoolApiVersion
             }
             default {
                 Write-Verbose "Searching for all AVD host pools in subscription $global:subscriptionId"
