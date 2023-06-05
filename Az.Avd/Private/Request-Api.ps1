@@ -35,6 +35,7 @@ function Request-Api {
                 $parameters.Add("Body", $($Body)) > $null
             }
             $results = Invoke-WebRequest @parameters | ConvertFrom-Json
+            $resultObject.Add($results) > $null
             if ($results.value) {
                 $resultObject.Add($results.value) > $null
             }
