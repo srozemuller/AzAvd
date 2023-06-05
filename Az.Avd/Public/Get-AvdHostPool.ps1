@@ -11,11 +11,13 @@ Enter the name of the resourcegroup where the hostpool resides in.
 .PARAMETER ResourceId
 Enter the hostpool ResourceId
 .EXAMPLE
+Get-AvdHostPool
+.EXAMPLE
 Get-AvdHostPool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
 .EXAMPLE
 Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
 #>
-    [CmdletBinding(DefaultParameterSetName = "Name")]
+    [CmdletBinding(DefaultParameterSetName = "All")]
     param (
         [Parameter(Mandatory, ParameterSetName = "Name")]
         [ValidateNotNullOrEmpty()]
@@ -31,9 +33,6 @@ Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
     )
     Begin {
         Write-Verbose "Start searching for hostpool $hostpoolName"
-        AuthenticationCheck
-        $token = GetAuthToken -resource $global:AzureApiUrl
-        $apiVersion = "?api-version=2019-12-10-preview"
         switch ($PsCmdlet.ParameterSetName) {
             Name {
                 Write-Verbose "Name and ResourceGroup provided"
@@ -43,19 +42,19 @@ Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
                 Write-Verbose "ResourceId provided"
                 $url = $global:AzureApiUrl + $resourceId + $apiVersion
             }
-        }
-        $parameters = @{
-            uri     = $url
-            Headers = $token
+            default {
+                Write-Verbose "Searching for all AVD host pools in subscription $global:subscriptionId"
+                $url = "{0}/subscriptions/{1}/providers/Microsoft.DesktopVirtualization/hostpools?api-version={2}" -f $global:AzureApiUrl, $global:subscriptionId, $global:hostpoolApiVersion
+            }
         }
     }
     Process {
         $parameters = @{
             uri     = $url
             Method  = "GET"
-            Headers = $token
         }
-        $results = Invoke-RestMethod @parameters
+        Write-Verbose $url
+        $results = Request-Api @parameters
         $results
     }
 }
