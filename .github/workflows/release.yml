@@ -50,13 +50,14 @@ jobs:
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.1
         with:
-          custom_tag: ${{ steps.generate_tag.outputs.version }}.${{ github.run_number }}
+          custom_tag: ${{ steps.generate_tag.outputs.version }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Configuration without Checkout"
         id: without_checkout
         uses: mikepenz/release-changelog-builder-action@develop
         with:
-          toTag: v${{ steps.generate_tag.outputs.version }}.${{ github.run_number }}
+          fromTag: v2.5.1
+          toTag: v${{ steps.generate_tag.outputs.version }}
           configurationJson: |
             {
               "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
@@ -102,8 +103,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{ steps.generate_tag.outputs.version }}.${{ github.run_number }}
-          release_name: Release v${{ steps.generate_tag.outputs.version }}.${{ github.run_number }}
+          tag_name: v${{ steps.generate_tag.outputs.version }}
+          release_name: Release v${{ steps.generate_tag.outputs.version }}
           body: ${{ steps.without_checkout.outputs.changelog }}
           draft: false
           prerelease: false
