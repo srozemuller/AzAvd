@@ -20,7 +20,7 @@ function Request-Api {
     Begin {
         Write-Verbose "Requesting url $Uri with method $Method"
         $resultObject = [System.Collections.ArrayList]::new()
-        if ($null -eq $token){
+        if ($null -eq $token) {
             $token = GetAuthToken
         }
     }
@@ -36,9 +36,9 @@ function Request-Api {
             }
             $results = Invoke-WebRequest @parameters | ConvertFrom-Json
             if ($results.value) {
-                $results = $results.value
+                $resultObject.Add($results.value) > $null
             }
-            while (($null -ne $results."@odata.nextLink")) {
+            while ($null -ne $results.'@odata.nextLink') {
                 $pagingUrl = $results."@odata.nextLink"
                 Write-Verbose "Fetching odata.nextLink: $pagingUrl"
 
@@ -47,11 +47,10 @@ function Request-Api {
                     $resultObject.Add($value) > $null
                 }
             }
-
         }
         catch {
             Write-Error -Message "An error occurred while requesting url $uri. Error message: $($_)"
         }
-        $results
+        $resultObject
     }
 }
