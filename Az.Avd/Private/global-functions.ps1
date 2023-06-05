@@ -14,7 +14,7 @@ function AuthenticationCheck {
     if ($null -eq $global:tokenRequest) {
         Throw "Please connect to AVD first using the Connect-Avd command"
     }
-    if ($null -eq $global:subscriptionId){
+    if ($null -eq $global:subscriptionId) {
         Write-Warning "No subscription ID provided yet"
         $global:subscriptionId = Read-Host -Prompt "Please fill in the subscription Id"
         Write-Information "Subscription ID is set, if you want to changed the context, use Set-AvdContext -SubscriptionID <GUID>" -InformationAction Continue
@@ -31,14 +31,13 @@ function GetAuthToken {
     if ($null -eq $global:tokenRequest) {
         Throw "Please connect to AVD first using the Connect-Avd command"
     }
-    if ($null -eq $global:subscriptionId){
+    if ($null -eq $global:subscriptionId) {
         Write-Warning "No subscription ID provided yet"
         $global:subscriptionId = Read-Host -Prompt "Please fill in the subscription Id"
         Write-Information "Subscription ID is set, if you want to changed the context, use Set-AvdContext -SubscriptionID <GUID>" -InformationAction Continue
     }
     $expireTime = Get-Date -UnixTimeSeconds $global:tokenRequest.expires_on
-    if ((Get-Date) -gt $expireTime)
-    {
+    if ((Get-Date) -gt $expireTime) {
         Write-Verbose "Current token has expired. Requesting a new token based on the refresh token."
         $global:authHeader = Connect-Avd -RefreshToken $global:tokenRequest.refresh_token -TenantID $TenantId
     }
@@ -82,7 +81,7 @@ function Remove-Resource () {
 
 
 function Get-Resource () {
-    [CmdletBinding(DefaultParameterSetName='default')]
+    [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
         [Parameter(Mandatory, ParameterSetName = 'default')]
         [Parameter(Mandatory, ParameterSetName = 'api')]
@@ -171,11 +170,11 @@ function ConcatSessionHostName {
     $name
 }
 
-function TestAzResource($resourceId,$apiVersion) {
+function TestAzResource($resourceId, $apiVersion) {
     $testParameters = @{
-        method = "GET"
+        method  = "GET"
         headers = GetAuthToken -resource $global:AzureApiUrl
-        uri = "{0}{1}?api-version={2}" -f $global:AzureApiUrl, $resourceId, $apiVersion
+        uri     = "{0}{1}?api-version={2}" -f $global:AzureApiUrl, $resourceId, $apiVersion
     }
     Invoke-RestMethod @testParameters
 }
