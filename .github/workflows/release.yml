@@ -56,8 +56,8 @@ jobs:
         id: without_checkout
         uses: mikepenz/release-changelog-builder-action@develop
         with:
-          fromTag: v${{ steps.generate_tag.outputs.version }}
-          toTag: v2.5.1
+          fromTag: v2.5.1
+          toTag: v${{ steps.generate_tag.outputs.version }}
           configurationJson: |
             {
               "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
