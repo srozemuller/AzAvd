@@ -22,13 +22,12 @@ function Start-AvdSessionHost {
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
-    
+
         [parameter(Mandatory, ParameterSetName = 'All')]
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
-    
-        [parameter(Mandatory, ParameterSetName = 'All')]
+
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$Name,
@@ -89,7 +88,7 @@ function Start-AvdSessionHost {
                     Write-Information "$($_.name) is already $hostState" -InformationAction Continue
                     Continue
                 }
-                else {    
+                else {
                     do {
                         $state = Get-AvdSessionHostPowerState -Id $_.id
                         Write-Information "[Start-AvdSessionHost] - Checking $($_.name) powerstate for $hostState, current state $($state.powerstate)" -InformationAction Continue
@@ -102,5 +101,5 @@ function Start-AvdSessionHost {
                 Throw "[Start-AvdSessionHost] - Not able to start $($_.name), $_"
             }
         }
-    }       
+    }
 }

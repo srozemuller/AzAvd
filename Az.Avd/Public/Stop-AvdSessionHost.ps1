@@ -15,7 +15,7 @@ function Stop-AvdSessionHost {
     .EXAMPLE
     Stop-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
     #>
-    [CmdletBinding(DefaultParameterSetName = 'All')]
+    [CmdletBinding(DefaultParameterSetName = 'Hostname')]
     param
     (
         [parameter(Mandatory, ParameterSetName = 'All')]
@@ -28,8 +28,8 @@ function Stop-AvdSessionHost {
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
 
-        [parameter(Mandatory, ParameterSetName = 'All')]
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
+        [parameter(Mandatory, ParameterSetName = 'All')]
         [ValidateNotNullOrEmpty()]
         [string]$Name,
 
@@ -92,7 +92,6 @@ function Stop-AvdSessionHost {
                 $powerOffParameters = @{
                     uri     = "{0}{1}/{2}?api-version={3}" -f $global:AzureApiUrl, $_.properties.resourceId, $task, $global:vmApiVersion
                     Method  = "POST"
-                    Headers = $token
                 }
                 Request-Api @powerOffParameters
                 $initialState = Get-AvdSessionHostPowerState -Id $_.id
@@ -100,10 +99,10 @@ function Stop-AvdSessionHost {
                     Write-Information "$($_.name) is already $hostState" -InformationAction Continue
                     Continue
                 }
-                else {    
+                else {
                     do {
                         $state = Get-AvdSessionHostPowerState -Id $_.id
-                        Write-Information "[Start-AvdSessionHost] - Checking $($_.name) powerstate for $hostState, current state $($state.powerstate)" -InformationAction Continue
+                        Write-Information "[Stop-AvdSessionHost] - Checking $($_.name) powerstate for $hostState, current state $($state.powerstate)" -InformationAction Continue
                         Start-Sleep 3
                     }
                     while ($state.powerstate -ne $hostState)
