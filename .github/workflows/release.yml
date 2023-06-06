@@ -56,7 +56,7 @@ jobs:
         id: without_checkout
         uses: mikepenz/release-changelog-builder-action@develop
         with:
-          fromTag: v${{ steps.generate_tag.outputs.version }}
+          fromTag: v2.5.1
           toTag: v${{ steps.generate_tag.outputs.version }}.${{ github.run_number }}
           configurationJson: |
             {
@@ -103,7 +103,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{ steps.generate_tag.outputs.version }}.${{ github.run_number }}
+          tag_name: v${{ steps.generate_tag.outputs.version }}.${{ github.run_number }}
           release_name: Release v${{ steps.generate_tag.outputs.version }}.${{ github.run_number }}
           body: ${{ steps.without_checkout.outputs.changelog }}
           draft: false
