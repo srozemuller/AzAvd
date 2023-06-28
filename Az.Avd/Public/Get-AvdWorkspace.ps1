@@ -33,14 +33,14 @@ function Get-AvdWorkspace {
     Begin {
         Write-Verbose "Searching for workspace $WorkspaceName"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         $apiVersion = "?api-version=2021-01-14-preview"
         switch ($PsCmdlet.ParameterSetName) {
             Name {
-                $url = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/workspaces/" + $Name + $apiVersion        
+                $url = $global:AzureApiUrl + "/subscriptions/" + $global:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/workspaces/" + $Name + $apiVersion        
             }
             ResourceId {
-                $url = $Script:AzureApiUrl + $resourceId + $apiVersion  
+                $url = $global:AzureApiUrl + $resourceId + $apiVersion  
             }
         }
     }

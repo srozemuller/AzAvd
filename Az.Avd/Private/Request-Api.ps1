@@ -9,7 +9,7 @@ function Request-Api {
         [ValidateNotNullOrEmpty()]
         [string]$Uri,
 
-        [Parameter(Mandatory)]
+        [Parameter()]
         [ValidateNotNullOrEmpty()]
         [object]$Headers,
 
@@ -20,23 +20,28 @@ function Request-Api {
     Begin {
         Write-Verbose "Requesting url $Uri with method $Method"
         $resultObject = [System.Collections.ArrayList]::new()
+        if ($null -eq $token) {
+            $token = GetAuthToken
+        }
     }
     Process {
         try {
             $parameters = @{
                 Uri     = $Uri
                 Method  = $Method
-                Headers = $Headers
+                Headers = $token
             }
             if ($Body) {
-                $parameters.Add("Body", $Body) > $null
+                $parameters.Add("Body", $($Body)) > $null
             }
-            $results = (Invoke-WebRequest @parameters) | ConvertFrom-Json
-            $resultObject = $results.value
-            if ($null -eq $results.value) {
-                $resultObject = $results
+            $results = Invoke-WebRequest @parameters | ConvertFrom-Json
+            if ($results.PsObject.Properties.name -contains 'value') {
+                $resultObject.Add($results.value) > $null
             }
-            while (($null -ne $results."@odata.nextLink")) {
+            else {
+                $resultObject.Add($results) > $null
+            }
+            while ($null -ne $results.'@odata.nextLink') {
                 $pagingUrl = $results."@odata.nextLink"
                 Write-Verbose "Fetching odata.nextLink: $pagingUrl"
 
@@ -45,13 +50,10 @@ function Request-Api {
                     $resultObject.Add($value) > $null
                 }
             }
-
         }
-        catch [System.Exception] {
-            Write-Error -Message "An error occurred while requesting url $uri. Error message: $($PSItem.Exception.Message)"
+        catch {
+            Write-Error -Message "An error occurred while requesting url $uri. Error message: $($_)"
         }
-    }
-    End {
-        return $resultObject
+        $resultObject
     }
 }

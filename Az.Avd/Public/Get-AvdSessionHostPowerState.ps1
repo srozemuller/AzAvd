@@ -26,12 +26,12 @@ function Get-AvdSessionHostPowerState {
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
-    
+
         [parameter(Mandatory, ParameterSetName = 'All')]
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
-    
+
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$Name,
@@ -43,8 +43,6 @@ function Get-AvdSessionHostPowerState {
     )
     Begin {
         Write-Verbose "[Get-AvdSessionHostPowerState] - Check session host's powerstate"
-        AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
         $sessionHostParameters = @{
             hostpoolName      = $HostpoolName
             resourceGroupName = $ResourceGroupName
@@ -77,15 +75,13 @@ function Get-AvdSessionHostPowerState {
                 Write-Verbose "[Get-AvdSessionHostPowerState] - Found $($sessionHosts.Count) host(s)"
                 $apiVersion = "?api-version=2021-11-01"
                 $powerParameters = @{
-                    uri     = "{0}{1}/instanceView{2}" -f $Script:AzureApiUrl, $_.vmResources.id, $apiVersion
+                    uri     = "{0}{1}/instanceView{2}" -f $global:AzureApiUrl, $_.vmResources.id, $apiVersion
                     Method  = "GET"
-                    Headers = $token
                 }
-                $VmObject = Invoke-RestMethod @powerParameters
+                $VmObject = Request-Api @powerParameters
                 $powerState = $VmObject.statuses.code.Where({ $_ -match 'PowerState' })
                 if ($powerState) {
                     $state = $powerState.Replace('PowerState/', $null)
-                    Write-Information -MessageData "$($_.name) is $state" -InformationAction Continue
                 }
                 $powerObject = @{
                     name       = $_.name
@@ -97,8 +93,8 @@ function Get-AvdSessionHostPowerState {
                 Throw "[Get-AvdSessionHostPowerState] - Not able to get powerstate from $($_.name), $_"
             }
         }
-    }   
+    }
     End {
         $returnObject
-    }    
+    }
 }

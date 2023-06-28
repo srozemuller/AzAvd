@@ -60,15 +60,15 @@ function Update-AvdWorkspace {
     Begin {
         Write-Verbose "Creating workspace $WorkspaceName"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         $apiVersion = "?api-version=2021-01-14-preview"
         switch ($PsCmdlet.ParameterSetName) {
             Name {
-                $url = $Script:AzureApiUrl + "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/workspaces/" + $Name + $apiVersion        
+                $url = $global:AzureApiUrl + "/subscriptions/" + $global:subscriptionId + "/resourceGroups/" + $ResourceGroupName + "/providers/Microsoft.DesktopVirtualization/workspaces/" + $Name + $apiVersion        
                 $getResults = Get-AvdWorkspace -WorkspaceName $WorkspaceName -ResourceGroupName $ResourceGroupName
             }
             ResourceId {
-                $url = $Script:AzureApiUrl + $resourceId + $apiVersion 
+                $url = $global:AzureApiUrl + $resourceId + $apiVersion 
                 $getResults = Get-AvdWorkspace -ResourceId $ResourceId 
             }
         }

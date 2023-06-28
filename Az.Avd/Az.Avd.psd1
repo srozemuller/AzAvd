@@ -115,10 +115,13 @@
         'New-AvdVmTemplate',
         'New-AvdWorkbook',
         'New-AvdWorkspace',
+        'Remove-AvdApplicationGroup',
+        'Remove-AvdHostpool',
         'Remove-AvdInsightsSessionHost',
         'Remove-AvdSessionHost',
         'Remove-AvdSessionHostTags',
         'Remove-AvdWorkbook',
+        'Remove-AvdWorkspace',
         'Repair-AvdSessionHost',
         'Restart-AvdSessionHost',
         'Set-AvdContext',
@@ -174,7 +177,7 @@
             ReleaseNotes = ''
             # Prerelease string of this module
 
-            Prerelease = 'beta'
+            Prerelease = ''
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update/save
             # RequireLicenseAcceptance = $false

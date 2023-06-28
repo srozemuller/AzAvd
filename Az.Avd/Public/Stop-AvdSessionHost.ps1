@@ -15,21 +15,21 @@ function Stop-AvdSessionHost {
     .EXAMPLE
     Stop-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
     #>
-    [CmdletBinding(DefaultParameterSetName = 'All')]
+    [CmdletBinding(DefaultParameterSetName = 'Hostname')]
     param
     (
         [parameter(Mandatory, ParameterSetName = 'All')]
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$HostpoolName,
-    
+
         [parameter(Mandatory, ParameterSetName = 'All')]
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
-    
-        [parameter(Mandatory, ParameterSetName = 'All')]
+
         [parameter(Mandatory, ParameterSetName = 'Hostname')]
+        [parameter(Mandatory, ParameterSetName = 'All')]
         [ValidateNotNullOrEmpty()]
         [string]$Name,
 
@@ -50,17 +50,15 @@ function Stop-AvdSessionHost {
     )
     Begin {
         Write-Verbose "Stopping session hosts"
-        AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
-        $apiVersion = "?api-version=2021-11-01"
         $sessionHostParameters = @{
             hostpoolName      = $HostpoolName
             resourceGroupName = $ResourceGroupName
         }
         $task = 'powerOff'
-        if ($Deallocate.IsPresent)
-        {
+        $hostState = 'stopped'
+        if ($Deallocate.IsPresent) {
             $task = 'deallocate'
+            $hostState = 'deallocated'
         }
     }
     Process {
@@ -90,19 +88,30 @@ function Stop-AvdSessionHost {
         $sessionHosts | ForEach-Object {
             try {
                 Write-Verbose "Found $($sessionHosts.Count) host(s)"
-                Write-Verbose "Starting $($_.name)"
+                Write-Verbose "Stopping host $($_.name)"
                 $powerOffParameters = @{
-                    uri     = "{0}{1}/{2}{3}" -f $Script:AzureApiUrl, $_.properties.resourceId, $task, $apiVersion
+                    uri     = "{0}{1}/{2}?api-version={3}" -f $global:AzureApiUrl, $_.properties.resourceId, $task, $global:vmApiVersion
                     Method  = "POST"
-                    Headers = $token
                 }
-                Invoke-RestMethod @powerOffParameters
-                Write-Information -MessageData "$($_.name) stopped" -InformationAction Continue
+                Request-Api @powerOffParameters
+                $initialState = Get-AvdSessionHostPowerState -Id $_.id
+                if ($initialState.powerstate -eq $hostState) {
+                    Write-Information "$($_.name) is already $hostState" -InformationAction Continue
+                    Continue
+                }
+                else {
+                    do {
+                        $state = Get-AvdSessionHostPowerState -Id $_.id
+                        Write-Information "[Stop-AvdSessionHost] - Checking $($_.name) powerstate for $hostState, current state $($state.powerstate)" -InformationAction Continue
+                        Start-Sleep 3
+                    }
+                    while ($state.powerstate -ne $hostState)
+                }
             }
             catch {
-                Continue 
+                Continue
                 "Not able to stop $($_.name), $_"
             }
         }
-    }       
+    }
 }
