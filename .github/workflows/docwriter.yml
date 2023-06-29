@@ -1,0 +1,43 @@
+name: Deploy AVD Environment Friendly
+
+
+  # Triggers the workflow after the beta workflow check is completed succesfully
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  # workflow_call needed for reuse workflow
+  workflow_call:
+
+env:
+  location: WestEurope
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+    write:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Download a Build Artifact
+            uses: actions/download-artifact@v2.1.0
+            with:
+              name: azModule
+          - name: Checkout repo
+            uses: actions/checkout@v2
+            with:
+              ref: ${{ github.head_ref }}
+          - name: Install PSPlaty module
+            shell: pwsh
+            run: |
+              Set-PSRepository PSGallery -InstallationPolicy Trusted
+              Install-Module PlatyPS -ErrorAction Stop
+          - name: Generate help files
+            shell: pwsh
+            run: |
+              ./Compiler/Az.Avd.generate.docs.ps1
+          - name: Commit & Push changes
+            uses: actions-js/push@master
+            with:
+              github_token: ${{ secrets.GITHUB_TOKEN }}
+              message: 'CommitFromGitAction'
+              directory: ./Docs
+              author_name: ${{ secrets.user }}
+              author_email: ${{ secrets.email }}
