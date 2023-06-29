@@ -15,29 +15,6 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - name: Checkout
-      uses: actions/checkout@v2.4.0
-      with:
-        # Repository name with owner. For example, actions/checkout
-        repository: ''
-        path: 'drop'
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2.3.1
-      with:
-        # Artifact name
-        name: azModule
-        path: drop
-    - name: github env check
-      shell: pwsh
-      run: |
-          dir env:
   test:
     uses: ./.github/workflows/code.tester.yml
   testAvd:
@@ -56,12 +33,12 @@ jobs:
   writeDocs:
       needs:
         - test
-        - testAvd
       uses: ./.github/workflows/docwriter.yml
   publish:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    needs: test
+    needs:
+      - writeDocs
     steps:
       - name: Download a Build Artifact
         uses: actions/download-artifact@v2.1.0
