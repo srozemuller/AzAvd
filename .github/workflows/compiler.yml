@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: BetaCompiler
+name: Compiler
 
 # Controls when the workflow will run
 on:
@@ -8,6 +8,7 @@ on:
     types: [opened, synchronize, reopened]
     branches:
       - 'beta'
+      - 'main'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -40,6 +41,7 @@ jobs:
   test:
     uses: ./.github/workflows/code.tester.yml
   testAvd:
+    if: github.ref == 'refs/heads/beta'
     uses: ./.github/workflows/deploy.avd.env.yml
     secrets:
       CLIENT_ID: ${{ secrets.CLIENT_ID }}
@@ -51,3 +53,25 @@ jobs:
       - test
       - testAvd
     uses: ./.github/workflows/release.yml
+  writeDocs:
+      needs:
+        - test
+        - testAvd
+      uses: ./.github/workflows/docwriter.yml
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2.1.0
+        with:
+          name: azModule
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Publishing module
+        shell: pwsh
+        run: |
+          ./Compiler/Az.Avd.publishPSgallery.ps1 -PS_GALLERY_KEY ${{ secrets.PS_GALLERY_KEY }}
