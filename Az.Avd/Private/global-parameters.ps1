@@ -19,7 +19,7 @@ $global:avdDiagnosticsApiVersion = "2021-05-01-preview"
 $global:workbookApiVersion = "2021-08-01"
 $global:virtualMachineVersion = "2023-03-01"
 
-
+$global:scalingPlanApiVersion = "2022-10-14-preview"
 
 $global:AvdInsightsCountersLocation = '$PSScriptRoot\..\Private\avdinsights-sources.json'
 
