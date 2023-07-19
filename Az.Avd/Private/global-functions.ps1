@@ -197,3 +197,27 @@ function Get-RandomString($type) {
         return $password
     }
 }
+
+function IsValidTime {
+    param (
+        [string]$time
+    )
+    # Define a regular expression pattern to match "09:30" format
+    $pattern = "^([01]\d|2[0-3]):([0-5]\d)$"
+
+    # Check if the time matches the pattern
+    if ($time -match $pattern) {
+        $hour = [int]$matches[1]
+        $minute = [int]$matches[2]
+
+        # Check if the hour and minute values are within valid range
+        if ($hour -ge 0 -and $hour -le 23 -and $minute -ge 0 -and $minute -le 59) {
+            $timeObject = @{
+                hour   = $hour
+                minute = $minute
+            }
+            return $timeObject
+        }
+    }
+    return $false
+}
