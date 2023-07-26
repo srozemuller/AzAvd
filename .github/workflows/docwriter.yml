@@ -32,6 +32,7 @@ jobs:
           - name: Generate help files
             shell: pwsh
             run: |
+              git pull origin main
               ./Compiler/Az.Avd.generate.docs.ps1
           - name: Commit & Push changes
             uses: actions-js/push@master
