@@ -5,46 +5,41 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdApplicationGroup
+# Remove-AvdApplicationGroup
 
 ## SYNOPSIS
-Get AVD applicationgroup information with the assigned permissions.
+Removes an AVD applicationgroup.
 
 ## SYNTAX
 
-### Name
+### All (Default)
 ```
-Get-AvdApplicationGroup -Name <String> -ResourceGroupName <String> [<CommonParameters>]
+Remove-AvdApplicationGroup -ResourceGroupName <String> [<CommonParameters>]
 ```
 
-### Hostpool
+### Name
 ```
-Get-AvdApplicationGroup -HostpoolName <String> -HostpoolResourceGroup <String> [<CommonParameters>]
+Remove-AvdApplicationGroup -Name <String> -ResourceGroupName <String> [<CommonParameters>]
 ```
 
 ### ResourceId
 ```
-Get-AvdApplicationGroup -ResourceId <String> [<CommonParameters>]
+Remove-AvdApplicationGroup -ResourceId <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-With this function you can get information about an AVD application group.
+With this function you can remove an AVD application group.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdApplicationGroup -Name applicationGroup -ResourceGroupName "rg-avd-001"
+Remove-AvdApplicationGroup -ApplicationGroupName applicationGroup -ResourceGroupName rg-avd-001
 ```
 
 ### EXAMPLE 2
 ```
-Get-AvdApplicationGroup -ResourceId "/subscriptions/../applicationGroupname"
-```
-
-### EXAMPLE 3
-```
-Get-AvdApplicationGroup -HostpoolName "avd-hostpool" -HostpoolResourceGroup "rg-avd-001"
+Remove-AvdApplicationGroup -ResourceId "/subscriptions/../applicationGroupname"
 ```
 
 ## PARAMETERS
@@ -65,41 +60,11 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the name of the resourcegroup where the application group resides in.
-
-```yaml
-Type: String
-Parameter Sets: Name
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -HostpoolName
-Enter the name of the hostpool to look in.
-
-```yaml
-Type: String
-Parameter Sets: Hostpool
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -HostpoolResourceGroup
 Enter the name of the resourcegroup where the hostpool resides in.
 
 ```yaml
 Type: String
-Parameter Sets: Hostpool
+Parameter Sets: All, Name
 Aliases:
 
 Required: True
