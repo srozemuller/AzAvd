@@ -197,3 +197,26 @@ function Get-RandomString($type) {
         return $password
     }
 }
+
+function GetHostpoolRgFromId() {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory)]
+        [string]$ResourceId
+    )
+    # Define the regex pattern to extract host pool name and resource group name
+    $regexPattern = "/subscriptions/[^/]+/resourcegroups/(?<ResourceGroupName>[^/]+)/providers/Microsoft\.DesktopVirtualization/hostpools/(?<HostPoolName>[^/]+)/"
+
+    # Use Select-String to find matches based on the regex pattern
+    $matches = $resourceId | Select-String -Pattern $regexPattern
+
+    # Extract the host pool name and resource group name from the matched results
+    $hostPoolName = $matches.Matches[0].Groups["HostPoolName"].Value
+    $resourceGroupName = $matches.Matches[0].Groups["ResourceGroupName"].Value
+
+    $results = @{
+        HostPoolName = $hostPoolName
+        ResourceGroupName = $resourceGroupName}
+    # Output the results
+    return $results
+}

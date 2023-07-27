@@ -7,12 +7,11 @@
 #
 
 @{
-
     # Script module or binary module file associated with this manifest.
     RootModule             = 'Az.Avd.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '3.1.0'
+    ModuleVersion          = '3.0.1'
 
     # Supported PSEditions
     CompatiblePSEditions   = 'Core', 'Desktop'

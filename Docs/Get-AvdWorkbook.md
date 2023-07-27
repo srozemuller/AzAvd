@@ -5,86 +5,86 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdHostPool
+# Get-AvdWorkbook
 
 ## SYNOPSIS
-Get AVD Hostpool information.
+Get all worksbook related to AVD
 
 ## SYNTAX
 
-### Name
+### Name (Default)
 ```
-Get-AvdHostPool -HostPoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+Get-AvdWorkbook [-WorkbookName <Array>] [-ShowContent] [<CommonParameters>]
 ```
 
 ### ResourceId
 ```
-Get-AvdHostPool -ResourceId <String> [<CommonParameters>]
+Get-AvdWorkbook [-WorkbookName <Array>] [-Id <String>] [-ShowContent] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-With this function you can get information about an AVD hostpool.
+Searches at subscription level for all workbooks that are assigned to the AVD resource
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdHostPool
+Get-AvdWorkbook
 ```
 
 ### EXAMPLE 2
 ```
-Get-AvdHostPool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
+Get-AvdWorkbook -WorkbookName "Workbook 1"
 ```
 
 ### EXAMPLE 3
 ```
-Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
+Get-AvdWorkbook -WorkbookName @("Workbook 1", "Workbook")
 ```
 
 ## PARAMETERS
 
-### -HostPoolName
-Enter the name of the hostpool you want information from.
+### -WorkbookName
+Enter the workbook name(s) to search for
 
 ```yaml
-Type: String
-Parameter Sets: Name
+Type: Array
+Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ResourceGroupName
-Enter the name of the resourcegroup where the hostpool resides in.
-
-```yaml
-Type: String
-Parameter Sets: Name
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ResourceId
-Enter the hostpool ResourceId
+### -Id
+{{ Fill Id Description }}
 
 ```yaml
 Type: String
 Parameter Sets: ResourceId
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ShowContent
+{{ Fill ShowContent Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

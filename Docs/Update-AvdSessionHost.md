@@ -22,12 +22,25 @@ Update-AvdSessionHost [-AllowNewSession <Boolean>] [-AssignedUser <String>] [-Fr
 ### Hostname
 ```
 Update-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [-AllowNewSession <Boolean>]
- [-AssignedUser <String>] [-FriendlyName <String>] -SessionHostName <String> [-Force] [<CommonParameters>]
+ [-AssignedUser <String>] [-FriendlyName <String>] -SessionHostName <String> [-Force] [-UnAssignAll]
+ [<CommonParameters>]
 ```
 
 ### All
 ```
 Update-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [-AllowNewSession <Boolean>] [-Force]
+ [-UnAssignAll] [<CommonParameters>]
+```
+
+### Id-All
+```
+Update-AvdSessionHost [-AllowNewSession <Boolean>] [-FriendlyName <String>] -Id <Object> [-Force]
+ [-UnAssignAll] [<CommonParameters>]
+```
+
+### Hostname-All
+```
+Update-AvdSessionHost [-AllowNewSession <Boolean>] -SessionHostName <String> [-Force] [-UnAssignAll]
  [<CommonParameters>]
 ```
 
@@ -43,7 +56,12 @@ Update-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -S
 
 ### EXAMPLE 2
 ```
-Update-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -AssignedUser "" -Force
+Update-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -AssignedUser "user@domain.com" -Force
+```
+
+### EXAMPLE 3
+```
+Update-AvdSessionHost -HostpoolName avd-hostpool -ResourceGroupName rg-avd-01 -SessionHostName avd-hostpool/avd-host-1.avd.domain -UnAssignAll -Force
 ```
 
 ## PARAMETERS
@@ -115,7 +133,7 @@ Enter a friendly name for the current sessionhost.
 
 ```yaml
 Type: String
-Parameter Sets: Id, Hostname
+Parameter Sets: Id, Hostname, Id-All
 Aliases:
 
 Required: False
@@ -130,7 +148,7 @@ Enter the sessionhosts name avd-hostpool/avd-host-1.avd.domain
 
 ```yaml
 Type: String
-Parameter Sets: Hostname
+Parameter Sets: Hostname, Hostname-All
 Aliases:
 
 Required: True
@@ -145,7 +163,7 @@ Accept wildcard characters: False
 
 ```yaml
 Type: Object
-Parameter Sets: Id
+Parameter Sets: Id, Id-All
 Aliases:
 
 Required: True
@@ -161,6 +179,21 @@ Accept wildcard characters: False
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -UnAssignAll
+Unassign all users from the sessionhost.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Hostname, All, Id-All, Hostname-All
 Aliases:
 
 Required: False

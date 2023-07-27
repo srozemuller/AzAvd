@@ -5,86 +5,81 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdHostPool
+# Export-AvdWorkbook
 
 ## SYNOPSIS
-Get AVD Hostpool information.
+Exports the provided workbook
 
 ## SYNTAX
 
-### Name
+### Name (Default)
 ```
-Get-AvdHostPool -HostPoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+Export-AvdWorkbook [-WorkbookName <Array>] [-ExportPath <String>] [<CommonParameters>]
 ```
 
 ### ResourceId
 ```
-Get-AvdHostPool -ResourceId <String> [<CommonParameters>]
+Export-AvdWorkbook [-Id <String>] [-ExportPath <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-With this function you can get information about an AVD hostpool.
+Exports the workbook to a JSON formatted file on the provided file location
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdHostPool
+Get-AvdWorkbook -WorkbookName "Workbook 1" | Export-AvdWorkbook
 ```
 
 ### EXAMPLE 2
 ```
-Get-AvdHostPool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
-```
-
-### EXAMPLE 3
-```
-Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
+Export-AvdWorkbook -WorkbookName @("Workbook 1", "Workbook") -ExportPath .\
 ```
 
 ## PARAMETERS
 
-### -HostPoolName
-Enter the name of the hostpool you want information from.
+### -WorkbookName
+Enter the workbook name(s) to export
 
 ```yaml
-Type: String
+Type: Array
 Parameter Sets: Name
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ResourceGroupName
-Enter the name of the resourcegroup where the hostpool resides in.
-
-```yaml
-Type: String
-Parameter Sets: Name
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ResourceId
-Enter the hostpool ResourceId
+### -Id
+Enter the workbook resource ID
 
 ```yaml
 Type: String
 Parameter Sets: ResourceId
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
+Accept pipeline input: True (ByPropertyName, ByValue)
+Accept wildcard characters: False
+```
+
+### -ExportPath
+The path to export the JSON files to
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: .\
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
