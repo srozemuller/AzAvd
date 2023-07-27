@@ -37,6 +37,7 @@ jobs:
             uses: actions-js/push@master
             with:
               github_token: ${{ secrets.GITHUB_TOKEN }}
+              branch: ${{ github.head_ref }}
               message: 'CommitFromGitAction'
               directory: ./Docs
               author_name: ${{ secrets.user }}

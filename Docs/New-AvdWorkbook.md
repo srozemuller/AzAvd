@@ -5,85 +5,100 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdHostPool
+# New-AvdWorkbook
 
 ## SYNOPSIS
-Get AVD Hostpool information.
+Creates a new workbook for AVD
 
 ## SYNTAX
 
-### Name
 ```
-Get-AvdHostPool -HostPoolName <String> -ResourceGroupName <String> [<CommonParameters>]
-```
-
-### ResourceId
-```
-Get-AvdHostPool -ResourceId <String> [<CommonParameters>]
+New-AvdWorkbook [-ResourceGroupName] <String> [-WorkbookName] <String> [-WorkbookDescription] <String>
+ [-Location] <String> [-Template] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-With this function you can get information about an AVD hostpool.
+Creates a new AVD workbook based on a provided template.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdHostPool
-```
-
-### EXAMPLE 2
-```
-Get-AvdHostPool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
-```
-
-### EXAMPLE 3
-```
-Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
+New-AvdWorkbook -ResourceGroupName rg01 -Location westeurope -WorkbookName generalAvd -WorkbookDescription "All AVD Info" -Template ./AVDWorkbooks/generalEnvironment.json
 ```
 
 ## PARAMETERS
 
-### -HostPoolName
+### -ResourceGroupName
 Enter the name of the hostpool you want information from.
 
 ```yaml
 Type: String
-Parameter Sets: Name
+Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ResourceGroupName
+### -WorkbookName
 Enter the name of the resourcegroup where the hostpool resides in.
 
 ```yaml
 Type: String
-Parameter Sets: Name
+Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ResourceId
+### -WorkbookDescription
 Enter the hostpool ResourceId
 
 ```yaml
 Type: String
-Parameter Sets: ResourceId
+Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
+Position: 3
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Location
+{{ Fill Location Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 4
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Template
+The workbook template in JSON format
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 5
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

@@ -5,87 +5,72 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdHostPool
+# Remove-AvdWorkbook
 
 ## SYNOPSIS
-Get AVD Hostpool information.
+Removes the provided workbook
 
 ## SYNTAX
 
-### Name
+### Name (Default)
 ```
-Get-AvdHostPool -HostPoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+Remove-AvdWorkbook [-WorkbookName <Array>] [<CommonParameters>]
 ```
 
 ### ResourceId
 ```
-Get-AvdHostPool -ResourceId <String> [<CommonParameters>]
+Remove-AvdWorkbook [-Id <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-With this function you can get information about an AVD hostpool.
+Removes the workbook that is provided
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdHostPool
+Get-AvdWorkbook | Remove-AvdWorkbook
 ```
 
 ### EXAMPLE 2
 ```
-Get-AvdHostPool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
+Remove-AvdWorkbook -WorkbookName "Workbook 1"
 ```
 
 ### EXAMPLE 3
 ```
-Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
+Remove-AvdWorkbook -WorkbookName @("Workbook 1", "Workbook")
 ```
 
 ## PARAMETERS
 
-### -HostPoolName
-Enter the name of the hostpool you want information from.
+### -WorkbookName
+Enter the workbook name(s) to remove
 
 ```yaml
-Type: String
+Type: Array
 Parameter Sets: Name
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ResourceGroupName
-Enter the name of the resourcegroup where the hostpool resides in.
-
-```yaml
-Type: String
-Parameter Sets: Name
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ResourceId
-Enter the hostpool ResourceId
+### -Id
+{{ Fill Id Description }}
 
 ```yaml
 Type: String
 Parameter Sets: ResourceId
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByPropertyName, ByValue)
 Accept wildcard characters: False
 ```
 

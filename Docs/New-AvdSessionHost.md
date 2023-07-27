@@ -16,34 +16,34 @@ Deploys session hosts into a hostpool
 ```
 New-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -ImageVersionId <String>
  -SessionHostCount <Int32> [-InitialNumber <Int32>] -Prefix <String> -Version <String> -VmSize <String>
- -Location <String> -DiskType <String> -LocalAdmin <String> -LocalPass <String> -SubnetId <String> [-AzureAd]
- [-Intune] [-TrustedLaunch] [<CommonParameters>]
+ -Location <String> -DiskType <String> [-LocalAdmin <String>] [-LocalPass <String>] -SubnetId <String>
+ [-AzureAd] [-Intune] [-TrustedLaunch] [-MaxParallel <Int32>] [<CommonParameters>]
 ```
 
 ### NativeADWithSig
 ```
 New-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -ImageVersionId <String>
  -SessionHostCount <Int32> [-InitialNumber <Int32>] -Prefix <String> -Version <String> -VmSize <String>
- -Location <String> -DiskType <String> -LocalAdmin <String> -LocalPass <String> -SubnetId <String>
+ -Location <String> -DiskType <String> [-LocalAdmin <String>] [-LocalPass <String>] -SubnetId <String>
  -Domain <String> -OU <String> -DomainJoinAccount <String> -DomainJoinPassword <SecureString> [-Intune]
- [-TrustedLaunch] [<CommonParameters>]
+ [-TrustedLaunch] [-MaxParallel <Int32>] [<CommonParameters>]
 ```
 
 ### NativeADWithMarketPlace
 ```
 New-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -SessionHostCount <Int32>
  [-InitialNumber <Int32>] -Prefix <String> -Publisher <String> -Offer <String> -Sku <String> -VmSize <String>
- -Location <String> -DiskType <String> -LocalAdmin <String> -LocalPass <String> -SubnetId <String>
+ -Location <String> -DiskType <String> [-LocalAdmin <String>] [-LocalPass <String>] -SubnetId <String>
  -Domain <String> -OU <String> -DomainJoinAccount <String> -DomainJoinPassword <SecureString> [-Intune]
- [-TrustedLaunch] [<CommonParameters>]
+ [-TrustedLaunch] [-MaxParallel <Int32>] [<CommonParameters>]
 ```
 
 ### AADWithMarketPlace
 ```
 New-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -SessionHostCount <Int32>
  [-InitialNumber <Int32>] -Prefix <String> -Publisher <String> -Offer <String> -Sku <String> -VmSize <String>
- -Location <String> -DiskType <String> -LocalAdmin <String> -LocalPass <String> -SubnetId <String> [-AzureAd]
- [-Intune] [-TrustedLaunch] [<CommonParameters>]
+ -Location <String> -DiskType <String> [-LocalAdmin <String>] [-LocalPass <String>] -SubnetId <String>
+ [-AzureAd] [-Intune] [-TrustedLaunch] [-MaxParallel <Int32>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -269,9 +269,9 @@ Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
-Default value: None
+Default value: (Get-RandomString -type string)
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -284,9 +284,9 @@ Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
-Default value: None
+Default value: (Get-RandomString -type password)
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -409,6 +409,21 @@ Aliases:
 Required: False
 Position: Named
 Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxParallel
+{{ Fill MaxParallel Description }}
+
+```yaml
+Type: Int32
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: 5
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
