@@ -22,8 +22,6 @@ jobs:
               name: azModule
           - name: Checkout repo
             uses: actions/checkout@v2
-            with:
-              ref: ${{ github.head_ref }}
           - name: Install PSPlaty module
             shell: pwsh
             run: |
@@ -33,10 +31,6 @@ jobs:
             shell: pwsh
             run: |
               ./Compiler/Az.Avd.generate.docs.ps1
-          - name: GitInternalActions
-            run: |
-                git fetch origin main
-                git merge origin main
           - name: Commit & Push changes
             uses: actions-js/push@master
             with:
