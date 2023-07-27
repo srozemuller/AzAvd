@@ -22,6 +22,11 @@ jobs:
               name: azModule
           - name: Checkout repo
             uses: actions/checkout@v2
+<<<<<<< HEAD
+=======
+            with:
+              ref: ${{ github.head_ref }}
+>>>>>>> beta
           - name: Install PSPlaty module
             shell: pwsh
             run: |
