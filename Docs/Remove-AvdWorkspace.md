@@ -5,47 +5,42 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-AvdHostPool
+# Remove-AvdWorkspace
 
 ## SYNOPSIS
-Get AVD Hostpool information.
+Removes a new Azure Virtual Desktop workspace.
 
 ## SYNTAX
 
-### Name
+### Name (Default)
 ```
-Get-AvdHostPool -HostPoolName <String> -ResourceGroupName <String> [<CommonParameters>]
+Remove-AvdWorkspace -Name <String> -ResourceGroupName <String> [<CommonParameters>]
 ```
 
 ### ResourceId
 ```
-Get-AvdHostPool -ResourceId <String> [<CommonParameters>]
+Remove-AvdWorkspace -ResourceId <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-With this function you can get information about an AVD hostpool.
+The function will remove Azure Virtual Desktop workspace.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-AvdHostPool
+Remove-AvdWorkspace -workspacename avd-workspace -resourceGroupName rg-avd-01
 ```
 
 ### EXAMPLE 2
 ```
-Get-AvdHostPool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
-```
-
-### EXAMPLE 3
-```
-Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
+Remove-AvdWorkspace -Id /../resourcegroups/resourceId
 ```
 
 ## PARAMETERS
 
-### -HostPoolName
-Enter the name of the hostpool you want information from.
+### -Name
+{{ Fill Name Description }}
 
 ```yaml
 Type: String
@@ -60,7 +55,7 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the name of the resourcegroup where the hostpool resides in.
+Enter the AVD Hostpool resourcegroup name
 
 ```yaml
 Type: String
@@ -75,7 +70,7 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceId
-Enter the hostpool ResourceId
+Enter the Azure location
 
 ```yaml
 Type: String
@@ -85,7 +80,7 @@ Aliases:
 Required: True
 Position: Named
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
