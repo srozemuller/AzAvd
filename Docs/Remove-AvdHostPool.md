@@ -5,52 +5,51 @@ online version:
 schema: 2.0.0
 ---
 
-# Start-AvdSessionHost
+# Remove-AvdHostPool
 
 ## SYNOPSIS
-Starts AVD Session hosts in a specific hostpool.
+Removes AVD Hostpool information.
 
 ## SYNTAX
 
-### All (Default)
+### Name (Default)
 ```
-Start-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [-Force] [<CommonParameters>]
-```
-
-### Hostname
-```
-Start-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [<CommonParameters>]
+Remove-AvdHostPool -HostPoolName <String> -ResourceGroupName <String> [-Force] [<CommonParameters>]
 ```
 
-### Resource
+### ResourceId
 ```
-Start-AvdSessionHost -Id <Object> [<CommonParameters>]
+Remove-AvdHostPool -ResourceId <String> [-Force] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function starts sessionshosts in a specific Azure Virtual Desktop hostpool.
-If you want to start a specific session host then also provide the name,
+With this function you can remove an AVD hostpool.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Start-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01
+Remove-AvdHostPool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
 ```
 
 ### EXAMPLE 2
 ```
-Start-AvdSessionHost -HostpoolName avd-hostpool-personal -ResourceGroupName rg-avd-01 -SessionHostName avd-host-1.avd.domain
+Remove-AvdHostPool -ResourceId "/subscription/../HostPoolName"
+```
+
+### EXAMPLE 3
+```
+Remove-AvdHostPool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -Force
 ```
 
 ## PARAMETERS
 
-### -HostpoolName
-Enter the AVD Hostpool name
+### -HostPoolName
+Enter the name of the hostpool you want remove.
 
 ```yaml
 Type: String
-Parameter Sets: All, Hostname
+Parameter Sets: Name
 Aliases:
 
 Required: True
@@ -61,11 +60,11 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-Enter the AVD Hostpool resourcegroup name
+Enter the name of the resourcegroup where the hostpool resides in.
 
 ```yaml
 Type: String
-Parameter Sets: All, Hostname
+Parameter Sets: Name
 Aliases:
 
 Required: True
@@ -75,34 +74,18 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Name
-{{ Fill Name Description }}
+### -ResourceId
+Enter the hostpool ResourceId
 
 ```yaml
 Type: String
-Parameter Sets: Hostname
+Parameter Sets: ResourceId
 Aliases:
 
 Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Id
-\[ValidatePattern('^(?:(?!\/).)*$', ErrorMessage = "It looks like you also provided a hostpool, a sessionhost name is enough.
-Provided value {0}")\]
-
-```yaml
-Type: Object
-Parameter Sets: Resource
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
@@ -111,7 +94,7 @@ Accept wildcard characters: False
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: All
+Parameter Sets: (All)
 Aliases:
 
 Required: False
