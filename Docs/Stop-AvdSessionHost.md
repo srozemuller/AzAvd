@@ -12,15 +12,15 @@ Stops AVD Session hosts in a specific hostpool.
 
 ## SYNTAX
 
-### All (Default)
+### Hostname (Default)
 ```
-Stop-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [-Deallocate] [-Force]
+Stop-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [-Deallocate]
  [<CommonParameters>]
 ```
 
-### Hostname
+### All
 ```
-Stop-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [-Deallocate]
+Stop-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [-Deallocate] [-Force]
  [<CommonParameters>]
 ```
 
@@ -52,7 +52,7 @@ Enter the AVD Hostpool name
 
 ```yaml
 Type: String
-Parameter Sets: All, Hostname
+Parameter Sets: Hostname, All
 Aliases:
 
 Required: True
@@ -67,7 +67,7 @@ Enter the AVD Hostpool resourcegroup name
 
 ```yaml
 Type: String
-Parameter Sets: All, Hostname
+Parameter Sets: Hostname, All
 Aliases:
 
 Required: True
@@ -82,7 +82,7 @@ Accept wildcard characters: False
 
 ```yaml
 Type: String
-Parameter Sets: All, Hostname
+Parameter Sets: Hostname, All
 Aliases:
 
 Required: True

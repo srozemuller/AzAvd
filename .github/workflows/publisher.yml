@@ -1,0 +1,39 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Publisher
+
+# Controls when the workflow will run
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - 'main'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.4.0
+        with:
+        # Repository name with owner. For example, actions/checkout
+          repository: ''
+          path: 'drop'
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.3.1
+        with:
+        # Artifact name
+          name: azModule
+          path: drop
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2.1.0
+        with:
+          name: azModule
+      - name: Publishing module
+        shell: pwsh
+        run: |
+          ./Compiler/Az.Avd.publishPSgallery.ps1 -PS_GALLERY_KEY ${{ secrets.PS_GALLERY_KEY }}
