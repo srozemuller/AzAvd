@@ -30,28 +30,32 @@ function Get-AvdScalingPlanSchedule {
 
         [parameter(Mandatory, ParameterSetName = "ResourceId")]
         [ValidateNotNullOrEmpty()]
-        [string]$ScalingResourceId
+        [string]$PlanResourceId
     )
 
     Begin {
         Write-Verbose "Start creating scaling plan schedule for $ScalingPlanName"
+        $resultsObject = [System.Collections.ArrayList]::new()
         switch ($PSCmdlet.ParameterSetName){
             "FriendlyName" {
-                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/scalingPlans/{3}?api-version={4}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $ScalingPlanName, $global:scalingPlanApiVersion
+                $resourceId = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DesktopVirtualization/scalingPlans/{2}" -f $global:subscriptionId, $ResourceGroupName, $ScalingPlanName
             }
-            "ResourceId" {
-                $url = "{0}?api-version={1}" -f $ResourceId, $global:scalingPlanApiVersion
+            default {
+                $resourceId = $PlanResourceId
             }
         }
-        $scalingPlan = Get-AvdScalingPlan -ScalingPlanName $ScalingPlanName -ResourceGroupName $ResourceGroupName
     }
     Process {
-        $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/scalingPlans/{3}/{4}schedules?api-version={5}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $ScalingPlanName, $scalingPlan.scalingPlanType, $global:scalingPlanApiVersion
-        $parameters = @{
-            URI     = $url
-            Method  = "GET"
+        $types = @("personal","pooled")
+        $types | ForEach-Object {
+            $url = "{0}{1}/{2}Schedules?api-version={3}" -f $global:AzureApiUrl, $resourceId, $_, $global:scalingPlanScheduleApiVersion
+            $parameters = @{
+                URI     = $url
+                Method  = "GET"
+            }
+            $results = Request-Api @parameters
+            $resultsObject.Add($results) >> $null
         }
-        $results = Request-Api @parameters
-        $results
+        return $resultsObject
     }
 }

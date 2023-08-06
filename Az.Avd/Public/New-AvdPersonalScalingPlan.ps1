@@ -4,7 +4,7 @@ function New-AvdPersonalScalingPlan {
     Creates a new Azure Virtual Desktop Personal Scaling plan.
     .DESCRIPTION
     The function will create a new Azure Virtual Desktop scaling plan and will assign it to (a) hostpool(s).
-    .PARAMETER ScalingPlanName
+    .PARAMETER Name
     Enter the scaling plan name
     .PARAMETER ResourceGroupName
     Enter the resourcegroup name
@@ -19,14 +19,16 @@ function New-AvdPersonalScalingPlan {
     .PARAMETER TimeZone
     Timezone where the plan lives. (default is the timezone where the script is running.)
     .EXAMPLE
-    New-AvdPersonalScalingPlan -ScalingPlanName 'ScalingPlan' -ResourceGroupName 'rg-avd-01' -Location 'WestEurope'
+    New-AvdPersonalScalingPlan -Name 'ScalingPlan' -ResourceGroupName 'rg-avd-01' -Location 'WestEurope'
+    .EXAMPLE
+    New-AvdPersonalScalingPlan -Name 'ScalingPlan' -ResourceGroupName 'rg-avd-01' -Location 'WestEurope' -AssignToHostpool @{"Hostpool-1" = "RG-AVD-01"}
     #>
     [CmdletBinding()]
     param
     (
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string]$ScalingPlanName,
+        [string]$Name,
 
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
@@ -54,8 +56,8 @@ function New-AvdPersonalScalingPlan {
     )
 
     Begin {
-        Write-Verbose "Start creating scaling plan $ScalingPlanName"
-        $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/scalingPlans/{3}?api-version={4}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $ScalingPlanName, $global:scalingPlanApiVersion
+        Write-Verbose "Start creating scaling plan $Name"
+        $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/scalingPlans/{3}?api-version={4}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $Name, $global:scalingPlanApiVersion
         $body = @{
             location   = $Location
             properties = @{
