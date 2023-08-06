@@ -20,9 +20,7 @@ function Request-Api {
     Begin {
         Write-Verbose "Requesting url $Uri with method $Method"
         $resultObject = [System.Collections.ArrayList]::new()
-        if ($null -eq $global:authHeader) {
-            $global:authHeader = GetAuthToken
-        }
+        $global:authHeader = GetAuthToken
     }
     Process {
         try {
