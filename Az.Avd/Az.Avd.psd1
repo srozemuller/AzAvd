@@ -121,6 +121,8 @@
         'Remove-AvdApplicationGroup',
         'Remove-AvdHostpool',
         'Remove-AvdInsightsSessionHost',
+        'Remove-AvdScalingPlan',
+        'Remove-AvdScalingPlanSchedule',
         'Remove-AvdSessionHost',
         'Remove-AvdSessionHostTags',
         'Remove-AvdWorkbook',
@@ -193,7 +195,7 @@
     } # End of PrivateData hashtable
 
     # HelpInfo URI of this module
-    # HelpInfoURI = ''
+    HelpInfoURI = 'https://github.com/srozemuller/AzAvd/Docs'
 
     # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
     # DefaultCommandPrefix = ''
