@@ -38,7 +38,7 @@ function GetAuthToken {
     }
     $expireTime = Get-Date -UnixTimeSeconds $global:tokenRequest.expires_on
     if ((Get-Date) -gt $expireTime) {
-        Write-Verbose "Current token has expired. Requesting a new token based on the refresh token."
+        Write-Warning "Current token has expired. Requesting a new token based on the refresh token."
         $global:authHeader = Connect-Avd -RefreshToken $global:tokenRequest.refresh_token -TenantID $TenantId
     }
     return $global:authHeader
