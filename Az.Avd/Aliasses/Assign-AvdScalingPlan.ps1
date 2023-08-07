@@ -1,0 +1,1 @@
+New-Alias -Name Assign-AvdScalingPlan -Description "Alias for Publish-AvdScalingPlan" -Value Publish-AvdScalingPlan -Force
