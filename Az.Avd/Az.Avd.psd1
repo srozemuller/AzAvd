@@ -11,7 +11,7 @@
     RootModule             = 'Az.Avd.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '3.0.1'
+    ModuleVersion          = '3.1.0'
 
     # Supported PSEditions
     CompatiblePSEditions   = 'Core', 'Desktop'
@@ -76,6 +76,7 @@
         'Add-AvdSessionHostTags',
         'Connect-Avd',
         'Copy-AvdApplicationGroupPermissions',
+        'Disable-AvdScalingPlan',
         'Disable-AvdSessionHost',
         'Disconnect-Avd',
         'Disconnect-AvdUserSessions',
@@ -84,6 +85,7 @@
         'Enable-AvdInsightsCounters',
         'Enable-AvdInsightsHostpool',
         'Enable-AvdInsightsWorkspace',
+        'Enable-AvdScalingPlan',
         'Enable-AvdSessionHost',
         'Enable-AvdStartVmOnConnect',
         'Export-AvdConfig',
@@ -96,6 +98,8 @@
         'Get-AvdInsightsSessionHost',
         'Get-AvdLatestSessionHost',
         'Get-AvdNetworkInfo',
+        'Get-AvdScalingPlan',
+        'Get-AvdScalingPlanSchedule',
         'Get-AvdSessionHost'
         'Get-AvdSessionHostPowerState',
         'Get-AvdSessionHostResources',
@@ -109,14 +113,19 @@
         'New-AvdAutoScaleRole',
         'New-AvdApplicationGroup',
         'New-AvdHostpool',
+        'New-AvdPersonalScalingPlan',
         'New-AvdScalingPlan',
+        'New-AvdScalingPlanSchedule',
         'New-AvdSessionHost',
         'New-AvdVmTemplate',
         'New-AvdWorkbook',
         'New-AvdWorkspace',
+        'Publish-AvdScalingPlan',
         'Remove-AvdApplicationGroup',
         'Remove-AvdHostpool',
         'Remove-AvdInsightsSessionHost',
+        'Remove-AvdScalingPlan',
+        'Remove-AvdScalingPlanSchedule',
         'Remove-AvdSessionHost',
         'Remove-AvdSessionHostTags',
         'Remove-AvdWorkbook',
@@ -126,6 +135,7 @@
         'Set-AvdContext',
         'Start-AvdSessionHost',
         'Stop-AvdSessionHost',
+        'Unpublish-AvdScalingPlan',
         'Update-AvdDesktopApplication',
         'Update-AvdDiagnostics',
         'Update-AvdHostpool',
@@ -144,8 +154,10 @@
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
     AliasesToExport        = @(
+        'Assign-AvdScalingPlan',
         'Assign-AvdUser',
-        'UnAssign-AvdUser'
+        'UnAssign-AvdUser',
+        'Unassign-AvdScalingPlan'
     )
 
     # DSC resources to export from this module
@@ -189,7 +201,7 @@
     } # End of PrivateData hashtable
 
     # HelpInfo URI of this module
-    # HelpInfoURI = ''
+    HelpInfoURI = 'https://github.com/srozemuller/AzAvd/Docs'
 
     # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
     # DefaultCommandPrefix = ''
