@@ -11,7 +11,7 @@ function Publish-AvdScalingPlan {
     .PARAMETER AssignToHostPool
     Enter the AVD Hostpool names and resource groups (eg. @{"Hostpool-1" = "RG-AVD-01"; "Hostpool-2" = "RG-AVD-02" }
     .EXAMPLE
-    Publish-AvdPersonalScalingPlan -Name 'ScalingPlan' -ResourceGroupName 'rg-avd-01' -AssignToHostpool @{"Hostpool-1" = "RG-AVD-01"}
+    Publish-AvdScalingPlan -Name 'ScalingPlan' -ResourceGroupName 'rg-avd-01' -AssignToHostpool @{"Hostpool-1" = "RG-AVD-01"}
     #>
     [CmdletBinding()]
     param
