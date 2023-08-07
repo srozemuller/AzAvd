@@ -42,41 +42,41 @@ function New-AvdScalingPlanSchedule {
         Specifies the start time for the off-peak period.
     .PARAMETER OffPeakLoadBalancingAlgorithm
         Specifies the load balancing algorithm during the off-peak period. Valid options are "BreadthFirst" and "DepthFirst". (Applicable only for the "Pooled" ParameterSetName)
-    .PARAMETER rampUpStartVMOnConnect
+    .PARAMETER RampUpStartVMOnConnect
         Specifies whether to start VMs on connect during the ramp-up period. Valid options are "Enable" and "Disable". (Applicable only for the "Personal" ParameterSetName)
-    .PARAMETER peakStartVMOnConnect
+    .PARAMETER PeakStartVMOnConnect
         Specifies whether to start VMs on connect during the peak period. Valid options are "Enable" and "Disable". (Applicable only for the "Personal" ParameterSetName)
-    .PARAMETER rampDownStartVMOnConnect
+    .PARAMETER RampDownStartVMOnConnect
         Specifies whether to start VMs on connect during the ramp-down period. Valid options are "Enable" and "Disable". (Applicable only for the "Personal" ParameterSetName)
-    .PARAMETER offPeakStartVMOnConnect
+    .PARAMETER OffPeakStartVMOnConnect
         Specifies whether to start VMs on connect during the off-peak period. Valid options are "Enable" and "Disable". (Applicable only for the "Personal" ParameterSetName)
-    .PARAMETER peakActionOnDisconnect
+    .PARAMETER PeakActionOnDisconnect
         Specifies the action on disconnect during the peak period. Valid options are "Deallocate" and "None". (Applicable only for the "Personal" ParameterSetName)
-    .PARAMETER peakActionOnLogoff
+    .PARAMETER PeakActionOnLogoff
         Specifies the action on logoff during the peak period. Valid options are "Deallocate" and "None". (Applicable only for the "Personal" ParameterSetName)
-    .PARAMETER rampDownActionOnDisconnect
+    .PARAMETER RampDownActionOnDisconnect
         Specifies the action on disconnect during the ramp-down period. Valid options are "Deallocate" and "None". (Applicable only for the "Personal" ParameterSetName)
-    .PARAMETER rampDownActionOnLogoff
+    .PARAMETER RampDownActionOnLogoff
         Specifies the action on logoff during the ramp-down period. Valid options are "Deallocate" and "None". (Applicable only for the "Personal" ParameterSetName)
-    .PARAMETER offPeakActionOnDisconnect
+    .PARAMETER OffPeakActionOnDisconnect
         Specifies the action on disconnect during the off-peak period. Valid options are "Deallocate" and "None". (Applicable only for the "Personal" ParameterSetName)
-    .PARAMETER offPeakActionOnLogoff
+    .PARAMETER OffPeakActionOnLogoff
         Specifies the action on logoff during the off-peak period. Valid options are "Deallocate" and "None". (Applicable only for the "Personal" ParameterSetName)
-    .PARAMETER rampUpMinutesToWaitOnDisconnect
+    .PARAMETER RampUpMinutesToWaitOnDisconnect
         Specifies the minutes to wait on disconnect during the ramp-up period. (Applicable only for the "Personal" ParameterSetName)
-    .PARAMETER rampUpMinutesToWaitOnLogoff
+    .PARAMETER RampUpMinutesToWaitOnLogoff
         Specifies the minutes to wait on logoff during the ramp-up period. (Applicable only for the "Personal" ParameterSetName)
-    .PARAMETER peakMinutesToWaitOnDisconnect
+    .PARAMETER PeakMinutesToWaitOnDisconnect
         Specifies the minutes to wait on disconnect during the peak period. (Applicable only for the "Personal" ParameterSetName)
-    .PARAMETER peakMinutesToWaitOnLogoff
+    .PARAMETER PeakMinutesToWaitOnLogoff
         Specifies the minutes to wait on logoff during the peak period. (Applicable only for the "Personal" ParameterSetName)
-    .PARAMETER rampDownMinutesToWaitOnDisconnect
+    .PARAMETER RampDownMinutesToWaitOnDisconnect
         Specifies the minutes to wait on disconnect during the ramp-down period. (Applicable only for the "Personal" ParameterSetName)
-    .PARAMETER rampDownMinutesToWaitOnLogoff
+    .PARAMETER RampDownMinutesToWaitOnLogoff
         Specifies the minutes to wait on logoff during the ramp-down period. (Applicable only for the "Personal" ParameterSetName)
-    .PARAMETER offPeakMinutesToWaitOnDisconnect
+    .PARAMETER OffPeakMinutesToWaitOnDisconnect
         Specifies the minutes to wait on disconnect during the off-peak period. (Applicable only for the "Personal" ParameterSetName)
-    .PARAMETER offPeakMinutesToWaitOnLogoff
+    .PARAMETER OffPeakMinutesToWaitOnLogoff
         Specifies the minutes to wait on logoff during the off-peak period. (Applicable only for the "Personal" ParameterSetName)
     .EXAMPLE
         New-AvdScalingPlanSchedule -ScalingPlanName "PersonalPlan" -ResourceGroupName 'rg-avd-01' -ScheduleName 'Thursday' -daysOfWeek @("Tuesday") @peakObject @rampUpObject @rampDownObject @offPeakObject
@@ -178,84 +178,84 @@ function New-AvdScalingPlanSchedule {
         [parameter(Mandatory, ParameterSetName = "Personal")]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("Enable", "Disable")]
-        [string]$rampUpStartVMOnConnect,
+        [string]$RampUpStartVMOnConnect,
 
         [parameter(Mandatory, ParameterSetName = "Personal")]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("Enable", "Disable")]
-        [string]$peakStartVMOnConnect,
+        [string]$PeakStartVMOnConnect,
 
         [parameter(Mandatory, ParameterSetName = "Personal")]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("Enable", "Disable")]
-        [string]$rampDownStartVMOnConnect,
+        [string]$RampDownStartVMOnConnect,
 
         [parameter(Mandatory, ParameterSetName = "Personal")]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("Enable", "Disable")]
-        [string]$offPeakStartVMOnConnect,
+        [string]$OffPeakStartVMOnConnect,
 
         [parameter(Mandatory, ParameterSetName = "Personal")]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("Deallocate", "None")]
-        [string]$peakActionOnDisconnect,
+        [string]$PeakActionOnDisconnect,
 
         [parameter(Mandatory, ParameterSetName = "Personal")]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("Deallocate", "None")]
-        [string]$peakActionOnLogoff,
+        [string]$PeakActionOnLogoff,
 
         [parameter(Mandatory, ParameterSetName = "Personal")]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("Deallocate", "None")]
-        [string]$rampDownActionOnDisconnect,
+        [string]$RampDownActionOnDisconnect,
 
         [parameter(Mandatory, ParameterSetName = "Personal")]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("Deallocate", "None")]
-        [string]$rampDownActionOnLogoff,
+        [string]$RampDownActionOnLogoff,
 
         [parameter(Mandatory, ParameterSetName = "Personal")]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("Deallocate", "None")]
-        [string]$offPeakActionOnDisconnect,
+        [string]$OffPeakActionOnDisconnect,
 
         [parameter(Mandatory, ParameterSetName = "Personal")]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("Deallocate", "None")]
-        [string]$offPeakActionOnLogoff,
+        [string]$OffPeakActionOnLogoff,
 
         [parameter(Mandatory, ParameterSetName = "Personal")]
         [ValidateNotNullOrEmpty()]
-        [int]$rampUpMinutesToWaitOnDisconnect,
+        [int]$RampUpMinutesToWaitOnDisconnect,
 
         [parameter(Mandatory, ParameterSetName = "Personal")]
         [ValidateNotNullOrEmpty()]
-        [int]$rampUpMinutesToWaitOnLogoff,
+        [int]$RampUpMinutesToWaitOnLogoff,
 
         [parameter(Mandatory, ParameterSetName = "Personal")]
         [ValidateNotNullOrEmpty()]
-        [int]$peakMinutesToWaitOnDisconnect,
+        [int]$PeakMinutesToWaitOnDisconnect,
 
         [parameter(Mandatory, ParameterSetName = "Personal")]
         [ValidateNotNullOrEmpty()]
-        [int]$peakMinutesToWaitOnLogoff,
+        [int]$PeakMinutesToWaitOnLogoff,
 
         [parameter(Mandatory, ParameterSetName = "Personal")]
         [ValidateNotNullOrEmpty()]
-        [int]$rampDownMinutesToWaitOnDisconnect,
+        [int]$RampDownMinutesToWaitOnDisconnect,
 
         [parameter(Mandatory, ParameterSetName = "Personal")]
         [ValidateNotNullOrEmpty()]
-        [int]$rampDownMinutesToWaitOnLogoff,
+        [int]$RampDownMinutesToWaitOnLogoff,
 
         [parameter(Mandatory, ParameterSetName = "Personal")]
         [ValidateNotNullOrEmpty()]
-        [int]$offPeakMinutesToWaitOnDisconnect,
+        [int]$OffPeakMinutesToWaitOnDisconnect,
 
         [parameter(Mandatory, ParameterSetName = "Personal")]
         [ValidateNotNullOrEmpty()]
-        [int]$offPeakMinutesToWaitOnLogoff
+        [int]$OffPeakMinutesToWaitOnLogoff
     )
 
     Begin {
@@ -276,25 +276,25 @@ function New-AvdScalingPlanSchedule {
                 Write-Verbose "Creating a scaling plan personal type schedule"
                 $scheduleType = "personalSchedules"
                 $personalScheduleObject = @{
-                    rampUpStartVMOnConnect            = $rampUpStartVMOnConnect
-                    rampUpMinutesToWaitOnDisconnect   = $rampUpMinutesToWaitOnDisconnect
-                    rampUpMinutesToWaitOnLogoff       = $rampUpMinutesToWaitOnLogoff
+                    RampUpStartVMOnConnect            = $RampUpStartVMOnConnect
+                    RampUpMinutesToWaitOnDisconnect   = $RampUpMinutesToWaitOnDisconnect
+                    RampUpMinutesToWaitOnLogoff       = $RampUpMinutesToWaitOnLogoff
                     rampUpActionOnDisconnect          = $rampUpActionOnDisconnect
-                    peakStartVMOnConnect              = $peakStartVMOnConnect
-                    peakActionOnDisconnect            = $peakActionOnDisconnect
-                    peakMinutesToWaitOnDisconnect     = $peakMinutesToWaitOnDisconnect
-                    peakActionOnLogoff                = $peakActionOnLogoff
-                    peakMinutesToWaitOnLogoff         = $peakMinutesToWaitOnLogoff
-                    rampDownStartVMOnConnect          = $rampDownStartVMOnConnect
-                    rampDownActionOnDisconnect        = $rampDownActionOnDisconnect
-                    rampDownMinutesToWaitOnDisconnect = $rampDownMinutesToWaitOnDisconnect
-                    rampDownActionOnLogoff            = $rampDownActionOnLogoff
-                    rampDownMinutesToWaitOnLogoff     = $rampDownMinutesToWaitOnLogoff
-                    offPeakStartVMOnConnect           = $offPeakStartVMOnConnect
-                    offPeakActionOnDisconnect         = $offPeakActionOnDisconnect
-                    offPeakMinutesToWaitOnDisconnect  = $offPeakMinutesToWaitOnDisconnect
-                    offPeakActionOnLogoff             = $offPeakActionOnLogoff
-                    offPeakMinutesToWaitOnLogoff      = $offPeakMinutesToWaitOnLogoff
+                    PeakStartVMOnConnect              = $PeakStartVMOnConnect
+                    PeakActionOnDisconnect            = $PeakActionOnDisconnect
+                    PeakMinutesToWaitOnDisconnect     = $PeakMinutesToWaitOnDisconnect
+                    PeakActionOnLogoff                = $PeakActionOnLogoff
+                    PeakMinutesToWaitOnLogoff         = $PeakMinutesToWaitOnLogoff
+                    RampDownStartVMOnConnect          = $RampDownStartVMOnConnect
+                    RampDownActionOnDisconnect        = $RampDownActionOnDisconnect
+                    RampDownMinutesToWaitOnDisconnect = $RampDownMinutesToWaitOnDisconnect
+                    RampDownActionOnLogoff            = $RampDownActionOnLogoff
+                    RampDownMinutesToWaitOnLogoff     = $RampDownMinutesToWaitOnLogoff
+                    OffPeakStartVMOnConnect           = $OffPeakStartVMOnConnect
+                    OffPeakActionOnDisconnect         = $OffPeakActionOnDisconnect
+                    OffPeakMinutesToWaitOnDisconnect  = $OffPeakMinutesToWaitOnDisconnect
+                    OffPeakActionOnLogoff             = $OffPeakActionOnLogoff
+                    OffPeakMinutesToWaitOnLogoff      = $OffPeakMinutesToWaitOnLogoff
                 }
                 $personalScheduleObject.GetEnumerator() | ForEach-Object { $body.properties.Add($_.Key, $_.Value) }
             }
