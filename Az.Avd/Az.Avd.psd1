@@ -76,6 +76,7 @@
         'Add-AvdSessionHostTags',
         'Connect-Avd',
         'Copy-AvdApplicationGroupPermissions',
+        'Disable-AvdScalingPlan',
         'Disable-AvdSessionHost',
         'Disconnect-Avd',
         'Disconnect-AvdUserSessions',
@@ -84,6 +85,7 @@
         'Enable-AvdInsightsCounters',
         'Enable-AvdInsightsHostpool',
         'Enable-AvdInsightsWorkspace',
+        'Enable-AvdScalingPlan',
         'Enable-AvdSessionHost',
         'Enable-AvdStartVmOnConnect',
         'Export-AvdConfig',
@@ -118,6 +120,7 @@
         'New-AvdVmTemplate',
         'New-AvdWorkbook',
         'New-AvdWorkspace',
+        'Publish-AvdScalingPlan',
         'Remove-AvdApplicationGroup',
         'Remove-AvdHostpool',
         'Remove-AvdInsightsSessionHost',
@@ -132,6 +135,7 @@
         'Set-AvdContext',
         'Start-AvdSessionHost',
         'Stop-AvdSessionHost',
+        'Unpublish-AvdScalingPlan',
         'Update-AvdDesktopApplication',
         'Update-AvdDiagnostics',
         'Update-AvdHostpool',
@@ -150,8 +154,10 @@
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
     AliasesToExport        = @(
+        'Assign-AvdScalingPlan',
         'Assign-AvdUser',
-        'UnAssign-AvdUser'
+        'UnAssign-AvdUser',
+        'Unassign-AvdScalingPlan'
     )
 
     # DSC resources to export from this module
