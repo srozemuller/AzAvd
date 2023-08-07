@@ -35,9 +35,7 @@ function Unpublish-AvdScalingPlan {
         $planInfo = Get-AvdScalingPlan -Name $Name -ResourceGroupName $ResourceGroupName
         $body = @{
             location   = $planInfo.location
-            properties = @{
-                hostPoolReferences = @()
-            }
+            properties = @{}
         }
     }
     Process {
@@ -49,6 +47,9 @@ function Unpublish-AvdScalingPlan {
         $hostPoolReferences = $($planInfo.Properties.hostPoolReferences | Where-Object { $_.hostPoolArmPath -notin $hostPoolToRemove })
         if ($null -ne $hostPoolReferences) {
             $body.properties.Add("hostPoolReferences", $hostPoolReferences)
+        }
+        else {
+            $body.properties.Add("hostPoolReferences", @())
         }
         $jsonBody = $body | ConvertTo-Json -Depth 6
         $parameters = @{

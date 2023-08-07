@@ -26,7 +26,7 @@ function Publish-AvdScalingPlan {
 
         [parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [object]$AssignToHostPool
+        [object]$HostPool
     )
 
     Begin {
@@ -47,7 +47,7 @@ function Publish-AvdScalingPlan {
                     scalingPlanEnabled = $_.scalingPlanEnabled
                 }) >> $null
         }
-        $AssignToHostPool.GetEnumerator() | ForEach-Object {
+        $HostPool.GetEnumerator() | ForEach-Object {
             $hostpool = Get-AvdHostPool -HostPoolName $_.Key -ResourceGroupName $_.Value
             $hostPoolReferences.add(@{
                     hostPoolArmPath    = $hostpool.id
