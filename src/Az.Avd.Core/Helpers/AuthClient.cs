@@ -120,4 +120,6 @@ public class AuthClient : IAuthClient
             .ExecuteAsync().Result;
         return authResult;
     }
+    
 }
+
