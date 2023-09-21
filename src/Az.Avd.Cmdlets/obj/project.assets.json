@@ -46,6 +46,41 @@
           }
         }
       },
+      "Azure.ResourceManager/1.6.0": {
+        "type": "package",
+        "dependencies": {
+          "Azure.Core": "1.32.0",
+          "System.Text.Json": "4.7.2"
+        },
+        "compile": {
+          "lib/netstandard2.0/Azure.ResourceManager.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Azure.ResourceManager.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Azure.ResourceManager.DesktopVirtualization/1.1.0": {
+        "type": "package",
+        "dependencies": {
+          "Azure.Core": "1.32.0",
+          "Azure.ResourceManager": "1.6.0",
+          "System.Text.Json": "4.7.2"
+        },
+        "compile": {
+          "lib/netstandard2.0/Azure.ResourceManager.DesktopVirtualization.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Azure.ResourceManager.DesktopVirtualization.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.ApplicationInsights/2.21.0": {
         "type": "package",
         "dependencies": {
@@ -1045,6 +1080,38 @@
         "azureicon.png",
         "lib/netstandard2.0/Azure.Identity.dll",
         "lib/netstandard2.0/Azure.Identity.xml"
+      ]
+    },
+    "Azure.ResourceManager/1.6.0": {
+      "sha512": "pd7DRK7UpsQagSwgkXiWl6k5v3aXTcEwLvyjAtozd/pr86bsmaWEtcA2aa+kt82wMH2L8nw1ByfRIY0hQQSIVg==",
+      "type": "package",
+      "path": "azure.resourcemanager/1.6.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "CHANGELOG.md",
+        "README.md",
+        "azure.resourcemanager.1.6.0.nupkg.sha512",
+        "azure.resourcemanager.nuspec",
+        "azureicon.png",
+        "lib/netstandard2.0/Azure.ResourceManager.dll",
+        "lib/netstandard2.0/Azure.ResourceManager.xml"
+      ]
+    },
+    "Azure.ResourceManager.DesktopVirtualization/1.1.0": {
+      "sha512": "mPG32bLPddA/o1CnpJZJLrux4F3j678BpZq3amZQgKIl7LBLk2B9mWv6DGGq5hZqSF+OJqCZ6XvSfYBVivdN+A==",
+      "type": "package",
+      "path": "azure.resourcemanager.desktopvirtualization/1.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "CHANGELOG.md",
+        "README.md",
+        "azure.resourcemanager.desktopvirtualization.1.1.0.nupkg.sha512",
+        "azure.resourcemanager.desktopvirtualization.nuspec",
+        "azureicon.png",
+        "lib/netstandard2.0/Azure.ResourceManager.DesktopVirtualization.dll",
+        "lib/netstandard2.0/Azure.ResourceManager.DesktopVirtualization.xml"
       ]
     },
     "Microsoft.ApplicationInsights/2.21.0": {
@@ -2233,6 +2300,7 @@
     "net6.0": [
       "Az.Avd.Core >= 1.0.0",
       "Azure.Identity >= 1.10.1",
+      "Azure.ResourceManager.DesktopVirtualization >= 1.1.0",
       "PowerShellStandard.Library >= 7.0.0-preview.1",
       "System.Management.Automation >= 7.2.12"
     ]
@@ -2281,6 +2349,10 @@
           "Azure.Identity": {
             "target": "Package",
             "version": "[1.10.1, )"
+          },
+          "Azure.ResourceManager.DesktopVirtualization": {
+            "target": "Package",
+            "version": "[1.1.0, )"
           },
           "PowerShellStandard.Library": {
             "target": "Package",

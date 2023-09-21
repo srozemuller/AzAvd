@@ -1,11 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "L42bpAPtMvRK4tlyCuxeffFHn6DUnPbBOWri+bRcIR5XUbneL7s5y4QcNnEhOIqwQAqbJXpVk68glXWtsvrhGQ==",
+  "dgSpecHash": "/wcPVLWEqWXZGiOdgP8X2P/jQs4m45f9iQ6X+H6mAkIfzl66sNeuzPFHS9bSU4zV+DZQU9asynLfD3IZY1HnAA==",
   "success": true,
   "projectFilePath": "/Users/srozemuller/repos/AzAvd/src/Az.Avd.Cmdlets/Az.Avd.Cmdlets.csproj",
   "expectedPackageFiles": [
     "/Users/srozemuller/.nuget/packages/azure.core/1.35.0/azure.core.1.35.0.nupkg.sha512",
     "/Users/srozemuller/.nuget/packages/azure.identity/1.10.1/azure.identity.1.10.1.nupkg.sha512",
+    "/Users/srozemuller/.nuget/packages/azure.resourcemanager/1.6.0/azure.resourcemanager.1.6.0.nupkg.sha512",
+    "/Users/srozemuller/.nuget/packages/azure.resourcemanager.desktopvirtualization/1.1.0/azure.resourcemanager.desktopvirtualization.1.1.0.nupkg.sha512",
     "/Users/srozemuller/.nuget/packages/microsoft.applicationinsights/2.21.0/microsoft.applicationinsights.2.21.0.nupkg.sha512",
     "/Users/srozemuller/.nuget/packages/microsoft.bcl.asyncinterfaces/1.1.1/microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "/Users/srozemuller/.nuget/packages/microsoft.csharp/4.7.0/microsoft.csharp.4.7.0.nupkg.sha512",

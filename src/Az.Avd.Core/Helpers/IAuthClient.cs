@@ -6,5 +6,4 @@ public interface IAuthClient
 {
     public Task<AuthenticationResult?> GetTokenFromDeviceFlow();
     public AuthenticationResult? GetTokenFromInteractiveFlow();
-    public AuthenticationResult? GetTokenFromInteractiveFlow();
 }

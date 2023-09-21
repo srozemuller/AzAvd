@@ -1,0 +1,5 @@
+/Users/srozemuller/repos/AzAvd/src/Az.Avd.Core/bin/Debug/net6.0/publish/Az.Avd.Core.dll
+/Users/srozemuller/repos/AzAvd/src/Az.Avd.Core/bin/Debug/net6.0/publish/Az.Avd.Core.deps.json
+/Users/srozemuller/repos/AzAvd/src/Az.Avd.Core/bin/Debug/net6.0/publish/Az.Avd.Core.pdb
+/Users/srozemuller/repos/AzAvd/src/Az.Avd.Core/bin/Debug/net6.0/publish/Microsoft.Identity.Client.dll
+/Users/srozemuller/repos/AzAvd/src/Az.Avd.Core/bin/Debug/net6.0/publish/Microsoft.IdentityModel.Abstractions.dll

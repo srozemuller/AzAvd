@@ -8,16 +8,27 @@ public class ConnectAvdAccountCommand
     [Cmdlet(VerbsCommunications.Connect, "AvdAccount")]
     public class ConnectAvdAccountDeviceCodeCommand : PSCmdlet
     {
-        [Parameter(Position=1,ParameterSetName = "DeviceCode")]
-        public Guid TenantId { get; set; }
+        [Parameter(Position = 1, Mandatory = true)]
+        [ValidateSet("Interactive","Device","ClientSecret")]
+        public string Mode { get; set; }
         
-        
-
         protected override void ProcessRecord()
         {
             var authClient = new AuthClient();
-            var token = authClient.GetDeviceToken(TenantId);
-            var result = authClient.GetTokenFromInteractiveFlow();
+            switch (Mode)
+            {
+                case "Device":
+                {
+                    var token = authClient.GetTokenFromDeviceFlow();
+                    Console.WriteLine("DeviceMode");
+                    break;
+                }
+                case "Interactive":
+                {
+                    var token = authClient.GetTokenFromInteractiveFlow();
+                    break;
+                }
+            }
         }
     }
 }

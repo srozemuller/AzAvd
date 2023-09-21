@@ -8,32 +8,6 @@ public class AuthClient : IAuthClient
     private const string ClientId = AppInfo.AzurePowerShellApp;
     private static readonly string[] Scopes = new string[] { ApiUrls.AzureApiScope };
 
-    public async Task<AuthenticationResult> GetDeviceToken(Guid tenantId)
-    {
-        var authority = $"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/devicecode";
-        var pca = PublicClientApplicationBuilder
-            .Create(ClientId)
-            .WithAuthority(authority)
-            .WithDefaultRedirectUri()
-            .Build();
-
-        var accounts = await pca.GetAccountsAsync();
-
-        // All AcquireToken* methods store the tokens in the cache, so check the cache first
-        try
-        {
-            return await pca.AcquireTokenSilent(Scopes, accounts.FirstOrDefault())
-                .ExecuteAsync();
-        }
-        catch (MsalUiRequiredException ex)
-        {
-            // No token found in the cache or Azure AD insists that a form interactive auth is required (e.g. the tenant admin turned on MFA)
-            // If you want to provide a more complex user experience, check out ex.Classification 
-
-            return await AcquireByDeviceCodeAsync(pca);
-        }
-    }
-
     private static async Task<AuthenticationResult> AcquireByDeviceCodeAsync(IPublicClientApplication pca)
     {
         try
@@ -93,9 +67,31 @@ public class AuthClient : IAuthClient
         return null;
     }
 
-    public Task<AuthenticationResult?> GetTokenFromDeviceFlow()
+    public async Task<AuthenticationResult?> GetTokenFromDeviceFlow()
     {
-        throw new NotImplementedException();
+        var authority = "https://microsoft.com/devicelogin";
+        var pca = PublicClientApplicationBuilder
+            .Create(ClientId)
+            .WithAuthority(authority)
+            .WithDefaultRedirectUri()
+            .Build();
+
+        var accounts = await pca.GetAccountsAsync();
+
+        // All AcquireToken* methods store the tokens in the cache, so check the cache first
+        try
+        {
+            return await pca.AcquireTokenSilent(Scopes, accounts.FirstOrDefault())
+                .ExecuteAsync();
+        }
+        catch (MsalUiRequiredException ex)
+        {
+            // No token found in the cache or Azure AD insists that a form interactive auth is required (e.g. the tenant admin turned on MFA)
+            // If you want to provide a more complex user experience, check out ex.Classification 
+
+            var authResult = await AcquireByDeviceCodeAsync(pca);
+            return authResult;
+        }
     }
 
     public AuthenticationResult? GetTokenFromInteractiveFlow()
@@ -103,7 +99,6 @@ public class AuthClient : IAuthClient
         var pcaOptions = new PublicClientApplicationOptions
         {
             ClientId = AppInfo.AzurePowerShellApp,
-            //TenantId = tenantId.ToString(),
             RedirectUri = "http://localhost"
         };
 
