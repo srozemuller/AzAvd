@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Identity" Version="1.10.1" />
+    <PackageReference Include="PowerShellStandard.Library" Version="7.0.0-preview.1" />
+    <PackageReference Include="System.Management.Automation" Version="7.2.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\Private\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Commands\Public\GetResourceGroupCommand.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Az.Avd.Core\Az.Avd.Core.csproj" />
+  </ItemGroup>
+
+</Project>

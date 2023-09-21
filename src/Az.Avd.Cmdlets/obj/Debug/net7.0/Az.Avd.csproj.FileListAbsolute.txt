@@ -1,0 +1,12 @@
+/Users/srozemuller/RiderProjects/Az.Avd/bin/Debug/net7.0/Az.Avd.deps.json
+/Users/srozemuller/RiderProjects/Az.Avd/bin/Debug/net7.0/Az.Avd.dll
+/Users/srozemuller/RiderProjects/Az.Avd/bin/Debug/net7.0/Az.Avd.pdb
+/Users/srozemuller/RiderProjects/Az.Avd/obj/Debug/net7.0/Az.Avd.csproj.AssemblyReference.cache
+/Users/srozemuller/RiderProjects/Az.Avd/obj/Debug/net7.0/Az.Avd.GeneratedMSBuildEditorConfig.editorconfig
+/Users/srozemuller/RiderProjects/Az.Avd/obj/Debug/net7.0/Az.Avd.AssemblyInfoInputs.cache
+/Users/srozemuller/RiderProjects/Az.Avd/obj/Debug/net7.0/Az.Avd.AssemblyInfo.cs
+/Users/srozemuller/RiderProjects/Az.Avd/obj/Debug/net7.0/Az.Avd.csproj.CoreCompileInputs.cache
+/Users/srozemuller/RiderProjects/Az.Avd/obj/Debug/net7.0/Az.Avd.dll
+/Users/srozemuller/RiderProjects/Az.Avd/obj/Debug/net7.0/refint/Az.Avd.dll
+/Users/srozemuller/RiderProjects/Az.Avd/obj/Debug/net7.0/Az.Avd.pdb
+/Users/srozemuller/RiderProjects/Az.Avd/obj/Debug/net7.0/ref/Az.Avd.dll

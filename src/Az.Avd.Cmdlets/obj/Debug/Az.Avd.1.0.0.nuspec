@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Az.Avd</id>
+    <version>1.0.0</version>
+    <authors>Az.Avd</authors>
+    <description>Package Description</description>
+    <dependencies>
+      <group targetFramework="net6.0">
+        <dependency id="Azure.Identity" version="1.10.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Identity.Client" version="4.56.0" exclude="Build,Analyzers" />
+        <dependency id="System.Management.Automation" version="7.2.12" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="/Users/srozemuller/RiderProjects/Az.Avd/bin/Debug/net6.0/Az.Avd.dll" target="lib/net6.0/Az.Avd.dll" />
+  </files>
+</package>

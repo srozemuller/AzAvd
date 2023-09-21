@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Az.Avd.Cmdlets", "src\Az.Avd.Cmdlets\Az.Avd.Cmdlets.csproj", "{38847119-C988-4F01-8E72-F6079C794F4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Az.Avd.Core", "src\Az.Avd.Core\Az.Avd.Core.csproj", "{98596074-27B8-47EB-93BF-1B0508C73076}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{38847119-C988-4F01-8E72-F6079C794F4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38847119-C988-4F01-8E72-F6079C794F4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38847119-C988-4F01-8E72-F6079C794F4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38847119-C988-4F01-8E72-F6079C794F4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98596074-27B8-47EB-93BF-1B0508C73076}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98596074-27B8-47EB-93BF-1B0508C73076}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98596074-27B8-47EB-93BF-1B0508C73076}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98596074-27B8-47EB-93BF-1B0508C73076}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

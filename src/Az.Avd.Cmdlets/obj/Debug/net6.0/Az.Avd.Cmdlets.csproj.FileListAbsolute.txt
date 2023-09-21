@@ -1,0 +1,15 @@
+/Users/srozemuller/repos/AzAvd/src/Az.Avd.Cmdlets/bin/Debug/net6.0/Az.Avd.Cmdlets.deps.json
+/Users/srozemuller/repos/AzAvd/src/Az.Avd.Cmdlets/bin/Debug/net6.0/Az.Avd.Cmdlets.dll
+/Users/srozemuller/repos/AzAvd/src/Az.Avd.Cmdlets/bin/Debug/net6.0/Az.Avd.Cmdlets.pdb
+/Users/srozemuller/repos/AzAvd/src/Az.Avd.Cmdlets/bin/Debug/net6.0/Az.Avd.Core.dll
+/Users/srozemuller/repos/AzAvd/src/Az.Avd.Cmdlets/bin/Debug/net6.0/Az.Avd.Core.pdb
+/Users/srozemuller/repos/AzAvd/src/Az.Avd.Cmdlets/obj/Debug/net6.0/Az.Avd.Cmdlets.csproj.AssemblyReference.cache
+/Users/srozemuller/repos/AzAvd/src/Az.Avd.Cmdlets/obj/Debug/net6.0/Az.Avd.Cmdlets.GeneratedMSBuildEditorConfig.editorconfig
+/Users/srozemuller/repos/AzAvd/src/Az.Avd.Cmdlets/obj/Debug/net6.0/Az.Avd.Cmdlets.AssemblyInfoInputs.cache
+/Users/srozemuller/repos/AzAvd/src/Az.Avd.Cmdlets/obj/Debug/net6.0/Az.Avd.Cmdlets.AssemblyInfo.cs
+/Users/srozemuller/repos/AzAvd/src/Az.Avd.Cmdlets/obj/Debug/net6.0/Az.Avd.Cmdlets.csproj.CoreCompileInputs.cache
+/Users/srozemuller/repos/AzAvd/src/Az.Avd.Cmdlets/obj/Debug/net6.0/Az.Avd.Cmdlets.csproj.CopyComplete
+/Users/srozemuller/repos/AzAvd/src/Az.Avd.Cmdlets/obj/Debug/net6.0/Az.Avd.Cmdlets.dll
+/Users/srozemuller/repos/AzAvd/src/Az.Avd.Cmdlets/obj/Debug/net6.0/refint/Az.Avd.Cmdlets.dll
+/Users/srozemuller/repos/AzAvd/src/Az.Avd.Cmdlets/obj/Debug/net6.0/Az.Avd.Cmdlets.pdb
+/Users/srozemuller/repos/AzAvd/src/Az.Avd.Cmdlets/obj/Debug/net6.0/ref/Az.Avd.Cmdlets.dll

@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "84+SVnU9GWvW6hsCWofnoYKjIOeKkY/l7LYqJgiBybznoGzB1yeb0QVjL+h791LxGigPsQl+9RYX+Ys+IlRBrg==",
+  "success": true,
+  "projectFilePath": "/Users/srozemuller/repos/AzAvd/src/Az.Avd.Core/Az.Avd.Core.csproj",
+  "expectedPackageFiles": [
+    "/Users/srozemuller/.nuget/packages/microsoft.identity.client/4.55.0/microsoft.identity.client.4.55.0.nupkg.sha512",
+    "/Users/srozemuller/.nuget/packages/microsoft.identitymodel.abstractions/6.22.0/microsoft.identitymodel.abstractions.6.22.0.nupkg.sha512",
+    "/Users/srozemuller/.nuget/packages/microsoft.netcore.app.ref/6.0.20/microsoft.netcore.app.ref.6.0.20.nupkg.sha512",
+    "/Users/srozemuller/.nuget/packages/microsoft.aspnetcore.app.ref/6.0.20/microsoft.aspnetcore.app.ref.6.0.20.nupkg.sha512"
+  ],
+  "logs": []
+}
