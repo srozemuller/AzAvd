@@ -11,25 +11,23 @@ public class ConnectAvdAccountCommand
         [Parameter(Position = 1, Mandatory = true)]
         [ValidateSet("Interactive","Device","ClientSecret")]
         public string Mode { get; set; }
-        
+
         protected override void ProcessRecord()
         {
-            var authClient = new AuthClient();
             switch (Mode)
             {
                 case "Device":
                 {
-                    var token = authClient.GetTokenFromDeviceFlow();
+                    var token = MsalHelper.GetTokenFromDeviceFlow();
                     Console.WriteLine("DeviceMode");
                     break;
                 }
                 case "Interactive":
                 {
-                    var token = authClient.GetTokenFromInteractiveFlow();
+                    var token = MsalHelper.GetTokenFromInteractiveFlow();
                     break;
                 }
             }
         }
     }
 }
-
