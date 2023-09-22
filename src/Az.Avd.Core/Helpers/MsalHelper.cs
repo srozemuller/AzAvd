@@ -8,7 +8,7 @@ public static class MsalHelper
     private const string ClientId = AppInfo.AzurePowerShellApp;
     private static readonly string[] Scopes = { ApiUrls.AzureApiScope };
 
-    private static async Task<AuthenticationResult> AcquireByDeviceCodeAsync(IPublicClientApplication pca)
+    private static async Task<AuthenticationResult?> AcquireByDeviceCodeAsync(IPublicClientApplication pca)
     {
         try
         {
@@ -49,6 +49,7 @@ public static class MsalHelper
             // no active subscriptions for the tenant. Check with your subscription administrator.
             // Mitigation: if you have an active subscription for the tenant this might be that you have a typo in the
             // tenantId (GUID) or tenant domain name.
+            Console.WriteLine(ex.Message);
         }
         catch (OperationCanceledException ex)
         {
@@ -56,12 +57,14 @@ public static class MsalHelper
             // to indicate that the operation was cancelled.
             // See /dotnet/standard/threading/cancellation-in-managed-threads
             // for more detailed information on how C# supports cancellation in managed threads.
+            Console.WriteLine(ex.Message);
         }
         catch (MsalClientException ex)
         {
             // Possible cause - verification code expired before contacting the server
             // This exception will occur if the user does not manage to sign-in before a time out (15 mins) and the
             // call to `AcquireTokenWithDeviceCode` is not cancelled in between
+            Console.WriteLine(ex.Message);
         }
 
         return null;
@@ -89,9 +92,7 @@ public static class MsalHelper
             // No token found in the cache or Azure AD insists that a form interactive auth is required (e.g. the tenant admin turned on MFA)
             // If you want to provide a more complex user experience, check out ex.Classification
 
-            var authResult = await AcquireByDeviceCodeAsync(pca);
-            Console.WriteLine($"Token is: {authResult.AccessToken}");
-            return authResult;
+            return await AcquireByDeviceCodeAsync(pca);
         }
     }
 

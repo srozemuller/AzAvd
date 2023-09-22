@@ -19,7 +19,6 @@ public class ConnectAvdAccountCommand
                 case "Device":
                 {
                     var token = MsalHelper.GetTokenFromDeviceFlow();
-                    Console.WriteLine("DeviceMode");
                     break;
                 }
                 case "Interactive":
