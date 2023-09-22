@@ -1,5 +1,6 @@
 using Az.Avd.Core.Constants;
 using Microsoft.Identity.Client;
+using Microsoft.Identity.Client.Extensions.Msal;
 
 namespace Az.Avd.Core.Helpers;
 
@@ -103,11 +104,27 @@ public class AuthClient : IAuthClient
             RedirectUri = "http://localhost"
         };
 
+        var storageProperties =
+            new StorageCreationPropertiesBuilder(Config.CacheFileName, Config.CacheDir)
+                .WithLinuxKeyring(
+                    Config.LinuxKeyRingSchema,
+                    Config.LinuxKeyRingCollection,
+                    Config.LinuxKeyRingLabel,
+                    Config.LinuxKeyRingAttr1,
+                    Config.LinuxKeyRingAttr2)
+                .WithMacKeyChain(
+                    Config.KeyChainServiceName,
+                    Config.KeyChainAccountName)
+                .Build();
 
         var pca = PublicClientApplicationBuilder
             .CreateWithApplicationOptions(pcaOptions)
+            .WithAuthority(Config.Authority)
+            .WithRedirectUri("http://localhost")
             .Build();
+        var cacheHelper = await MsalCacheHelper.CreateAsync(storageProperties );cacheHelper.RegisterCache(pca.UserTokenCache);
         var accounts =  pca.GetAccountsAsync().Result;
+        
         try
         {
             return pca.AcquireTokenSilent(Scopes, accounts.FirstOrDefault())
@@ -132,4 +149,32 @@ public class AuthClient : IAuthClient
             return authResult;
         }
     }
+}
+
+public class Config
+{
+    // App settings
+    public static readonly string[] Scopes = new[] { "user.read" };
+
+    // Use "common" if you want to allow any "enterprise" (work or school) account AND any user account (live.com, outlook, hotmail) to log in.
+    // Use an actual tenant ID to allow only your enterprise to log in.
+    // Use "organizations" to allow only enterprise log-in, this is required for the Username / Password flow
+    public const string Authority = "https://login.microsoftonline.com/common";
+
+    // DO NOT USE THIS CLIENT ID IN YOUR APP. WE REGULARLY DELETE THEM. CREATE YOUR OWN!
+    public const string ClientId = AppInfo.AzurePowerShellApp; 
+
+    // Cache settings
+    public const string CacheFileName = "myapp_msal_cache.txt";
+    public readonly static string CacheDir = MsalCacheHelper.UserRootDirectory;
+
+    public const string KeyChainServiceName = "myapp_msal_service";
+    public const string KeyChainAccountName = "myapp_msal_account";
+
+    public const string LinuxKeyRingSchema = "com.contoso.devtools.tokencache";
+    public const string LinuxKeyRingCollection = MsalCacheHelper.LinuxKeyRingDefaultCollection;
+    public const string LinuxKeyRingLabel = "MSAL token cache for all Contoso dev tool apps.";
+    public static readonly KeyValuePair<string, string> LinuxKeyRingAttr1 = new KeyValuePair<string, string>("Version", "1");
+    public static readonly KeyValuePair<string, string> LinuxKeyRingAttr2 = new KeyValuePair<string, string>("ProductGroup", "MyApps");
+
 }

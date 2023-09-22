@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.Identity.Client" Version="4.55.0" />
+      <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.31.0" />
     </ItemGroup>
 
 </Project>
