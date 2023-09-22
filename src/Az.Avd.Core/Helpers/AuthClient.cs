@@ -103,26 +103,14 @@ public class AuthClient : IAuthClient
             ClientId = AppInfo.AzurePowerShellApp,
             RedirectUri = "http://localhost"
         };
-
-        var storageProperties =
-            new StorageCreationPropertiesBuilder(Config.CacheFileName, Config.CacheDir)
-                .WithLinuxKeyring(
-                    Config.LinuxKeyRingSchema,
-                    Config.LinuxKeyRingCollection,
-                    Config.LinuxKeyRingLabel,
-                    Config.LinuxKeyRingAttr1,
-                    Config.LinuxKeyRingAttr2)
-                .WithMacKeyChain(
-                    Config.KeyChainServiceName,
-                    Config.KeyChainAccountName)
-                .Build();
+        
 
         var pca = PublicClientApplicationBuilder
             .CreateWithApplicationOptions(pcaOptions)
             .WithAuthority(Config.Authority)
             .WithRedirectUri("http://localhost")
             .Build();
-        var cacheHelper = await MsalCacheHelper.CreateAsync(storageProperties );cacheHelper.RegisterCache(pca.UserTokenCache);
+
         var accounts =  pca.GetAccountsAsync().Result;
         
         try

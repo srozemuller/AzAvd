@@ -5,6 +5,7 @@ namespace Az.Avd.Core.Helpers;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 public class ApiClient
 {
@@ -25,8 +26,8 @@ public class ApiClient
                 {
                     // Read the response content as a string
                     string responseBody = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine("Response:");
-                    Console.WriteLine(responseBody);
+                    var responseJson = JsonConvert.DeserializeObject(responseBody);
+                    Console.WriteLine(responseJson);
                 }
                 else
                 {
