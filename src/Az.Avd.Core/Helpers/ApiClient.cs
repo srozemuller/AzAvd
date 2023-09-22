@@ -1,3 +1,8 @@
+using System.Diagnostics;
+using System.Globalization;
+using Az.Avd.Core.Constants;
+using Microsoft.Identity.Client;
+
 namespace Az.Avd.Core.Helpers;
 
 using System;
@@ -7,11 +12,12 @@ using System.Threading.Tasks;
 
 public class ApiClient
 {
-    static async Task Get(string url)
+    public static async Task Get(string url)
     {
         var httpClient = new HttpClient();
-        var token = AuthClient();
-        httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer {token}");
+        var token = FetchToken.FromCache();
+        Console.WriteLine($"Token is: {token}");
+        httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         {
             try
             {
@@ -29,6 +35,7 @@ public class ApiClient
                 else
                 {
                     Console.WriteLine($"HTTP Request Error: {response.StatusCode} - {response.ReasonPhrase}");
+                    
                 }
             }
             catch (HttpRequestException e)

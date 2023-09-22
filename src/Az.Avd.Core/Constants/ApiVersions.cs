@@ -5,7 +5,7 @@ public class ApiVersions
     private const string AvdApiVersion = "2022-02-10-preview";
     const string sessionHostApiVersion = "2022-02-10-preview";
     const string vmApiVersion = "2022-11-01";
-    const string hostpoolApiVersion = "2022-02-10-preview";
+    public const string HostpoolApiVersion = "2022-02-10-preview";
     const string applicationGroupApiVersion = "2022-02-10-preview";
     const string workspaceApiVersion = "2022-02-10-preview";
     private const string diagnosticsApiVersion = "2020-08-01";

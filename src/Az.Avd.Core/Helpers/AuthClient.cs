@@ -90,11 +90,12 @@ public class AuthClient : IAuthClient
             // If you want to provide a more complex user experience, check out ex.Classification 
 
             var authResult = await AcquireByDeviceCodeAsync(pca);
+            Console.WriteLine($"Token is: {authResult}");
             return authResult;
         }
     }
 
-    public AuthenticationResult? GetTokenFromInteractiveFlow()
+    public async Task<AuthenticationResult?> GetTokenFromInteractiveFlow()
     {
         var pcaOptions = new PublicClientApplicationOptions
         {
@@ -106,20 +107,28 @@ public class AuthClient : IAuthClient
         var pca = PublicClientApplicationBuilder
             .CreateWithApplicationOptions(pcaOptions)
             .Build();
-
-        var viewOptions = new SystemWebViewOptions
+        var accounts = await pca.GetAccountsAsync();
+        try
         {
-            BrowserRedirectSuccess =
-                new Uri("https://rozemuller.com", UriKind.Absolute),
-        };
+            return await pca.AcquireTokenSilent(Scopes, accounts.FirstOrDefault())
+                .ExecuteAsync();
+            
+        }
+        catch
+        {
+            var viewOptions = new SystemWebViewOptions
+            {
+                BrowserRedirectSuccess =
+                    new Uri("https://rozemuller.com", UriKind.Absolute),
+            };
 
-        // Make the interactive token request
-        var authResult = pca.AcquireTokenInteractive(new[] { ApiUrls.AzureApiScope })
-            .WithUseEmbeddedWebView(false)
-            .WithSystemWebViewOptions(viewOptions)
-            .ExecuteAsync().Result;
-        return authResult;
+            // Make the interactive token request
+            var authResult = pca.AcquireTokenInteractive(new[] { ApiUrls.AzureApiScope })
+                .WithUseEmbeddedWebView(false)
+                .WithSystemWebViewOptions(viewOptions)
+                .ExecuteAsync().Result;
+            Console.WriteLine($"Token is: {authResult}");
+            return authResult;
+        }
     }
-    
 }
-
