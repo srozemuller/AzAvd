@@ -18,7 +18,8 @@ public class ConnectAvdAccountCommand
             {
                 case "Device":
                 {
-                    var token = MsalHelper.GetTokenFromDeviceFlow();
+                    var token = MsalHelper.GetATokenForGraph();
+                    Console.WriteLine("DeviceFlow");
                     break;
                 }
                 case "Interactive":
