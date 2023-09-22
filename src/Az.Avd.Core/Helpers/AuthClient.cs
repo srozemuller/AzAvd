@@ -67,7 +67,7 @@ public class AuthClient : IAuthClient
         return null;
     }
 
-    public async Task<AuthenticationResult?> GetTokenFromDeviceFlow()
+    public async Task<AuthenticationResult> GetTokenFromDeviceFlow()
     {
         var authority = "https://microsoft.com/devicelogin";
         var pca = PublicClientApplicationBuilder
@@ -90,12 +90,12 @@ public class AuthClient : IAuthClient
             // If you want to provide a more complex user experience, check out ex.Classification 
 
             var authResult = await AcquireByDeviceCodeAsync(pca);
-            Console.WriteLine($"Token is: {authResult}");
+            Console.WriteLine($"Token is: {authResult.AccessToken}");
             return authResult;
         }
     }
 
-    public async Task<AuthenticationResult?> GetTokenFromInteractiveFlow()
+    public async Task<AuthenticationResult> GetTokenFromInteractiveFlow()
     {
         var pcaOptions = new PublicClientApplicationOptions
         {
@@ -107,14 +107,13 @@ public class AuthClient : IAuthClient
         var pca = PublicClientApplicationBuilder
             .CreateWithApplicationOptions(pcaOptions)
             .Build();
-        var accounts = await pca.GetAccountsAsync();
+        var accounts =  pca.GetAccountsAsync().Result;
         try
         {
-            return await pca.AcquireTokenSilent(Scopes, accounts.FirstOrDefault())
-                .ExecuteAsync();
-            
+            return pca.AcquireTokenSilent(Scopes, accounts.FirstOrDefault())
+                .ExecuteAsync().Result;
         }
-        catch
+        catch (Exception ex)
         {
             var viewOptions = new SystemWebViewOptions
             {
@@ -127,7 +126,9 @@ public class AuthClient : IAuthClient
                 .WithUseEmbeddedWebView(false)
                 .WithSystemWebViewOptions(viewOptions)
                 .ExecuteAsync().Result;
-            Console.WriteLine($"Token is: {authResult}");
+            Console.WriteLine($"Token is: {authResult.AccessToken}");
+            Console.WriteLine($"exception is {ex.Message}");
+            Environment.SetEnvironmentVariable("token",authResult.AccessToken);
             return authResult;
         }
     }

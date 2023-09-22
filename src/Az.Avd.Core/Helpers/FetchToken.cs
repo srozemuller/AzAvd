@@ -6,7 +6,7 @@ namespace Az.Avd.Core.Helpers;
 
 public class FetchToken
 {
-    public static async Task FromCache()
+    public static async Task<AuthenticationResult?> FromCache()
     {
         var pca = PublicClientApplicationBuilder
             .Create(AppInfo.AzurePowerShellApp)
@@ -20,10 +20,12 @@ public class FetchToken
             var token = await pca.AcquireTokenSilent(new[] { ApiUrls.AzureApiScope }, accounts.FirstOrDefault())
                 .ExecuteAsync();
             Console.WriteLine($"{token}");
+            return token;
         }
         catch (MsalUiRequiredException ex)
         {
             Console.WriteLine($"Error Acquiring Token:{System.Environment.NewLine}{ex.Message}");
         }
+        return null;
     }
 }

@@ -1,7 +1,4 @@
-using System.Diagnostics;
-using System.Globalization;
-using Az.Avd.Core.Constants;
-using Microsoft.Identity.Client;
+
 
 namespace Az.Avd.Core.Helpers;
 
@@ -9,20 +6,19 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-
 public class ApiClient
 {
     public static async Task Get(string url)
     {
         var httpClient = new HttpClient();
-        var token = FetchToken.FromCache();
-        Console.WriteLine($"Token is: {token}");
+        var token = Environment.GetEnvironmentVariable("token");
         httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         {
             try
             {
                 // Make a GET request to a specific endpoint
-                HttpResponseMessage response = await httpClient.GetAsync($"{url}");
+                Console.WriteLine($"Sending request to: {url}");
+                HttpResponseMessage response = await httpClient.GetAsync(url);
 
                 // Check if the request was successful
                 if (response.IsSuccessStatusCode)
