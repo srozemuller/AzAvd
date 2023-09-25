@@ -7,14 +7,14 @@ namespace Az.Avd.Cmdlets.Services;
 
 public interface IHostpoolService
 {
-    Task<List<Hostpool>?> GetBySubscriptionAsync(Guid subscriptionId);
+    Task<GraphValueResponse<Hostpool>?> GetBySubscriptionAsync(Guid subscriptionId);
 }
 
 public sealed class HostpoolService : IHostpoolService
 {
     private readonly HttpClient _http = new();
 
-    public async Task<List<Hostpool>?> GetBySubscriptionAsync(Guid subscriptionId)
+    public async Task<GraphValueResponse<Hostpool>?> GetBySubscriptionAsync(Guid subscriptionId)
     {
         var url = $"{ApiUrls.AzureApiUrl}/subscriptions/{subscriptionId}/providers/Microsoft.DesktopVirtualization/hostpools?api-version={ApiVersions.HostpoolApiVersion}";
         var token = MsalHelper.GetTokenFromInteractiveFlow().AccessToken;
@@ -36,7 +36,7 @@ public sealed class HostpoolService : IHostpoolService
 
             // Read the response content as a string
             var responseStream = await response.Content.ReadAsStreamAsync();
-            var result = await JsonSerializer.DeserializeAsync<List<Hostpool>?>(responseStream);
+            var result = await JsonSerializer.DeserializeAsync<GraphValueResponse<Hostpool>?>(responseStream);
 
             Console.Write(result);
 
