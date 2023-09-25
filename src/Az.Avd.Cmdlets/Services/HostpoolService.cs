@@ -36,7 +36,7 @@ public sealed class HostpoolService : IHostpoolService
 
             // Read the response content as a string
             var responseStream = await response.Content.ReadAsStreamAsync();
-            var result = await JsonSerializer.DeserializeAsync<GraphValueResponse<Hostpool>?>(responseStream);
+            var result = await JsonSerializer.DeserializeAsync<GraphValueResponse<Hostpool>?>(responseStream, CustomJsonOptions.Default());
 
             Console.Write(result);
 

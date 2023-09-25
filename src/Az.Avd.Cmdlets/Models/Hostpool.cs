@@ -1,11 +1,10 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Az.Avd.Cmdlets.Models;
 
 public sealed record GraphValueResponse<T>
 {
-    public IEnumerable<T> Value { get; init; } = Enumerable.Empty<T>();
+    public IEnumerable<T>? Value { get; init; }
 }
 
 public sealed record Hostpool
