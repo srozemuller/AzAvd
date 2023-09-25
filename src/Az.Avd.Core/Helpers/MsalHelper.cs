@@ -14,12 +14,16 @@ public static class MsalHelper
 
     public static async Task<AuthenticationResult> GetATokenForGraph()
     {
-        IPublicClientApplication pca = PublicClientApplicationBuilder
+        /*IPublicClientApplication pca = PublicClientApplicationBuilder
             .Create(ClientId)
             .WithAuthority(Authority)
             .WithDefaultRedirectUri()
-            .Build();
-
+            .Build();*/
+        
+        var pca = IdentityHelper.GetDefaultClientApplication();
+        var cacheHelper = IdentityHelper.CreateCacheHelperAsync().Result;
+        cacheHelper.RegisterCache(pca.UserTokenCache);
+        
         var accounts = await pca.GetAccountsAsync();
 
         // All AcquireToken* methods store the tokens in the cache, so check the cache first
@@ -114,6 +118,7 @@ public static class MsalHelper
         }
         catch (MsalUiRequiredException e)
         {
+            Console.WriteLine($"There is an error, {e.Message}");
             return pca
                 .AcquireTokenInteractive(new[] { ApiUrls.AzureApiScope })
                 .ExecuteAsync().Result;
@@ -121,7 +126,9 @@ public static class MsalHelper
         catch (Exception e)
         {
             Console.WriteLine($"An exception has occurred while handling the authentication flow: {e.Message}");
-            throw;
+            return pca
+                .AcquireTokenInteractive(new[] { ApiUrls.AzureApiScope })
+                .ExecuteAsync().Result;
         }
     }
 

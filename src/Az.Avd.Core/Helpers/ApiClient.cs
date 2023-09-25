@@ -12,7 +12,7 @@ public class ApiClient
     public static async Task Get(string url)
     {
         var httpClient = new HttpClient();
-        var token = Environment.GetEnvironmentVariable("token");
+        var token = MsalHelper.GetTokenFromInteractiveFlow().AccessToken;
         httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         {
             try
@@ -26,8 +26,7 @@ public class ApiClient
                 {
                     // Read the response content as a string
                     string responseBody = await response.Content.ReadAsStringAsync();
-                    var responseJson = JsonConvert.DeserializeObject(responseBody);
-                    Console.WriteLine(responseJson);
+                    Console.WriteLine(responseBody);
                 }
                 else
                 {
