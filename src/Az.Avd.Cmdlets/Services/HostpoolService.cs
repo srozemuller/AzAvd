@@ -38,8 +38,6 @@ public sealed class HostpoolService : IHostpoolService
             var responseStream = await response.Content.ReadAsStreamAsync();
             var result = await JsonSerializer.DeserializeAsync<GraphValueResponse<Hostpool>?>(responseStream, CustomJsonOptions.Default());
 
-            Console.Write(result);
-
             return result; // <-- This is the result we want to return
         }
         catch (HttpRequestException e)
