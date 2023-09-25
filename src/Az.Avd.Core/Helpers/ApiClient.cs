@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 public class ApiClient
 {
-    public static async Task Get(string url)
+    public static async Task<List<string[]>?> GetAsync(string url)
     {
         var httpClient = new HttpClient();
         var token = MsalHelper.GetTokenFromInteractiveFlow().AccessToken;
@@ -39,5 +39,6 @@ public class ApiClient
                 Console.WriteLine($"HTTP Request Exception: {e.Message}");
             }
         }
+        return null;
     }
 }

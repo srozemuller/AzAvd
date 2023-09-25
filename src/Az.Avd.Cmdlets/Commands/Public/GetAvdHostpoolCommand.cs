@@ -20,7 +20,7 @@ public class GetAvdHostpoolCommand
         protected override void ProcessRecord()
         {
             var url = $"{ApiUrls.AzureApiUrl}/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.DesktopVirtualization/hostpools/{hostpoolName}?api-version={ApiVersions.HostpoolApiVersion}";
-            ApiClient.Get(url);
+           
         }
     }
 }

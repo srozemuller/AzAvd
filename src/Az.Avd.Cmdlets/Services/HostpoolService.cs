@@ -19,8 +19,12 @@ public sealed class HostpoolService : IHostpoolService
     public async Task<List<Hostpool>?> GetBySubscription(Guid subscriptionId)
     {
         
-        var url = $"{ApiUrls.AzureApiUrl}/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.DesktopVirtualization/hostpools/{hostpoolName}?api-version={ApiVersions.HostpoolApiVersion}";
-        var responseBody = ApiClient.Get(url);
-        var responseJson = JsonConvert.DeserializeObject<HostPoolResource>(responseBody);
+        var url = $"{ApiUrls.AzureApiUrl}/subscriptions/{subscriptionId}/providers/Microsoft.DesktopVirtualization/hostpools?api-version={ApiVersions.HostpoolApiVersion}";
+        var responseBody = ApiClient.GetAsync(url);
+        if (responseBody != null)
+        {
+            return JsonConvert.DeserializeObject<List<Hostpool>?>(responseBody);
+        }
+        return null;
     }
 }
