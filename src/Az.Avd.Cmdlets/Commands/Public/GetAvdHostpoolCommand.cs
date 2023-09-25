@@ -1,4 +1,5 @@
 using System.Management.Automation;
+using Az.Avd.Cmdlets.Services;
 using Az.Avd.Core.Constants;
 using Az.Avd.Core.Helpers;
 namespace Az.Avd.Cmdlets.Commands.Public;
@@ -10,7 +11,7 @@ public class GetAvdHostpoolCommand
     public class GetAvdHostpool : PSCmdlet
     {
         [Parameter(Position = 1, Mandatory = true)]
-        public string subscriptionId { get; set; }
+        public Guid subscriptionId { get; set; }
         [Parameter(Position = 2, Mandatory = true)]
         public string resourceGroupName { get; set; }
         
@@ -19,8 +20,8 @@ public class GetAvdHostpoolCommand
         
         protected override void ProcessRecord()
         {
-            var url = $"{ApiUrls.AzureApiUrl}/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.DesktopVirtualization/hostpools/{hostpoolName}?api-version={ApiVersions.HostpoolApiVersion}";
-           
+            var hostpools = IHostpoolService.GetBySubscription(subscriptionId);
+            Console.Write(hostpools);;
         }
     }
 }

@@ -20,10 +20,34 @@ public sealed class HostpoolService : IHostpoolService
     {
         
         var url = $"{ApiUrls.AzureApiUrl}/subscriptions/{subscriptionId}/providers/Microsoft.DesktopVirtualization/hostpools?api-version={ApiVersions.HostpoolApiVersion}";
-        var responseBody = ApiClient.GetAsync(url);
-        if (responseBody != null)
+        var httpClient = new HttpClient();
+        var token = MsalHelper.GetTokenFromInteractiveFlow().AccessToken;
+        httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         {
-            return JsonConvert.DeserializeObject<List<Hostpool>?>(responseBody);
+            try
+            {
+                // Make a GET request to a specific endpoint
+                Console.WriteLine($"Sending request to: {url}");
+                HttpResponseMessage response = await httpClient.GetAsync(url);
+
+                // Check if the request was successful
+                if (response.IsSuccessStatusCode)
+                {
+                    // Read the response content as a string
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    var goodBody = JsonConvert.DeserializeObject<List<Hostpool>?>(responseBody);
+                    Console.WriteLine(response);
+                }
+                else
+                {
+                    Console.WriteLine($"HTTP Request Error: {response.StatusCode} - {response.ReasonPhrase}");
+                    
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine($"HTTP Request Exception: {e.Message}");
+            }
         }
         return null;
     }
