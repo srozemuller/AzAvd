@@ -7,14 +7,14 @@ namespace Az.Avd.Cmdlets.Services;
 
 public interface IHostpoolService
 {
-    Task<List<Hostpool>?> GetBySubscription(Guid subscriptionId);
+    Task<List<Hostpool>?> GetBySubscriptionAsync(Guid subscriptionId);
 }
 
 public sealed class HostpoolService : IHostpoolService
 {
     private readonly HttpClient _http = new();
 
-    public async Task<List<Hostpool>?> GetBySubscription(Guid subscriptionId)
+    public async Task<List<Hostpool>?> GetBySubscriptionAsync(Guid subscriptionId)
     {
         var url = $"{ApiUrls.AzureApiUrl}/subscriptions/{subscriptionId}/providers/Microsoft.DesktopVirtualization/hostpools?api-version={ApiVersions.HostpoolApiVersion}";
         var token = MsalHelper.GetTokenFromInteractiveFlow().AccessToken;

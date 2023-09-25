@@ -1,9 +1,7 @@
 using System.Management.Automation;
 using Az.Avd.Cmdlets.Services;
-using Az.Avd.Core.Constants;
-using Az.Avd.Core.Helpers;
-namespace Az.Avd.Cmdlets.Commands.Public;
 
+namespace Az.Avd.Cmdlets.Commands.Public;
 
 public class GetAvdHostpoolCommand
 {
@@ -12,16 +10,17 @@ public class GetAvdHostpoolCommand
     {
         [Parameter(Position = 1, Mandatory = true)]
         public Guid subscriptionId { get; set; }
+
         [Parameter(Position = 2, Mandatory = true)]
         public string resourceGroupName { get; set; }
-        
+
         [Parameter(Position = 3, Mandatory = true)]
         public string hostpoolName { get; set; }
-        
+
         protected override void ProcessRecord()
         {
             HostpoolService hostpools = new HostpoolService();
-            var hostpoolDetails = hostpools.GetBySubscription(subscriptionId);
+            var hostpoolDetails = hostpools.GetBySubscriptionAsync(subscriptionId).Result;
 
             // Process and return the hostpool details to PowerShell
             if (hostpoolDetails != null)
