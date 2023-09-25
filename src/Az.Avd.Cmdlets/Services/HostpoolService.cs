@@ -37,6 +37,7 @@ public sealed class HostpoolService : IHostpoolService
                     string responseBody = await response.Content.ReadAsStringAsync();
                     var goodBody = JsonConvert.DeserializeObject<List<Hostpool>?>(responseBody);
                     Console.WriteLine(response);
+                    Console.Write(goodBody);
                 }
                 else
                 {

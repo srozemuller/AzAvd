@@ -20,8 +20,20 @@ public class GetAvdHostpoolCommand
         
         protected override void ProcessRecord()
         {
-            var hostpools = IHostpoolService.GetBySubscription(subscriptionId);
-            Console.Write(hostpools);;
+            HostpoolService hostpools = new HostpoolService();
+            var hostpoolDetails = hostpools.GetBySubscription(subscriptionId);
+
+            // Process and return the hostpool details to PowerShell
+            if (hostpoolDetails != null)
+            {
+                // Write the result to the output stream
+                Console.Write(hostpoolDetails);
+            }
+            else
+            {
+                // Handle error or no results found
+                WriteError(new ErrorRecord(new Exception("Hostpool not found"), "HostpoolNotFound", ErrorCategory.ObjectNotFound, null));
+            }
         }
     }
 }
