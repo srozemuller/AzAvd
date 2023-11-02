@@ -28,7 +28,7 @@ function GetAuthToken {
         [string]$Resource
 
     )
-    if ($null -eq $global:tokenRequest) {
+    if ($null -eq $global:tokenRequest.access_token) {
         Throw "Please connect to AVD first using the Connect-Avd command"
     }
     if ($null -eq $global:subscriptionId) {
@@ -36,7 +36,8 @@ function GetAuthToken {
         $global:subscriptionId = Read-Host -Prompt "Please fill in the subscription Id"
         Write-Information "Subscription ID is set, if you want to changed the context, use Set-AvdContext -SubscriptionID <GUID>" -InformationAction Continue
     }
-    $expireTime = Get-Date -UnixTimeSeconds $global:tokenRequest.expires_on
+    $tokenInfo = Convert-JWTtoken -token $global:tokenRequest.access_token
+    $expireTime = Get-Date -UnixTimeSeconds $tokenInfo.exp
     if ((Get-Date) -gt $expireTime) {
         Write-Warning "Current token has expired. Requesting a new token based on the refresh token."
         $global:authHeader = Connect-Avd -RefreshToken $global:tokenRequest.refresh_token -TenantID $TenantId
