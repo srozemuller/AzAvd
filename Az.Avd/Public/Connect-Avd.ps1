@@ -41,8 +41,7 @@ function Connect-Avd {
         [ValidateNotNullOrEmpty()]
         [string]$RedirectUri = [string]::Empty,
 
-        [parameter(ParameterSetName = "ClientSecret", HelpMessage = "Specify the subscription ID to connect to")]
-        [parameter(ParameterSetName = "DeviceCode", HelpMessage = "Specify the subscription ID to connect to")]
+        [parameter(Mandatory, HelpMessage = "Specify the subscription ID to connect to")]
         [ValidateNotNullOrEmpty()]
         [string]$SubscriptionId,
 
@@ -58,7 +57,10 @@ function Connect-Avd {
         [switch]$DeviceCode,
 
         [parameter(ParameterSetName = "Refresh", HelpMessage = "Specify to refresh an existing access token.")]
-        [string]$RefreshToken
+        [string]$RefreshToken,
+
+        [parameter(ParameterSetName = "AccessToken", HelpMessage = "Provide an access token to use for authentication.")]
+        [string]$AccessToken
     )
     Begin {
         $global:TenantId = $TenantID
@@ -167,6 +169,12 @@ function Connect-Avd {
                     catch {
                         $errorMessage = $_.ErrorDetails.Message | ConvertFrom-Json
                         # If not waiting for auth, throw error
+                    }
+                }
+                "AccessToken" {
+                    Write-Verbose "Using provided access token, that is ease for me. Thank you for that."
+                    $global:tokenRequest = [PSCustomObject]@{
+                        access_token = $AccessToken
                     }
                 }
             }
