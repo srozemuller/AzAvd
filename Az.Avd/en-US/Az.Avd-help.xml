@@ -705,7 +705,7 @@
           </dev:type>
           <dev:defaultValue>[string]::Empty</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>SubscriptionId</maml:name>
           <maml:description>
             <maml:para>Specify a subscription ID to set the Azure context. Can be changed later using Set-AvdContext.</maml:para>
@@ -748,6 +748,18 @@
           <maml:name>TenantID</maml:name>
           <maml:description>
             <maml:para>Specify the tenant name or ID, e.g. tenant.onmicrosoft.com or &lt;GUID&gt;.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>SubscriptionId</maml:name>
+          <maml:description>
+            <maml:para>Specify a subscription ID to set the Azure context. Can be changed later using Set-AvdContext.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -807,7 +819,7 @@
           </dev:type>
           <dev:defaultValue>[string]::Empty</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>SubscriptionId</maml:name>
           <maml:description>
             <maml:para>Specify a subscription ID to set the Azure context. Can be changed later using Set-AvdContext.</maml:para>
@@ -841,6 +853,33 @@
             <maml:uri />
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Connect-Avd</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>SubscriptionId</maml:name>
+          <maml:description>
+            <maml:para>Specify a subscription ID to set the Azure context. Can be changed later using Set-AvdContext.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>AccessToken</maml:name>
+          <maml:description>
+            <maml:para>Provide an access token to use for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
       </command:syntaxItem>
     </command:syntax>
@@ -881,7 +920,7 @@
         </dev:type>
         <dev:defaultValue>[string]::Empty</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>SubscriptionId</maml:name>
         <maml:description>
           <maml:para>Specify a subscription ID to set the Azure context. Can be changed later using Set-AvdContext.</maml:para>
@@ -933,6 +972,18 @@
         <maml:name>RefreshToken</maml:name>
         <maml:description>
           <maml:para>Specify to refresh an existing access token.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>AccessToken</maml:name>
+        <maml:description>
+          <maml:para>Provide an access token to use for authentication.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>

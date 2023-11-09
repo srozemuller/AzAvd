@@ -14,19 +14,24 @@ Get an access token using either authorization code flow or device code flow, th
 
 ### ClientSecret (Default)
 ```
-Connect-Avd [-TenantID <String>] [-ClientID <String>] [-RedirectUri <String>] [-SubscriptionId <String>]
+Connect-Avd [-TenantID <String>] [-ClientID <String>] [-RedirectUri <String>] -SubscriptionId <String>
  [-ClientSecret <String>] [-Scope <String>] [<CommonParameters>]
 ```
 
 ### Refresh
 ```
-Connect-Avd [-TenantID <String>] [-RefreshToken <String>] [<CommonParameters>]
+Connect-Avd [-TenantID <String>] -SubscriptionId <String> [-RefreshToken <String>] [<CommonParameters>]
 ```
 
 ### DeviceCode
 ```
-Connect-Avd -TenantID <String> [-ClientID <String>] [-RedirectUri <String>] [-SubscriptionId <String>]
+Connect-Avd -TenantID <String> [-ClientID <String>] [-RedirectUri <String>] -SubscriptionId <String>
  [-Scope <String>] [-DeviceCode] [<CommonParameters>]
+```
+
+### AccessToken
+```
+Connect-Avd -SubscriptionId <String> [-AccessToken <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -111,10 +116,10 @@ Can be changed later using Set-AvdContext.
 
 ```yaml
 Type: String
-Parameter Sets: ClientSecret, DeviceCode
+Parameter Sets: (All)
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False
@@ -172,6 +177,21 @@ Specify to refresh an existing access token.
 ```yaml
 Type: String
 Parameter Sets: Refresh
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -AccessToken
+Provide an access token to use for authentication.
+
+```yaml
+Type: String
+Parameter Sets: AccessToken
 Aliases:
 
 Required: False
