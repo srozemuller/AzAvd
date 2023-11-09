@@ -15,7 +15,7 @@ function Convert-JWTtoken {
     Write-Verbose $tokenheader
     #Convert from Base64 encoded string to PSObject all at once
     Write-Verbose "Decoded header:"
-    [System.Text.Encoding]::ASCII.GetString([system.convert]::FromBase64String($tokenheader)) | ConvertFrom-Json | fl | Out-Default
+    [System.Text.Encoding]::ASCII.GetString([system.convert]::FromBase64String($tokenheader)) | ConvertFrom-Json | fl | Out-Null
 
     #Payload
     $tokenPayload = $token.Split(".")[1].Replace('-', '+').Replace('_', '/')
