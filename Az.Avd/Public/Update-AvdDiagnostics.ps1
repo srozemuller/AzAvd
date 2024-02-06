@@ -13,7 +13,7 @@ function Update-AvdDiagnostics {
     .PARAMETER LAWorkspace
     Enter the name of the Log Analytics Workspace
     .EXAMPLE
-    Update-AvdDiagnostics -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -AvdWorkspace avd-workpace-001 -DiagnosticsName 
+    Update-AvdDiagnostics -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -LaWorkspace avd-workpace-001 -DiagnosticsName
     #>
     [CmdletBinding(DefaultParameterSetName = 'Category')]
     param (
@@ -42,7 +42,7 @@ function Update-AvdDiagnostics {
         [parameter(Mandatory, ParameterSetName = 'Category')]
         [ValidateSet("Checkpoint", "Error", "Management", "Connection", "HostRegistration","AgentHealthStatus","NetworkData","SessionHostManagement","ConnectionGraphicsData")]
         [array]$Categories
-        
+
     )
     Begin {
         AuthenticationCheck
@@ -57,7 +57,7 @@ function Update-AvdDiagnostics {
         switch ($PsCmdlet.ParameterSetName) {
             LAWS {
                 Write-Verbose "LAWS"
-                try { 
+                try {
                     $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.OperationalInsights/workspaces/{3}?api-version=2020-08-01" -f $global:AzureApiUrl, $global:subscriptionId, $LaResourceGroupName, $LAWorkspace
                     $loganalyticsParameters = @{
                         URI     = $url 
@@ -94,7 +94,7 @@ function Update-AvdDiagnostics {
                 workspaceId = $Laws.id
                 logs        = @($CategoryBody)
             }
-        }    
+        }
         $parameters = @{
             uri     = "{0}/{1}/providers/microsoft.insights/diagnosticSettings/{2}?api-version=2021-05-01-preview" -f $global:AzureApiUrl, $hostpool.Id, $diagnosticsName
             Method  = "PUT"
