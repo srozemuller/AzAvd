@@ -1,5 +1,5 @@
 function Update-AvdHostPoolUpdate {
-    <#
+<#
 .SYNOPSIS
 Get AVD Hostpool information.
 .DESCRIPTION
