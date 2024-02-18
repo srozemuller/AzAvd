@@ -31,7 +31,7 @@ function Connect-Avd {
         [ValidateNotNullOrEmpty()]
         [string]$TenantID,
 
-        [parameter(ParameterSetName = "ClientSecret", HelpMessage = "Application ID (Client ID) for an Azure AD service principal. Uses by default the 'Microsoft Azure PowerShell' service principal Application ID.")]
+        [parameter(Mandatory, ParameterSetName = "ClientSecret", HelpMessage = "Application ID (Client ID) for an Azure AD service principal. Uses by default the 'Microsoft Azure PowerShell' service principal Application ID.")]
         [parameter(ParameterSetName = "DeviceCode")]
         [ValidateNotNullOrEmpty()]
         [string]$ClientID = "1950a258-227b-4e31-a9cf-717495945fc2",
@@ -45,7 +45,7 @@ function Connect-Avd {
         [ValidateNotNullOrEmpty()]
         [string]$SubscriptionId,
 
-        [parameter(ParameterSetName = "ClientSecret", HelpMessage = "Specify the client secret of your registered application")]
+        [parameter(Mandatory, ParameterSetName = "ClientSecret", HelpMessage = "Specify the client secret of your registered application")]
         [string]$ClientSecret,
 
         [parameter(ParameterSetName = "ClientSecret", HelpMessage = "Specify the subscription ID to connect to")]
@@ -132,9 +132,6 @@ function Connect-Avd {
                     }
                 }
                 "ClientSecret" {
-                    if ($null -ne $global:tokenRequest -and (!($global:tokenRequest.scope))){
-                        throw "You allready are logged in with a service principal, disconnect first if you want to reauthenticate. Use Disconnect-Avd"
-                    }
                     # Must be this URL. https://management.azure.com is not working while using the resource object. The scope object is ignored when providing management.azure.com
                     $Scope = 'https://management.core.windows.net/'
                     $tokenBody = @{
@@ -144,6 +141,7 @@ function Connect-Avd {
                         resource      = $Scope
                     }
                     $contentType = "application/x-www-form-urlencoded"
+                    $script:loginType = $PSCmdlet.ParameterSetName
                     $global:tokenRequest = try {
                         Invoke-RestMethod -Method POST -Uri "https://login.microsoftonline.com/$TenantID/oauth2/token" -Body $tokenBody -ContentType $contentType
                     }

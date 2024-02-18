@@ -11,7 +11,6 @@ function Disconnect-Avd {
     param
     ()
     Begin {
-        AuthenticationCheck
     }
     Process {
         Write-Verbose -Message "Logging out from AVD on resource $($global:tokenRequest.resource)"
