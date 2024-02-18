@@ -51,14 +51,14 @@ function Copy-AvdApplicationGroupPermissions {
     Begin {
         Write-Verbose "Start copying permissions"
         AuthenticationCheck
-        $graphToken = GetAuthToken -resource $Script:GraphApiUrl
+        $graphToken = GetAuthToken -resource $global:GraphApiUrl
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
             Name {
                 Write-Verbose "Name and ResourceGroup provided"
                 $FromApplicationResults = Get-AvdApplicationGroup -ApplicationGroupName $FromApplicationGroupName -ResourceGroupName $FromResourceGroupName
-                $Scope = "/subscriptions/" + $Script:subscriptionId + "/resourcegroups/" + $FromResourceGroupName + "/providers/Microsoft.DesktopVirtualization/applicationgroups/" + $FromApplicationGroupName
+                $Scope = "/subscriptions/" + $global:subscriptionId + "/resourcegroups/" + $FromResourceGroupName + "/providers/Microsoft.DesktopVirtualization/applicationgroups/" + $FromApplicationGroupName
                 $AppGroupPermissionsParameters = @{
                     ApplicationGroupName = $ToApplicationGroupName
                     ResourceGroupName = $ToResourceGroupName
@@ -75,12 +75,12 @@ function Copy-AvdApplicationGroupPermissions {
         }
         $FromApplicationResults.assignments.properties | Where-Object { $_.Scope -eq $Scope }  | ForEach-Object {
             If ($_.principalType -eq 'User') {
-                $graphUrl = $Script:GraphApiUrl + "/" + $script:GraphApiVersion + "/users/" + $_.principalId
+                $graphUrl = $global:GraphApiUrl + "/" + $global:GraphApiVersion + "/users/" + $_.principalId
                 $identityInfo = Invoke-RestMethod -Method GET -Uri $graphUrl -Headers $graphToken
                 Write-Verbose "Adding user $($identityInfo.userPrincipalName) to $ToApplicationGroupName"
             }
             Else {
-                $graphUrl = $Script:GraphApiUrl + "/" + $script:GraphApiVersion + "/groups?`$filter=id eq '$($_.principalId)'"
+                $graphUrl = $global:GraphApiUrl + "/" + $global:GraphApiVersion + "/groups?`$filter=id eq '$($_.principalId)'"
                 $identityInfo = (Invoke-RestMethod -Method GET -Uri $graphUrl -Headers $graphToken).value
                 Write-Verbose "Adding group $($identityInfo.displayName) to $ToApplicationGroupName"   
             }

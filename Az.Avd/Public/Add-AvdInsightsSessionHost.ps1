@@ -37,12 +37,12 @@ function Add-AvdInsightsSessionHost {
     )
     Begin {
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
             WorkspaceName {
-                $WorkSpaceId = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.OperationalInsights/workspaces/{2}" -f $script:subscriptionId, $LaResourceGroupName, $LAWorkspace
+                $WorkSpaceId = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.OperationalInsights/workspaces/{2}" -f $global:subscriptionId, $LaResourceGroupName, $LAWorkspace
             }
             default {
                 Write-Verbose "[Add-AvdInsightsSessionHost] - Got a session host's resource ID. Thank you for that!"
@@ -50,8 +50,8 @@ function Add-AvdInsightsSessionHost {
         }
         Write-Verbose "[Add-AvdInsightsSessionHost] - Looking for workspace"
         Write-Verbose $WorkSpaceId
-        $laws = Get-Resource -Method "GET" -ResourceId $WorkSpaceId -ApiVersion $script:diagnosticsApiVersion -Verbose
-        $lawsKey = Get-Resource -Method "POST" -ResourceId $WorkSpaceId -ApiVersion $script:diagnosticsApiVersion -UrlAddition '/sharedKeys'  -Verbose 
+        $laws = Get-Resource -Method "GET" -ResourceId $WorkSpaceId -ApiVersion $global:diagnosticsApiVersion -Verbose
+        $lawsKey = Get-Resource -Method "POST" -ResourceId $WorkSpaceId -ApiVersion $global:diagnosticsApiVersion -UrlAddition '/sharedKeys'  -Verbose 
         
         if ($null -eq $laws) {
             Throw "No workspace found! If it is a new workspace, create the workspace first, $_"
@@ -83,7 +83,7 @@ function Add-AvdInsightsSessionHost {
                         }
                     }
                     $requestParameters = @{
-                        uri     = "{0}{1}/extensions/{2}?api-version={3}" -f $Script:AzureApiUrl, $_.vmResources.id, "OMSExtenstion", "2022-08-01"
+                        uri     = "{0}{1}/extensions/{2}?api-version={3}" -f $global:AzureApiUrl, $_.vmResources.id, "OMSExtenstion", "2022-08-01"
                         Method  = "PUT"
                         Headers = $token
                         Body    = $extensionBody | ConvertTo-Json -Depth 99

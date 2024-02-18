@@ -45,10 +45,7 @@ function Get-AvdSessionHost {
     )
     Begin {
         Write-Verbose "Start searching session hosts"
-        AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
-        $baseUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/sessionHosts/" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName
-        $apiVersion = "?api-version=2021-07-12"
+        $baseUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/sessionHosts" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $HostpoolName
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -60,22 +57,14 @@ function Get-AvdSessionHost {
                     $Name = $Name.Split("/")[-1]
                 }
                 Write-Verbose "Looking for sessionhost $Name"
-                $baseUrl = "{0}{1}" -f $baseUrl, $Name
+                $baseUrl = "{0}/{1}" -f $baseUrl, $Name
             }
             Resource {
                 Write-Verbose "Looking for sessionhost base on resourceId $Id"
                 if ($Id.Contains('Microsoft.Compute/virtualMachines')) {
                     Throw "Please use the session host's resource ID, not the virtual machine"
                 }
-                $baseUrl = "{0}{1}" -f $Script:AzureApiUrl, $Id
-            }
-            AllID {
-                Write-Verbose 'Using base url for getting all session hosts in $hostpoolName'
-                $baseUrl = $Script:AzureApiUrl + $HostPoolResourceId + "/sessionHosts/"
-            }
-            HostId {
-                Write-Verbose "Looking for sessionhost $Id"
-                $baseUrl = "{0}/{1}" -f $Script:AzureApiUrl, $Id
+                $baseUrl = "{0}{1}" -f $global:AzureApiUrl, $Id
             }
             AllID {
                 Write-Verbose 'Using base url for getting all session hosts in $hostpoolName'
@@ -86,38 +75,31 @@ function Get-AvdSessionHost {
                 $baseUrl = "{0}/{1}" -f $Script:AzureApiUrl, $Id
             }
         }
-        write-verbose $baseUrl
+        Write-Verbose $baseUrl
         $parameters = @{
-            uri     = "{0}{1}" -f $baseUrl, $apiVersion
-            Method  = "GET"
-            Headers = $token
+            uri    = "{0}?api-version={1}" -f $baseUrl, $global:AvdApiVersion
+            Method = "GET"
         }
 
         try {
             $allHosts = [System.Collections.ArrayList]@()
-            $results = Invoke-RestMethod @parameters
-            if ($Name -or $Id) {
-                $results | ForEach-Object {
-                    $_ | Add-Member -MemberType NoteProperty -Name HostpoolName -Value $HostpoolName
-                    $_ | Add-Member -MemberType NoteProperty -Name ResourceGroupName -Value $ResourceGroupName
-                }
-                $results.ForEach({ $allHosts.Add($_) | Out-Null })
+            $results = Request-Api @parameters
+            if ($Id) {
+                $HostpoolName = (GetHostpoolRgFromId -ResourceId $Id).HostPoolName
+                $ResourceGroupName = (GetHostpoolRgFromId -ResourceId $Id).ResourceGroupName
+
             }
-            else {
-                $results.value.ForEach({ $allHosts.Add($_) | Out-Null })
-                # Check if there is a next page with session hosts
-                $pagingURL = $results."nextLink"
-                while ($null -ne $pagingURL) {
-                    Write-Verbose "Got a next page url"
-                    $results = Invoke-RestMethod -Uri $pagingURL -Headers $token -Method Get
-                    $pagingURL = $results."nextLink"
-                    $results.value.ForEach({ $allHosts.Add($_) | Out-Null })
-                }
+            $results | ForEach-Object {
+                $_ | Add-Member -MemberType NoteProperty -Name HostpoolName -Value $HostpoolName
+                $_ | Add-Member -MemberType NoteProperty -Name ResourceGroupName -Value $ResourceGroupName
+                $allHosts.Add($_) >> $null
             }
-            $allHosts
+            return $allHosts
         }
         catch {
             Write-Error "Sessionhost not found in $HostpoolName, $($_.Exception.Message)"
         }
     }
 }
+
+$id = "/subscriptions/398c5aee-6356-47fa-b141-2251e85cdb97/resourcegroups/rg-avd-01/providers/Microsoft.DesktopVirtualization/hostpools/avd-auto-hp/sessionhosts/avdauto-2"

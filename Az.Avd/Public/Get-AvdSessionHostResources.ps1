@@ -44,8 +44,6 @@ function Get-AvdSessionHostResources {
 
     Begin {
         Write-Verbose "Start searching for resources"
-        AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
         $apiVersion = "?api-version=2022-03-01"
     }
     Process {
@@ -87,8 +85,7 @@ function Get-AvdSessionHostResources {
             Write-Verbose "Searching for $($_.Name)"
             try {
                 $requestParameters = @{
-                    uri    = "{0}{1}{2}&`$expand=instanceView" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
-                    header = $token
+                    uri    = "{0}{1}{2}&`$expand=instanceView" -f $global:AzureApiUrl, $_.properties.resourceId, $apiVersion
                     method = "GET"
                 }
                 $resource = Request-Api @requestParameters

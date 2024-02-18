@@ -31,7 +31,7 @@ function Get-AvdDiagnosticSettings {
     Begin {
         Write-Verbose "Start searching for host pool"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         $parameters = @{
             HostPoolName      = $HostpoolName 
             ResourceGroupName = $ResourceGroupName
@@ -42,11 +42,11 @@ function Get-AvdDiagnosticSettings {
             Name {
                 Write-Verbose "Got a hostpool's name, searching for the resource ID"
                 $Id = (Get-AvdHostPool @parameters).id
-                $uri =  "{0}/{1}/providers/microsoft.insights/diagnosticSettings/?api-version=2021-05-01-preview" -f $Script:AzureApiUrl, $Id
+                $uri =  "{0}/{1}/providers/microsoft.insights/diagnosticSettings/?api-version=2021-05-01-preview" -f $global:AzureApiUrl, $Id
             }
             Id {
                 Write-Verbose "Thank you for making me ease and providing the ID"
-                $uri =  "{0}/{1}/providers/microsoft.insights/diagnosticSettings/?api-version=2017-05-01-preview" -f $Script:AzureApiUrl, $Id
+                $uri =  "{0}/{1}/providers/microsoft.insights/diagnosticSettings/?api-version=2017-05-01-preview" -f $global:AzureApiUrl, $Id
             }
             Default {
                 Write-Error "No hostpool name and resource group or id provided"

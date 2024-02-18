@@ -14,8 +14,7 @@ Starts AVD Session hosts in a specific hostpool.
 
 ### All (Default)
 ```
-Start-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> -Name <String> [-Force]
- [<CommonParameters>]
+Start-AvdSessionHost -HostpoolName <String> -ResourceGroupName <String> [-Force] [<CommonParameters>]
 ```
 
 ### Hostname
@@ -81,7 +80,7 @@ Accept wildcard characters: False
 
 ```yaml
 Type: String
-Parameter Sets: All, Hostname
+Parameter Sets: Hostname
 Aliases:
 
 Required: True

@@ -7,12 +7,11 @@
 #
 
 @{
-
     # Script module or binary module file associated with this manifest.
     RootModule             = 'Az.Avd.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '3.0.0'
+    ModuleVersion          = '3.2.0'
 
     # Supported PSEditions
     CompatiblePSEditions   = 'Core', 'Desktop'
@@ -77,6 +76,7 @@
         'Add-AvdSessionHostTags',
         'Connect-Avd',
         'Copy-AvdApplicationGroupPermissions',
+        'Disable-AvdScalingPlan',
         'Disable-AvdSessionHost',
         'Disconnect-Avd',
         'Disconnect-AvdUserSessions',
@@ -85,6 +85,7 @@
         'Enable-AvdInsightsCounters',
         'Enable-AvdInsightsHostpool',
         'Enable-AvdInsightsWorkspace',
+        'Enable-AvdScalingPlan',
         'Enable-AvdSessionHost',
         'Enable-AvdStartVmOnConnect',
         'Export-AvdConfig',
@@ -93,17 +94,16 @@
         'Get-AvdContext',
         'Get-AvdDiagnosticSettings',
         'Get-AvdHostPool',
-        'Get-AvdHostPoolUpdate',
-        'Get-AvdHostPoolUpdateConfiguration',
-        'Get-AvdHostPoolUpldateResults'
-        'Get-AvdHostPoolUpdateSchedule',
-        'Get-AvdHostPoolUpdateState',
         'Get-AvdImageVersionStatus',
+        'Get-AvdInsightsSessionHost',
         'Get-AvdLatestSessionHost',
         'Get-AvdNetworkInfo',
+        'Get-AvdScalingPlan',
+        'Get-AvdScalingPlanSchedule',
         'Get-AvdSessionHost'
         'Get-AvdSessionHostPowerState',
         'Get-AvdSessionHostResources',
+        'Get-AvdUserAssignments',
         'Get-AvdUserSessions',
         'Get-AvdVmTemplate',
         'Get-AvdWorkbook',
@@ -114,15 +114,23 @@
         'New-AvdAutoScaleRole',
         'New-AvdApplicationGroup',
         'New-AvdHostpool',
+        'New-AvdPersonalScalingPlan',
         'New-AvdScalingPlan',
+        'New-AvdScalingPlanSchedule',
         'New-AvdSessionHost',
         'New-AvdVmTemplate',
         'New-AvdWorkbook',
         'New-AvdWorkspace',
+        'Publish-AvdScalingPlan',
+        'Remove-AvdApplicationGroup',
+        'Remove-AvdHostpool',
         'Remove-AvdInsightsSessionHost',
+        'Remove-AvdScalingPlan',
+        'Remove-AvdScalingPlanSchedule',
         'Remove-AvdSessionHost',
         'Remove-AvdSessionHostTags',
         'Remove-AvdWorkbook',
+        'Remove-AvdWorkspace',
         'Repair-AvdSessionHost',
         'Restart-AvdSessionHost',
         'Set-AvdContext',
@@ -131,11 +139,10 @@
         'Set-AvdHostPoolUpdate',
         'Start-AvdHostPoolUpdate',
         'Stop-AvdHostPoolUpdate',
+        'Unpublish-AvdScalingPlan',
         'Update-AvdDesktopApplication',
         'Update-AvdDiagnostics',
         'Update-AvdHostpool',
-        'Update-AvdHostPoolUpdate',
-        'Update-AvdHostpoolImageLocation',
         'Update-AvdRegistrationToken',
         'Update-AvdScheduledAgentsUpdate',
         'Update-AvdSessionHost',
@@ -151,8 +158,10 @@
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
     AliasesToExport        = @(
+        'Assign-AvdScalingPlan',
         'Assign-AvdUser',
-        'UnAssign-AvdUser'
+        'UnAssign-AvdUser',
+        'Unassign-AvdScalingPlan'
     )
 
     # DSC resources to export from this module
@@ -183,7 +192,7 @@
             ReleaseNotes = ''
             # Prerelease string of this module
 
-            Prerelease = 'beta'
+            Prerelease = ''
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update/save
             # RequireLicenseAcceptance = $false
@@ -196,7 +205,7 @@
     } # End of PrivateData hashtable
 
     # HelpInfo URI of this module
-    # HelpInfoURI = ''
+    HelpInfoURI = 'https://github.com/srozemuller/AzAvd/Docs'
 
     # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
     # DefaultCommandPrefix = ''

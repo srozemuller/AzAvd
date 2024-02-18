@@ -12,7 +12,7 @@ Get AVD Hostpool information.
 
 ## SYNTAX
 
-### Name (Default)
+### Name
 ```
 Get-AvdHostPool -HostPoolName <String> -ResourceGroupName <String> [<CommonParameters>]
 ```
@@ -29,10 +29,15 @@ With this function you can get information about an AVD hostpool.
 
 ### EXAMPLE 1
 ```
-Get-AvdHostPool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
+Get-AvdHostPool
 ```
 
 ### EXAMPLE 2
+```
+Get-AvdHostPool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
+```
+
+### EXAMPLE 3
 ```
 Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
 ```

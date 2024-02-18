@@ -30,7 +30,7 @@ function Export-AvdWorkbook {
         [string]$ExportPath = ".\"
     )
     Begin {
-        Write-Verbose "Start requesting workbooks in $script:subscriptionId for export"
+        Write-Verbose "Start requesting workbooks in $global:subscriptionId for export"
         AuthenticationCheck
     }
     Process {

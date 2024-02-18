@@ -51,7 +51,7 @@ function Disconnect-AvdUserSessions {
     Begin {
         Write-Verbose "Start searching session hosts"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         $apiVersion = "?api-version=2021-07-12"
         $avdParameters = @{
             HostpoolName      = $HostpoolName
@@ -78,7 +78,7 @@ function Disconnect-AvdUserSessions {
             if ($all) {
                 $userSessions | ForEach-Object {
                     $parameters = @{
-                        uri     = "{0}{1}{2}" -f $Script:AzureApiUrl, $_.id, $apiVersion
+                        uri     = "{0}{1}{2}" -f $global:AzureApiUrl, $_.id, $apiVersion
                         Method  = "DELETE"
                         Headers = $token
                     }
@@ -89,7 +89,7 @@ function Disconnect-AvdUserSessions {
                 $userId = $userSessions | Where-Object { $_.properties.userPrincipalName -eq $LogonName }
 
                 $parameters = @{
-                    uri     = "{0}{1}{2}" -f $Script:AzureApiUrl, $($userId.id), $apiVersion
+                    uri     = "{0}{1}{2}" -f $global:AzureApiUrl, $($userId.id), $apiVersion
                     Method  = "DELETE"
                     Headers = $token
                 }

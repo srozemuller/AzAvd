@@ -31,7 +31,7 @@ function Connect-Avd {
         [ValidateNotNullOrEmpty()]
         [string]$TenantID,
 
-        [parameter(ParameterSetName = "ClientSecret", HelpMessage = "Application ID (Client ID) for an Azure AD service principal. Uses by default the 'Microsoft Azure PowerShell' service principal Application ID.")]
+        [parameter(Mandatory, ParameterSetName = "ClientSecret", HelpMessage = "Application ID (Client ID) for an Azure AD service principal. Uses by default the 'Microsoft Azure PowerShell' service principal Application ID.")]
         [parameter(ParameterSetName = "DeviceCode")]
         [ValidateNotNullOrEmpty()]
         [string]$ClientID = "1950a258-227b-4e31-a9cf-717495945fc2",
@@ -41,12 +41,11 @@ function Connect-Avd {
         [ValidateNotNullOrEmpty()]
         [string]$RedirectUri = [string]::Empty,
 
-        [parameter(ParameterSetName = "ClientSecret", HelpMessage = "Specify the subscription ID to connect to")]
-        [parameter(ParameterSetName = "DeviceCode", HelpMessage = "Specify the subscription ID to connect to")]
+        [parameter(Mandatory, HelpMessage = "Specify the subscription ID to connect to")]
         [ValidateNotNullOrEmpty()]
         [string]$SubscriptionId,
 
-        [parameter(ParameterSetName = "ClientSecret", HelpMessage = "Specify the client secret of your registered application")]
+        [parameter(Mandatory, ParameterSetName = "ClientSecret", HelpMessage = "Specify the client secret of your registered application")]
         [string]$ClientSecret,
 
         [parameter(ParameterSetName = "ClientSecret", HelpMessage = "Specify the subscription ID to connect to")]
@@ -58,13 +57,16 @@ function Connect-Avd {
         [switch]$DeviceCode,
 
         [parameter(ParameterSetName = "Refresh", HelpMessage = "Specify to refresh an existing access token.")]
-        [string]$RefreshToken
+        [string]$RefreshToken,
+
+        [parameter(ParameterSetName = "AccessToken", HelpMessage = "Provide an access token to use for authentication.")]
+        [string]$AccessToken
     )
     Begin {
-        $script:TenantId = $TenantID
+        $global:TenantId = $TenantID
         if ($SubscriptionId) {
             Write-Verbose "Subscription ID provided, setting context to $SubscriptionId"
-            $script:subscriptionId = $SubscriptionId
+            $global:subscriptionId = $SubscriptionId
         }
         # Determine the correct RedirectUri (also known as Reply URL) to use with MSAL.PS
         if ($ClientID -eq "1950a258-227b-4e31-a9cf-717495945fc2") {
@@ -97,7 +99,7 @@ function Connect-Avd {
         try {
             switch ($PSCmdlet.ParameterSetName) {
                 "DeviceCode" {
-                    if ($null -ne $script:tokenRequest -and ($script:tokenRequest.scope -eq 'user_impersonation')){
+                    if ($null -ne $global:tokenRequest -and ($global:tokenRequest.scope -eq 'user_impersonation')){
                         throw "You allready are logged in with user_impersonation, disconnect first if you want to reauthenticate. Use Disconnect-Avd"
                     }
                     $clientBody = @{
@@ -107,7 +109,7 @@ function Connect-Avd {
                     }
                     $requestUrl = Invoke-WebRequest -Method POST -Uri "https://login.microsoftonline.com/$($TenantID)/oauth2/v2.0/devicecode" -Body $clientBody
                     $content = ($requestUrl.Content | ConvertFrom-Json)
-                    if ([string]::IsNullOrEmpty($script:tokenRequest.access_token)) {
+                    if ([string]::IsNullOrEmpty($global:tokenRequest.access_token)) {
                         Write-Information "`n$($content.message)" -InformationAction Continue
                     }
                     # Get OAuth Token
@@ -116,8 +118,8 @@ function Connect-Avd {
                         code       = $content.device_code
                         client_id  = $ClientId
                     }
-                    while ([string]::IsNullOrEmpty($script:tokenRequest.access_token)) {
-                        $script:tokenRequest = try {
+                    while ([string]::IsNullOrEmpty($global:tokenRequest.access_token)) {
+                        $global:tokenRequest = try {
                             Invoke-RestMethod -Method POST -Uri "https://login.microsoftonline.com/$TenantID/oauth2/token" -Body $tokenBody
                         }
                         catch {
@@ -130,9 +132,6 @@ function Connect-Avd {
                     }
                 }
                 "ClientSecret" {
-                    if ($null -ne $script:tokenRequest -and (!($script:tokenRequest.scope))){
-                        throw "You allready are logged in with a service principal, disconnect first if you want to reauthenticate. Use Disconnect-Avd"
-                    }
                     # Must be this URL. https://management.azure.com is not working while using the resource object. The scope object is ignored when providing management.azure.com
                     $Scope = 'https://management.core.windows.net/'
                     $tokenBody = @{
@@ -142,7 +141,8 @@ function Connect-Avd {
                         resource      = $Scope
                     }
                     $contentType = "application/x-www-form-urlencoded"
-                    $script:tokenRequest = try {
+                    $script:loginType = $PSCmdlet.ParameterSetName
+                    $global:tokenRequest = try {
                         Invoke-RestMethod -Method POST -Uri "https://login.microsoftonline.com/$TenantID/oauth2/token" -Body $tokenBody -ContentType $contentType
                     }
                     catch {
@@ -159,9 +159,9 @@ function Connect-Avd {
                         grant_type    = "refresh_token"
                         client_id     = $ClientId
                         refresh_token = $RefreshToken
-                        scope         = $script:tokenRequest.scope
+                        scope         = $global:tokenRequest.scope
                     }
-                    $script:tokenRequest = try {
+                    $global:tokenRequest = try {
                         Invoke-RestMethod -Method POST -Uri "https://login.microsoftonline.com/$TenantID/oauth2/token" -Body $tokenBody
                     }
                     catch {
@@ -169,14 +169,20 @@ function Connect-Avd {
                         # If not waiting for auth, throw error
                     }
                 }
+                "AccessToken" {
+                    Write-Verbose "Using provided access token, that is ease for me. Thank you for that."
+                    $global:tokenRequest = [PSCustomObject]@{
+                        access_token = $AccessToken
+                    }
+                }
             }
-            Write-Verbose "Token is $($script:tokenRequest)"
-            $script:authHeader = @{
+            Write-Verbose "Token is $($global:tokenRequest)"
+            $global:authHeader = @{
                 'Content-Type' = 'application/json'
-                Authorization  = "Bearer {0}" -f $script:tokenRequest.access_token
+                Authorization  = "Bearer {0}" -f $global:tokenRequest.access_token
             }
             Write-Information "Succesfully connected to scope $scope"
-            return $script:authHeader
+            return $global:authHeader
         }
         catch [System.Exception] {
             Write-Error -Message "An error occurred while constructing parameter input for access token retrieval. Error message: $($PSItem.Exception.Message)"

@@ -19,7 +19,7 @@ function Set-AvdContext {
         AuthenticationCheck
         if ($SubscriptionId){
             Write-Verbose "Subscription ID provided, setting contect to $SubcriptionId"
-            $script:subscriptionId = $SubscriptionId
+            $global:subscriptionId = $SubscriptionId
         }
     }
     Process {

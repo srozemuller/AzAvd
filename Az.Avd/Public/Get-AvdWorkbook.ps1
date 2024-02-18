@@ -28,19 +28,19 @@ Get-AvdWorkbook -WorkbookName @("Workbook 1", "Workbook")
         [switch]$ShowContent = $false
     )
     Begin {
-        Write-Verbose "Start requesting workbooks in $script:subscriptionId"
+        Write-Verbose "Start requesting workbooks in $global:subscriptionId"
         AuthenticationCheck
-        $token = GetAuthToken -resource $script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         if ($ShowContent.IsPresent) {
             Write-Verbose "Showing content"
             $ShowContent = $true
         }
         switch ($PsCmdlet.ParameterSetName) {
             Name {
-                $url = "{0}/subscriptions/{1}/providers/Microsoft.Insights/workbooks?category=workbook&canFetchContent=$ShowContent&api-version={2}" -f $Script:AzureApiUrl, $script:subscriptionId, $script:workbookApiVersion
+                $url = "{0}/subscriptions/{1}/providers/Microsoft.Insights/workbooks?category=workbook&canFetchContent=$ShowContent&api-version={2}" -f $global:AzureApiUrl, $global:subscriptionId, $global:workbookApiVersion
             }
             ResourceId {
-                $url = "{0}{1}?canFetchContent=$ShowContent&api-version={2}" -f $Script:AzureApiUrl, $Id, $script:workbookApiVersion
+                $url = "{0}{1}?canFetchContent=$ShowContent&api-version={2}" -f $global:AzureApiUrl, $Id, $global:workbookApiVersion
             }
         }
     }

@@ -47,7 +47,7 @@ function Enable-AvdSessionHost {
     Begin {
         Write-Verbose "Enabling session hosts"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         $apiVersion = "?api-version=2022-02-10-preview"
         $sessionHostParameters = @{
             hostpoolName      = $HostpoolName
@@ -86,7 +86,7 @@ function Enable-AvdSessionHost {
                     }
                 }
                 $enableParameters = @{
-                    uri     = "{0}{1}{2}" -f $Script:AzureApiUrl, $_.id, $apiVersion
+                    uri     = "{0}{1}{2}" -f $global:AzureApiUrl, $_.id, $apiVersion
                     Method  = "PATCH"
                     Headers = $token
                     Body    = $body | ConvertTo-Json

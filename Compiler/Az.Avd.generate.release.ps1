@@ -45,7 +45,7 @@ switch ($BranchName) {
     #default is main branch
     default {
         $releaseName = 'v{0}' -f $manifest.ModuleVersion
-    }  
+    }
 }
 try {
     #Publish-Module -Name $env:ProjectName -NuGetApiKey $env:PS_GALLERY_KEY

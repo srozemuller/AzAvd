@@ -34,7 +34,7 @@ Function Get-AvdNetworkInfo {
     Begin {
         Write-Verbose "Start searching for networkinfo."
         AuthenticationCheck
-        $token = GetAuthToken -resource $script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         $apiVersion = "?api-version=2021-03-01"
     }
     Process {
@@ -61,12 +61,12 @@ Function Get-AvdNetworkInfo {
         }
         $SessionHosts | ForEach-Object {
             $nicParameters = @{
-                uri = $script:AzureApiUrl + $_.vmResources.properties.networkprofile.networkinterfaces.id + $apiVersion
+                uri = $global:AzureApiUrl + $_.vmResources.properties.networkprofile.networkinterfaces.id + $apiVersion
                 Headers = $token    
                 Method = "GET"
             }
             $nsgNicParameters = @{
-                uri = $script:AzureApiUrl + $_.vmResources.properties.networkprofile.networkinterfaces.id + "/effectiveNetworkSecurityGroups" + $apiVersion
+                uri = $global:AzureApiUrl + $_.vmResources.properties.networkprofile.networkinterfaces.id + "/effectiveNetworkSecurityGroups" + $apiVersion
                 Headers = $token    
                 Method = "POST"
             }
@@ -83,7 +83,7 @@ Function Get-AvdNetworkInfo {
             $networkInfo | Add-Member -NotePropertyName nicNsg -NotePropertyValue $requestNicNsgInfo
 
             $nsgSubnetParameters = @{
-                uri = $Script:AzureApiUrl+ $networkInfo.subnet.id + $apiVersion
+                uri = $global:AzureApiUrl+ $networkInfo.subnet.id + $apiVersion
                 Headers = $token    
                 Method = "GET"
             }

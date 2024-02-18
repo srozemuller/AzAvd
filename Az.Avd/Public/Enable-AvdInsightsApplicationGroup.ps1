@@ -111,7 +111,7 @@ function Enable-AvdInsightsApplicationGroup {
     Begin {
         Write-Verbose "[Enable-AvdInsightsApplicationGroup] - Start enabling AVD Insights for application group"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -136,7 +136,7 @@ function Enable-AvdInsightsApplicationGroup {
             }
         }
         Write-Verbose "[Enable-AvdInsightsApplicationGroup] - Looking for workspace"
-        $workspaceId = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.OperationalInsights/workspaces/{2}" -f $script:subscriptionId, $LaResourceGroupName, $LAWorkspace
+        $workspaceId = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.OperationalInsights/workspaces/{2}" -f $global:subscriptionId, $LaResourceGroupName, $LAWorkspace
         Write-Verbose $workspaceId
         $laws = (Get-Resource -ResourceId $workspaceId -Verbose).value
 
@@ -178,7 +178,7 @@ function Enable-AvdInsightsApplicationGroup {
                 }
                 $Id | ForEach-Object {  
                     $parameters = @{
-                        uri     = "{0}{1}/providers/microsoft.insights/diagnosticSettings/{2}?api-version={3}" -f $Script:AzureApiUrl, $_, $DiagnosticsName, $Script:AvdDiagnosticsApiVersion
+                        uri     = "{0}{1}/providers/microsoft.insights/diagnosticSettings/{2}?api-version={3}" -f $global:AzureApiUrl, $_, $DiagnosticsName, $global:AvdDiagnosticsApiVersion
                         Method  = "PUT"
                         Headers = $token
                         Body    = $diagnosticsBody | ConvertTo-Json -Depth 4

@@ -11,13 +11,13 @@ function Get-AvdInsightsSessionHost {
     .PARAMETER LaResourceGroupName
     Enter the name of the Log Analyics Workspace resource group
     .EXAMPLE
-    Add-AvdInsightsSessionHost -Id /subscriptions/../sessionhosts/avd-0 -WorkSpaceId /subscriptions/../Microsoft.OperationalInsights/workspaces/laworkspace
+    Get-AvdInsightsSessionHost -Id /subscriptions/../sessionhosts/avd-0 -WorkSpaceId /subscriptions/../Microsoft.OperationalInsights/workspaces/laworkspace
     .EXAMPLE
-    Add-AvdInsightsSessionHost -Id /subscriptions/../sessionhosts/avd-0 -LAWorkspace laworkspace -LaResourceGroupName rg-la-01
+    Get-AvdInsightsSessionHost -Id /subscriptions/../sessionhosts/avd-0 -LAWorkspace laworkspace -LaResourceGroupName rg-la-01
     #>
     [CmdletBinding(DefaultParameterSetName = 'WorkspaceName')]
     param (
-        
+
         [parameter(Mandatory,ParameterSetName = 'WorkspaceId')]
         [parameter(Mandatory, ParameterSetName = 'WorkspaceName')]
         [ValidateNotNullOrEmpty()]
@@ -27,7 +27,7 @@ function Get-AvdInsightsSessionHost {
         [parameter(Mandatory, ParameterSetName = 'WorkspaceName')]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
-    
+
         [parameter(ParameterSetName = 'WorkspaceId')]
         [parameter(ParameterSetName = 'WorkspaceName')]
         [ValidateNotNullOrEmpty()]
@@ -50,15 +50,13 @@ function Get-AvdInsightsSessionHost {
         [parameter(Mandatory, ParameterSetName = 'WorkspaceName')]
         [parameter(Mandatory,ParameterSetName = 'WorkspaceNameResourceId')]
         [string]$LaResourceGroupName,
-    
+
         [parameter()]
         [switch]$Missing
     )
     Begin {
         Write-Verbose "Start searching for resources"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
-        $apiVersion = "?api-version=2022-03-01"
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -93,8 +91,7 @@ function Get-AvdInsightsSessionHost {
         }
         catch {
             Throw "No sessionhosts ($name) found in $HostpoolName ($ResourceGroupName), $_"
-        }   
-        $returnResults = [System.Collections.ArrayList]@()     
+        }
         $sessionHosts | Foreach-Object {
             Write-Verbose "Searching for $($_.Name)"
             $monitoringEnabled = $false
@@ -110,7 +107,7 @@ function Get-AvdInsightsSessionHost {
                 }
                 else {}
                 $object.Add("monitoringEnabled",$monitoringEnabled)
-                $object.Add("autoUpgradeMinorVersion",$monitoringInfo.properties.autoUpgradeMinorVersion)
+                $object.Add("autoUpgradeMinorVersion",$autoUpgradeMinorVersion)
                 $object.Add("provisioningState",$monitoringInfo.properties.provisioningState)
                 $object.Add("type",$monitoringInfo.properties.type)
                 $object.Add("workspaceId",$monitoringInfo.properties.settings.workspaceId)

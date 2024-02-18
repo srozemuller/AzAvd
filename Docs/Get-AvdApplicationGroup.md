@@ -12,14 +12,14 @@ Get AVD applicationgroup information with the assigned permissions.
 
 ## SYNTAX
 
-### All (Default)
-```
-Get-AvdApplicationGroup -ResourceGroupName <String> [<CommonParameters>]
-```
-
 ### Name
 ```
-Get-AvdApplicationGroup -ApplicationGroupName <String> -ResourceGroupName <String> [<CommonParameters>]
+Get-AvdApplicationGroup -Name <String> -ResourceGroupName <String> [<CommonParameters>]
+```
+
+### Hostpool
+```
+Get-AvdApplicationGroup -HostpoolName <String> -HostpoolResourceGroup <String> [<CommonParameters>]
 ```
 
 ### ResourceId
@@ -34,7 +34,7 @@ With this function you can get information about an AVD application group.
 
 ### EXAMPLE 1
 ```
-Get-AvdApplicationGroup -ApplicationGroupName applicationGroup -ResourceGroupName rg-avd-001
+Get-AvdApplicationGroup -Name applicationGroup -ResourceGroupName "rg-avd-001"
 ```
 
 ### EXAMPLE 2
@@ -42,10 +42,15 @@ Get-AvdApplicationGroup -ApplicationGroupName applicationGroup -ResourceGroupNam
 Get-AvdApplicationGroup -ResourceId "/subscriptions/../applicationGroupname"
 ```
 
+### EXAMPLE 3
+```
+Get-AvdApplicationGroup -HostpoolName "avd-hostpool" -HostpoolResourceGroup "rg-avd-001"
+```
+
 ## PARAMETERS
 
-### -ApplicationGroupName
-Enter the name of the application group you want information from.
+### -Name
+{{ Fill Name Description }}
 
 ```yaml
 Type: String
@@ -60,11 +65,41 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
+Enter the name of the resourcegroup where the application group resides in.
+
+```yaml
+Type: String
+Parameter Sets: Name
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -HostpoolName
+Enter the name of the hostpool to look in.
+
+```yaml
+Type: String
+Parameter Sets: Hostpool
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -HostpoolResourceGroup
 Enter the name of the resourcegroup where the hostpool resides in.
 
 ```yaml
 Type: String
-Parameter Sets: All, Name
+Parameter Sets: Hostpool
 Aliases:
 
 Required: True

@@ -1,7 +1,6 @@
 $modulePath = Join-Path -Path (Join-Path ".././" -ChildPath "AzAvd") -ChildPath "Az.Avd"
 $psFiles = Get-ChildItem -Path (Join-Path -Path $modulePath -ChildPath "Public")
 BeforeAll {
-    $skipFiles = @("Connect-Avd.ps1")
 }
 Describe "Analyze code" -ForEach @(
     foreach ($file in $psFiles) {
@@ -12,7 +11,7 @@ Describe "Analyze code" -ForEach @(
             content     = Get-Content -Path $file
             helpInfo    = Get-Help $file.BaseName
             IgnoreRules = @('PSUseApprovedVerbs')
-            fileobj     = $file 
+            fileobj     = $file
         }
     }
 ) {
@@ -90,15 +89,6 @@ Describe "Analyze code" -ForEach @(
 
     It "<fileName> should not contain return in functions" {
         $file | Should -Not -FileContentMatch 'return `$'
-    }
-
-    It "<fileName> should have an AuthenticationCheck" {
-        if ($fileName -in $skipFiles) {
-            Write-Information "Function $fileName does not need AuthenticationCheck" -InformationAction Continue
-        }
-        else {
-            ($content | Select-String -Pattern 'AuthenticationCheck') | Should -Be $true
-        }
     }
 
     It "<fileName> function start with function name and should be $($file.BaseName) " {

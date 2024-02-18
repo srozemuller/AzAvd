@@ -49,7 +49,7 @@ function Remove-AvdInsightsSessionHost {
     Begin {
         Write-Verbose "[Remove-AvdInsightsSessionHost] - Start removing sessionhosts from insights"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         $sessionHostParameters = @{
             hostpoolName      = $HostpoolName
             resourceGroupName = $ResourceGroupName
@@ -90,7 +90,7 @@ function Remove-AvdInsightsSessionHost {
                     Start-AvdSessionHost -Id $vmObject.id
                 }
                 $requestParameters = @{
-                    uri     = "{0}{1}/extensions/{2}?api-version={3}" -f $Script:AzureApiUrl, $_.vmResources.id, "OMSExtenstion", "2022-08-01"
+                    uri     = "{0}{1}/extensions/{2}?api-version={3}" -f $global:AzureApiUrl, $_.vmResources.id, "OMSExtenstion", "2022-08-01"
                     Method  = "DELETE"
                     Headers = $token
                 }

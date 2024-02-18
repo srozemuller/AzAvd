@@ -10,7 +10,7 @@ function New-Workspace {
 
         [parameter()]
         [string]$ResourceGroupName,
-    
+
         [parameter()]
         [string]$Location,
 
@@ -21,8 +21,8 @@ function New-Workspace {
         if ($null -eq $LAWorkspace) {
             $LAWorkspace = "log-analytics-avd-" + (Get-Random -Maximum 99999)
             Write-Verbose "No Log Analytics Workspace provided, creating a new one."
-            Write-Verbose "Workspace name: $LAWorkspace"    
-        } 
+            Write-Verbose "Workspace name: $LAWorkspace"
+        }
         $body = @{
             location   = $Location
             properties = @{
@@ -32,9 +32,9 @@ function New-Workspace {
                 }
             }
         }
-        $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.OperationalInsights/workspaces/{3}?api-version={4}" -f $Script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $Workspace, $script:diagnosticsApiVersion
+        $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.OperationalInsights/workspaces/{3}?api-version={4}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $Workspace, $global:diagnosticsApiVersion
         $loganalyticsParameters = @{
-            URI     = $url 
+            URI     = $url
             Method  = "PUT"
             Body    = $body | ConvertTo-Json
             Headers = $token

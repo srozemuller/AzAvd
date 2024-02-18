@@ -50,7 +50,7 @@ function DeallocateAvdSessionHost {
     Begin {
         Write-Verbose "Deallocating session hosts"
         AuthenticationCheck
-        $token = GetAuthToken -resource $Script:AzureApiUrl
+        $token = GetAuthToken -resource $global:AzureApiUrl
         $sessionHostParameters = @{
             hostpoolName      = $HostpoolName
             resourceGroupName = $ResourceGroupName
@@ -87,7 +87,7 @@ function DeallocateAvdSessionHost {
                 Write-Verbose "Found $($sessionHosts.Count) host(s)"
                 Write-Verbose "Deallocating $($_.name)"
                 $powerOffParameters = @{
-                    uri     = "{0}{1}/deallocate{2}" -f $Script:AzureApiUrl, $_.properties.resourceId, $apiVersion
+                    uri     = "{0}{1}/deallocate{2}" -f $global:AzureApiUrl, $_.properties.resourceId, $apiVersion
                     Method  = "POST"
                     Headers = $token
                 }

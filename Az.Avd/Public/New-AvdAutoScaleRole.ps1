@@ -39,16 +39,16 @@ function New-AvdAutoScaleRole {
     Begin {
         Write-Verbose "Start creating a new  RBAC for with name $RoleName"
         AuthenticationCheck
-        $AzureHeader = GetAuthToken -resource $Script:AzureApiUrl
+        $AzureHeader = GetAuthToken -resource $global:AzureApiUrl
         $apiVersion = "?api-version=2018-07-01"
         
         switch ($PsCmdlet.ParameterSetName) {
             ResourceGroupScope {
                 Write-Verbose "ResourceGroup provided"
-                $Scope = "/subscriptions/" + $script:subscriptionId + "/resourceGroups/" + $ResourceGroupName 
+                $Scope = "/subscriptions/" + $global:subscriptionId + "/resourceGroups/" + $ResourceGroupName 
             }
             Default {
-                $Scope = "/subscriptions/" + $script:subscriptionId
+                $Scope = "/subscriptions/" + $global:subscriptionId
             }
         }   
     }
@@ -86,15 +86,15 @@ function New-AvdAutoScaleRole {
             }
         }
         $RoleJsonBody = $RoleBody | ConvertTo-Json -Depth 5
-        $url = $Script:AzureApiUrl + $Scope + "/providers/Microsoft.Authorization/roleDefinitions/" + $RoleGuid + $apiVersion
+        $url = $global:AzureApiUrl + $Scope + "/providers/Microsoft.Authorization/roleDefinitions/" + $RoleGuid + $apiVersion
         $rbacRole = Invoke-RestMethod -Method PUT -Body $RoleJsonBody -Headers $AzureHeader -URi $url
         if ($Assign.IsPresent) {
-            $GraphHeader = GetAuthToken -resource $Script:GraphApiUrl
-            $servicePrincipalURL = $Script:GraphApiUrl + "/" +$script:GraphApiVersion + "/servicePrincipals?`$filter=displayName eq 'Windows Virtual Desktop'"
+            $GraphHeader = GetAuthToken -resource $global:GraphApiUrl
+            $servicePrincipalURL = $global:GraphApiUrl + "/" +$global:GraphApiVersion + "/servicePrincipals?`$filter=displayName eq 'Windows Virtual Desktop'"
             $servicePrincipals = Invoke-RestMethod -Method GET -Uri $servicePrincipalURL -Headers $GraphHeader
             $servicePrincipals.value.id | ForEach-Object {
                 $assignGuid = (New-Guid).Guid
-                $assignURL = $Script:AzureApiUrl + $Scope + "/providers/Microsoft.Authorization/roleAssignments/" + $AssignGuid + "?api-version=2021-04-01-preview"
+                $assignURL = $global:AzureApiUrl + $Scope + "/providers/Microsoft.Authorization/roleAssignments/" + $AssignGuid + "?api-version=2021-04-01-preview"
                 $assignBody = @{
                     properties = @{
                         roleDefinitionId = $rbacRole.id

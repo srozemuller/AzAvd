@@ -46,10 +46,10 @@ function Enable-AvdStartVmOnConnect {
     )
     Begin {
         AuthenticationCheck
-        $GraphHeader = GetAuthToken -resource $Script:GraphApiUrl
-        $ServicePrincipalURL = "$($Script:GraphApiUrl)/beta/servicePrincipals?`$filter=displayName eq 'Windows Virtual Desktop'"
+        $GraphHeader = GetAuthToken -resource $global:GraphApiUrl
+        $ServicePrincipalURL = "$($global:GraphApiUrl)/beta/servicePrincipals?`$filter=displayName eq 'Windows Virtual Desktop'"
         $ServicePrincipals = Invoke-RestMethod -Method GET -Uri $ServicePrincipalURL -Headers $GraphHeader
-        $AzureHeader = GetAuthToken -resource $Script:AzureApiUrl
+        $AzureHeader = GetAuthToken -resource $global:AzureApiUrl
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -81,7 +81,7 @@ function Enable-AvdStartVmOnConnect {
         try {
             #Region create custom role
             # Building a new role GUID
-            $Scope = "/subscriptions/" + $script:subscriptionId + "/Resourcegroups/$HostsResourceGroup"
+            $Scope = "/subscriptions/" + $global:subscriptionId + "/Resourcegroups/$HostsResourceGroup"
             $RoleGuid = (New-Guid).Guid
             # Generating the role body
             $RoleBody = @{
@@ -107,7 +107,7 @@ function Enable-AvdStartVmOnConnect {
             }
     
             $RoleJsonBody = $RoleBody | ConvertTo-Json -Depth 5
-            $DefinitionUrl = $Script:AzureApiUrl + $Scope + "/providers/Microsoft.Authorization/roleDefinitions/" + $RoleGuid + "?api-version=2018-07-01"
+            $DefinitionUrl = $global:AzureApiUrl + $Scope + "/providers/Microsoft.Authorization/roleDefinitions/" + $RoleGuid + "?api-version=2018-07-01"
             $CustomRole = Invoke-RestMethod -Method PUT -Body $RoleJsonBody -Headers $AzureHeader -URi $DefinitionUrl
             #Endregion
         }
@@ -119,7 +119,7 @@ function Enable-AvdStartVmOnConnect {
             # New assignment GUID
             $ServicePrincipals.value.id | ForEach-Object {
                 $AssignGuid = (New-Guid).Guid
-                $AssignURL = $Script:AzureApiUrl + $Scope + "/providers/Microsoft.Authorization/roleAssignments/" + $AssignGuid + "?api-version=2021-04-01-preview"
+                $AssignURL = $global:AzureApiUrl + $Scope + "/providers/Microsoft.Authorization/roleAssignments/" + $AssignGuid + "?api-version=2021-04-01-preview"
                 $assignBody = @{
                     properties = @{
                         roleDefinitionId = $CustomRole.id
