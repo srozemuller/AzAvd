@@ -10,6 +10,8 @@ Enter the name of the hostpool you want information from.
 Enter the name of the resourcegroup where the hostpool resides in.
 .PARAMETER ResourceId
 Enter the hostpool ResourceId
+.PARAMETER JsonContent
+Enter the json content for the update configuration
 .EXAMPLE
 Update-AvdHostPoolUpdateConfiguration -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001 -JsonBody "{"json":"string"}"
 .EXAMPLE
@@ -32,7 +34,7 @@ Update-AvdHostPoolUpdateConfiguration -ResourceId "/subscription/../HostPoolName
         [Parameter(Mandatory, ParameterSetName = "Name")]
         [Parameter(Mandatory, ParameterSetName = "ResourceId")]
         [ValidateNotNullOrEmpty()]
-        [string]$JsonBody
+        [object]$JsonContent
     )
     Begin {
         Write-Verbose "Start searching for hostpool update configuration in $hostpoolName"
@@ -52,9 +54,9 @@ Update-AvdHostPoolUpdateConfiguration -ResourceId "/subscription/../HostPoolName
         try {
             $parameters = @{
                 Uri     = $url
-                Body = $JsonBody
+                Body = $JsonContent
                 Method  = "PATCH"
-                Headers = $script:authHeader
+                Headers = $global:authHeader
             }
             $response = Request-Api @parameters
             $response

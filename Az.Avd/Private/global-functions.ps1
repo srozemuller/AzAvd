@@ -11,15 +11,18 @@ function AuthenticationCheck {
     .NOTES
     NAME: precheck
     #>
+    if ($null -eq $global:authHeader) {
+        Throw "Please connect to AVD first using the Connect-Avd command"
+    }
     if (!($script:loginType = 'ClientSecret')) {
         if ($null -eq $global:tokenRequest) {
             Throw "Please connect to AVD first using the Connect-Avd command"
         }
-        if ($null -eq $global:subscriptionId) {
-            Write-Warning "No subscription ID provided yet"
-            $global:subscriptionId = Read-Host -Prompt "Please fill in the subscription Id"
-            Write-Information "Subscription ID is set, if you want to changed the context, use Set-AvdContext -SubscriptionID <GUID>" -InformationAction Continue
-        }
+    }
+    if ($null -eq $script:subscriptionId) {
+        Write-Warning "No subscription ID provided yet"
+        $script:subscriptionId = Read-Host -Prompt "Please fill in the subscription Id"
+        Write-Information "Subscription ID is set, if you want to changed the context, use Set-AvdContext -SubscriptionID <GUID>" -InformationAction Continue
     }
 }
 

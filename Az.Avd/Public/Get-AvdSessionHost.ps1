@@ -50,7 +50,7 @@ function Get-AvdSessionHost {
     Process {
         switch ($PsCmdlet.ParameterSetName) {
             All {
-                Write-Verbose 'Using base url for getting all session hosts in $hostpoolName'
+                Write-Verbose "Using base url for getting all session hosts in $($hostpoolName)"
             }
             Hostname {
                 if ($Name -match "/") {

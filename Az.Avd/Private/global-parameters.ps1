@@ -1,10 +1,10 @@
 # In this file all global parameters are set. 
 
-$global:AzureApiUrl = "https://management.azure.com"
-$global:GraphApiUrl = "https://graph.microsoft.com"
-$global:GraphApiVersion = "beta"
+$script:AzureApiUrl = "https://management.azure.com"
+$script:GraphApiUrl = "https://graph.microsoft.com"
+$script:GraphApiVersion = "beta"
 
-$global:AvdModuleLocation = "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_1.0.02404.172.zip"
+$script:AvdModuleLocation = "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_1.0.02404.172.zip"
 
 $global:AvdApiVersion = "2022-02-10-preview"
 
@@ -27,5 +27,5 @@ $script:AvdInsightsCountersLocation = '$PSScriptRoot\..\Private\avdinsights-sour
 $script:hostpoolApiVersion = "2022-02-10-preview"
 $script:sessionhostApiVersion = "2022-02-10-preview"
 $script:diskApiVersion = "2021-12-01"
-$script:hostpoolUpdateApiVersion = "2021-05-13-preview"
+$script:hostpoolUpdateApiVersion = "2022-08-09-privatepreview"
 $global:AvdInsightsCountersLocation = '$PSScriptRoot\..\Private\avdinsights-sources.json'

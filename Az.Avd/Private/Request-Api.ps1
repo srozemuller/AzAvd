@@ -20,7 +20,6 @@ function Request-Api {
     Begin {
         Write-Verbose "Requesting url $Uri with method $Method"
         $resultObject = [System.Collections.ArrayList]::new()
-        $global:authHeader = GetAuthToken
     }
     Process {
         try {
@@ -32,26 +31,37 @@ function Request-Api {
             if ($Body) {
                 $parameters.Add("Body", $($Body)) > $null
             }
-            $results = Invoke-WebRequest @parameters | ConvertFrom-Json
-            if ($results.PsObject.Properties.name -contains 'value') {
-                $resultObject.Add($results.value) > $null
+            $results = Invoke-WebRequest @parameters -SkipHttpErrorCheck
+            if ($results.error) {
+                $errorMessage = "$($results.error.code): $($results.error.message)"
+                Write-Error "An error occurred: $($errorMessage)"
             }
-            else {
-                $resultObject.Add($results) > $null
-            }
-            while ($null -ne $results.'@odata.nextLink') {
-                $pagingUrl = $results."@odata.nextLink"
-                Write-Verbose "Fetching odata.nextLink: $pagingUrl"
-
-                $results = (Invoke-WebRequest -Uri $pagingUrl -Method $Method -Headers $Headers) | ConvertFrom-Json
-                foreach ($value in $results.content.value) {
-                    $resultObject.Add($value) > $null
+            switch ($Method) {
+                "GET" {
+                    if ($results.PsObject.Properties.name -contains 'value') {
+                        $resultObject.Add($results.value) > $null
+                    }
+                    else {
+                        $resultObject.Add($results) > $null
+                    }
+                    while ($null -ne $results.'@odata.nextLink') {
+                        $pagingUrl = $results."@odata.nextLink"
+                        Write-Verbose "Fetching odata.nextLink: $pagingUrl"
+                        $results = (Invoke-WebRequest -Uri $pagingUrl -Method $Method -Headers $Headers) | ConvertFrom-Json
+                        foreach ($value in $results.content.value) {
+                            $resultObject.Add($value) > $null
+                        }
+                    }
+                    return $resultObject
+                }
+                Default {
+                    $message = "Result: $($results.StatusCode) - $($results.StatusDescription) $($results.Content)"
+                    Write-Output $message
                 }
             }
         }
         catch {
-            Write-Error -Message "An error occurred while requesting url $uri. Error message: $($_)"
+            Write-Error -Message "An error occurred while requesting url $uri. Error message: $($_.Exception.Message)"
         }
-        $resultObject
     }
 }

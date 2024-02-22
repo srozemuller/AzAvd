@@ -11,7 +11,7 @@
     RootModule             = 'Az.Avd.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '3.2.0'
+    ModuleVersion          = '3.3.0'
 
     # Supported PSEditions
     CompatiblePSEditions   = 'Core', 'Desktop'
@@ -94,6 +94,8 @@
         'Get-AvdContext',
         'Get-AvdDiagnosticSettings',
         'Get-AvdHostPool',
+        'Get-AvdHostPoolUpdateConfiguration',
+        'Get-AvdHostPoolUpdateStatus',
         'Get-AvdImageVersionStatus',
         'Get-AvdInsightsSessionHost',
         'Get-AvdLatestSessionHost',
@@ -132,10 +134,13 @@
         'Remove-AvdWorkbook',
         'Remove-AvdWorkspace',
         'Repair-AvdSessionHost',
+        'Restart-AvdHostPoolUpdate',
         'Restart-AvdSessionHost',
+        'Resume-AvdHostPoolUpdate',
         'Set-AvdContext',
         'Start-AvdSessionHost',
         'Stop-AvdSessionHost',
+        'Suspend-AvdHostPoolUpdate',
         'Set-AvdHostPoolUpdate',
         'Start-AvdHostPoolUpdate',
         'Stop-AvdHostPoolUpdate',
@@ -143,6 +148,7 @@
         'Update-AvdDesktopApplication',
         'Update-AvdDiagnostics',
         'Update-AvdHostpool',
+        'Update-AvdHostpoolUpdateConfiguration',
         'Update-AvdRegistrationToken',
         'Update-AvdScheduledAgentsUpdate',
         'Update-AvdSessionHost',
@@ -160,6 +166,7 @@
     AliasesToExport        = @(
         'Assign-AvdScalingPlan',
         'Assign-AvdUser',
+        'Retry-AvdHostPoolUpdate',
         'UnAssign-AvdUser',
         'Unassign-AvdScalingPlan'
     )

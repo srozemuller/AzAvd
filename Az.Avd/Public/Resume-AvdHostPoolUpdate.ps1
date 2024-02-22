@@ -1,4 +1,4 @@
-function Get-AvdHostPoolUpdateConfiguration {
+function Resume-AvdHostPoolUpdate {
 <#
 .SYNOPSIS
 Get AVD Hostpool information.
@@ -11,11 +11,11 @@ Enter the name of the resourcegroup where the hostpool resides in.
 .PARAMETER ResourceId
 Enter the hostpool ResourceId
 .EXAMPLE
-Get-AvdHostPool -HostPoolName avd-hostpool-001 -ResourceGroupName rg-avd-001
+Resume-AvdHostPoolUpdate -Resourceid /subscriptions/xxx/resourceGroups/rg-avd/providers/Microsoft.DesktopVirtualization/hostpools/AVD-Hostpool/
 .EXAMPLE
-Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
+Resume-AvdHostPoolUpdate -Hostpoolname AVD-Hostpool -ResourceGroupName rg-avd
 #>
-    [CmdletBinding(DefaultParameterSetName = "Name")]
+    [CmdletBinding(DefaultParameterSetName = "ResourceID")]
     param (
         [Parameter(Mandatory, ParameterSetName = "Name")]
         [ValidateNotNullOrEmpty()]
@@ -25,30 +25,36 @@ Get-AvdHostPool -ResourceId "/subscription/../HostPoolName"
         [ValidateNotNullOrEmpty()]
         [string]$ResourceGroupName,
 
-        [Parameter(Mandatory, ParameterSetName = "ResourceId")]
+        [Parameter(Mandatory, ParameterSetName = "ResourceID")]
         [ValidateNotNullOrEmpty()]
         [string]$ResourceId
     )
     Begin {
-        Write-Verbose "Start searching for hostpool update configuration in $hostpoolName"
+        Write-Verbose "Start searching for hostpool $hostpoolName"
         AuthenticationCheck
         switch ($PsCmdlet.ParameterSetName) {
             Name {
                 Write-Verbose "Name and ResourceGroup provided"
-                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/sessionHostConfigurations/default?api-version={4}" -f $script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName, $script:hostpoolUpdateApiVersion
+                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/sessionHostManagements/default/controlSessionHostUpdate?api-version={4}" -f $script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName, $script:hostpoolUpdateApiVersion
+                $sessionHosts = Get-AvdSessionHost -HostpoolName $HostPoolName -ResourceGroupName $ResourceGroupName
             }
             ResourceId {
                 Write-Verbose "ResourceId provided"
-                $url = "{0}{1}/sessionHostConfigurations/default?api-version={2}" -f $script:AzureApiUrl, $ResourceId, $script:hostpoolUpdateApiVersion
+                $sessionHosts = Get-AvdSessionHost -HostPoolResourceId $ResourceId
+                $url = "{0}{1}/sessionHostManagements/default/controlSessionHostUpdate?api-version={2}" -f $script:AzureApiUrl, $resourceId, $script:hostpoolUpdateApiVersion
             }
         }
     }
     Process {
         try {
+            $body = @{
+                action = "Cancel"
+            } | ConvertTo-Json
             $parameters = @{
                 uri     = $url
-                Method  = "GET"
+                Method  = "POST"
                 Headers = $global:authHeader
+                Body    = $body
             }
             $response = Request-Api @parameters
             return $response

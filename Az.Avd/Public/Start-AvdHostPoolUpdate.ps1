@@ -83,10 +83,11 @@ Start-AvdHostPoolUpdate -Hostpoolname AVD-Hostpool -ResourceGroupName rg-avd -Ma
                 }
                 validateOnly = $false
             } | ConvertTo-Json
+            Write-Verbose "Sending request to $url"
             $parameters = @{
                 uri     = $url
                 Method  = "POST"
-                Headers = $script:authHeader
+                Headers = $global:authHeader
                 Body    = $body
             }
             $response = Request-Api @parameters
