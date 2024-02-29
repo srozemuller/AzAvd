@@ -38,6 +38,7 @@ function Request-Api {
             }
             switch ($Method) {
                 "GET" {
+                    $results = $results.Content | ConvertFrom-Json
                     if ($results.PsObject.Properties.name -contains 'value') {
                         $resultObject.Add($results.value) > $null
                     }

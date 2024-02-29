@@ -149,7 +149,7 @@ function Connect-Avd {
                         $errorMessage = $_.ErrorDetails.Message | ConvertFrom-Json
                         # If not waiting for auth, throw error
                         if ($errorMessage.error -ne "authorization_pending") {
-                            throw "Authorization is pending."
+                            throw $errorMessage.error
                         }
                     }
                 }

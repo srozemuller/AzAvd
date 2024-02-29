@@ -45,7 +45,7 @@ function Get-AvdSessionHost {
     )
     Begin {
         Write-Verbose "Start searching session hosts"
-        $baseUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/sessionHosts" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $HostpoolName
+        $baseUrl = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/sessionHosts" -f $script:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $HostpoolName
     }
     Process {
         switch ($PsCmdlet.ParameterSetName) {
@@ -101,5 +101,3 @@ function Get-AvdSessionHost {
         }
     }
 }
-
-$id = "/subscriptions/398c5aee-6356-47fa-b141-2251e85cdb97/resourcegroups/rg-avd-01/providers/Microsoft.DesktopVirtualization/hostpools/avd-auto-hp/sessionhosts/avdauto-2"

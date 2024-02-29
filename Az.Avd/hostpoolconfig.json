@@ -1,0 +1,58 @@
+{
+  "name": "default",
+  "id": "/subscriptions/6d3c408e-b617-44ed-bc24-280249636525/resourceGroups/avdprivate-previewupdate/providers/Microsoft.DesktopVirtualization/hostPools/hpupdate/sessionHostConfigurations/default",
+  "type": "Microsoft.DesktopVirtualization/hostPools/sessionHostConfigurations",
+  "properties": {
+    "version": "2024-02-28T20:04:21Z",
+    "provisioningState": "Succeeded",
+    "vmSizeId": "Standard_D2s_v3",
+    "vmLocation": "westeurope",
+    "friendlyName": null,
+    "vmTags": {
+      "cm-resource-parent": "/subscriptions/6d3c408e-b617-44ed-bc24-280249636525/resourceGroups/avdprivate-previewupdate/providers/Microsoft.DesktopVirtualization/hpupdate"
+    },
+    "vmResourceGroup": "avdprivate-previewupdate",
+    "vmNamePrefix": "avdup",
+    "availabilityZones": null,
+    "networkInfo": {
+      "subnetId": "/subscriptions/6d3c408e-b617-44ed-bc24-280249636525/resourceGroups/rg-roz-avd-01/providers/Microsoft.Network/virtualNetworks/rz-vnet-01/subnets/default",
+      "securityGroupId": null
+    },
+    "diskInfo": {
+      "type": "StandardSSD_LRS"
+    },
+    "imageInfo": {
+      "type": "Custom",
+      "marketplaceInfo": {
+        "offer": "office-365",
+        "publisher": "microsoftwindowsdesktop",
+        "sku": "win11-23h2-avd-m365",
+        "exactVersion": "22631.3007.240109"
+      },
+      "customInfo": {
+        "resourceId": "/subscriptions/6d3c408e-b617-44ed-bc24-280249636525/resourceGroups/rg-avd-thebeast/providers/Microsoft.Compute/galleries/BeastyGallery/images/Win11-Juicy_Image/versions/2024.02.22"
+      }
+    },
+    "domainInfo": {
+      "joinType": "AzureActiveDirectory",
+      "activeDirectoryInfo": null,
+      "azureActiveDirectoryInfo": {
+        "mdmProviderGuid": null
+      }
+    },
+    "vmAdminCredentials": {
+      "usernameKeyVaultSecretUri": "https://kv-rozemuller.vault.azure.net/secrets/vmjoinerpass",
+      "passwordKeyVaultSecretUri": "https://kv-rozemuller.vault.azure.net/secrets/adsyncuser-pass"
+    },
+    "bootDiagnosticsInfo": {
+      "enabled": true,
+      "storageUri": null
+    },
+    "securityInfo": {
+      "type": "Standard",
+      "secureBootEnabled": false,
+      "vTpmEnabled": false
+    },
+    "customConfigurationScriptUrl": null
+  }
+}

@@ -1,4 +1,4 @@
-function Stop-AvdHostPoolUpdate {
+function Restart-AvdHostPoolUpdate {
 <#
 .SYNOPSIS
 Get AVD Hostpool information.
@@ -11,9 +11,9 @@ Enter the name of the resourcegroup where the hostpool resides in.
 .PARAMETER ResourceId
 Enter the hostpool ResourceId
 .EXAMPLE
-Stop-AvdHostPoolUpdate -Resourceid /subscriptions/xxx/resourceGroups/rg-avd/providers/Microsoft.DesktopVirtualization/hostpools/AVD-Hostpool/
+Restart-AvdHostPoolUpdate -Resourceid /subscriptions/xxx/resourceGroups/rg-avd/providers/Microsoft.DesktopVirtualization/hostpools/AVD-Hostpool/
 .EXAMPLE
-Stop-AvdHostPoolUpdate -Hostpoolname AVD-Hostpool -ResourceGroupName rg-avd
+Restart-AvdHostPoolUpdate -Hostpoolname AVD-Hostpool -ResourceGroupName rg-avd
 #>
     [CmdletBinding(DefaultParameterSetName = "ResourceID")]
     param (
@@ -36,11 +36,9 @@ Stop-AvdHostPoolUpdate -Hostpoolname AVD-Hostpool -ResourceGroupName rg-avd
             Name {
                 Write-Verbose "Name and ResourceGroup provided"
                 $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/sessionHostManagements/default/controlSessionHostUpdate?api-version={4}" -f $script:AzureApiUrl, $script:subscriptionId, $ResourceGroupName, $HostpoolName, $script:hostpoolUpdateApiVersion
-                $sessionHosts = Get-AvdSessionHost -HostpoolName $HostPoolName -ResourceGroupName $ResourceGroupName
             }
             ResourceId {
                 Write-Verbose "ResourceId provided"
-                $sessionHosts = Get-AvdSessionHost -HostPoolResourceId $ResourceId
                 $url = "{0}{1}/sessionHostManagements/default/controlSessionHostUpdate?api-version={2}" -f $script:AzureApiUrl, $resourceId, $script:hostpoolUpdateApiVersion
             }
         }

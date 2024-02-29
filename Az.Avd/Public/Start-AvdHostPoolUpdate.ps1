@@ -12,7 +12,7 @@ Enter the name of the resourcegroup where the hostpool resides in.
 Enter the hostpool ResourceId
 .PARAMETER MaxVMsRemovedDuringUpdate
 Enter the number of sessionhosts that can be removed during the update.
-.PARAMETER SaveOriginalDisk
+.PARAMETER DeleteOriginalVm
 Enter if you want to save the original disk.
 .PARAMETER logOffMessage
 Enter the message that will be shown to the user when the sessionhost is removed.
@@ -41,7 +41,7 @@ Start-AvdHostPoolUpdate -Hostpoolname AVD-Hostpool -ResourceGroupName rg-avd -Ma
         [int]$MaxVMsRemovedDuringUpdate,
 
         [Parameter()]
-        [bool]$SaveOriginalDisk = $true,
+        [switch]$DeleteOriginalVm,
 
         [Parameter()]
         [string]$logOffMessage = "Please save your work and sign out for this session host will be shut down for image update. Please log back in when you are ready",
@@ -72,9 +72,15 @@ Start-AvdHostPoolUpdate -Hostpoolname AVD-Hostpool -ResourceGroupName rg-avd -Ma
                 Write-Warning "MaxVMsRemovedDuringUpdate ($MaxVMsRemovedDuringUpdate) is higher than the amount of sessionhosts ($($sessionHosts.Count)) in the hostpool. Setting MaxVMsRemovedDuringUpdate to $($sessionHosts.Count - 1)"
                 $MaxVMsRemovedDuringUpdate = $sessionHosts.Count - 1
             }
+            if ($DeleteOriginalVm.IsPresent) {
+                $DeleteOriginalVm = $true
+            }
+            else {
+                $DeleteOriginalVm = $false
+            }
             $body = @{
                 parameters   = @{
-                    saveOriginalDisk          = $SaveOriginalDisk
+                    deleteOriginalVm          = $DeleteOriginalVm
                     maxVMsRemovedDuringUpdate = $MaxVMsRemovedDuringUpdate
                     maintenanceAlerts         = @()
                     logOffDelayMinutes        = $LogoutDelayMinutes
