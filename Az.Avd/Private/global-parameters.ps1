@@ -4,7 +4,7 @@ $script:AzureApiUrl = "https://management.azure.com"
 $script:GraphApiUrl = "https://graph.microsoft.com"
 $script:GraphApiVersion = "beta"
 
-$script:AvdModuleLocation = "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_1.0.02404.172.zip"
+$script:AvdModuleLocation = "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_1.0.02627.270.zip"
 
 $global:AvdApiVersion = "2022-02-10-preview"
 
