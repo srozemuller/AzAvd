@@ -48,7 +48,7 @@ function Get-AvdScalingPlan {
                 $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/scalingPlans/{3}" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $Name
             }
             'HostpoolName' {
-                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/scalingPlans" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $Name
+                $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/hostpools/{3}/scalingPlans" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName, $HostpoolName
             }
             'ResourceGroup' {
                 $url = "{0}/subscriptions/{1}/resourceGroups/{2}/providers/Microsoft.DesktopVirtualization/scalingPlans" -f $global:AzureApiUrl, $global:subscriptionId, $ResourceGroupName
