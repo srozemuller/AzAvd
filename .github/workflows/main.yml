@@ -48,6 +48,14 @@ jobs:
           Set-PSRepository PSGallery -InstallationPolicy Trusted
           Install-Module PSScriptAnalyzer -ErrorAction Stop
           Install-Module Pester -ErrorAction Stop
+      - name: Change Az.Avd module version to tag
+        shell: pwsh
+        run: |
+          $Params = @{
+          Path = ".\Az.Avd.psd1"
+          ModuleVersion = "${{ github.ref_name }}"
+          }
+          Update-ModuleManifest @Params
       - name: Importing Az.Avd module
         shell: pwsh
         run: |
