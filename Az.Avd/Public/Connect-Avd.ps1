@@ -41,7 +41,7 @@ function Connect-Avd {
         [ValidateNotNullOrEmpty()]
         [string]$RedirectUri = [string]::Empty,
 
-        [parameter(Mandatory, HelpMessage = "Specify the subscription ID to connect to")]
+        [parameter(HelpMessage = "Specify the subscription ID to connect to, this sets the context to the correct subscription directly. Otherwise, use Set-AvdContext -subscription")]
         [ValidateNotNullOrEmpty()]
         [string]$SubscriptionId,
 
