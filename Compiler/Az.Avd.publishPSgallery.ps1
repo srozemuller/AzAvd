@@ -4,7 +4,8 @@ param (
     [string]$PS_GALLERY_KEY
 )
 $env:ProjectName = "Az.Avd"
-if ($env:GITHUB_REF_NAME -eq 'main') {
+$regexPattern = '^\d+\.\d+\.\d+$'
+if ($env:GITHUB_REF_NAME -match $regexPattern) {
     try {
         Publish-Module -Path (Join-Path ".././AzAvd" -ChildPath $env:ProjectName) -NuGetApiKey $PS_GALLERY_KEY
         write-host "Module $env:ProjectName published"
@@ -14,5 +15,5 @@ if ($env:GITHUB_REF_NAME -eq 'main') {
     }    
 }
 else {
-    "Github branch is not main"
+    "Github $env:GITHUB_REF_NAME does not match a valid version number."
 }
