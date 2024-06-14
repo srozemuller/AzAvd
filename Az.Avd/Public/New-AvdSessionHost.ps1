@@ -246,10 +246,10 @@ function New-AvdSessionHost {
                 # Checking every 15 seconds till the max of 60 (is 15 minutes) if the VM is created successfully
                 $maxRetries = 30
                 $checkCount = 0
-                $vmName = $_
-                Write-Verbose "Creating session host $vmName nic"
+                $internalVmName = $_
+                Write-Verbose "Creating session host $internalVmName nic"
 
-                $nicName = "{0}-nic" -f $vmName
+                $nicName = "{0}-nic" -f $internalVmName
                 $nicBody = @{
                     "properties" = @{
                         "enableAcceleratedNetworking" = $true
@@ -288,13 +288,13 @@ function New-AvdSessionHost {
                                 "managedDisk"  = @{
                                     "storageAccountType" = $using:diskType
                                 }
-                                "name"         = "{0}-os" -f $vmName
+                                "name"         = "{0}-os" -f $internalVmName
                                 "createOption" = "FromImage"
                             }
                         }
                         "osProfile"       = @{
                             "adminUsername" = $using:LocalAdmin
-                            "computerName"  = $using:vmName
+                            "computerName"  = $internalVmName
                             "adminPassword" = $using:LocalPass
                         }
                         "networkProfile"  = @{
