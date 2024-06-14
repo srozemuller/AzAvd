@@ -16,7 +16,6 @@ function Set-AvdContext {
         [Guid]$SubscriptionId
     )
     Begin {
-        AuthenticationCheck
         if ($SubscriptionId){
             Write-Verbose "Subscription ID provided, setting contect to $SubcriptionId"
             $global:subscriptionId = $SubscriptionId
