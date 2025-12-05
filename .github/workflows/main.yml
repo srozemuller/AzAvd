@@ -98,7 +98,7 @@ jobs:
       - name: Generate help files
         shell: pwsh
         run: |
-          ./Compiler/Az.Avd.generateHelp.ps1
+          ./Compiler/Az.Avd.generate.docs.ps1
       - name: Commit & Push changes
         uses: actions-js/push@master
         with:
