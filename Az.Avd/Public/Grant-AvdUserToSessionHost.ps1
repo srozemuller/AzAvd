@@ -24,8 +24,7 @@ function Grant-AvdUserToSessionHost {
     .EXAMPLE
     Grant-AvdUserToSessionHost -HostpoolName "hp-avd-personal" -ResourceGroupName "rg-avd-01" -SubscriptionId "ade317a3-a92e-4615-a8d0-30ae80dfa9a7" -UserList @('user1@domain.com', 'user2@domain.com', 'user3@domain.com')
     .EXAMPLE
-    $users = @('user1@domain.com', 'user2@domain.com', 'user3@domain.com')
-    Grant-AvdUserToSessionHost -HostpoolName "hp-avd-personal" -ResourceGroupName "rg-avd-01" -SubscriptionId "ade317a3-a92e-4615-a8d0-30ae80dfa9a7" -UserList $users -MaxAssignments 2
+    Grant-AvdUserToSessionHost -HostpoolName "hp-avd-personal" -ResourceGroupName "rg-avd-01" -SubscriptionId "ade317a3-a92e-4615-a8d0-30ae80dfa9a7" -UserList  @('user1@domain.com', 'user2@domain.com', 'user3@domain.com') -MaxAssignments 2
     #>
     [CmdletBinding(DefaultParameterSetName = 'SingleUser')]
     param

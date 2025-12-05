@@ -91,7 +91,8 @@ function Remove-AvdSessionHost {
                 # Wait for VM to be actually deleted before proceeding with associated resources
                 if ($DeleteAssociated.IsPresent) {
                     Write-Verbose "Waiting for VM deletion to complete..."
-                    $maxWait = 60 # seconds
+                    # seconds to wait
+                    $maxWait = 60
                     $waited = 0
                     $vmDeleted = $false
                     
