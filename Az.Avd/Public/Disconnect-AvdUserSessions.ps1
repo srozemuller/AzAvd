@@ -52,7 +52,8 @@ function Disconnect-AvdUserSessions {
         Write-Verbose "Start searching session hosts"
         AuthenticationCheck
         $token = GetAuthToken -resource $global:AzureApiUrl
-        $apiVersion = "?api-version=2021-07-12"
+        $apiVersion = "2024-04-03"
+        $batchApiUrl = "https://management.azure.com/batch?api-version=2020-06-01"
         $avdParameters = @{
             HostpoolName      = $HostpoolName
             ResourceGroupName = $ResourceGroupName
@@ -75,29 +76,97 @@ function Disconnect-AvdUserSessions {
             Throw "No user sessions found under $Hostpoolname in $ResourceGroupName"
         }
         try {
+            # Build batch requests for disconnection
+            $batchRequests = @()
+            
             if ($all) {
-                $userSessions | ForEach-Object {
-                    $parameters = @{
-                        uri     = "{0}{1}{2}" -f $global:AzureApiUrl, $_.id, $apiVersion
-                        Method  = "DELETE"
-                        Headers = $token
+                # Disconnect all user sessions
+                Write-Information "Preparing to disconnect $($userSessions.Count) user session(s)" -InformationAction Continue
+                
+                foreach ($session in $userSessions) {
+                    $sessionUrl = $session.id -replace "^https://management\.azure\.com", ""
+                    
+                    $batchRequests += @{
+                        httpMethod = "DELETE"
+                        name = [System.Guid]::NewGuid().ToString()
+                        requestHeaderDetails = @{
+                            commandName = "Microsoft_Azure_WVD.WvdManagerUserDetailsBlade.SessionsTab.gridLogOffCommand.logOffUserSession"
+                        }
+                        requestHeaderDictionary = @{
+                            "User-Agent" = @("AzurePortal/1.0.03193.971")
+                        }
+                        url = "$sessionUrl" + "?api-version=$apiVersion"
                     }
-                    Invoke-RestMethod @parameters
                 }
             }
             else {
-                $userId = $userSessions | Where-Object { $_.properties.userPrincipalName -eq $LogonName }
-
-                $parameters = @{
-                    uri     = "{0}{1}{2}" -f $global:AzureApiUrl, $($userId.id), $apiVersion
-                    Method  = "DELETE"
-                    Headers = $token
+                # Disconnect specific user session
+                $userSession = $userSessions | Where-Object { $_.properties.userPrincipalName -eq $LogonName }
+                
+                if (-not $userSession) {
+                    throw "User session not found for user: $LogonName"
                 }
-                Invoke-RestMethod @parameters
+                
+                Write-Information "Preparing to disconnect user session for: $LogonName" -InformationAction Continue
+                
+                $sessionUrl = $userSession.id -replace "^https://management\.azure\.com", ""
+                
+                $batchRequests += @{
+                    httpMethod = "DELETE"
+                    name = [System.Guid]::NewGuid().ToString()
+                    requestHeaderDetails = @{
+                        commandName = "Microsoft_Azure_WVD.WvdManagerUserDetailsBlade.SessionsTab.gridLogOffCommand.logOffUserSession"
+                    }
+                    requestHeaderDictionary = @{
+                        "User-Agent" = @("AzurePortal/1.0.03193.971")
+                    }
+                    url = "$sessionUrl" + "?api-version=$apiVersion"
+                }
+            }
+            
+            # Execute batch request
+            if ($batchRequests.Count -gt 0) {
+                $batchRequest = @{
+                    requests = $batchRequests
+                }
+                
+                $batchParameters = @{
+                    uri = $batchApiUrl
+                    Method = "POST"
+                    Headers = $token
+                    Body = ($batchRequest | ConvertTo-Json -Depth 10)
+                }
+                
+                Write-Verbose "Executing batch disconnect request for $($batchRequests.Count) session(s)"
+                $batchResponse = Request-Api @batchParameters
+                
+                # Process batch response
+                $successCount = 0
+                $failureCount = 0
+                
+                foreach ($response in $batchResponse.responses) {
+                    if ($response.httpStatusCode -eq 200 -or $response.httpStatusCode -eq 204) {
+                        $successCount++
+                        Write-Verbose "Successfully disconnected session: $($response.name)"
+                    }
+                    else {
+                        $failureCount++
+                        Write-Warning "Failed to disconnect session: $($response.name). Status: $($response.httpStatusCode). Error: $($response.content.error.message)"
+                    }
+                }
+                
+                Write-Information "Disconnect Summary: $successCount successful, $failureCount failed" -InformationAction Continue
+                
+                return @{
+                    TotalSessions = $batchRequests.Count
+                    SuccessfulDisconnects = $successCount
+                    FailedDisconnects = $failureCount
+                    BatchResponse = $batchResponse
+                }
             }
         }
         catch {
-            Throw "Logging of users not succesfully, $_"
+            Throw "Disconnecting users not successful: $_"
         }
     }
 }
